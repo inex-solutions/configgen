@@ -25,11 +25,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ConfigGen.Domain.Contract")]
+[assembly: AssemblyTitle("ConfigGen.Templating.Razor.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ConfigGen.Domain.Contract")]
+[assembly: AssemblyProduct("ConfigGen.Templating.Razor.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -40,7 +40,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("922a7cac-d79f-47a8-a780-5ee0baa384fa")]
+[assembly: Guid("51334e01-0207-4b6d-8305-09dbd3f74f24")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -22,5 +22,6 @@ namespace ConfigGen.Domain.Contract
 {
     public interface ITemplate
     {
+        TemplateRenderResults Render(ITokenValues tokenValues);
     }
 }

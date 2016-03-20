@@ -18,21 +18,25 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+
+using System;
+using Machine.Specifications;
+
+namespace ConfigGen.Templating.Razor.Tests
 {
-    public sealed class RenderingResult
+    namespace RazorTemplateTests
     {
-        public RenderingResult(RenderingResultStatus status, string renderedResult = null, string[] errors = null)
+        [Subject(typeof(RazorTemplate))]
+        public abstract class RazorTemplateTestsBase
         {
-            Status = status;
-            RenderedResult = renderedResult;
-            Errors = errors ?? new string[0];
+            protected static RazorTemplate Subject;
+            protected static string TemplateContents;
+
+            Establish context = () =>
+            {
+                Subject = new RazorTemplate();
+                TemplateContents = null;
+            };
         }
-
-        public RenderingResultStatus Status { get; }
-
-        public string RenderedResult { get; }
-
-        public string[] Errors { get; }
     }
 }

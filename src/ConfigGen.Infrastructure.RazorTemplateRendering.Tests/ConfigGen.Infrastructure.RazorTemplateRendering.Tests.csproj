@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RazorTemplateTests.cs" />
+    <Compile Include="RazorTemplateRendererTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

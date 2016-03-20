@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{295F8721-ADF4-4276-9CE4-3A5FC17AF4A9}</ProjectGuid>
+    <ProjectGuid>{8603B9D8-9392-4044-9512-FF8A36BD1167}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfigGen.Infrastructure.RazorTemplateRendering</RootNamespace>
-    <AssemblyName>ConfigGen.Infrastructure.RazorTemplateRendering</AssemblyName>
+    <RootNamespace>ConfigGen.Templating.Razor.Tests</RootNamespace>
+    <AssemblyName>ConfigGen.Templating.Razor.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,12 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    <Reference Include="Machine.Specifications, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Machine.Specifications.0.9.0\lib\net45\Machine.Specifications.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Machine.Specifications.Clr4, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Machine.Specifications.0.9.0\lib\net45\Machine.Specifications.Clr4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,18 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGenerationResults.cs" />
-    <Compile Include="CodeGenerator.cs" />
-    <Compile Include="DictionaryBackedDynamicModel.cs" />
-    <Compile Include="DynamicModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RazorTemplateEngineFactory.cs" />
-    <Compile Include="RazorTemplateRenderer.cs" />
-    <Compile Include="RenderingResult.cs" />
-    <Compile Include="RenderingResultStatus.cs" />
-    <Compile Include="TemplateBase.cs" />
-    <Compile Include="TemplateCompilationResults.cs" />
-    <Compile Include="TemplateCompiler.cs" />
+    <Compile Include="RazorTemplateTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
+      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
+      <Name>ConfigGen.Domain.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj">
+      <Project>{C96CB4FE-EFD6-4673-B587-71E1053B970E}</Project>
+      <Name>ConfigGen.Templating.Razor</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

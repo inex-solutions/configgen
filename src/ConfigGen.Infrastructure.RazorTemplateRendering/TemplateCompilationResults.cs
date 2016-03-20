@@ -25,30 +25,17 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
     internal sealed class TemplateCompilationResults
     {
-        private readonly bool _success;
-        private readonly Type _compiledType;
-        private readonly string[] _errors;
-
         public TemplateCompilationResults(bool success, Type compiledType = null, string[] errors = null)
         {
-            _success = success;
-            _compiledType = compiledType;
-            _errors = errors ?? new string[0];
+            Success = success;
+            CompiledType = compiledType;
+            Errors = errors ?? new string[0];
         }
 
-        public bool Success
-        {
-            get { return _success; }
-        }
+        public bool Success { get; }
 
-        public Type CompiledType
-        {
-            get { return _compiledType; }
-        }
+        public Type CompiledType { get; }
 
-        public string[] Errors
-        {
-            get { return _errors; }
-        }
+        public string[] Errors { get; }
     }
 }

@@ -24,8 +24,9 @@ using Machine.Specifications;
 
 namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
 {
-    namespace RazorTemplateTests
+    namespace RazorTemplateRendererTests
     {
+        [Subject(typeof(RazorTemplateRenderer))]
         public abstract class RazorTemplateTestsBase
         {
             protected const string Value = "TestValue";
@@ -35,10 +36,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             protected static DictionaryBackedDynamicModel Model;
             protected static RenderingResult Result;
 
-            protected static RazorTemplateRenderer Subject
-            {
-                get { return LazyRazorRenderer.Value; }
-            }
+            protected static RazorTemplateRenderer Subject => LazyRazorRenderer.Value;
 
             Establish context = () =>
             {

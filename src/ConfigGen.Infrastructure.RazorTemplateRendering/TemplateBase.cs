@@ -35,10 +35,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering
             _model = model;
         }
 
-        public dynamic Model
-        {
-            get { return _model; }
-        }
+        public dynamic Model => _model;
 
         public virtual void Write(object value)
         {

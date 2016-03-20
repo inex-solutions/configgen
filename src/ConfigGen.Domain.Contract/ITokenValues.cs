@@ -18,21 +18,10 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Domain.Contract
 {
-    public sealed class RenderingResult
+    public interface ITokenValues
     {
-        public RenderingResult(RenderingResultStatus status, string renderedResult = null, string[] errors = null)
-        {
-            Status = status;
-            RenderedResult = renderedResult;
-            Errors = errors ?? new string[0];
-        }
-
-        public RenderingResultStatus Status { get; }
-
-        public string RenderedResult { get; }
-
-        public string[] Errors { get; }
+        string Name { get; } 
     }
 }

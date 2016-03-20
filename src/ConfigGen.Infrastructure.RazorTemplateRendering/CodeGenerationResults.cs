@@ -25,30 +25,17 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
     internal sealed class CodeGenerationResults
     {
-        private readonly bool _success;
-        private readonly CodeCompileUnit _result;
-        private readonly string[] _errors;
-
         public CodeGenerationResults(bool success, CodeCompileUnit result = null, string[] errors = null)
         {
-            _success = success;
-            _result = result;
-            _errors = errors ?? new string[0];
+            Success = success;
+            Result = result;
+            Errors = errors ?? new string[0];
         }
 
-        public bool Success
-        {
-            get { return _success; }
-        }
+        public bool Success { get; }
 
-        public CodeCompileUnit Result
-        {
-            get { return _result; }
-        }
+        public CodeCompileUnit Result { get; }
 
-        public string[] Errors
-        {
-            get { return _errors; }
-        }
+        public string[] Errors { get; }
     }
 }

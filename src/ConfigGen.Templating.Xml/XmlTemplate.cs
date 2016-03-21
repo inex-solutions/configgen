@@ -26,6 +26,13 @@ namespace ConfigGen.Templating.Xml
 {
     public class XmlTemplate : ITemplate
     {
+        private string templateContents;
+
+        public XmlTemplate(string templateContents)
+        {
+            this.templateContents = templateContents;
+        }
+
         public TemplateRenderResults Render(ITokenValues tokenValues)
         {
             throw new NotImplementedException();

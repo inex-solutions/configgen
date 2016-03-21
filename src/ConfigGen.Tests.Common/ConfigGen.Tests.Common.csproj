@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8603B9D8-9392-4044-9512-FF8A36BD1167}</ProjectGuid>
+    <ProjectGuid>{3FEBFF76-6425-454A-BEF3-5ACB437B6A5D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfigGen.Templating.Razor.Tests</RootNamespace>
-    <AssemblyName>ConfigGen.Templating.Razor.Tests</AssemblyName>
+    <RootNamespace>ConfigGen.Tests.Common</RootNamespace>
+    <AssemblyName>ConfigGen.Tests.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,18 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Machine.Specifications, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Machine.Specifications.0.9.0\lib\net45\Machine.Specifications.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Machine.Specifications.Clr4, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Machine.Specifications.0.9.0\lib\net45\Machine.Specifications.Clr4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Machine.Specifications.Should, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Machine.Specifications.Should.0.8.0\lib\net45\Machine.Specifications.Should.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,24 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RazorTemplateTests.cs" />
+    <Compile Include="TokenValuesCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
-      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
+      <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj">
-      <Project>{C96CB4FE-EFD6-4673-B587-71E1053B970E}</Project>
-      <Name>ConfigGen.Templating.Razor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Tests.Common\ConfigGen.Tests.Common.csproj">
-      <Project>{3febff76-6425-454a-bef3-5acb437b6a5d}</Project>
-      <Name>ConfigGen.Tests.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

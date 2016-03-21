@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain.Contract;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Tests.Common
 {
     public class TokenValuesCollection : ITokenValues
     {
@@ -34,7 +34,7 @@ namespace ConfigGen.Templating.Razor.Tests
             _tokenValues = tokenValues;
         }
 
-        public string Name => "RazorTemplateTests";
+        public string Name => "Test-ITokenValues";
 
         public IDictionary<string, object> ToDictionary()
         {

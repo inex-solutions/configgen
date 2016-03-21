@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8603B9D8-9392-4044-9512-FF8A36BD1167}</ProjectGuid>
+    <ProjectGuid>{D95F075F-FB3D-4972-85B0-21AEFA353FD7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfigGen.Templating.Razor.Tests</RootNamespace>
-    <AssemblyName>ConfigGen.Templating.Razor.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>ConfigGen.Templating.Xml.Tests</RootNamespace>
+    <AssemblyName>ConfigGen.Templating.Xml.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -53,19 +53,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RazorTemplateTests.cs" />
+    <Compile Include="XmlTemplateTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
-      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
+      <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj">
-      <Project>{C96CB4FE-EFD6-4673-B587-71E1053B970E}</Project>
-      <Name>ConfigGen.Templating.Razor</Name>
+    <ProjectReference Include="..\ConfigGen.Templating.Xml\ConfigGen.Templating.Xml.csproj">
+      <Project>{A2A596E2-B503-4311-9AD4-7EDAE03D7B1F}</Project>
+      <Name>ConfigGen.Templating.Xml</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Tests.Common\ConfigGen.Tests.Common.csproj">
-      <Project>{3febff76-6425-454a-bef3-5acb437b6a5d}</Project>
+      <Project>{3FEBFF76-6425-454A-BEF3-5ACB437B6A5D}</Project>
       <Name>ConfigGen.Tests.Common</Name>
     </ProjectReference>
   </ItemGroup>

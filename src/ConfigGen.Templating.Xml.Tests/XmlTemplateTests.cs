@@ -25,14 +25,14 @@ using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using Machine.Specifications;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Templating.Xml.Tests
 {
     namespace RazorTemplateTests
     {
-        [Subject(typeof(RazorTemplate))]
+        [Subject(typeof(XmlTemplate))]
         public abstract class RazorTemplateTestsBase
         {
-            protected static RazorTemplate Subject;
+            protected static XmlTemplate Subject;
             protected static string TemplateContents;
             protected static TokenValuesCollection TokenValues;
             protected static TemplateRenderResults Result;
@@ -53,7 +53,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                Subject = new RazorTemplate(TemplateContents);
+                Subject = new XmlTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
@@ -80,8 +80,8 @@ namespace ConfigGen.Templating.Razor.Tests
         {
             Establish context = () =>
             {
-                TemplateContents = "<root>@Model.TokenOne</root>";
-                Subject = new RazorTemplate(TemplateContents);
+                TemplateContents = "<root>[%TokenOne%]</root>";
+                Subject = new XmlTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",

@@ -19,7 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
@@ -30,7 +29,7 @@ namespace ConfigGen.Templating.Xml.Tests
     namespace RazorTemplateTests
     {
         [Subject(typeof(XmlTemplate))]
-        public abstract class RazorTemplateTestsBase
+        public abstract class XmlTemplateTestsBase
         {
             protected static XmlTemplate Subject;
             protected static string TemplateContents;
@@ -48,7 +47,7 @@ namespace ConfigGen.Templating.Xml.Tests
             };
         }
 
-        public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestsBase
+        public class when_rendering_a_template_which_contains_no_tokens : XmlTemplateTestsBase
         {
             Establish context = () =>
             {
@@ -76,7 +75,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
         }
 
-        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : RazorTemplateTestsBase
+        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : XmlTemplateTestsBase
         {
             Establish context = () =>
             {

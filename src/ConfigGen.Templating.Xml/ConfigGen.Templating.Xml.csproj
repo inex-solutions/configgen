@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConfigGen.Templating.Xml</RootNamespace>
     <AssemblyName>ConfigGen.Templating.Xml</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,7 +41,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplyElement.cs" />
+    <Compile Include="ApplyElementCreator.cs" />
+    <Compile Include="ApplyElementSubNode.cs" />
+    <Compile Include="ApplyElementSubNodeCreator.cs" />
+    <Compile Include="ApplyElementSubNodeType.cs" />
+    <Compile Include="ApplyWhenAttributeProcessor.cs" />
+    <Compile Include="ApplyWhenElementProcessor.cs" />
+    <Compile Include="ApplyWhenFormatException.cs" />
+    <Compile Include="ConditionalElementProcessorBase.cs" />
+    <Compile Include="ConditionException.cs" />
+    <Compile Include="ConfigGenNodeProcessorFactory.cs" />
+    <Compile Include="IConfigGenNodeProcessor.cs" />
+    <Compile Include="ITemplateProcessor.cs" />
+    <Compile Include="OnNotAppliedAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemoveAttributeFromParentProcessor.cs" />
+    <Compile Include="TemplateProcessor.cs" />
+    <Compile Include="XElementExtensions.cs" />
     <Compile Include="XmlTemplate.cs" />
   </ItemGroup>
   <ItemGroup>

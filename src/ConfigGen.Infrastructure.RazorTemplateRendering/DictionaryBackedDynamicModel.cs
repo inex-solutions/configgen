@@ -19,33 +19,33 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
-    public class DictionaryBackedDynamicModel : DynamicModel, IEnumerable<KeyValuePair<string, object>>
+    public class DictionaryBackedDynamicModel : DynamicModel
     {
-        private readonly Dictionary<string, object> _dictionary = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> _dictionary;
+        private readonly HashSet<string> _accessedTokens;
 
-        public void Add(string key, object value)
+        public DictionaryBackedDynamicModel(IDictionary<string, object> values)
         {
-            _dictionary.Add(key, value);
+            _dictionary = new Dictionary<string, object>(values);
+            _accessedTokens = new HashSet<string>();
         }
 
         protected override bool TryGetValue(string key, out object value)
         {
+            if (!_accessedTokens.Contains(key))
+            {
+                _accessedTokens.Add(key);
+            }
+
             return _dictionary.TryGetValue(key, out value);
         }
 
-        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
-        {
-            return _dictionary.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        [Pure]
+        public HashSet<string> AccessedTokens => new HashSet<string>(_accessedTokens);
     }
 }

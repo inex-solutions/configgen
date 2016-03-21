@@ -18,10 +18,15 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using JetBrains.Annotations;
+
 namespace ConfigGen.Domain.Contract
 {
     public interface ITemplate
     {
-        TemplateRenderResults Render(ITokenValues tokenValues);
+        [Pure]
+        [NotNull]
+        TemplateRenderResults Render([NotNull] ITokenValues tokenValues);
     }
 }

@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Machine.Specifications;
 
 namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
@@ -54,7 +55,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             {
                 TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
 
-                Model = new DictionaryBackedDynamicModel();
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
             };
 
             Because of = () => Result = Subject.Render(Model);
@@ -72,7 +73,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             {
                 TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
 
-                Model = new DictionaryBackedDynamicModel();
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
             };
 
             Because of = () => Result = Subject.Render(Model);
@@ -90,7 +91,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             {
                 TemplateContents = "<root>hello</root>";
 
-                Model = new DictionaryBackedDynamicModel();
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
             };
 
             Because of = () => Result = Subject.Render(Model);
@@ -112,10 +113,10 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             {
                 TemplateContents = "<root>@Model.key</root>";
 
-                Model = new DictionaryBackedDynamicModel
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
                 {
                     {"key", Value}
-                };
+                });
 
                 ExpectedOutput = TemplateContents.Replace("@Model.key", Value);
             };
@@ -139,10 +140,10 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             {
                 TemplateContents = "<root>@Model.key</root>";
 
-                Model = new DictionaryBackedDynamicModel
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
                 {
                     {"different_key", Value}
-                };
+                });
 
                 ExpectedOutput = TemplateContents.Replace("@Model.key", string.Empty);
             };

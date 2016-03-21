@@ -39,7 +39,7 @@ namespace ConfigGen.Templating.Razor.Tests
 
             Establish context = () =>
             {
-                Subject = new RazorTemplate();
+                Subject = null;
                 TemplateContents = null;
                 TokenValues = null;
                 Result = null;
@@ -52,7 +52,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-
+                Subject = new RazorTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
@@ -80,7 +80,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenOne</root>";
-
+                Subject = new RazorTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",

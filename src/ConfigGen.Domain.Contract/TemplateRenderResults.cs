@@ -18,9 +18,39 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using JetBrains.Annotations;
+
 namespace ConfigGen.Domain.Contract
 {
     public class TemplateRenderResults
     {
+        public TemplateRenderResults(
+            TemplateRenderResultStatus status, 
+            [CanBeNull] string renderedResult, 
+            [CanBeNull] string[] usedTokens, 
+            [CanBeNull]string[] unusedTokens, 
+            [CanBeNull] string[] errors)
+        {
+            Status = status;
+            RenderedResult = renderedResult;
+            UsedTokens = usedTokens ?? new string[0];
+            UnusedTokens = unusedTokens ?? new string[0];
+            Errors = errors ?? new string[0];
+        }
+
+        public TemplateRenderResultStatus Status { get; }
+
+        [CanBeNull]
+        public string RenderedResult { get; }
+
+        [NotNull]
+        public string[] Errors { get; }
+
+        [NotNull]
+        public string[] UsedTokens { get; }
+
+        [NotNull]
+        public string[] UnusedTokens { get; }
     }
 }

@@ -20,6 +20,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Razor.Tests
@@ -31,12 +33,76 @@ namespace ConfigGen.Templating.Razor.Tests
         {
             protected static RazorTemplate Subject;
             protected static string TemplateContents;
+            protected static TokenValuesCollection TokenValues;
+            protected static TemplateRenderResults Result;
+            protected static string ExpectedOutput;
 
             Establish context = () =>
             {
                 Subject = new RazorTemplate();
                 TemplateContents = null;
+                TokenValues = null;
+                Result = null;
+                ExpectedOutput = null;
             };
+        }
+
+        public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>hello</root>";
+
+                TokenValues = new TokenValuesCollection(new Dictionary<string, string>
+                {
+                    ["TokenOne"] = "One",
+                    ["TokenTwo"] = "Two",
+                });
+            };
+
+            Because of = () => Result = Subject.Render(TokenValues);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+
+            It both_supplied_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
+
+            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
+        }
+
+        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : RazorTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>@Model.TokenOne</root>";
+
+                TokenValues = new TokenValuesCollection(new Dictionary<string, string>
+                {
+                    ["TokenOne"] = "One",
+                    ["TokenTwo"] = "Two",
+                });
+
+                ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
+            };
+
+            Because of = () => Result = Subject.Render(TokenValues);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+
+            It the_used_supplied_token_should_be_listed_as_used = () => Result.UsedTokens.ShouldContainOnly("TokenOne");
+
+            It the_unused_supplied_token_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenTwo");
         }
     }
 }

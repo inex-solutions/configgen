@@ -26,33 +26,13 @@ using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
 {
-    namespace RazorTemplateTests
+    namespace XmlTemplateTests
     {
-        [Subject(typeof(XmlTemplate))]
-        public abstract class XmlTemplateTestsBase
-        {
-            protected static XmlTemplate Subject;
-            protected static string TemplateContents;
-            protected static TokenValuesCollection TokenValues;
-            protected static TemplateRenderResults Result;
-            protected static string ExpectedOutput;
-
-            Establish context = () =>
-            {
-                Subject = null;
-                TemplateContents = null;
-                TokenValues = null;
-                Result = null;
-                ExpectedOutput = null;
-            };
-        }
-
         public class when_rendering_a_template_which_contains_no_tokens : XmlTemplateTestsBase
         {
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                Subject = new XmlTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
@@ -80,7 +60,6 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenOne%]</root>";
-                Subject = new XmlTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",

@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
@@ -31,7 +32,7 @@ namespace ConfigGen.Templating.Razor.Tests
         [Subject(typeof(RazorTemplate))]
         public abstract class RazorTemplateTestsBase
         {
-            protected static RazorTemplate Subject;
+            private static Lazy<RazorTemplate> lazySubject;
             protected static string TemplateContents;
             protected static TokenValuesCollection TokenValues;
             protected static TemplateRenderResults Result;
@@ -39,12 +40,14 @@ namespace ConfigGen.Templating.Razor.Tests
 
             Establish context = () =>
             {
-                Subject = null;
+                lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
                 TemplateContents = null;
                 TokenValues = null;
                 Result = null;
                 ExpectedOutput = null;
             };
+
+            protected static RazorTemplate Subject => lazySubject.Value;
         }
 
         public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestsBase
@@ -52,7 +55,6 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                Subject = new RazorTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
@@ -80,7 +82,6 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenOne</root>";
-                Subject = new RazorTemplate(TemplateContents);
                 TokenValues = new TokenValuesCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",

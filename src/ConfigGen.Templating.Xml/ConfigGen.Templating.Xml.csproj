@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,24 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplyElement.cs" />
-    <Compile Include="ApplyElementCreator.cs" />
-    <Compile Include="ApplyElementSubNode.cs" />
-    <Compile Include="ApplyElementSubNodeCreator.cs" />
-    <Compile Include="ApplyElementSubNodeType.cs" />
-    <Compile Include="ApplyWhenAttributeProcessor.cs" />
-    <Compile Include="ApplyWhenElementProcessor.cs" />
-    <Compile Include="ApplyWhenFormatException.cs" />
-    <Compile Include="ConditionalElementProcessorBase.cs" />
-    <Compile Include="ConditionException.cs" />
-    <Compile Include="ConfigGenNodeProcessorFactory.cs" />
-    <Compile Include="IConfigGenNodeProcessor.cs" />
-    <Compile Include="ITemplateProcessor.cs" />
-    <Compile Include="OnNotAppliedAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoveAttributeFromParentProcessor.cs" />
-    <Compile Include="TemplateProcessor.cs" />
-    <Compile Include="XElementExtensions.cs" />
     <Compile Include="XmlTemplate.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +53,13 @@
       <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
+      <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>
+      <Name>ConfigGen.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

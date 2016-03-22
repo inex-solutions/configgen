@@ -20,22 +20,103 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.Xml;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
     public class XmlTemplate : ITemplate
     {
-        private string templateContents;
+        public const string ConfigGenXmlNamespace = "http://roblevine.co.uk/Namespaces/ConfigGen/1/0/";
 
-        public XmlTemplate(string templateContents)
+        [NotNull]
+        private readonly Stream _templateContents;
+
+        public XmlTemplate([NotNull] string templateContents)
         {
-            this.templateContents = templateContents;
+            if (templateContents == null) throw new ArgumentNullException(nameof(templateContents));
+
+            _templateContents = new MemoryStream();
+
+            var writer = new StreamWriter(_templateContents);
+            writer.Write(templateContents);
+            writer.Flush();
+            _templateContents.Position = 0;
         }
 
-        public TemplateRenderResults Render(ITokenValues tokenValues)
+        public XmlTemplate([NotNull] Stream templateContents)
         {
-            throw new NotImplementedException();
+            if (templateContents == null) throw new ArgumentNullException(nameof(templateContents));
+            if (!templateContents.CanSeek || !templateContents.CanRead) throw new InvalidOperationException("Supplied stream must be seekable and readable");
+            _templateContents = templateContents;
+            _templateContents.Position = 0;
+        }
+
+        public TemplateRenderResults Render([NotNull] ITokenValues tokenValues)
+        {
+            
+            try
+            {
+                var xmlDeclarationParser = new XmlDeclarationParser();
+                xmlDeclarationParser.Parse(_templateContents);
+                _templateContents.Position = 0;
+                XElement rawTemplate = XElement.Load(_templateContents, LoadOptions.PreserveWhitespace);
+
+                // remove config gen namespace declaration
+                foreach (var attribute in rawTemplate.Attributes())
+                {
+                    if (attribute.Value == ConfigGenXmlNamespace)
+                    {
+                        attribute.Remove();
+                    }
+                }
+
+                var usedTokens = new List<string>();
+                var unusedTokens = new List<string>();
+
+                string output;
+
+                var xmlWriterSettings = new XmlWriterSettings
+                {
+                    OmitXmlDeclaration = !xmlDeclarationParser.XmlDeclarationPresent, 
+                    Indent = true,
+                };
+
+                using (var stream = new MemoryStream())
+                using (var streamReader = new StreamReader(stream))
+                {
+                    var xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
+
+                    rawTemplate.Save(xmlWriter);
+                    xmlWriter.Flush();
+                    stream.Position = 0;
+
+                    output = streamReader.ReadToEnd();
+                }
+
+                return new TemplateRenderResults(
+                            TemplateRenderResultStatus.Success,
+                            output,
+                            usedTokens.ToArray(),
+                            unusedTokens.ToArray(),
+                            null);
+
+            }
+            catch (Exception ex)
+            {
+                return new TemplateRenderResults(
+                    TemplateRenderResultStatus.Failure,
+                    null,
+                    null,
+                    null,
+                    new[] { ex.ToString() });
+            }
         }
     }
 }

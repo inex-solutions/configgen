@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
@@ -48,7 +49,7 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
 
             It both_supplied_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 
@@ -66,7 +67,7 @@ namespace ConfigGen.Templating.Xml.Tests
                     ["TokenTwo"] = "Two",
                 });
 
-                ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
+                ExpectedOutput = TemplateContents.Replace("[%TokenOne%]", "One");
             };
 
             Because of = () => Result = Subject.Render(TokenValues);
@@ -77,7 +78,8 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = 
+                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
 
             It the_used_supplied_token_should_be_listed_as_used = () => Result.UsedTokens.ShouldContainOnly("TokenOne");
 

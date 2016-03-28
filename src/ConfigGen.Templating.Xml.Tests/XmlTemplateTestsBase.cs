@@ -2,12 +2,14 @@
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using Machine.Specifications;
+using Machine.Specifications.Annotations;
 
 namespace ConfigGen.Templating.Xml.Tests
 {
     [Subject(typeof(XmlTemplate))]
     public abstract class XmlTemplateTestsBase
     {
+        [NotNull]
         private static Lazy<XmlTemplate> lazySubject; 
         protected static string TemplateContents;
         protected static TokenValuesCollection TokenValues;
@@ -23,6 +25,7 @@ namespace ConfigGen.Templating.Xml.Tests
             ExpectedOutput = null;
         };
 
+        [NotNull]
         protected static XmlTemplate Subject => lazySubject.Value;
     }
 }

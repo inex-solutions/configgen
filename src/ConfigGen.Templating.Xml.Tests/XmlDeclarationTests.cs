@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
@@ -44,7 +45,8 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_output_should_be_the_unaltered_template_with_the_xml_declaration = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+            It the_resulting_output_should_be_the_unaltered_template_with_the_xml_declaration = 
+                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
         }
 
         public class when_the_template_does_not_contain_an_xml_declaration : XmlTemplateTestsBase
@@ -62,7 +64,8 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_output_should_be_the_unaltered_template_without_the_xml_declaration = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+            It the_resulting_output_should_be_the_unaltered_template_without_the_xml_declaration = 
+                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
         }
 
         public class when_the_template_contains_the_configgen_xmlns_declaration : XmlTemplateTestsBase
@@ -84,7 +87,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_template_with_the_configgen_xmlns_declaration_removed = 
-                () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
         }
 
         public class when_the_template_contains_a_non_configgen_xmlns_declaration : XmlTemplateTestsBase
@@ -103,7 +106,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_unaltered_template_with_the_non_configgen_xmlns_declaration =
-                () => Result.RenderedResult.ShouldEqual(TemplateContents);
+                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
         }
     }
 }

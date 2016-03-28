@@ -84,7 +84,7 @@ namespace ConfigGen.Templating.Xml
 
                 var xmlWriterSettings = new XmlWriterSettings
                 {
-                    OmitXmlDeclaration = !xmlDeclarationParser.XmlDeclarationPresent, 
+                    OmitXmlDeclaration = !xmlDeclarationParser.XmlDeclarationPresent,
                     Indent = true,
                 };
 

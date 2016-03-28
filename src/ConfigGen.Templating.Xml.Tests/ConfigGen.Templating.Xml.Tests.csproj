@@ -75,6 +75,10 @@
       <Project>{3FEBFF76-6425-454A-BEF3-5ACB437B6A5D}</Project>
       <Name>ConfigGen.Tests.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
+      <Project>{19f4fcfe-ceb6-4242-81fd-2a35814e6f59}</Project>
+      <Name>ConfigGen.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

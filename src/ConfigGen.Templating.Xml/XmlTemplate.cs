@@ -64,7 +64,8 @@ namespace ConfigGen.Templating.Xml
             try
             {
                 var xmlDeclarationParser = new XmlDeclarationParser();
-                xmlDeclarationParser.Parse(_templateContents);
+                XmlDeclarationInfo xmlDeclarationInfo = xmlDeclarationParser.Parse(_templateContents);
+
                 _templateContents.Position = 0;
                 XElement rawTemplate = XElement.Load(_templateContents, LoadOptions.PreserveWhitespace);
 
@@ -84,7 +85,7 @@ namespace ConfigGen.Templating.Xml
 
                 var xmlWriterSettings = new XmlWriterSettings
                 {
-                    OmitXmlDeclaration = !xmlDeclarationParser.XmlDeclarationPresent,
+                    OmitXmlDeclaration = !xmlDeclarationInfo.XmlDeclarationPresent,
                     Indent = true,
                 };
 

@@ -2,9 +2,8 @@
 using System.IO;
 using System.Text;
 using System.Xml;
-
-using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
+using ConfigGen.Utilities.Extensions;
 
 namespace ConfigGen.Utilities.Xml
 {
@@ -13,16 +12,14 @@ namespace ConfigGen.Utilities.Xml
     /// </summary>
     public class XmlDeclarationParser
     {
-        private Encoding _actualEncoding;
-        private Encoding _statedEncoding;
-        private bool _xmlDeclarationPresent;
-        private bool _parseCalled;
-
         /// <summary>
-        /// Parses the declaration of the supplied XML stream.
+        /// Parses the declaration of the supplied XML stream, and returns information about the declaration.
         /// </summary>
         /// <param name="xmlStream">The XML stream.</param>
-        public void Parse([NotNull] Stream xmlStream)
+        /// <returns>Information about the xml declaration</returns>
+        [Pure]
+        [NotNull]
+        public XmlDeclarationInfo Parse([NotNull] Stream xmlStream)
         {
             if (xmlStream == null) throw new ArgumentNullException(nameof(xmlStream));
 
@@ -33,7 +30,7 @@ namespace ConfigGen.Utilities.Xml
             {
                 try
                 {
-                    ReadXmlDeclaration(ms);
+                    return ReadXmlDeclaration(ms);
                 }
                 catch (XmlException ex)
                 {
@@ -54,80 +51,44 @@ namespace ConfigGen.Utilities.Xml
                                 writer.Write(xml);
                                 writer.Flush();
                                 writerStream.Position = 0;
-                                ReadXmlDeclaration(writerStream);
-                            }
+                                var declarationInfo = ReadXmlDeclaration(writerStream);
 
-                            _actualEncoding = reader.CurrentEncoding;
+                                return new XmlDeclarationInfo(declarationInfo.XmlDeclarationPresent, declarationInfo.StatedEncoding, reader.CurrentEncoding);
+                            }
                         }
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
             }
-
-            _parseCalled = true;
         }
 
-        private void ReadXmlDeclaration(MemoryStream ms)
+        [NotNull]
+        private XmlDeclarationInfo ReadXmlDeclaration([NotNull] Stream stream)
         {
-            using (var reader = new XmlTextReader(ms))
+            Encoding actualEncoding = null;
+            Encoding statedEncoding = null;
+            bool xmlDeclarationPresent = false;
+
+            using (var reader = new XmlTextReader(stream))
             {
                 if (reader.Read())
                 {
-                    _actualEncoding = reader.Encoding;
+                    actualEncoding = reader.Encoding;
 
                     if (reader.NodeType == XmlNodeType.XmlDeclaration)
                     {
-                        _xmlDeclarationPresent = true;
+                        xmlDeclarationPresent = true;
                         var encodingAttribute = reader.GetAttribute("encoding");
                         if (!string.IsNullOrEmpty(encodingAttribute))
                         {
-                            _statedEncoding = Encoding.GetEncoding(encodingAttribute);
+                            statedEncoding = Encoding.GetEncoding(encodingAttribute);
                         }
                     }
                 }
             }
-        }
 
-        /// <summary>
-        /// Gets the encoding stated in the xml declaration if any, otherwise null.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Raised if this property is accessed before <see cref="Parse"/> has been called.</exception>
-        public Encoding StatedEncoding
-        {
-            get
-            {
-                if (!_parseCalled) throw new InvalidOperationException("Parse must be called before accessing this property.");
-                return _statedEncoding;
-            }
-        }
-
-        /// <summary>
-        /// Gets the encoding of the stream as detected by the <see cref="XmlTextReader"/> instance.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Raised if this property is accessed before <see cref="Parse"/> has been called.</exception>
-        public Encoding ActualEncoding
-        {
-            get
-            {
-                if (!_parseCalled) throw new InvalidOperationException("Parse must be called before accessing this property.");
-                return _actualEncoding;
-            }
-        }
-
-        /// <summary>
-        /// Gets a flag indicating if an xml declaration was detected.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Raised if this property is accessed before <see cref="Parse"/> has been called.</exception>
-        public bool XmlDeclarationPresent
-        {
-            get
-            {
-                if (!_parseCalled) throw new InvalidOperationException("Parse must be called before accessing this property.");
-                return _xmlDeclarationPresent;
-            }
+            return new XmlDeclarationInfo(xmlDeclarationPresent, statedEncoding, actualEncoding);
         }
     }
 }

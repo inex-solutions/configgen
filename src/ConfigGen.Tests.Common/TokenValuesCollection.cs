@@ -19,26 +19,45 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Tests.Common
 {
     public class TokenValuesCollection : ITokenValues
     {
+        [NotNull]
         private readonly IDictionary<string, string> _tokenValues;
 
-        public TokenValuesCollection(IDictionary<string, string> tokenValues)
+        public TokenValuesCollection([NotNull] IDictionary<string, string> tokenValues)
         {
+            if (tokenValues == null) throw new ArgumentNullException(nameof(tokenValues));
+
             _tokenValues = tokenValues;
         }
 
         public string Name => "Test-ITokenValues";
 
+        public IEnumerable<string> TokenNames => _tokenValues.Keys;
+
         public IDictionary<string, object> ToDictionary()
         {
             return _tokenValues.ToDictionary(pair => pair.Key, pair => (object)pair.Value);
+        }
+
+        public bool TryGetValue([NotNull] string tokenName, out object value)
+        {
+            if (tokenName == null) throw new ArgumentNullException(nameof(tokenName));
+
+            string val;
+            bool ret = _tokenValues.TryGetValue(tokenName, out val);
+
+            value = ret ? val : null;
+
+            return ret;
         }
     }
 }

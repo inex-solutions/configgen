@@ -1,6 +1,6 @@
 ﻿#region Copyright and License Notice
-// Copyright (C)2010-2014 - Rob Levine and other contributors
-// http://configgen.codeplex.com
+// Copyright (C)2010-2016 - INEX Solutions Ltd
+// https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
 // 

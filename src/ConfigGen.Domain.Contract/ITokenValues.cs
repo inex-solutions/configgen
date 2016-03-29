@@ -19,14 +19,23 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
     public interface ITokenValues
     {
+        [NotNull]
         string Name { get; }
 
+        [NotNull]
+        IEnumerable<string> TokenNames { get; }
+
+        [NotNull]
         IDictionary<string, object> ToDictionary();
+
+        bool TryGetValue([NotNull] string tokenName, out object value);
     }
 }

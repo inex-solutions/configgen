@@ -22,10 +22,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
 using JetBrains.Annotations;
 
@@ -34,6 +36,8 @@ namespace ConfigGen.Templating.Xml
     public class XmlTemplate : ITemplate
     {
         public const string ConfigGenXmlNamespace = "http://roblevine.co.uk/Namespaces/ConfigGen/1/0/";
+
+        public static readonly Regex TokenRegexp = new Regex(@"\[%(?<mib>.*)%\]", RegexOptions.Multiline | RegexOptions.Compiled);
 
         [NotNull]
         private readonly Stream _templateContents;
@@ -78,7 +82,7 @@ namespace ConfigGen.Templating.Xml
                     }
                 }
 
-                var usedTokens = new List<string>();
+                var usedTokens = new HashSet<string>();
                 var unusedTokens = new List<string>();
 
                 string output;
@@ -101,6 +105,23 @@ namespace ConfigGen.Templating.Xml
                     output = streamReader.ReadToEnd();
                 }
 
+                var tokenValueMatchEvaluator = new TokenValueMatchEvaluator(
+                    tokenValues: tokenValues,
+                    onTokenUsed: tokenName => usedTokens.AddIfNotPresent(tokenName),
+                    onUnrecognisedToken: tokenName => { });
+
+                var matchEvaluator = new MatchEvaluator(tokenValueMatchEvaluator.Target);
+
+                output = TokenRegexp.Replace(output, matchEvaluator);
+
+                foreach (var token in tokenValues.TokenNames)
+                {
+                    if (!usedTokens.Contains(token))
+                    {
+                        unusedTokens.Add(token);
+                    }
+                }
+
                 return new TemplateRenderResults(
                             TemplateRenderResultStatus.Success,
                             output,
@@ -118,6 +139,6 @@ namespace ConfigGen.Templating.Xml
                     null,
                     new[] { ex.ToString() });
             }
-        }
+        }   
     }
 }

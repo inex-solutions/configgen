@@ -20,33 +20,21 @@
 #endregion
 
 using System;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
-using Machine.Specifications.Annotations;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Xml.Tests
+namespace ConfigGen.Utilities.Extensions
 {
-    [Subject(typeof(XmlTemplate))]
-    public abstract class XmlTemplateTestsBase
+    public static class HashSetExtensions
     {
-        [NotNull]
-        private static Lazy<XmlTemplate> lazySubject; 
-        protected static string TemplateContents;
-        protected static TokenValuesCollection TokenValues;
-        protected static TemplateRenderResults Result;
-        protected static string ExpectedOutput;
-
-        Establish context = () =>
+        public static void AddIfNotPresent<T>([NotNull] this HashSet<T> hashSet, T item)
         {
-            TemplateContents = null;
-            lazySubject = new Lazy<XmlTemplate>(() => new XmlTemplate(TemplateContents));
-            TokenValues = null;
-            Result = null;
-            ExpectedOutput = null;
-        };
+            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
 
-        [NotNull]
-        protected static XmlTemplate Subject => lazySubject.Value;
+            if (!hashSet.Contains(item))
+            {
+                hashSet.Add(item);
+            }
+        }
     }
 }

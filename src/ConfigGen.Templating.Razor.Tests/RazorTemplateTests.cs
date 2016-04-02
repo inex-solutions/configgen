@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Razor.Tests
@@ -104,6 +105,34 @@ namespace ConfigGen.Templating.Razor.Tests
             It the_used_supplied_token_should_be_listed_as_used = () => Result.UsedTokens.ShouldContainOnly("TokenOne");
 
             It the_unused_supplied_token_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenTwo");
+        }
+
+        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : RazorTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>@Model.TokenThree</root>";
+                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+
+                ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
+            };
+
+            Because of = () => Result = Subject.Render(TokenValues);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            //TODO: is this correct?
+            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
+
+            It the_unrecognised_token_should_be_listed_as_unrecognised = () => Result.UnrecognisedTokens.ShouldContainOnly("TokenThree");
+
+            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
+
+            It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
         }
     }
 }

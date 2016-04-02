@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Infrastructure.RazorTemplateRendering;
 using JetBrains.Annotations;
@@ -69,6 +70,7 @@ namespace ConfigGen.Templating.Razor
                         result.RenderedResult,
                         usedTokens.ToArray(),
                         unusedTokens.ToArray(),
+                        model.UnrecognisedTokens.ToArray(),
                         null);
                 }
 
@@ -77,6 +79,7 @@ namespace ConfigGen.Templating.Razor
                     null,
                     usedTokens.ToArray(),
                     unusedTokens.ToArray(),
+                    model.UnrecognisedTokens.ToArray(),
                     result.Errors);
 
             }
@@ -84,6 +87,7 @@ namespace ConfigGen.Templating.Razor
             {
                 return new TemplateRenderResults(
                     TemplateRenderResultStatus.Failure,
+                    null,
                     null,
                     null,
                     null,

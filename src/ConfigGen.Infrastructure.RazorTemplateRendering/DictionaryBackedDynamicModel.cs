@@ -19,33 +19,54 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
     public class DictionaryBackedDynamicModel : DynamicModel
     {
+        [NotNull]
         private readonly Dictionary<string, object> _dictionary;
+
+        [NotNull]
         private readonly HashSet<string> _accessedTokens;
 
-        public DictionaryBackedDynamicModel(IDictionary<string, object> values)
+        [NotNull]
+        private readonly HashSet<string> _unrecognisedTokens;
+
+        public DictionaryBackedDynamicModel([NotNull] IDictionary<string, object> values)
         {
+            if (values == null) throw new ArgumentNullException(nameof(values));
             _dictionary = new Dictionary<string, object>(values);
             _accessedTokens = new HashSet<string>();
+            _unrecognisedTokens = new HashSet<string>();
         }
 
-        protected override bool TryGetValue(string key, out object value)
+        protected override bool TryGetValue([NotNull] string key, out object value)
         {
-            if (!_accessedTokens.Contains(key))
+            if (key == null) throw new ArgumentNullException(nameof(key));
+
+            bool found = _dictionary.TryGetValue(key, out value);
+
+            if (found
+                && !_accessedTokens.Contains(key))
             {
                 _accessedTokens.Add(key);
             }
 
-            return _dictionary.TryGetValue(key, out value);
+            if (!found
+                && !_unrecognisedTokens.Contains(key))
+            {
+                _unrecognisedTokens.Add(key);
+            }
+
+            return found;
         }
 
-        [Pure]
         public HashSet<string> AccessedTokens => new HashSet<string>(_accessedTokens);
+
+        public HashSet<string> UnrecognisedTokens => new HashSet<string>(_unrecognisedTokens);
     }
 }

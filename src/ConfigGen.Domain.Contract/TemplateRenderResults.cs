@@ -29,13 +29,15 @@ namespace ConfigGen.Domain.Contract
             TemplateRenderResultStatus status, 
             [CanBeNull] string renderedResult, 
             [CanBeNull] string[] usedTokens, 
-            [CanBeNull]string[] unusedTokens, 
+            [CanBeNull]string[] unusedTokens,
+            [CanBeNull]string[] unrecognisedTokens,
             [CanBeNull] string[] errors)
         {
             Status = status;
             RenderedResult = renderedResult;
             UsedTokens = usedTokens ?? new string[0];
             UnusedTokens = unusedTokens ?? new string[0];
+            UnrecognisedTokens = unrecognisedTokens ?? new string[0];
             Errors = errors ?? new string[0];
         }
 
@@ -52,5 +54,8 @@ namespace ConfigGen.Domain.Contract
 
         [NotNull]
         public string[] UnusedTokens { get; }
+
+        [NotNull]
+        public string[] UnrecognisedTokens { get; }
     }
 }

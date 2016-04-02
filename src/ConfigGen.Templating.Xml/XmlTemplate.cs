@@ -83,6 +83,7 @@ namespace ConfigGen.Templating.Xml
                 }
 
                 var usedTokens = new HashSet<string>();
+                var unrecognisedTokens = new HashSet<string>();
                 var unusedTokens = new List<string>();
 
                 string output;
@@ -108,7 +109,7 @@ namespace ConfigGen.Templating.Xml
                 var tokenValueMatchEvaluator = new TokenValueMatchEvaluator(
                     tokenValues: tokenValues,
                     onTokenUsed: tokenName => usedTokens.AddIfNotPresent(tokenName),
-                    onUnrecognisedToken: tokenName => { });
+                    onUnrecognisedToken: tokenName => unrecognisedTokens.AddIfNotPresent(tokenName));
 
                 var matchEvaluator = new MatchEvaluator(tokenValueMatchEvaluator.Target);
 
@@ -127,6 +128,7 @@ namespace ConfigGen.Templating.Xml
                             output,
                             usedTokens.ToArray(),
                             unusedTokens.ToArray(),
+                            unrecognisedTokens.ToArray(),
                             null);
 
             }
@@ -134,6 +136,7 @@ namespace ConfigGen.Templating.Xml
             {
                 return new TemplateRenderResults(
                     TemplateRenderResultStatus.Failure,
+                    null,
                     null,
                     null,
                     null,

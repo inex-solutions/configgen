@@ -19,7 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 

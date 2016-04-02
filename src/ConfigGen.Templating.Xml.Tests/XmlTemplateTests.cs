@@ -78,12 +78,40 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = 
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value =
                 () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
 
             It the_used_supplied_token_should_be_listed_as_used = () => Result.UsedTokens.ShouldContainOnly("TokenOne");
 
             It the_unused_supplied_token_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenTwo");
+        }
+
+        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>[%TokenThree%]</root>";
+                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+
+                ExpectedOutput = TemplateContents.Replace("[%TokenThree%]", "");
+            };
+
+            Because of = () => Result = Subject.Render(TokenValues);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            //TODO: is this correct?
+            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
+
+            It the_unrecognised_token_should_be_listed_as_unrecognised = () => Result.UnrecognisedTokens.ShouldContainOnly("TokenThree");
+
+            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
+
+            It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
         }
     }
 }

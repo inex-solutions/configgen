@@ -19,29 +19,28 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using JetBrains.Annotations;
+using System.Linq;
+using System.Text;
+using System.Xml.Linq;
 
 namespace ConfigGen.Utilities.Extensions
 {
-    public static class StringExtensions
+    public static class XContainerExtensions
     {
         /// <summary>
-        /// Returns true if the supplied string is either null or an empty string, otherwise false.
+        /// Returns the InnerXml of the supplied Xml container, or null if null is supplied.
         /// </summary>
-        public static bool IsNullOrEmpty([CanBeNull] this string s)
+        public static string InnerXml(this XContainer containerNode)
         {
-            return String.IsNullOrEmpty(s);
-        }
+            if (containerNode == null)
+            {
+                return null;
+            }
 
-        /// <summary>
-        /// Returns the result of a <see cref="string.Format(string,object[])"/> operation on the supplied <paramref name="formatString"/>,
-        /// using the supplied <paramref name="args"/>.
-        /// </summary>
-        [NotNull]
-        public static string With([NotNull] this string formatString, [NotNull] params object[] args)
-        {
-            return String.Format(formatString, args);
+            StringBuilder innerXml = new StringBuilder();
+            containerNode.Nodes().ToList().ForEach(node => innerXml.Append(node.ToString()));
+
+            return innerXml.ToString();
         }
     }
 }

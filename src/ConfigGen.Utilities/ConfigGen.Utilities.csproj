@@ -45,8 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\AssemblyExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\HashSetExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\XContainerExtensions.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />
     <Compile Include="Xml\XmlDeclarationParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,29 +19,19 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
+using System.Xml.Linq;
+using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Extensions
+namespace ConfigGen.Templating.Xml.NodeProcessing
 {
-    public static class StringExtensions
+    /// <summary>
+    /// Interface to be implemented by config-gen node processors. 
+    /// </summary>
+    /// <remarks>Implementations of this instance must be stateless as they are reused.</remarks>
+    internal interface IConfigGenNodeProcessor
     {
-        /// <summary>
-        /// Returns true if the supplied string is either null or an empty string, otherwise false.
-        /// </summary>
-        public static bool IsNullOrEmpty([CanBeNull] this string s)
-        {
-            return String.IsNullOrEmpty(s);
-        }
-
-        /// <summary>
-        /// Returns the result of a <see cref="string.Format(string,object[])"/> operation on the supplied <paramref name="formatString"/>,
-        /// using the supplied <paramref name="args"/>.
-        /// </summary>
         [NotNull]
-        public static string With([NotNull] this string formatString, [NotNull] params object[] args)
-        {
-            return String.Format(formatString, args);
-        }
+        ProcessNodeResults ProcessNode([NotNull] XElement node, [NotNull] ITokenDataset dataset);
     }
 }

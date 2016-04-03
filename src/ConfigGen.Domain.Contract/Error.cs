@@ -20,33 +20,31 @@
 #endregion
 
 using System;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
-using Machine.Specifications.Annotations;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Domain.Contract
 {
-    [Subject(typeof(RazorTemplate))]
-    public abstract class RazorTemplateTestsBase
+    public abstract class Error
     {
-        [NotNull]
-        private static Lazy<RazorTemplate> lazySubject;
-        protected static string TemplateContents;
-        protected static TokenDatasetCollection TokenDataset;
-        protected static TemplateRenderResults Result;
-        protected static string ExpectedOutput;
-
-        Establish context = () =>
+        protected Error([NotNull] string detail)
         {
-            TemplateContents = null;
-            lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-            TokenDataset = null;
-            Result = null;
-            ExpectedOutput = null;
-        };
+            if (detail == null) throw new ArgumentNullException(nameof(detail));
+
+            Detail = detail;
+        }
 
         [NotNull]
-        protected static RazorTemplate Subject => lazySubject.Value;
+        public abstract string Source { get; }
+
+        [NotNull]
+        public abstract string Code { get; }
+
+        [NotNull]
+        public string Detail { get; }
+
+        public override string ToString()
+        {
+            return $"Error '{Code}' in '{Source}': {Detail}";
+        }
     }
 }

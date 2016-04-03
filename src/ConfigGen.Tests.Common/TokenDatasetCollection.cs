@@ -27,19 +27,19 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Tests.Common
 {
-    public class TokenValuesCollection : ITokenValues
+    public class TokenDatasetCollection : ITokenDataset
     {
         [NotNull]
         private readonly IDictionary<string, string> _tokenValues;
 
-        public TokenValuesCollection([NotNull] IDictionary<string, string> tokenValues)
+        public TokenDatasetCollection([NotNull] IDictionary<string, string> tokenValues)
         {
             if (tokenValues == null) throw new ArgumentNullException(nameof(tokenValues));
 
             _tokenValues = tokenValues;
         }
 
-        public string Name => "Test-ITokenValues";
+        public string Name => "Test-ITokenDataset";
 
         public IEnumerable<string> TokenNames => _tokenValues.Keys;
 
@@ -58,6 +58,11 @@ namespace ConfigGen.Tests.Common
             value = ret ? val : null;
 
             return ret;
+        }
+
+        public bool Contains(string tokenName)
+        {
+            return _tokenValues.ContainsKey(tokenName);
         }
     }
 }

@@ -19,34 +19,23 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
-using Machine.Specifications.Annotations;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Domain.Contract
 {
-    [Subject(typeof(RazorTemplate))]
-    public abstract class RazorTemplateTestsBase
+    public interface ITokenDataset
     {
         [NotNull]
-        private static Lazy<RazorTemplate> lazySubject;
-        protected static string TemplateContents;
-        protected static TokenDatasetCollection TokenDataset;
-        protected static TemplateRenderResults Result;
-        protected static string ExpectedOutput;
-
-        Establish context = () =>
-        {
-            TemplateContents = null;
-            lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-            TokenDataset = null;
-            Result = null;
-            ExpectedOutput = null;
-        };
+        string Name { get; }
 
         [NotNull]
-        protected static RazorTemplate Subject => lazySubject.Value;
+        IEnumerable<string> TokenNames { get; }
+
+        [NotNull]
+        IDictionary<string, object> ToDictionary();
+
+        bool TryGetValue([NotNull] string tokenName, out object value);
+        bool Contains(string tokenName);
     }
 }

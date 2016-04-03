@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Templating.Xml.NodeProcessing;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
 using JetBrains.Annotations;
@@ -35,8 +36,13 @@ namespace ConfigGen.Templating.Xml
 {
     public class XmlTemplate : ITemplate
     {
+        [NotNull]
         public const string ConfigGenXmlNamespace = "http://roblevine.co.uk/Namespaces/ConfigGen/1/0/";
 
+        [NotNull]
+        public const string XmlTemplateErrorSource = nameof(XmlTemplate);
+
+        [NotNull]
         public static readonly Regex TokenRegexp = new Regex(@"\[%(?<mib>.*)%\]", RegexOptions.Multiline | RegexOptions.Compiled);
 
         [NotNull]
@@ -62,16 +68,55 @@ namespace ConfigGen.Templating.Xml
             _templateContents.Position = 0;
         }
 
-        public TemplateRenderResults Render([NotNull] ITokenValues tokenValues)
+        [NotNull]
+        public TemplateRenderResults Render([NotNull] ITokenDataset tokenDataset)
         {
-            
+            if (tokenDataset == null) throw new ArgumentNullException(nameof(tokenDataset));
+
             try
             {
+                var usedTokens = new HashSet<string>();
+                var unrecognisedTokens = new HashSet<string>();
+                var unusedTokens = new List<string>();
+                var errors = new List<Error>();
+
                 var xmlDeclarationParser = new XmlDeclarationParser();
                 XmlDeclarationInfo xmlDeclarationInfo = xmlDeclarationParser.Parse(_templateContents);
 
                 _templateContents.Position = 0;
-                XElement rawTemplate = XElement.Load(_templateContents, LoadOptions.PreserveWhitespace);
+                XElement rawTemplate;
+
+                try
+                {
+                    rawTemplate = XElement.Load(_templateContents, LoadOptions.PreserveWhitespace);
+                }
+                catch (Exception ex)
+                {
+                    return new TemplateRenderResults(
+                        status: TemplateRenderResultStatus.Failure,
+                        renderedResult: null,
+                        usedTokens: usedTokens,
+                        unusedTokens: unusedTokens,
+                        unrecognisedTokens: unrecognisedTokens,
+                        errors: new TemplateLoadError(ex.ToString()).ToSingleEnumerable());
+                }
+
+                XElement configGenNode;
+
+                var configGenNodeProcessorFactory = new ConfigGenNodeProcessorFactory();
+                while ((configGenNode = GetConfigGenNodes(rawTemplate)) != null)
+                {
+                    var nodeProcessor = configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, tokenDataset);
+
+                    var result = nodeProcessor.ProcessNode(configGenNode, tokenDataset);
+                    if (result.ErrorMessage != null)
+                    {
+                        errors.Add(new ConditionProcessingError(result.ErrorMessage));
+                    }
+
+                    usedTokens.AddWhereNotPresent(result.UsedTokens);
+                    unrecognisedTokens.AddWhereNotPresent(result.UnrecognisedTokens);
+                }
 
                 // remove config gen namespace declaration
                 foreach (var attribute in rawTemplate.Attributes())
@@ -81,11 +126,7 @@ namespace ConfigGen.Templating.Xml
                         attribute.Remove();
                     }
                 }
-
-                var usedTokens = new HashSet<string>();
-                var unrecognisedTokens = new HashSet<string>();
-                var unusedTokens = new List<string>();
-
+                
                 string output;
 
                 var xmlWriterSettings = new XmlWriterSettings
@@ -107,7 +148,7 @@ namespace ConfigGen.Templating.Xml
                 }
 
                 var tokenValueMatchEvaluator = new TokenValueMatchEvaluator(
-                    tokenValues: tokenValues,
+                    tokenDataset: tokenDataset,
                     onTokenUsed: tokenName => usedTokens.AddIfNotPresent(tokenName),
                     onUnrecognisedToken: tokenName => unrecognisedTokens.AddIfNotPresent(tokenName));
 
@@ -115,7 +156,7 @@ namespace ConfigGen.Templating.Xml
 
                 output = TokenRegexp.Replace(output, matchEvaluator);
 
-                foreach (var token in tokenValues.TokenNames)
+                foreach (var token in tokenDataset.TokenNames)
                 {
                     if (!usedTokens.Contains(token))
                     {
@@ -124,24 +165,34 @@ namespace ConfigGen.Templating.Xml
                 }
 
                 return new TemplateRenderResults(
-                            TemplateRenderResultStatus.Success,
-                            output,
-                            usedTokens.ToArray(),
-                            unusedTokens.ToArray(),
-                            unrecognisedTokens.ToArray(),
-                            null);
-
+                            status: errors.Any() ? TemplateRenderResultStatus.Failure : TemplateRenderResultStatus.Success,
+                            renderedResult: output,
+                            usedTokens: usedTokens,
+                            unusedTokens: unusedTokens,
+                            unrecognisedTokens: unrecognisedTokens,
+                            errors: errors);
             }
             catch (Exception ex)
             {
                 return new TemplateRenderResults(
-                    TemplateRenderResultStatus.Failure,
-                    null,
-                    null,
-                    null,
-                    null,
-                    new[] { ex.ToString() });
+                       status: TemplateRenderResultStatus.Failure,
+                       renderedResult: null,
+                       usedTokens: null,
+                       unusedTokens: null,
+                       unrecognisedTokens: null,
+                       errors: new UnhandledExceptionError(XmlTemplateErrorSource, ex).ToSingleEnumerable());
             }
-        }   
+        }
+
+        [CanBeNull]
+        private static XElement GetConfigGenNodes([NotNull] XElement documentElement)
+        {
+            if (documentElement == null) throw new ArgumentNullException(nameof(documentElement));
+
+            return documentElement
+                .Descendants()
+                .FirstOrDefault(e => e.Name.Namespace == ConfigGenXmlNamespace
+                            || e.Attributes().FirstOrDefault(a => a.Name.Namespace == ConfigGenXmlNamespace) != null);
+        }
     }
 }

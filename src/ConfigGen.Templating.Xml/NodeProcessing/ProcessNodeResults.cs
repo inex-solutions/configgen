@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,29 +19,34 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Extensions
+namespace ConfigGen.Templating.Xml.NodeProcessing
 {
-    public static class StringExtensions
+    internal class ProcessNodeResults
     {
-        /// <summary>
-        /// Returns true if the supplied string is either null or an empty string, otherwise false.
-        /// </summary>
-        public static bool IsNullOrEmpty([CanBeNull] this string s)
+        [NotNull]
+        private readonly string[] _usedTokens;
+
+        [NotNull]
+        private readonly string[] _unrecognisedTokens;
+
+        public ProcessNodeResults([CanBeNull] IEnumerable<string> usedTokens,[CanBeNull]  IEnumerable<string> unrecognisedTokens, [CanBeNull] string errorMessage)
         {
-            return String.IsNullOrEmpty(s);
+            _usedTokens = usedTokens?.ToArray() ?? new string[0];
+            _unrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];
+            ErrorMessage = errorMessage;
         }
 
-        /// <summary>
-        /// Returns the result of a <see cref="string.Format(string,object[])"/> operation on the supplied <paramref name="formatString"/>,
-        /// using the supplied <paramref name="args"/>.
-        /// </summary>
         [NotNull]
-        public static string With([NotNull] this string formatString, [NotNull] params object[] args)
-        {
-            return String.Format(formatString, args);
-        }
+        public string[] UsedTokens => _usedTokens.ToArray();
+
+        [NotNull]
+        public string[] UnrecognisedTokens => _unrecognisedTokens.ToArray();
+
+        [CanBeNull]
+        public string ErrorMessage { get; }
     }
 }

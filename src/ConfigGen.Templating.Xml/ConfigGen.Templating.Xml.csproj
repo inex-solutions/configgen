@@ -45,9 +45,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConditionProcessingError.cs" />
+    <Compile Include="NodeProcessing\ApplyWhenAttributeProcessor.cs" />
+    <Compile Include="NodeProcessing\ConfigGenNodeProcessorFactory.cs" />
+    <Compile Include="NodeProcessing\ExpressionEvaluation\ConfigurationExpressionEvaluator.cs" />
+    <Compile Include="NodeProcessing\ExpressionEvaluation\ExpressionEvaluationException.cs" />
+    <Compile Include="NodeProcessing\ExpressionEvaluation\SearchableXmlConverter.cs" />
+    <Compile Include="NodeProcessing\IConfigGenNodeProcessor.cs" />
+    <Compile Include="NodeProcessing\ProcessNodeResults.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateLoadError.cs" />
     <Compile Include="TokenValueMatchEvaluator.cs" />
     <Compile Include="XmlTemplate.cs" />
+    <Compile Include="XmlTemplateErrorCodes.cs" />
+    <Compile Include="XmlTemplateErrorBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

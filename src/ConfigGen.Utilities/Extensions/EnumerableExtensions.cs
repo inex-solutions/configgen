@@ -20,28 +20,22 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Reflection;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Extensions
 {
-    public static class AssemblyExtensions
+    public static class EnumerableExtensions
     {
         /// <summary>
-        /// Returns a stream for the specified resource file.
+        /// Returns an <see cref="IEnumerable{T}" /> instance containing only the supplied <paramref name="item"/>.
         /// </summary>
-        /// <param name="assembly">Assembly from which to get resource</param>
-        /// <param name="resourcePath">Resource path of file, not including the assembly name; e.g. for resource MyDomain.MyAssembly.MyFolder.MyResource 
-        /// in assembly MyDomain.MyAssembly, resource path is MyFolder.MyResource</param>
-        /// <returns>Stream</returns>
-        public static Stream GetEmbeddedResourceFileStream([NotNull] this Assembly assembly, [NotNull] string resourcePath)
+        [NotNull]
+        public static IEnumerable<T> ToSingleEnumerable<T>([NotNull] this T item)
         {
-            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            if (resourcePath == null) throw new ArgumentNullException(nameof(resourcePath));
+            if (item == null) throw new ArgumentNullException(nameof(item));
 
-            var resourceName = assembly.FullName.Split(',')[0] + "." + resourcePath;
-            return assembly.GetManifestResourceStream(resourceName);
+            return new T[] {item};
         }
     }
 }

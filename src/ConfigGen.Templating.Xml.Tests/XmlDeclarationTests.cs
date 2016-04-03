@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
-using ConfigGen.Utilities.Extensions;
+using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
@@ -31,22 +31,28 @@ namespace ConfigGen.Templating.Xml.Tests
     {
         public class when_the_template_contains_an_xml_declaration : XmlTemplateTestsBase
         {
+            private static string XmlDeclaration;
+            private static string TemplateBody;
             Establish context = () =>
             {
-                TemplateContents = 
-@"<?xml version=""1.0"" encoding=""utf-8""?>
-<root>
+                XmlDeclaration = @"<?xml version=""1.0"" encoding=""utf-8""?>";
+                TemplateBody = 
+@"<root>
   <child key=""value"" />
 </root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+                TemplateContents = XmlDeclaration + TemplateBody;
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_output_should_be_the_unaltered_template_with_the_xml_declaration = 
-                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
+            It the_resulting_output_should_contain_the_xml_declaration = 
+                () => Result.RenderedResult.ShouldStartWith(XmlDeclaration);
+
+            It the_resulting_output_should_be_the_rest_of_the_template_unaltered =
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
         public class when_the_template_does_not_contain_an_xml_declaration : XmlTemplateTestsBase
@@ -57,15 +63,21 @@ namespace ConfigGen.Templating.Xml.Tests
 @"<root>
   <child key=""value"" />
 </root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_output_should_be_the_unaltered_template_without_the_xml_declaration = 
-                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
+            It the_resulting_output_should_be_the_unaltered_template_without_the_xml_declaration =
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
+
+            It the_resulting_output_should_not_contain_the_xml_declaration =
+                () => Result.RenderedResult.ShouldNotContain("<?");
+
+            It the_resulting_output_should_be_the_unaltered_template =
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
         public class when_the_template_contains_the_configgen_xmlns_declaration : XmlTemplateTestsBase
@@ -79,15 +91,15 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_output_should_be_the_template_with_the_configgen_xmlns_declaration_removed = 
-                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
+            It the_resulting_output_should_be_the_template_with_the_configgen_xmlns_declaration_removed =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
         public class when_the_template_contains_a_non_configgen_xmlns_declaration : XmlTemplateTestsBase
@@ -98,15 +110,15 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_unaltered_template_with_the_non_configgen_xmlns_declaration =
-                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
     }
 }

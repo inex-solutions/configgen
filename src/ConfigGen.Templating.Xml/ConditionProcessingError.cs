@@ -19,22 +19,16 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Templating.Xml
 {
-    public interface ITokenValues
+    internal class ConditionProcessingError : XmlTemplateErrorBase
     {
-        [NotNull]
-        string Name { get; }
+        public ConditionProcessingError([NotNull] string detail) : base(detail)
+        {
+        }
 
-        [NotNull]
-        IEnumerable<string> TokenNames { get; }
-
-        [NotNull]
-        IDictionary<string, object> ToDictionary();
-
-        bool TryGetValue([NotNull] string tokenName, out object value);
+        public override string Code => XmlTemplateErrorCodes.ConditionProcessingError;
     }
 }

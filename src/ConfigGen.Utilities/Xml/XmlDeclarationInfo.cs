@@ -25,6 +25,9 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Xml
 {
+    /// <summary>
+    /// Represents an xml delcaration processing instruction.
+    /// </summary>
     public class XmlDeclarationInfo
     {
         public XmlDeclarationInfo(bool xmlDeclarationPresent, [CanBeNull] Encoding statedEncoding, [CanBeNull] Encoding actualEncoding)

@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
-using ConfigGen.Utilities.Extensions;
+using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Razor.Tests
@@ -34,14 +34,14 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
                 });
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -61,7 +61,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenOne</root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -70,7 +70,7 @@ namespace ConfigGen.Templating.Razor.Tests
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -90,12 +90,12 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenThree</root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
 
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -103,14 +103,51 @@ namespace ConfigGen.Templating.Razor.Tests
 
             It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            //TODO: is this correct?
-            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
+            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
             It the_unrecognised_token_should_be_listed_as_unrecognised = () => Result.UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
             It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
 
             It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
+        }
+
+        public class when_rendering_a_template_which_contains_invalid_csharp : RazorTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_resulting_status_should_contain_a_single_error_with_code =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeGenerationError);
+        }
+
+        public class when_rendering_a_template_which_contains_invalid_razor_syntax : RazorTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_resulting_status_should_contain_a_single_error = () => Result.Errors.Length.ShouldEqual(1);
+
+            It the_single_error_should_be_a_code_compilation_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeCompilationError);
         }
     }
 }

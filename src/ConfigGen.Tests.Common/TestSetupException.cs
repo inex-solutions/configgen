@@ -23,11 +23,13 @@ using System;
 
 namespace ConfigGen.Tests.Common
 {
+    /// <summary>
+    /// An exception representing an error during the setup or initialisation of a test.
+    /// </summary>
     public class TestSetupException : Exception
     {
         public TestSetupException(string message) : base (message)
         {
-            
         }
     }
 }

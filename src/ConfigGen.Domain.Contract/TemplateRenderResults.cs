@@ -19,6 +19,8 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
@@ -28,17 +30,17 @@ namespace ConfigGen.Domain.Contract
         public TemplateRenderResults(
             TemplateRenderResultStatus status, 
             [CanBeNull] string renderedResult, 
-            [CanBeNull] string[] usedTokens, 
-            [CanBeNull]string[] unusedTokens,
-            [CanBeNull]string[] unrecognisedTokens,
-            [CanBeNull] string[] errors)
+            [CanBeNull] IEnumerable<string> usedTokens, 
+            [CanBeNull] IEnumerable<string> unusedTokens,
+            [CanBeNull] IEnumerable<string> unrecognisedTokens,
+            [CanBeNull] IEnumerable<Error> errors)
         {
             Status = status;
             RenderedResult = renderedResult;
-            UsedTokens = usedTokens ?? new string[0];
-            UnusedTokens = unusedTokens ?? new string[0];
-            UnrecognisedTokens = unrecognisedTokens ?? new string[0];
-            Errors = errors ?? new string[0];
+            UsedTokens = usedTokens?.ToArray() ?? new string[0];
+            UnusedTokens = unusedTokens?.ToArray() ?? new string[0];
+            UnrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];
+            Errors = errors?.ToArray() ?? new Error[0];
         }
 
         public TemplateRenderResultStatus Status { get; }
@@ -47,7 +49,7 @@ namespace ConfigGen.Domain.Contract
         public string RenderedResult { get; }
 
         [NotNull]
-        public string[] Errors { get; }
+        public Error[] Errors { get; }
 
         [NotNull]
         public string[] UsedTokens { get; }

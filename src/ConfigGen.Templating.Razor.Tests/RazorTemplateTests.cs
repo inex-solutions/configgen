@@ -19,7 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
@@ -30,27 +29,6 @@ namespace ConfigGen.Templating.Razor.Tests
 {
     namespace RazorTemplateTests
     {
-        [Subject(typeof(RazorTemplate))]
-        public abstract class RazorTemplateTestsBase
-        {
-            private static Lazy<RazorTemplate> lazySubject;
-            protected static string TemplateContents;
-            protected static TokenValuesCollection TokenValues;
-            protected static TemplateRenderResults Result;
-            protected static string ExpectedOutput;
-
-            Establish context = () =>
-            {
-                lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-                TemplateContents = null;
-                TokenValues = null;
-                Result = null;
-                ExpectedOutput = null;
-            };
-
-            protected static RazorTemplate Subject => lazySubject.Value;
-        }
-
         public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestsBase
         {
             Establish context = () =>

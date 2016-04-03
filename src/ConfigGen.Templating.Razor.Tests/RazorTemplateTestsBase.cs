@@ -25,13 +25,13 @@ using ConfigGen.Tests.Common;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 
-namespace ConfigGen.Templating.Xml.Tests
+namespace ConfigGen.Templating.Razor.Tests
 {
-    [Subject(typeof(XmlTemplate))]
-    public abstract class XmlTemplateTestsBase
+    [Subject(typeof(RazorTemplate))]
+    public abstract class RazorTemplateTestsBase
     {
         [NotNull]
-        private static Lazy<XmlTemplate> lazySubject;
+        private static Lazy<RazorTemplate> lazySubject;
         protected static string TemplateContents;
         protected static TokenValuesCollection TokenValues;
         protected static TemplateRenderResults Result;
@@ -40,13 +40,13 @@ namespace ConfigGen.Templating.Xml.Tests
         Establish context = () =>
         {
             TemplateContents = null;
-            lazySubject = new Lazy<XmlTemplate>(() => new XmlTemplate(TemplateContents));
+            lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
             TokenValues = null;
             Result = null;
             ExpectedOutput = null;
         };
 
         [NotNull]
-        protected static XmlTemplate Subject => lazySubject.Value;
+        protected static RazorTemplate Subject => lazySubject.Value;
     }
 }

@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RazorTemplateTests.cs" />
+    <Compile Include="RazorTemplateTestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

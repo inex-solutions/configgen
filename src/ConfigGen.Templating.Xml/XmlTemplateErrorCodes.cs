@@ -30,5 +30,8 @@ namespace ConfigGen.Templating.Xml
 
         [NotNull]
         public static readonly string TemplateLoadError = "TemplateLoadError";
+
+        [NotNull]
+        public static readonly string BadMarkupError = "BadMarkupError";
     }
 }

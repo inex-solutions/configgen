@@ -19,16 +19,17 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    internal class ConditionProcessingError : XmlTemplateErrorBase
+    internal class XmlTemplateError : Error
     {
-        public ConditionProcessingError([NotNull] string detail) : base(detail)
+        public const string RazorTemplateErrorSource = "XmlTemplate";
+
+        public XmlTemplateError([NotNull] string code, [CanBeNull] string detail) : base(RazorTemplateErrorSource, code, detail)
         {
         }
-
-        public override string Code => XmlTemplateErrorCodes.ConditionProcessingError;
     }
 }

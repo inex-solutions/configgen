@@ -98,7 +98,7 @@ namespace ConfigGen.Templating.Xml
                         usedTokens: usedTokens,
                         unusedTokens: unusedTokens,
                         unrecognisedTokens: unrecognisedTokens,
-                        errors: new TemplateLoadError(ex.ToString()).ToSingleEnumerable());
+                        errors: new XmlTemplateError(XmlTemplateErrorCodes.TemplateLoadError, ex.ToString()).ToSingleEnumerable());
                 }
 
                 XElement configGenNode;
@@ -109,9 +109,9 @@ namespace ConfigGen.Templating.Xml
                     var nodeProcessor = configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, tokenDataset);
 
                     var result = nodeProcessor.ProcessNode(configGenNode, tokenDataset);
-                    if (result.ErrorMessage != null)
+                    if (result.ErrorCode != null)
                     {
-                        errors.Add(new ConditionProcessingError(result.ErrorMessage));
+                        errors.Add(new XmlTemplateError(result.ErrorCode, result.ErrorMessage));
                     }
 
                     usedTokens.AddWhereNotPresent(result.UsedTokens);

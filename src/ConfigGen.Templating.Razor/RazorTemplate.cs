@@ -106,15 +106,15 @@ namespace ConfigGen.Templating.Razor
             var detail = string.Join("\n", renderingResult.Errors ?? new string[0]);
             if (renderingResult.Status == RenderingResultStatus.CodeCompilationFailed)
             {
-                yield return new CodeCompilationError(detail);
+                yield return new RazorTemplateError(RazorTemplateErrorCodes.CodeCompilationError, detail);
             }
             else if (renderingResult.Status == RenderingResultStatus.CodeGenerationFailed)
             {
-                yield return new CodeGenerationError(detail);
+                yield return new RazorTemplateError(RazorTemplateErrorCodes.CodeGenerationError, detail);
             }
             else
             {
-                yield return new GeneralRazorTemplateError(detail);
+                yield return new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, detail);
             }
         }
     }

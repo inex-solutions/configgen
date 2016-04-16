@@ -49,16 +49,14 @@ namespace ConfigGen.Tests.Common.MSpec
 
             if (count != 1)
             {
-                throw new SpecificationException(
-                    "Expected error collection to contain a single item, but there were {count} items");
+                throw new SpecificationException($"Expected error collection to contain a single item, but there were {count} items");
             }
 
             var error = actualArray[0];
 
             if (error.Code != expectedErrorCode)
             {
-                throw new SpecificationException(
-                    "Incorrect error code. Expected {expectedErrorCode}, but was {error.Code}");
+                throw new SpecificationException($"Incorrect error code. Expected {expectedErrorCode}, but was {error.Code}");
             }
 
             return actual;

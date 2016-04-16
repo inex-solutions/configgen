@@ -26,11 +26,10 @@ using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
-namespace ConfigGen.Templating.Xml.Tests
+namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 {
     namespace ApplyWhenAttributeProcessorTests 
     {
-
         public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : XmlTemplateTestsBase
         {
             Establish context = () =>

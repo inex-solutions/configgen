@@ -26,18 +26,22 @@ namespace ConfigGen.Domain.Contract
 {
     public abstract class Error
     {
-        protected Error([NotNull] string detail)
+        protected Error([NotNull] string source, [NotNull] string code, [NotNull] string detail)
         {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (code == null) throw new ArgumentNullException(nameof(code));
             if (detail == null) throw new ArgumentNullException(nameof(detail));
 
+            Source = source;
+            Code = code;
             Detail = detail;
         }
 
         [NotNull]
-        public abstract string Source { get; }
+        public string Source { get; }
 
         [NotNull]
-        public abstract string Code { get; }
+        public string Code { get; }
 
         [NotNull]
         public string Detail { get; }

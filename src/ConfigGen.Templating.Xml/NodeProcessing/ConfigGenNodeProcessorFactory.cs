@@ -49,6 +49,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 throw new ArgumentNullException(nameof(element));
             }
 
+            if (element.Name.Namespace == XmlTemplate.ConfigGenXmlNamespace)
+            {
+                return new UnsupportedElementProcessor();
+            }
+
             var configGenAttribute = element.Attributes().FirstOrDefault(a => a.Name.Namespace == XmlTemplate.ConfigGenXmlNamespace);
 
             if (configGenAttribute == null)
@@ -56,12 +61,14 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 throw new NotSupportedException("No node processor exists for the node which is not in the config gen namespace, and contains no attributes in the config gen namespace.");
             }
 
+            var configurationExpressionEvaluator = new ConfigurationExpressionEvaluator(tokenDataset);
+
             if (configGenAttribute.Name.LocalName == "applyWhen")
             {
-                return new ApplyWhenAttributeProcessor(new ConfigurationExpressionEvaluator(tokenDataset));
+                return new ApplyWhenAttributeProcessor(configurationExpressionEvaluator);
             }
 
-            throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "No node processor exists for the node of type 'attribute' with name '{0}'", configGenAttribute.Name.LocalName));
+            return new UnsupportedAttributeProcessor();
         }
     }
 }

@@ -26,13 +26,10 @@ namespace ConfigGen.Domain.Contract
 {
     public class UnhandledExceptionError : Error
     {
-        public UnhandledExceptionError([NotNull] string source, [NotNull] Exception ex) : base(ex.ToString())
+        public const string UnhandledExceptionErrorCode = "UnhandledException";
+
+        public UnhandledExceptionError([NotNull] string source, [NotNull] Exception ex) : base(source, UnhandledExceptionErrorCode, ex.ToString())
         {
-            Source = source;
         }
-
-        public override string Source { get; }
-
-        public override string Code => "UnhandledException";
     }
 }

@@ -33,11 +33,16 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         [NotNull]
         private readonly string[] _unrecognisedTokens;
 
-        public ProcessNodeResults([CanBeNull] IEnumerable<string> usedTokens,[CanBeNull]  IEnumerable<string> unrecognisedTokens, [CanBeNull] string errorMessage)
+        public ProcessNodeResults(
+            [CanBeNull] IEnumerable<string> usedTokens = null,
+            [CanBeNull]  IEnumerable<string> unrecognisedTokens = null,
+            [CanBeNull] string errorCode = null,
+            [CanBeNull] string errorMessage = null)
         {
             _usedTokens = usedTokens?.ToArray() ?? new string[0];
             _unrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];
             ErrorMessage = errorMessage;
+            ErrorCode = errorCode;
         }
 
         [NotNull]
@@ -45,6 +50,9 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
         [NotNull]
         public string[] UnrecognisedTokens => _unrecognisedTokens.ToArray();
+
+        [CanBeNull]
+        public string ErrorCode { get; }
 
         [CanBeNull]
         public string ErrorMessage { get; }

@@ -35,7 +35,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     internal class ApplyWhenAttributeProcessor : IConfigGenNodeProcessor
     {
         private readonly ConfigurationExpressionEvaluator _evaluator;
-   //     private static readonly ILog Log = LogManager.GetLogger(typeof(ApplyWhenAttributeProcessor));
 
         public ApplyWhenAttributeProcessor(ConfigurationExpressionEvaluator evaluator)
         {
@@ -61,7 +60,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (expression.IsNullOrEmpty())
             {
                 attribute.Remove();
-                return new ProcessNodeResults(null, null, "Condition error: and empty condition was encountered");
+                return new ProcessNodeResults(null, null, XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
             }
 
             IEnumerable<string> locatedTokens = _evaluator.PrepareExpression(ref expression);
@@ -85,8 +84,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 dataset.Name,
                 expression);
 
-        //    Log.DebugFormat("Expression evaluated '{0}' for machine '{1}': {2}", result, machineConfigurationSettings.MachineName, expression);
-
             if (result)
             {
                 attribute.Remove();
@@ -96,7 +93,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 element.Remove();
             }
 
-            return new ProcessNodeResults(usedTokens, unrecognisedTokens, null);
+            return new ProcessNodeResults(usedTokens, unrecognisedTokens);
         }
     }
 }

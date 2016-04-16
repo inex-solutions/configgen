@@ -19,16 +19,17 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Razor
 {
-    internal class CodeCompilationError : RazorTemplateErrorBase
+    internal class RazorTemplateError : Error
     {
-        public CodeCompilationError([NotNull] string detail) : base(detail)
+        public const string RazorTemplateErrorSource = "RazorTemplate";
+
+        public RazorTemplateError([NotNull] string code, [NotNull] string detail) : base(RazorTemplateErrorSource, code, detail)
         {
         }
-
-        public override string Code => RazorTemplateErrorCodes.CodeCompilationError;
     }
 }

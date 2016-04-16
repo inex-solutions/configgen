@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
@@ -49,8 +48,16 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 throw new ArgumentNullException(nameof(element));
             }
 
+            // IoC this in - this will almost certainly be swapped for a different implementation in any case.
+            var configurationExpressionEvaluator = new ConfigurationExpressionEvaluator(tokenDataset);
+
             if (element.Name.Namespace == XmlTemplate.ConfigGenXmlNamespace)
             {
+                if (element.Name.LocalName == "Apply")
+                {
+                    return new ApplyElementProcessor(configurationExpressionEvaluator);
+                }
+                
                 return new UnsupportedElementProcessor();
             }
 
@@ -60,8 +67,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             {
                 throw new NotSupportedException("No node processor exists for the node which is not in the config gen namespace, and contains no attributes in the config gen namespace.");
             }
-
-            var configurationExpressionEvaluator = new ConfigurationExpressionEvaluator(tokenDataset);
 
             if (configGenAttribute.Name.LocalName == "applyWhen")
             {

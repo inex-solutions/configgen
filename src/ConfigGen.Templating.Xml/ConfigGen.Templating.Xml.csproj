@@ -45,18 +45,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConditionProcessingError.cs" />
+    <Compile Include="NodeProcessing\ApplyElement.cs" />
+    <Compile Include="NodeProcessing\ApplyElementCreator.cs" />
+    <Compile Include="NodeProcessing\ApplyElementProcessor.cs" />
+    <Compile Include="NodeProcessing\ApplyElementSubNode.cs" />
+    <Compile Include="NodeProcessing\ApplyElementSubNodeCreator.cs" />
+    <Compile Include="NodeProcessing\ApplyElementSubNodeType.cs" />
     <Compile Include="NodeProcessing\ApplyWhenAttributeProcessor.cs" />
+    <Compile Include="NodeProcessing\ApplyWhenFormatException.cs" />
+    <Compile Include="NodeProcessing\ConditionalElementProcessorBase.cs" />
+    <Compile Include="NodeProcessing\ConditionException.cs" />
     <Compile Include="NodeProcessing\ConfigGenNodeProcessorFactory.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\ConfigurationExpressionEvaluator.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\ExpressionEvaluationException.cs" />
+    <Compile Include="NodeProcessing\ExpressionEvaluation\ExpressionEvaluationResults.cs" />
+    <Compile Include="NodeProcessing\ExpressionEvaluation\IConfigurationExpressionEvaluator.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\SearchableXmlConverter.cs" />
     <Compile Include="NodeProcessing\IConfigGenNodeProcessor.cs" />
+    <Compile Include="NodeProcessing\OnNotAppliedAction.cs" />
     <Compile Include="NodeProcessing\ProcessNodeResults.cs" />
     <Compile Include="NodeProcessing\UnsupportedAttributeProcessor.cs" />
     <Compile Include="NodeProcessing\UnsupportedElementProcessor.cs" />
+    <Compile Include="NodeProcessing\XElementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TemplateLoadError.cs" />
     <Compile Include="TokenValueMatchEvaluator.cs" />
     <Compile Include="XmlTemplate.cs" />
     <Compile Include="XmlTemplateErrorCodes.cs" />

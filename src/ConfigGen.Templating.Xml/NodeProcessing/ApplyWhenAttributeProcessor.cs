@@ -34,10 +34,13 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     /// </summary>
     internal class ApplyWhenAttributeProcessor : IConfigGenNodeProcessor
     {
-        private readonly ConfigurationExpressionEvaluator _evaluator;
+        [NotNull]
+        private readonly IConfigurationExpressionEvaluator _evaluator;
 
-        public ApplyWhenAttributeProcessor(ConfigurationExpressionEvaluator evaluator)
+        public ApplyWhenAttributeProcessor([NotNull] IConfigurationExpressionEvaluator evaluator)
         {
+            if (evaluator == null) throw new ArgumentNullException(nameof(evaluator));
+
             _evaluator = evaluator;
         }
 
@@ -63,34 +66,35 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 return new ProcessNodeResults(null, null, XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
             }
 
-            IEnumerable<string> locatedTokens = _evaluator.PrepareExpression(ref expression);
+            ExpressionEvaluationResults evaluationResults = _evaluator.Evaluate(dataset.Name, expression);
 
             var usedTokens = new List<string>();
             var unrecognisedTokens = new List<string>();
 
-            foreach (var locatedToken in locatedTokens)
+            foreach (var usedToken in evaluationResults.UsedTokens)
             {
-                if (dataset.Contains(locatedToken))
+                if (dataset.Contains(usedToken))
                 {
-                    usedTokens.Add(locatedToken);
+                    usedTokens.Add(usedToken);
                 }
                 else
                 {
-                    unrecognisedTokens.Add(locatedToken);
+                    unrecognisedTokens.Add(usedToken);
                 }
             }
 
-            bool result = _evaluator.Evaluate(
-                dataset.Name,
-                expression);
-
-            if (result)
+            if (evaluationResults.Result)
             {
                 attribute.Remove();
             }
             else
             {
                 element.Remove();
+            }
+
+            if (evaluationResults.ErrorCode != null)
+            {
+                return new ProcessNodeResults(usedTokens, unrecognisedTokens, evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
             }
 
             return new ProcessNodeResults(usedTokens, unrecognisedTokens);

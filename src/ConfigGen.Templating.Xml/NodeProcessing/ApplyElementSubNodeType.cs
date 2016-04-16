@@ -18,3 +18,31 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+namespace ConfigGen.Templating.Xml.NodeProcessing
+{
+    /// <summary>
+    /// Specifies the type of "Apply" element subnode.
+    /// </summary>
+    public enum ApplyElementSubNodeType
+    {
+        /// <summary>
+        /// The subnode type is not known.
+        /// </summary>
+        Unknown,
+
+        /// <summary>
+        /// The subnode ia a When element.
+        /// </summary>
+        When,
+
+        /// <summary>
+        /// The subnode is an ElseWhen element.
+        /// </summary>
+        ElseWhen,
+
+        /// <summary>
+        /// The subnode is an Else element.
+        /// </summary>
+        Else
+    }
+}

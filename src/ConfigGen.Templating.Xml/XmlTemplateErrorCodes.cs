@@ -33,5 +33,8 @@ namespace ConfigGen.Templating.Xml
 
         [NotNull]
         public static readonly string BadMarkupError = "BadMarkupError";
+
+        [NotNull]
+        public static readonly string ApplyWhenElseFormatError = "ApplyWhenElseFormatError";
     }
 }

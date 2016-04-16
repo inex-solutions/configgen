@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,3 +18,23 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System;
+
+namespace ConfigGen.Templating.Xml.NodeProcessing
+{
+    /// <summary>
+    /// Exception thrown when the format of an Apply When..Else When...Else element family is incorrect.
+    /// </summary>
+    public class ApplyWhenFormatException : Exception
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplyWhenFormatException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public ApplyWhenFormatException(string message) : base(message)
+        {
+           
+        }
+    }
+}

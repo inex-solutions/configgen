@@ -56,7 +56,7 @@ namespace ConfigGen.Tests.Common.MSpec
 
             if (error.Code != expectedErrorCode)
             {
-                throw new SpecificationException($"Incorrect error code. Expected {expectedErrorCode}, but was {error.Code}");
+                throw new SpecificationException($"Incorrect error code. Expected {expectedErrorCode}, but was {error.Code} (\"{error.Detail}\")");
             }
 
             return actual;

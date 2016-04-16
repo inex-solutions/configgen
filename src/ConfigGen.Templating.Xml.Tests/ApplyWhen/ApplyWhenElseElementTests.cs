@@ -1,0 +1,382 @@
+﻿#region Copyright and License Notice
+// Copyright (C)2010-2016 - INEX Solutions Ltd
+// https://github.com/inex-solutions/configgen
+// 
+// This file is part of ConfigGen.
+// 
+// ConfigGen is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// ConfigGen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License and 
+// the GNU Lesser General Public License along with ConfigGen.  
+// If not, see <http://www.gnu.org/licenses/>
+#endregion
+
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
+using ConfigGen.Tests.Common;
+using ConfigGen.Tests.Common.MSpec;
+using Machine.Specifications;
+
+namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
+{
+    namespace ApplyWhenElseElementTests
+    {
+        public class when_an_Apply_element_with_no_child_node_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> <cg:Apply /> </Root>";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_an_applyWhenElse_format_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+
+            //TODO: - what should the output be?
+        }
+
+        public class when_an_Apply_element_with_an_incorrect_child_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:IncorrectChild condition=""true""/>
+    </cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_an_applyWhenElse_format_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+
+            //TODO: - what should the output be?
+        }
+
+        public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""true"">when</cg:When>
+        <cg:ElseWhen condition=""true"">elseWhen</cg:ElseWhen>
+        <cg:Else>else</cg:Else>
+    </cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        }
+
+        public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_in_the_wrong_order_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""true""/>
+        <cg:ElseWhen condition=""true""/>
+        <cg:Else />
+        <cg:ElseWhen condition=""true""/>
+</cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_an_applyWhenElse_format_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+        }
+
+        public class when_an_Apply_element_with_too_many_Else_elements_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""true""/>
+        <cg:Else />
+        <cg:Else />
+</cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_an_applyWhenElse_format_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+        }
+
+        public class when_an_Apply_element_with_an_empty_When_element_condition_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""""/>
+</cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_a_condition_processing_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+        }
+
+        public class when_an_Apply_element_with_an_empty_ElseWhen_element_condition_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""false""/>
+        <cg:ElseWhen condition=""""/>
+</cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_a_condition_processing_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+        }
+
+        public class when_an_Apply_element_with_an_unparseable_When_element_condition_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""$val /+-= 1""/>
+</cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_a_condition_processing_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+        }
+
+        public class when_an_Apply_element_with_an_unparseable_ElseWhen_element_condition_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""false""/>
+        <cg:ElseWhen condition=""$val /+-= 1""/>
+</cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_a_condition_processing_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+        }
+
+        public class when_ApplyWhenElseWhenElse_elements_with_a_true_When_condition_are_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                {
+                    {"val", "1"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:Else><contents of=""else""/></cg:Else>
+</cg:Apply>
+</Root>";
+
+                ExpectedOutput = @"<Root><contents of=""when""/></Root>";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_when_element =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+
+        public class when_ApplyWhenElseWhenElse_elements_with_a_true_ElseWhen_condition_are_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                {
+                    {"val", "2"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:Else><contents of=""else""/></cg:Else>
+</cg:Apply>
+</Root>";
+
+                ExpectedOutput = @"<Root><contents of=""elseWhen""/></Root>";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_elseWhen_element =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_neither_When_nor_ElseWhen_conditions_are_true : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                {
+                    {"val", "3"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:Else><contents of=""else""/></cg:Else>
+</cg:Apply>
+</Root>";
+
+                ExpectedOutput = @"<Root><contents of=""else""/></Root>";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_else_element =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_both_When_and_ElseWhen_conditions_are_true : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                {
+                    {"val", "1"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val = 1""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:Else><contents of=""else""/></cg:Else>
+</cg:Apply>
+</Root>";
+
+                ExpectedOutput = @"<Root><contents of=""when""/></Root>";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_when_element =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_with_an_onNotApplied_action_of_CommentOut : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                {
+                    {"val", "1"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply onNotApplied=""CommentOut"">
+        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:Else><contents of=""else""/></cg:Else>
+</cg:Apply>
+</Root>";
+
+                ExpectedOutput = @"<Root><contents of=""when"" /><!--<contents of=""elseWhen"" />--><!--<contents of=""else"" />--></Root > ";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_have_commented_out_the_contents_of_the_elements_with_the_failed_conditions =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+    }
+}

@@ -26,7 +26,7 @@ namespace ConfigGen.Domain.Contract
 {
     public abstract class Error
     {
-        protected Error([NotNull] string source, [NotNull] string code, [NotNull] string detail)
+        protected Error([NotNull] string source, [NotNull] string code, [CanBeNull] string detail)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (code == null) throw new ArgumentNullException(nameof(code));
@@ -43,7 +43,7 @@ namespace ConfigGen.Domain.Contract
         [NotNull]
         public string Code { get; }
 
-        [NotNull]
+        [CanBeNull]
         public string Detail { get; }
 
         public override string ToString()

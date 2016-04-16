@@ -44,7 +44,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
     /// returns a list of the tokens specified in the epxression. The result of this prepare call should then be passed to <see cref="Evaluate"/>.</para>
     /// </remarks>
     /// </summary>
-    internal class ConfigurationExpressionEvaluator
+    internal class ConfigurationExpressionEvaluator : IConfigurationExpressionEvaluator
     {
         #region Private Members
 
@@ -81,40 +81,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         }
 
         /// <summary>
-        /// Prepares the supplied expression for evaluation by removing the "$" symbol prefix from tokens in the expression, and
-        /// returns a list of all tokens found in the expression
-        /// </summary>
-        /// <param name="expression">Expression to prepare.</param>
-        /// <returns>
-        /// List of tokens in the supplied expressions.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="expression"/> is null</exception>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="expression"/> is zero length or if the 
-        /// supplied expression contains '[]' which is invalid in xPath and is reserved for internal use.</exception>
-        [NotNull]
-        public IEnumerable<string> PrepareExpression([NotNull] ref string expression)
-        {
-            if (expression == null) throw new ArgumentNullException(nameof(expression));
-            if (expression.Length == 0) throw new ArgumentException("expression cannot be zero length", nameof(expression));
-            if (expression.Contains("[]")) throw new ArgumentException("expression cannot contain '[]'", nameof(expression));
-
-            const string tmpEscapedPattern = "[]"; // this isn't valid in XPath, so makes a suitable temporary replacement string
-            var escapedExpression = expression.Replace("$$", tmpEscapedPattern);
-
-            var locatedTokens = new List<string>();
-            MatchEvaluator matchEvaluator = (Match match) =>
-            {
-                var locatedToken = match.Groups["token"].Value;
-                locatedTokens.Add(locatedToken);
-                return locatedToken;
-            };
-
-            expression = TokenIdentifierRegex.Replace(escapedExpression, matchEvaluator).Replace(tmpEscapedPattern, "$");
-
-            return locatedTokens;
-        }
-
-        /// <summary>
         /// Returns true if the supplied expression evaluates to a configuration setting for the specified machine, otherwise false.
         /// If the machine does not exist, false is returned.
         /// </summary>
@@ -132,24 +98,63 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// <exception cref="ArgumentNullException">Thrown if either argument is null</exception>
         /// <exception cref="ArgumentException">Thrown if either argument is zero length</exception>
         /// <exception cref="ExpressionEvaluationException">Thrown if an errors occurs while trying to evaluate the expression</exception>
-        public bool Evaluate([NotNull] string machineName, [NotNull] string expression)
+        [NotNull]
+        public ExpressionEvaluationResults Evaluate([NotNull] string machineName, [NotNull] string expression)
         {
             if (machineName == null) throw new ArgumentNullException(nameof(machineName));
             if (machineName.Length == 0) throw new ArgumentException("machineName cannot be zero length", nameof(machineName));
+
+            var locatedTokens = new List<string>();
+            bool result = false;
+            string errorCode = null;
+            string errorMessage = null;
+
+            if (expression == null || expression.Length == 0)
+            {
+                errorCode = XmlTemplateErrorCodes.ConditionProcessingError;
+                errorMessage = $"No expression was specified for machine '{machineName}"; //TODO - kinda unhelpful - might be better if the error included the node
+            }
+            else
+            {
+                const string searchString = "/Machine[@name='{0}']/Values[{1}]/*";
+                
+                try
+                {
+                    var preparedExpression = PrepareExpression(expression, locatedTokens);
+                    var xpath = string.Format(searchString, machineName, preparedExpression);
+                    result = _xPathNavigator.SelectSingleNode(xpath) != null;
+                }
+                catch (Exception ex)
+                {
+                    errorCode = XmlTemplateErrorCodes.ConditionProcessingError;
+                    errorMessage = $"An error occurred while trying to evaluate a the expression '{expression}' for machine '{machineName}: {ex}"; //TODO - kinda unhelpful - might be better if the error included the node
+                }
+            }
+
+            return new ExpressionEvaluationResults(result, locatedTokens, errorCode, errorMessage);
+        }
+
+        [NotNull]
+        private string PrepareExpression([NotNull] string expression, [NotNull] ICollection<string> locatedTokens)
+        {
+            if (locatedTokens == null) throw new ArgumentNullException(nameof(locatedTokens));
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             if (expression.Length == 0) throw new ArgumentException("expression cannot be zero length", nameof(expression));
+            if (expression.Contains("[]")) throw new ArgumentException("expression cannot contain '[]'", nameof(expression));
 
-            const string searchString = "/Machine[@name='{0}']/Values[{1}]/*";
-            var xpath = string.Format(searchString, machineName, expression);
+            const string tmpEscapedPattern = "[]"; // this isn't valid in XPath, so makes a suitable temporary replacement string
+            var escapedExpression = expression.Replace("$$", tmpEscapedPattern);
 
-            try
+            MatchEvaluator matchEvaluator = match =>
             {
-                return _xPathNavigator.SelectSingleNode(xpath) != null;
-            }
-            catch (Exception ex)
-            {
-                throw new ExpressionEvaluationException($"An error occurred while trying to evaluate a the expression '{expression}' for machine '{machineName};", ex);
-            }
+                var locatedToken = match.Groups["token"].Value;
+                locatedTokens.Add(locatedToken);
+                return locatedToken;
+            };
+
+            expression = TokenIdentifierRegex.Replace(escapedExpression, matchEvaluator).Replace(tmpEscapedPattern, "$");
+
+            return expression;
         }
     }
 }

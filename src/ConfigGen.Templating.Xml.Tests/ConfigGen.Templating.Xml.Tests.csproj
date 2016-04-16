@@ -56,10 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplyWhen\ApplyElementCreatorTests.cs" />
-    <Compile Include="ApplyWhen\ApplyElementSubNodeCreatorTests.cs" />
-    <Compile Include="ApplyWhen\ApplyWhenAttributeProcessorTests.cs" />
-    <Compile Include="ApplyWhen\ApplyWhenElementProcessorTests.cs" />
+    <Compile Include="ApplyWhen\ApplyWhenAttributeTests.cs" />
+    <Compile Include="ApplyWhen\ApplyWhenElseElementTests.cs" />
     <Compile Include="ConfigGenMarkupTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoveAttributesFromParentProcessorTests.cs" />

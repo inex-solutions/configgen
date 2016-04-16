@@ -23,18 +23,17 @@ using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
-using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 {
-    namespace ApplyWhenAttributeProcessorTests 
+    namespace ApplyWhenAttributeTests 
     {
         public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : XmlTemplateTestsBase
         {
             Establish context = () =>
             {
-                TemplateContents = @"<root xmlns:cg=""{0}""><child1 cg:applyWhen="""" /></root>".With(XmlTemplate.ConfigGenXmlNamespace);
+                TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen="""" /></root>";
             };
 
             Because of = () => Result = Subject.Render(TokenDataset);
@@ -49,7 +48,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                TemplateContents = @"<root xmlns:cg=""{0}""><child1 cg:applyWhen=""qw*&&'!"" /></root>".With(XmlTemplate.ConfigGenXmlNamespace);
+                TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen=""$val /+-= 1"" /></root>";
             };
 
             Because of = () => Result = Subject.Render(TokenDataset);
@@ -57,7 +56,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_errors_collection_should_specify_a_condition_processing_error =
-                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.TemplateLoadError);
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : XmlTemplateTestsBase
@@ -68,8 +67,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 {
                     {"val", "2"}
                 });
-                TemplateContents = @"<root xmlns:cg=""{0}""><child1 /><child2 cg:applyWhen=""$val=2"" /></root>"
-                                    .With(XmlTemplate.ConfigGenXmlNamespace);
+                TemplateContents =
+                    $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=2"" /></root>";
 
                 ExpectedOutput = @"<root><child1 /><child2 /></root>";
             };
@@ -92,8 +91,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 {
                     {"val", "2"}
                 });
-                TemplateContents = @"<root xmlns:cg=""{0}""><child1 /><child2 cg:applyWhen=""$val=3"" /></root>"
-                                    .With(XmlTemplate.ConfigGenXmlNamespace);
+                TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=3"" /></root>";
 
                 ExpectedOutput = @"<root><child1 /></root>";
             };
@@ -108,8 +106,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_indicate_the_token_had_been_used = () => Result.UsedTokens.ShouldContainOnly("val");
         }
 
- 
 
+     
         ///// <summary>
         ///// Regression test for http://configgen.codeplex.com/workitem/8 - "applyWhen attribute processor errors on empty string comparisons"
         ///// </summary>

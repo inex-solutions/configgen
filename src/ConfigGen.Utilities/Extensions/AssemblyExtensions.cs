@@ -19,8 +19,10 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.IO;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Extensions
 {
@@ -33,8 +35,11 @@ namespace ConfigGen.Utilities.Extensions
         /// <param name="resourcePath">Resource path of file, not including the assembly name; e.g. for resource MyDomain.MyAssembly.MyFolder.MyResource 
         /// in assembly MyDomain.MyAssembly, resource path is MyFolder.MyResource</param>
         /// <returns>Stream</returns>
-        public static Stream GetEmbeddedResourceFileStream(this Assembly assembly, string resourcePath)
+        public static Stream GetEmbeddedResourceFileStream([NotNull] this Assembly assembly, [NotNull] string resourcePath)
         {
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+            if (resourcePath == null) throw new ArgumentNullException(nameof(resourcePath));
+
             var resourceName = assembly.FullName.Split(',')[0] + "." + resourcePath;
             return assembly.GetManifestResourceStream(resourceName);
         }

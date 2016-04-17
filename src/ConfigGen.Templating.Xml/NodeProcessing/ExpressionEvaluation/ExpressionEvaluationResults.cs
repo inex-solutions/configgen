@@ -19,34 +19,30 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
-using Machine.Specifications.Annotations;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
 {
-    [Subject(typeof(RazorTemplate))]
-    public abstract class RazorTemplateTestsBase
+    internal class ExpressionEvaluationResults
     {
-        [NotNull]
-        private static Lazy<RazorTemplate> lazySubject;
-        protected static string TemplateContents;
-        protected static TokenDatasetCollection TokenDataset;
-        protected static TemplateRenderResults Result;
-        protected static string ExpectedOutput;
-
-        Establish context = () =>
+        public ExpressionEvaluationResults(bool result, IEnumerable<string> usedTokens, string errorCode, string errorMessage)
         {
-            TemplateContents = null;
-            lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-            TokenDataset = null;
-            Result = null;
-            ExpectedOutput = null;
-        };
+            Result = result;
+            UsedTokens = usedTokens ?? new string[0];
+            ErrorCode = errorCode;
+            ErrorMessage = errorMessage;
+        }
+
+        public bool Result { get; }
 
         [NotNull]
-        protected static RazorTemplate Subject => lazySubject.Value;
+        public IEnumerable<string> UsedTokens { get; }
+
+        [CanBeNull]
+        public string ErrorCode { get; }
+
+        [CanBeNull]
+        public string ErrorMessage { get; }
     }
 }

@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using Machine.Specifications;
@@ -33,17 +34,21 @@ namespace ConfigGen.Templating.Xml.Tests
         [NotNull]
         private static Lazy<XmlTemplate> lazySubject;
         protected static string TemplateContents;
-        protected static TokenValuesCollection TokenValues;
+
+        [NotNull]
+        protected static TokenDatasetCollection TokenDataset;
         protected static TemplateRenderResults Result;
         protected static string ExpectedOutput;
+        protected static Exception CaughtException;
 
         Establish context = () =>
         {
             TemplateContents = null;
             lazySubject = new Lazy<XmlTemplate>(() => new XmlTemplate(TemplateContents));
-            TokenValues = null;
+            TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
             Result = null;
             ExpectedOutput = null;
+            CaughtException = null;
         };
 
         [NotNull]

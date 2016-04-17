@@ -21,7 +21,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Infrastructure.RazorTemplateRendering;
 using JetBrains.Annotations;
@@ -30,6 +29,9 @@ namespace ConfigGen.Templating.Razor
 {
     public class RazorTemplate : ITemplate
     {
+        [NotNull]
+        private const string RazorTemplateErrorSource = nameof(RazorTemplate);
+
         [NotNull]
         private readonly RazorTemplateRenderer _razorTemplateRenderer;
 
@@ -40,11 +42,13 @@ namespace ConfigGen.Templating.Razor
 
         [Pure]
         [NotNull]
-        public TemplateRenderResults Render([NotNull] ITokenValues tokenValues)
+        public TemplateRenderResults Render([NotNull] ITokenDataset tokenDataset)
         {
+            if (tokenDataset == null) throw new ArgumentNullException(nameof(tokenDataset));
+
             try
             {
-                var tokenValueDictionary = tokenValues.ToDictionary();
+                var tokenValueDictionary = tokenDataset.ToDictionary();
                 var model = new DictionaryBackedDynamicModel(tokenValueDictionary);
                 RenderingResult result = _razorTemplateRenderer.Render(model);
 
@@ -66,32 +70,51 @@ namespace ConfigGen.Templating.Razor
                 if (result.Status == RenderingResultStatus.Success)
                 {
                     return new TemplateRenderResults(
-                        TemplateRenderResultStatus.Success,
-                        result.RenderedResult,
-                        usedTokens.ToArray(),
-                        unusedTokens.ToArray(),
-                        model.UnrecognisedTokens.ToArray(),
-                        null);
+                        status: TemplateRenderResultStatus.Success,
+                        renderedResult: result.RenderedResult,
+                        usedTokens: usedTokens,
+                        unusedTokens: unusedTokens,
+                        unrecognisedTokens: model.UnrecognisedTokens,
+                        errors: null);
                 }
 
                 return new TemplateRenderResults(
-                    TemplateRenderResultStatus.Failure,
-                    null,
-                    usedTokens.ToArray(),
-                    unusedTokens.ToArray(),
-                    model.UnrecognisedTokens.ToArray(),
-                    result.Errors);
-
+                    status: TemplateRenderResultStatus.Failure,
+                    renderedResult: null,
+                    usedTokens: usedTokens,
+                    unusedTokens: unusedTokens,
+                    unrecognisedTokens: model.UnrecognisedTokens,
+                    errors: MapErrors(result));
             }
             catch (Exception ex)
             {
                 return new TemplateRenderResults(
-                    TemplateRenderResultStatus.Failure,
-                    null,
-                    null,
-                    null,
-                    null,
-                    new [] {ex.ToString()});
+                    status: TemplateRenderResultStatus.Failure,
+                    renderedResult: null,
+                    usedTokens: null,
+                    unusedTokens: null,
+                    unrecognisedTokens: null,
+                    errors: new[] {new UnhandledExceptionError(RazorTemplateErrorSource, ex)});
+            }
+        }
+
+        [NotNull]
+        private IEnumerable<Error> MapErrors([NotNull] RenderingResult renderingResult)
+        {
+            if (renderingResult == null) throw new ArgumentNullException(nameof(renderingResult));
+
+            var detail = string.Join("\n", renderingResult.Errors ?? new string[0]);
+            if (renderingResult.Status == RenderingResultStatus.CodeCompilationFailed)
+            {
+                yield return new RazorTemplateError(RazorTemplateErrorCodes.CodeCompilationError, detail);
+            }
+            else if (renderingResult.Status == RenderingResultStatus.CodeGenerationFailed)
+            {
+                yield return new RazorTemplateError(RazorTemplateErrorCodes.CodeGenerationError, detail);
+            }
+            else
+            {
+                yield return new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, detail);
             }
         }
     }

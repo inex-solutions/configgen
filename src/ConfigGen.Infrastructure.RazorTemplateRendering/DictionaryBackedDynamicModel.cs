@@ -65,8 +65,10 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering
             return found;
         }
 
+        [NotNull]
         public HashSet<string> AccessedTokens => new HashSet<string>(_accessedTokens);
 
+        [NotNull]
         public HashSet<string> UnrecognisedTokens => new HashSet<string>(_unrecognisedTokens);
     }
 }

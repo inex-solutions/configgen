@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,3 +18,24 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Utilities.Extensions
+{
+    public static class EnumerableExtensions
+    {
+        /// <summary>
+        /// Returns an <see cref="IEnumerable{T}" /> instance containing only the supplied <paramref name="item"/>.
+        /// </summary>
+        [NotNull]
+        public static IEnumerable<T> ToSingleEnumerable<T>([NotNull] this T item)
+        {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
+            return new T[] {item};
+        }
+    }
+}

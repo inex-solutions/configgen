@@ -19,34 +19,17 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
-using Machine.Specifications.Annotations;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Templating.Razor
 {
-    [Subject(typeof(RazorTemplate))]
-    public abstract class RazorTemplateTestsBase
+    internal class RazorTemplateError : Error
     {
-        [NotNull]
-        private static Lazy<RazorTemplate> lazySubject;
-        protected static string TemplateContents;
-        protected static TokenDatasetCollection TokenDataset;
-        protected static TemplateRenderResults Result;
-        protected static string ExpectedOutput;
+        public const string RazorTemplateErrorSource = "RazorTemplate";
 
-        Establish context = () =>
+        public RazorTemplateError([NotNull] string code, [NotNull] string detail) : base(RazorTemplateErrorSource, code, detail)
         {
-            TemplateContents = null;
-            lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-            TokenDataset = null;
-            Result = null;
-            ExpectedOutput = null;
-        };
-
-        [NotNull]
-        protected static RazorTemplate Subject => lazySubject.Value;
+        }
     }
 }

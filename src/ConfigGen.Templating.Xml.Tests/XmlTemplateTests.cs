@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
-using ConfigGen.Utilities.Extensions;
+using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
@@ -34,14 +34,14 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
                 });
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -49,7 +49,7 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.WithoutNewlines().ShouldEqual(TemplateContents.WithoutNewlines());
+            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldContainXml(TemplateContents);
 
             It both_supplied_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 
@@ -61,7 +61,7 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenOne%]</root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -70,7 +70,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 ExpectedOutput = TemplateContents.Replace("[%TokenOne%]", "One");
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -79,7 +79,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
             It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value =
-                () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
             It the_used_supplied_token_should_be_listed_as_used = () => Result.UsedTokens.ShouldContainOnly("TokenOne");
 
@@ -91,12 +91,12 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenThree%]</root>";
-                TokenValues = new TokenValuesCollection(new Dictionary<string, string>());
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
 
                 ExpectedOutput = TemplateContents.Replace("[%TokenThree%]", "");
             };
 
-            Because of = () => Result = Subject.Render(TokenValues);
+            Because of = () => Result = Subject.Render(TokenDataset);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -104,14 +104,30 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            //TODO: is this correct?
-            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.WithoutNewlines().ShouldEqual(ExpectedOutput.WithoutNewlines());
+            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
             It the_unrecognised_token_should_be_listed_as_unrecognised = () => Result.UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
             It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
 
             It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
+        }
+
+        public class when_attempting_to_render_a_template_which_is_not_well_formed : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>no closing root tag";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_resulting_status_should_indicate_a_template_load_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.TemplateLoadError);
         }
     }
 }

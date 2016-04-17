@@ -22,6 +22,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
@@ -44,6 +45,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering
             }
         }
 
+        [NotNull]
         public RenderingResult Render<TModel>(TModel model)
         {
             var engine = new RazorTemplateEngineFactory().CreateEngine<TemplateBase<TModel>>(_additionalNamespaces);

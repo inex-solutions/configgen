@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,39 +19,34 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Text;
-using System.Xml;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Xml
+namespace ConfigGen.Templating.Xml.NodeProcessing
 {
     /// <summary>
-    /// Represents an xml delcaration processing instruction.
+    /// Represents the top level "Apply" element, which contains the "When", "ElseWhen", "Else" elements.
     /// </summary>
-    public class XmlDeclarationInfo
+    public class ApplyElement
     {
-        public XmlDeclarationInfo(bool xmlDeclarationPresent, [CanBeNull] Encoding statedEncoding, [CanBeNull] Encoding actualEncoding)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplyElement"/> class.
+        /// </summary>
+        public ApplyElement()
         {
-            XmlDeclarationPresent = xmlDeclarationPresent;
-            StatedEncoding = statedEncoding;
-            ActualEncoding = actualEncoding;
+            PredicateSubNodes = new Queue<ApplyElementSubNode>();
         }
 
         /// <summary>
-        /// Gets a flag indicating if an xml declaration was detected.
+        /// Gets a queue of the ("When" / "ElseWhen") predicates. 
         /// </summary>
-        public bool XmlDeclarationPresent { get; }
+        [NotNull]
+        public Queue<ApplyElementSubNode> PredicateSubNodes { get; private set; }
 
         /// <summary>
-        /// Gets the encoding stated in the xml declaration if any, otherwise null.
+        /// Gets or sets the final "Else" of an Apply element, if any, otherwise null.
         /// </summary>
         [CanBeNull]
-        public Encoding StatedEncoding { get; }
-
-        /// <summary>
-        /// Gets the encoding of the stream as detected by the <see cref="XmlTextReader"/> instance.
-        /// </summary>
-        [CanBeNull]
-        public Encoding ActualEncoding { get; }
+        public ApplyElementSubNode FinalElseSubNode { get; set; }
     }
 }

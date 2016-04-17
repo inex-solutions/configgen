@@ -18,3 +18,22 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+namespace ConfigGen.Templating.Xml.NodeProcessing
+{
+    /// <summary>
+    /// Specifies the action to be taken for an apply element subnode that is not to be included in the output (because it's condition
+    /// evaluates to false, or because a previous subnode has evalutated to true and is being included.
+    /// </summary>
+    public enum OnNotAppliedAction
+    {
+        /// <summary>
+        /// Remove the element from the output.
+        /// </summary>
+        Remove,
+
+        /// <summary>
+        /// Comment out the element in the output.
+        /// </summary>
+        CommentOut
+    }
+}

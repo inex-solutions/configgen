@@ -26,10 +26,10 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    public class TokenValueMatchEvaluator
+    internal class TokenValueMatchEvaluator
     {
         [NotNull]
-        private readonly ITokenValues _tokenValues;
+        private readonly ITokenDataset _tokenDataset;
 
         [NotNull]
         private readonly Action<string> _onTokenUsed;
@@ -37,13 +37,13 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         private readonly Action<string> _onUnrecognisedToken;
 
-        public TokenValueMatchEvaluator([NotNull] ITokenValues tokenValues, [NotNull] Action<string> onTokenUsed, [NotNull] Action<string> onUnrecognisedToken)
+        public TokenValueMatchEvaluator([NotNull] ITokenDataset tokenDataset, [NotNull] Action<string> onTokenUsed, [NotNull] Action<string> onUnrecognisedToken)
         {
-            if (tokenValues == null) throw new ArgumentNullException(nameof(tokenValues));
+            if (tokenDataset == null) throw new ArgumentNullException(nameof(tokenDataset));
             if (onTokenUsed == null) throw new ArgumentNullException(nameof(onTokenUsed));
             if (onUnrecognisedToken == null) throw new ArgumentNullException(nameof(onUnrecognisedToken));
 
-            _tokenValues = tokenValues;
+            _tokenDataset = tokenDataset;
             _onTokenUsed = onTokenUsed;
             _onUnrecognisedToken = onUnrecognisedToken;
         }
@@ -53,7 +53,7 @@ namespace ConfigGen.Templating.Xml
             var tokenName = match.Groups["mib"].Value;
             object value;
 
-            if (_tokenValues.TryGetValue(tokenName, out value)
+            if (_tokenDataset.TryGetValue(tokenName, out value)
                 && value != null)
             {
                 _onTokenUsed(tokenName);

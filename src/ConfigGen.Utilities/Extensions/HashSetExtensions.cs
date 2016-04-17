@@ -27,6 +27,9 @@ namespace ConfigGen.Utilities.Extensions
 {
     public static class HashSetExtensions
     {
+        /// <summary>
+        /// Adds the supplied <paramref name="item"/> to the supplied <paramref name="hashSet"/> if it is not already present in the collection.
+        /// </summary>
         public static void AddIfNotPresent<T>([NotNull] this HashSet<T> hashSet, T item)
         {
             if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
@@ -34,6 +37,21 @@ namespace ConfigGen.Utilities.Extensions
             if (!hashSet.Contains(item))
             {
                 hashSet.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Adds any items from the supplied <paramref name="items"/> collection to the supplied <paramref name="hashSet"/> 
+        /// that are not already present in the latter collection.
+        /// </summary>
+        public static void AddWhereNotPresent<T>([NotNull] this HashSet<T> hashSet, [NotNull] IEnumerable<T> items)
+        {
+            if (hashSet == null) throw new ArgumentNullException(nameof(hashSet));
+            if (items == null) throw new ArgumentNullException(nameof(items));
+
+            foreach (var item in items)
+            {
+                AddIfNotPresent(hashSet, item);
             }
         }
     }

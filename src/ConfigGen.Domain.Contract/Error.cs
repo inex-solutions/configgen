@@ -19,22 +19,36 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
+using System;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
-    public interface ITokenValues
+    public abstract class Error
     {
-        [NotNull]
-        string Name { get; }
+        protected Error([NotNull] string source, [NotNull] string code, [CanBeNull] string detail)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (code == null) throw new ArgumentNullException(nameof(code));
+            if (detail == null) throw new ArgumentNullException(nameof(detail));
+
+            Source = source;
+            Code = code;
+            Detail = detail;
+        }
 
         [NotNull]
-        IEnumerable<string> TokenNames { get; }
+        public string Source { get; }
 
         [NotNull]
-        IDictionary<string, object> ToDictionary();
+        public string Code { get; }
 
-        bool TryGetValue([NotNull] string tokenName, out object value);
+        [CanBeNull]
+        public string Detail { get; }
+
+        public override string ToString()
+        {
+            return $"Error '{Code}' in '{Source}': {Detail}";
+        }
     }
 }

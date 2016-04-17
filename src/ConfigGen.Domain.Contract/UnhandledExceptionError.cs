@@ -20,33 +20,16 @@
 #endregion
 
 using System;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
-using Machine.Specifications.Annotations;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Domain.Contract
 {
-    [Subject(typeof(RazorTemplate))]
-    public abstract class RazorTemplateTestsBase
+    public class UnhandledExceptionError : Error
     {
-        [NotNull]
-        private static Lazy<RazorTemplate> lazySubject;
-        protected static string TemplateContents;
-        protected static TokenDatasetCollection TokenDataset;
-        protected static TemplateRenderResults Result;
-        protected static string ExpectedOutput;
+        public const string UnhandledExceptionErrorCode = "UnhandledException";
 
-        Establish context = () =>
+        public UnhandledExceptionError([NotNull] string source, [NotNull] Exception ex) : base(source, UnhandledExceptionErrorCode, ex.ToString())
         {
-            TemplateContents = null;
-            lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-            TokenDataset = null;
-            Result = null;
-            ExpectedOutput = null;
-        };
-
-        [NotNull]
-        protected static RazorTemplate Subject => lazySubject.Value;
+        }
     }
 }

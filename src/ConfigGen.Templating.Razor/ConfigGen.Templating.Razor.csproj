@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RazorTemplate.cs" />
+    <Compile Include="RazorTemplateErrorCodes.cs" />
+    <Compile Include="RazorTemplateError.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

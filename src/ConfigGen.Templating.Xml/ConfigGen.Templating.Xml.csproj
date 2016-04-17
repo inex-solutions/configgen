@@ -52,12 +52,10 @@
     <Compile Include="NodeProcessing\ApplyElementSubNodeCreator.cs" />
     <Compile Include="NodeProcessing\ApplyElementSubNodeType.cs" />
     <Compile Include="NodeProcessing\ApplyWhenAttributeProcessor.cs" />
-    <Compile Include="NodeProcessing\ApplyWhenFormatException.cs" />
     <Compile Include="NodeProcessing\ConditionalElementProcessorBase.cs" />
     <Compile Include="NodeProcessing\ConditionException.cs" />
     <Compile Include="NodeProcessing\ConfigGenNodeProcessorFactory.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\ConfigurationExpressionEvaluator.cs" />
-    <Compile Include="NodeProcessing\ExpressionEvaluation\ExpressionEvaluationException.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\ExpressionEvaluationResults.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\IConfigurationExpressionEvaluator.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\SearchableXmlConverter.cs" />

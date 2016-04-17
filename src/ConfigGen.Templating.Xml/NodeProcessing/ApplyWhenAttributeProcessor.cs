@@ -66,7 +66,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 return new ProcessNodeResults(null, null, XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
             }
 
-            ExpressionEvaluationResults evaluationResults = _evaluator.Evaluate(dataset.Name, expression);
+            ExpressionEvaluationResults evaluationResults = _evaluator.Evaluate(dataset.Name, expression, element.Name);
 
             var usedTokens = new List<string>();
             var unrecognisedTokens = new List<string>();

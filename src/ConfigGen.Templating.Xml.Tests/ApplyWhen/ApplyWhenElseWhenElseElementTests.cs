@@ -27,7 +27,7 @@ using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 {
-    namespace ApplyWhenElseElementTests
+    namespace ApplyWhenElseWhenElseElementTests
     {
         public class when_an_Apply_element_with_no_child_node_is_rendered : XmlTemplateTestsBase
         {
@@ -224,6 +224,28 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
+        public class when_an_Apply_element_containing_an_unexpected_child_node_is_rendered : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""false""/>
+        <WhatIsThisNode />
+</cg:Apply>
+</Root>";
+
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_errors_collection_should_specify_a_condition_processing_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+        }
+
         public class when_ApplyWhenElseWhenElse_elements_with_a_true_When_condition_are_rendered : XmlTemplateTestsBase
         {
             Establish context = () =>
@@ -376,6 +398,42 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
 
             It the_resulting_output_should_have_commented_out_the_contents_of_the_elements_with_the_failed_conditions =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+
+        public class when_an_onCommentedOutComment_value_is_specfied_on_nodes_which_are_commented_out : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                {
+                    {"val", "1"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply onNotApplied=""CommentOut"">
+        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val = 2"" onCommentedOutComment=""elseWhen-CommentedOutComment""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:Else onCommentedOutComment=""else-CommentedOutComment""><contents of=""else""/></cg:Else>
+</cg:Apply>
+</Root>";
+
+                ExpectedOutput = @"
+<Root>
+<contents of=""when"" />
+<!-- elseWhen-CommentedOutComment --><!--<contents of=""elseWhen"" />-->
+<!-- else-CommentedOutComment --><!--<contents of=""else"" />-->
+</Root > ";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_prepend_the_commented_out_section_with_the_specified_comment =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
     }

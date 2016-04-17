@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
 using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
@@ -46,12 +47,8 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
     /// </summary>
     internal class ConfigurationExpressionEvaluator : IConfigurationExpressionEvaluator
     {
-        #region Private Members
-
         [NotNull]
         private static readonly Regex TokenIdentifierRegex = new Regex(@"\$(?<token>[A-Za-z0-9_-]+)", RegexOptions.Compiled);
-
-        #endregion
 
         [NotNull]
         private readonly XPathNavigator _xPathNavigator;
@@ -94,41 +91,42 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// </remarks>
         /// <param name="machineName">The machine name.</param>
         /// <param name="expression">Search expression.</param>
+        /// <param name="nodeName">The name of the node being processed (for reporting).</param>
         /// <returns>true if the supplied expression evaluates to a configuration setting for the specified machine, otherwise false</returns>
         /// <exception cref="ArgumentNullException">Thrown if either argument is null</exception>
         /// <exception cref="ArgumentException">Thrown if either argument is zero length</exception>
-        /// <exception cref="ExpressionEvaluationException">Thrown if an errors occurs while trying to evaluate the expression</exception>
         [NotNull]
-        public ExpressionEvaluationResults Evaluate([NotNull] string machineName, [NotNull] string expression)
+        public ExpressionEvaluationResults Evaluate([NotNull] string machineName, [NotNull] string expression, [CanBeNull] XName nodeName)
         {
             if (machineName == null) throw new ArgumentNullException(nameof(machineName));
             if (machineName.Length == 0) throw new ArgumentException("machineName cannot be zero length", nameof(machineName));
+
+            if (string.IsNullOrEmpty(expression))
+            {
+                return new ExpressionEvaluationResults(
+                    result: false,
+                    usedTokens: null,
+                    errorCode: XmlTemplateErrorCodes.ConditionProcessingError,
+                    errorMessage: $"No condition was specified on the node {nodeName}");
+            }
 
             var locatedTokens = new List<string>();
             bool result = false;
             string errorCode = null;
             string errorMessage = null;
 
-            if (expression == null || expression.Length == 0)
+            const string searchString = "/Machine[@name='{0}']/Values[{1}]/*";
+
+            try
+            {
+                var preparedExpression = PrepareExpression(expression, locatedTokens);
+                var xpath = string.Format(searchString, machineName, preparedExpression);
+                result = _xPathNavigator.SelectSingleNode(xpath) != null;
+            }
+            catch (Exception ex)
             {
                 errorCode = XmlTemplateErrorCodes.ConditionProcessingError;
-                errorMessage = $"No expression was specified for machine '{machineName}"; //TODO - kinda unhelpful - might be better if the error included the node
-            }
-            else
-            {
-                const string searchString = "/Machine[@name='{0}']/Values[{1}]/*";
-                
-                try
-                {
-                    var preparedExpression = PrepareExpression(expression, locatedTokens);
-                    var xpath = string.Format(searchString, machineName, preparedExpression);
-                    result = _xPathNavigator.SelectSingleNode(xpath) != null;
-                }
-                catch (Exception ex)
-                {
-                    errorCode = XmlTemplateErrorCodes.ConditionProcessingError;
-                    errorMessage = $"An error occurred while trying to evaluate a the expression '{expression}' for machine '{machineName}: {ex}"; //TODO - kinda unhelpful - might be better if the error included the node
-                }
+                errorMessage = $"An error occurred while trying to evaluate a the expression '{expression}', on node {nodeName} for machine '{machineName}: {ex}";
             }
 
             return new ExpressionEvaluationResults(result, locatedTokens, errorCode, errorMessage);
@@ -147,8 +145,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
 
             MatchEvaluator matchEvaluator = match =>
             {
-                var locatedToken = match.Groups["token"].Value;
-                locatedTokens.Add(locatedToken);
+                var locatedToken = match?.Groups["token"]?.Value;
+                if (locatedToken != null)
+                {
+                    locatedTokens.Add(locatedToken);
+                }
                 return locatedToken;
             };
 

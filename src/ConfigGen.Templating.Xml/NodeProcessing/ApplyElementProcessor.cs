@@ -27,6 +27,7 @@ using System.Xml;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation;
+using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
@@ -40,6 +41,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         [NotNull]
         private readonly IConfigurationExpressionEvaluator _configurationExpressionEvaluator;
 
+        [NotNull]
         private readonly ApplyElementCreator _applyElementCreator = new ApplyElementCreator();
 
         public ApplyElementProcessor([NotNull] IConfigurationExpressionEvaluator configurationExpressionEvaluator)
@@ -64,19 +66,17 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 throw new ArgumentException("Supplied element should have name 'Apply' in the configgen namespace.", nameof(element));
             }
 
-            ApplyElement applyElement;
-            try
-            {
-                applyElement = _applyElementCreator.Create(element);
-            }
-            catch (ApplyWhenFormatException ex)
+            Result<ApplyElement> result = _applyElementCreator.Create(element);
+
+            if (!result.Success)
             {
                 element.Remove();
-                //TODO: Just say no to exceptions as flow control
-                return new ProcessNodeResults(UsedTokens, UnrecognisedTokens, XmlTemplateErrorCodes.ApplyWhenElseFormatError, ex.Message);
+                return new ProcessNodeResults(UsedTokens, UnrecognisedTokens, XmlTemplateErrorCodes.ApplyWhenElseFormatError, result.ErrorMessage);
             }
 
             bool trueConditionAlreadyEvaluated = false;
+
+            ApplyElement applyElement = result.Value;
 
             while (applyElement.PredicateSubNodes.Count > 0)
             {

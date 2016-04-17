@@ -44,7 +44,10 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
             xmlWriter.WriteStartElement("Machines");
             foreach (var tokenDataset in tokenDatasetCollection)
             {
-                ToSearchableXml(tokenDataset, xmlWriter);
+                if (tokenDataset != null)
+                {
+                    ToSearchableXml(tokenDataset, xmlWriter);
+                }
             }
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndElement();

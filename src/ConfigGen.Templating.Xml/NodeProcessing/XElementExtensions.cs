@@ -21,34 +21,24 @@
 
 using System;
 using System.Xml.Linq;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {
     public static class XElementExtensions
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
-        public static string GetConditionAttribute(this XElement element)
+        public static string GetConditionAttribute([NotNull] this XElement element)
         {
+            if (element == null) throw new ArgumentNullException(nameof(element));
+
             var conditionAttribute = element.Attribute(XName.Get("condition"));
-            if (conditionAttribute == null)
-            {
-                return null;
-            }
-            return conditionAttribute.Value;
+            return conditionAttribute?.Value;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="parentOnNotAppliedAction"></param>
-        /// <returns></returns>
-        public static OnNotAppliedAction GetOnNotAppliedAttribute(this XElement element, OnNotAppliedAction parentOnNotAppliedAction)
+        public static OnNotAppliedAction GetOnNotAppliedAttribute([NotNull] this XElement element, OnNotAppliedAction parentOnNotAppliedAction)
         {
+            if (element == null) throw new ArgumentNullException(nameof(element));
+
             var onNotAppliedAttribute = element.Attribute(XName.Get("onNotApplied"));
             if (onNotAppliedAttribute == null)
             {
@@ -59,11 +49,9 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (!Enum.TryParse(onNotAppliedAttribute.Value, true, out onNotAppliedAction))
             {
                 throw new ArgumentException(
-                    string.Format(
-                        "The supplied onNotApplied, '{0}', was not recognised for element with name '{1}'.",
-                        onNotAppliedAttribute.Value,
-                        element.Name.LocalName));
+                    $"The supplied onNotApplied, '{onNotAppliedAttribute.Value}', was not recognised for element with name '{element.Name.LocalName}'.");
             }
+
             return onNotAppliedAction;
         }
     }

@@ -21,6 +21,8 @@
 
 using System;
 using System.Xml.Linq;
+using ConfigGen.Utilities;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {
@@ -30,7 +32,8 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     public class ApplyElementSubNodeCreator
     {
         /// <summary>
-        /// Returns an <see cref="ApplyElementSubNode"/> instance created from the supplied element.
+        /// Returns a <see cref="Result{ApplyElementSubNode}"/> containing either a successfully created <see cref="ApplyElementSubNode"/> from the 
+        /// supplied element, or an error message.
         /// </summary>
         /// <param name="element">XElement from which to create the <see cref="ApplyElementSubNode"/> instance.</param>
         /// <param name="defaultOnNotAppliedAction">The default action for sub-nodes which do not specify their own "on no applied" action.</param>
@@ -38,14 +41,13 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="element"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown if the supplied <paramref name="element"/> is not in the configgen namespace.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the supplied <paramref name="element"/> does not have a name of "When", "ElseWhen" or "Else".</exception>
-        /// <exception cref="ConditionException">Thrown if either the supplied <paramref name="element"/> is a "When" or "ElseWhen" element but does not have
-        /// a "condition" attribute, or if the supplied <paramref name="element"/> is an "Else" element and does have a "condition" element.</exception>
-        public virtual ApplyElementSubNode Create(XElement element, OnNotAppliedAction defaultOnNotAppliedAction)
+        [NotNull]
+        public virtual Result<ApplyElementSubNode> Create([NotNull] XElement element, OnNotAppliedAction defaultOnNotAppliedAction)
         {
-            if (element == null) throw new ArgumentNullException("element");
+            if (element == null) throw new ArgumentNullException(nameof(element));
             if (element.Name.Namespace != XmlTemplate.ConfigGenXmlNamespace)
             {
-                throw new ArgumentException("The supplied element is not in the ConfigGen namespace", "element");
+                throw new ArgumentException("The supplied element is not in the ConfigGen namespace", nameof(element));
             }
 
             var instance = new ApplyElementSubNode { ParentApplyElement = element.Parent, Element = element };
@@ -56,7 +58,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     instance.Predicate = element.GetConditionAttribute();
                     if (instance.Predicate == null)
                     {
-                        throw new ConditionException("A 'When' element must contain a 'condition' attribute");
+                        return new Result<ApplyElementSubNode>("A 'When' element must contain a 'condition' attribute");
                     }
                     break;
                 case "ElseWhen":
@@ -64,7 +66,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     instance.Predicate = element.GetConditionAttribute();
                     if (instance.Predicate == null)
                     {
-                        throw new ConditionException("An 'ElseWhen' element must contain a 'condition' attribute");
+                        return new Result<ApplyElementSubNode>("An 'ElseWhen' element must contain a 'condition' attribute");
                     }
                     break;
                 case "Else":
@@ -72,12 +74,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     var predicate = element.GetConditionAttribute();
                     if (predicate != null)
                     {
-                        throw new ConditionException("An 'Else' element must not contain a 'condition' attribute");
+                        return new Result<ApplyElementSubNode>("An 'Else' element must not contain a 'condition' attribute");
                     }
                     break;
                 default:
-                    throw new InvalidOperationException(
-                        "Cannot create a ApplyElementSubNode from an element with the name: " + element.Name.LocalName);
+                    throw new InvalidOperationException("Cannot create a ApplyElementSubNode from an element with the name: " + element.Name.LocalName);
             }
 
             instance.OnNotAppliedAction = element.GetOnNotAppliedAttribute(defaultOnNotAppliedAction);
@@ -95,7 +96,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 }
             }
 
-            return instance;
+            return new Result<ApplyElementSubNode>(instance);
         }
     }
 }

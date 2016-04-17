@@ -22,6 +22,8 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using ConfigGen.Utilities;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {
@@ -30,16 +32,15 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     /// </summary>
     public class ApplyElementCreator
     {
+        [NotNull]
         private readonly ApplyElementSubNodeCreator _applyElementSubNodeCreator = new ApplyElementSubNodeCreator();
 
         /// <summary>
-        /// Returns an <see cref="ApplyElement"/> instance created from the supplied element.
+        /// Returns an <see cref="Result{ApplyElement}"/> containing either a <see cref="ApplyElement"/> if creation was successful, 
+        /// otherwise error text.
         /// </summary>
-        /// <param name="applyElement">XElement from which to create the <see cref="ApplyElement"/> instance.</param>
-        /// <returns>An <see cref="ApplyElement"/> instance created from the supplied element</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="applyElement"/> is null.</exception>
-        /// <exception cref="ApplyWhenFormatException">Thrown if the supplied <paramref name="applyElement"/> has incorrect subnodes.</exception>
-        public virtual ApplyElement Create(XElement applyElement)
+        [NotNull]
+        public virtual Result<ApplyElement> Create(XElement applyElement)
         {
             if (applyElement == null) throw new ArgumentNullException();
 
@@ -50,11 +51,17 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (primaryPredicate == null
                 || primaryPredicate.Name != xname)
             {
-                throw new ApplyWhenFormatException("The first element in the 'Apply' container must be a 'When' element in the ConfigGen namespace.");
+                return new Result<ApplyElement>(errorMessage: "The first element in the 'Apply' container must be a 'When' element in the ConfigGen namespace.");
             }
 
             var onNotAppliedAttribute = applyElement.GetOnNotAppliedAttribute(OnNotAppliedAction.Remove);
-            returnValue.PredicateSubNodes.Enqueue(_applyElementSubNodeCreator.Create(primaryPredicate, onNotAppliedAttribute));
+            var result = _applyElementSubNodeCreator.Create(primaryPredicate, onNotAppliedAttribute);
+            if (!result.Success)
+            {
+                return new Result<ApplyElement>(result.ErrorMessage);
+            }
+
+            returnValue.PredicateSubNodes.Enqueue(result.Value);
 
             foreach (var currentElement in primaryPredicate.ElementsAfterSelf())
             {
@@ -62,25 +69,35 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 {
                     if (returnValue.FinalElseSubNode != null)
                     {
-                        throw new ApplyWhenFormatException("The 'else' element must be the final element in the 'Apply' container.");
+                        return new Result<ApplyElement>(errorMessage: "The 'else' element must be the final element in the 'Apply' container.");
                     }
 
                     if (currentElement.Name == XName.Get("ElseWhen", XmlTemplate.ConfigGenXmlNamespace))
                     {
-                        returnValue.PredicateSubNodes.Enqueue(_applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute));
+                        result = _applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute);
+                        if (!result.Success)
+                        {
+                            return new Result<ApplyElement>(result.ErrorMessage);
+                        }
+                        returnValue.PredicateSubNodes.Enqueue(result.Value);
                     }
                     else if (currentElement.Name == XName.Get("Else", XmlTemplate.ConfigGenXmlNamespace))
                     {
-                        returnValue.FinalElseSubNode = _applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute);
+                        result = _applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute);
+                        if (!result.Success)
+                        {
+                            return new Result<ApplyElement>(result.ErrorMessage);
+                        }
+                        returnValue.FinalElseSubNode = result.Value;
                     }
                     else
                     {
-                        throw new ApplyWhenFormatException("Unexpected node appeared in 'Apply' container: " + currentElement.Name);
+                        return new Result<ApplyElement>(errorMessage: "Unexpected node appeared in 'Apply' container: " + currentElement.Name);
                     }
                 }
             }
 
-            return returnValue;
+            return new Result<ApplyElement>(returnValue);
         }
     }
 }

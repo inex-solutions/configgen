@@ -112,5 +112,22 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
         }
+
+        public class when_attempting_to_render_a_template_which_is_not_well_formed : XmlTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>no closing root tag";
+            };
+
+            Because of = () => Result = Subject.Render(TokenDataset);
+
+            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_resulting_status_should_indicate_a_template_load_error =
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.TemplateLoadError);
+        }
     }
 }

@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {
@@ -39,16 +40,13 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// <summary>
         /// Gets a queue of the ("When" / "ElseWhen") predicates. 
         /// </summary>
+        [NotNull]
         public Queue<ApplyElementSubNode> PredicateSubNodes { get; private set; }
 
         /// <summary>
         /// Gets or sets the final "Else" of an Apply element, if any, otherwise null.
         /// </summary>
+        [CanBeNull]
         public ApplyElementSubNode FinalElseSubNode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the action to perform on nodes which are not applied.
-        /// </summary>
-        public OnNotAppliedAction OnNotAppliedAction { get; set; }
     }
 }

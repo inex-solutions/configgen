@@ -29,14 +29,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     public class ApplyElementSubNode
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApplyElementSubNode"/> class.
-        /// </summary>
-        public ApplyElementSubNode()
-        {
-            
-        }
-
-        /// <summary>
         /// Gets or sets the parent "Apply" element of which this is a sub node.
         /// </summary>
         public XElement ParentApplyElement { get; set; }

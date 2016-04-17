@@ -40,7 +40,8 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// <returns>Processor for the supplied node</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="element"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown if <paramref name="element"/> is not in the config-gen namespace.</exception>
-        /// <exception cref="NotSupportedException">Thrown if no processor can be found for the supplied node.e.</exception>
+        /// <exception cref="NotSupportedException">Thrown if no processor can be found for the supplied node.</exception>
+        [NotNull]
         public IConfigGenNodeProcessor GetProcessorForNode([NotNull] XElement element, [NotNull] ITokenDataset tokenDataset)
         {
             if (element == null)

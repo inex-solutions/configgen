@@ -35,7 +35,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
         public ProcessNodeResults(
             [CanBeNull] IEnumerable<string> usedTokens = null,
-            [CanBeNull]  IEnumerable<string> unrecognisedTokens = null,
+            [CanBeNull] IEnumerable<string> unrecognisedTokens = null,
             [CanBeNull] string errorCode = null,
             [CanBeNull] string errorMessage = null)
         {

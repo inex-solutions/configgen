@@ -72,7 +72,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 expression = conditionAttribute.Value;
             }
 
-            ExpressionEvaluationResults evaluationResults = configurationExpressionEvaluator.Evaluate(dataset.Name, expression);
+            ExpressionEvaluationResults evaluationResults = configurationExpressionEvaluator.Evaluate(dataset.Name, expression, element.Name);
 
             foreach (var usedToken in evaluationResults.UsedTokens)
             {

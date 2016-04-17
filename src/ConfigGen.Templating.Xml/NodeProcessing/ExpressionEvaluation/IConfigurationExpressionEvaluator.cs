@@ -20,13 +20,13 @@
 #endregion
 
 using System;
+using System.Xml.Linq;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
 {
     /// <summary>
-    /// Interface implemented by <see cref="ConfigurationExpressionEvaluator"/>. <see cref="PrepareExpression"/> should be called first,
-    /// followed by <see cref="Evaluate"/>.
+    /// Interface implemented by <see cref="ConfigurationExpressionEvaluator"/>.
     /// </summary>
     internal interface IConfigurationExpressionEvaluator
     {
@@ -44,10 +44,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// </remarks>
         /// <param name="machineName">The machine name.</param>
         /// <param name="expression">Serach expression.</param>
+        /// <param name="nodeName">The name of the node being processed (for reporting).</param>
         /// <returns>true if the supplied expression evaluates to a configuration setting for the specified machine, otherwise false</returns>
         /// <exception cref="ArgumentNullException">Thrown if either argument is null</exception>
         /// <exception cref="ArgumentException">Thrown if either argument is zero length</exception>
         [NotNull]
-        ExpressionEvaluationResults Evaluate([NotNull] string machineName, [NotNull] string expression);
+        ExpressionEvaluationResults Evaluate([NotNull] string machineName, [NotNull] string expression, [CanBeNull] XName nodeName);
     }
 }

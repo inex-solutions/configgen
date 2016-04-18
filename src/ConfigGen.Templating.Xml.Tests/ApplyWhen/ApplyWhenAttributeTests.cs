@@ -36,7 +36,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen="""" /></root>";
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -51,7 +51,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen=""$val /+-= 1"" /></root>";
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -63,7 +63,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                Configuration = new Configuration(new Dictionary<string, string>
                 {
                     {"val", "2"}
                 });
@@ -73,7 +73,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<root><child1 /><child2 /></root>";
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -87,7 +87,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                Configuration = new Configuration(new Dictionary<string, string>
                 {
                     {"val", "2"}
                 });
@@ -96,7 +96,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<root><child1 /></root>";
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 

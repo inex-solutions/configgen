@@ -41,10 +41,10 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
                 TemplateContents = XmlDeclaration + TemplateBody;
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+                Configuration = new Configuration(new Dictionary<string, string>());
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 

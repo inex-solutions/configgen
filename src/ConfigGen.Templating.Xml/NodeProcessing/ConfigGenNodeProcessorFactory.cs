@@ -42,7 +42,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// <exception cref="ArgumentException">Thrown if <paramref name="element"/> is not in the config-gen namespace.</exception>
         /// <exception cref="NotSupportedException">Thrown if no processor can be found for the supplied node.</exception>
         [NotNull]
-        public IConfigGenNodeProcessor GetProcessorForNode([NotNull] XElement element, [NotNull] ITokenDataset tokenDataset)
+        public IConfigGenNodeProcessor GetProcessorForNode([NotNull] XElement element, [NotNull] IConfiguration configuration)
         {
             if (element == null)
             {
@@ -50,7 +50,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             }
 
             // IoC this in - this will almost certainly be swapped for a different implementation in any case.
-            var configurationExpressionEvaluator = new ConfigurationExpressionEvaluator(tokenDataset);
+            var configurationExpressionEvaluator = new ConfigurationExpressionEvaluator(configuration);
 
             if (element.Name.Namespace == XmlTemplate.ConfigGenXmlNamespace)
             {

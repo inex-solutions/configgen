@@ -60,7 +60,7 @@
     <Compile Include="MSpec\ShouldExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSetupException.cs" />
-    <Compile Include="TokenDatasetCollection.cs" />
+    <Compile Include="Configuration.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

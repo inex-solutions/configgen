@@ -42,28 +42,28 @@ namespace ConfigGen.Templating.Razor
 
         [Pure]
         [NotNull]
-        public TemplateRenderResults Render([NotNull] ITokenDataset tokenDataset)
+        public TemplateRenderResults Render([NotNull] IConfiguration configuration)
         {
-            if (tokenDataset == null) throw new ArgumentNullException(nameof(tokenDataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             try
             {
-                var tokenValueDictionary = tokenDataset.ToDictionary();
-                var model = new DictionaryBackedDynamicModel(tokenValueDictionary);
+                var settings = configuration.ToDictionary();
+                var model = new DictionaryBackedDynamicModel(settings);
                 RenderingResult result = _razorTemplateRenderer.Render(model);
 
                 var usedTokens = new List<string>();
                 var unusedTokens = new List<string>();
 
-                foreach (var token in tokenValueDictionary)
+                foreach (var settingName in settings)
                 {
-                    if (model.AccessedTokens.Contains(token.Key))
+                    if (model.AccessedTokens.Contains(settingName.Key))
                     {
-                        usedTokens.Add(token.Key);
+                        usedTokens.Add(settingName.Key);
                     }
                     else
                     {
-                        unusedTokens.Add(token.Key);
+                        unusedTokens.Add(settingName.Key);
                     }
                 }
 

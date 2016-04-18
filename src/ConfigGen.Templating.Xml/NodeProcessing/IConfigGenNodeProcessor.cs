@@ -32,6 +32,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     internal interface IConfigGenNodeProcessor
     {
         [NotNull]
-        ProcessNodeResults ProcessNode([NotNull] XElement node, [NotNull] ITokenDataset dataset);
+        ProcessNodeResults ProcessNode([NotNull] XElement node, [NotNull] IConfiguration configuration);
     }
 }

@@ -55,10 +55,10 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// </summary>
         public override ProcessNodeResults ProcessNode(
             [NotNull] XElement element, 
-            [NotNull] ITokenDataset dataset)
+            [NotNull] IConfiguration configuration)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
-            if (dataset == null) throw new ArgumentNullException(nameof(dataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             if (element.Name.LocalName != "Apply"
                || element.Name.Namespace != XmlTemplate.ConfigGenXmlNamespace)
@@ -81,7 +81,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             while (applyElement.PredicateSubNodes.Count > 0)
             {
                 var subNode = applyElement.PredicateSubNodes.Dequeue();
-                var evaluationResults = EvaluateCondition(subNode.Element, dataset, _configurationExpressionEvaluator);
+                var evaluationResults = EvaluateCondition(subNode.Element, configuration, _configurationExpressionEvaluator);
 
                 if (evaluationResults.ErrorCode != null)
                 {

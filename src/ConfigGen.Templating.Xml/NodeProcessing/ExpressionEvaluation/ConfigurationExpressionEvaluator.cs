@@ -56,11 +56,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationExpressionEvaluator"/> class.
         /// </summary>
-        /// <param name="tokenDataset">The token dataset on which to provide search/evaluation functionality.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="tokenDataset"/> is null.</exception>
-        public ConfigurationExpressionEvaluator([NotNull] ITokenDataset tokenDataset)
+        /// <param name="configuration">The configuration on which to provide search/evaluation functionality.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="configuration"/> is null.</exception>
+        public ConfigurationExpressionEvaluator([NotNull] IConfiguration configuration)
         {
-            if (tokenDataset == null) throw new ArgumentNullException(nameof(tokenDataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             var dom = new XmlDocument();
             var searchableXmlConverter = new SearchableXmlConverter();
@@ -68,7 +68,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
             using (var stream = new MemoryStream())
             using (var writer = XmlWriter.Create(stream))
             {
-                searchableXmlConverter.ToSearchableXml(tokenDataset, writer);
+                searchableXmlConverter.ToSearchableXml(configuration, writer);
                 writer.Flush();
                 stream.Position = 0;
                 dom.Load(stream);
@@ -115,7 +115,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
             string errorCode = null;
             string errorMessage = null;
 
-            const string searchString = "/Machine[@name='{0}']/Values[{1}]/*";
+            const string searchString = "/Configuration[@name='{0}']/Values[{1}]/*";
 
             try
             {

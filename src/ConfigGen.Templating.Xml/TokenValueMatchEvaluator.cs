@@ -29,7 +29,7 @@ namespace ConfigGen.Templating.Xml
     internal class TokenValueMatchEvaluator
     {
         [NotNull]
-        private readonly ITokenDataset _tokenDataset;
+        private readonly IConfiguration _configuration;
 
         [NotNull]
         private readonly Action<string> _onTokenUsed;
@@ -37,13 +37,13 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         private readonly Action<string> _onUnrecognisedToken;
 
-        public TokenValueMatchEvaluator([NotNull] ITokenDataset tokenDataset, [NotNull] Action<string> onTokenUsed, [NotNull] Action<string> onUnrecognisedToken)
+        public TokenValueMatchEvaluator([NotNull] IConfiguration configuration, [NotNull] Action<string> onTokenUsed, [NotNull] Action<string> onUnrecognisedToken)
         {
-            if (tokenDataset == null) throw new ArgumentNullException(nameof(tokenDataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (onTokenUsed == null) throw new ArgumentNullException(nameof(onTokenUsed));
             if (onUnrecognisedToken == null) throw new ArgumentNullException(nameof(onUnrecognisedToken));
 
-            _tokenDataset = tokenDataset;
+            _configuration = configuration;
             _onTokenUsed = onTokenUsed;
             _onUnrecognisedToken = onUnrecognisedToken;
         }
@@ -53,7 +53,7 @@ namespace ConfigGen.Templating.Xml
             var tokenName = match.Groups["mib"].Value;
             object value;
 
-            if (_tokenDataset.TryGetValue(tokenName, out value)
+            if (_configuration.TryGetValue(tokenName, out value)
                 && value != null)
             {
                 _onTokenUsed(tokenName);

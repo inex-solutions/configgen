@@ -47,10 +47,10 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         [NotNull]
         public ProcessNodeResults ProcessNode(
             [NotNull] XElement element, 
-            [NotNull] ITokenDataset dataset)
+            [NotNull] IConfiguration configuration)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
-            if (dataset == null) throw new ArgumentNullException(nameof(dataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             var attributeName = XName.Get("applyWhen", XmlTemplate.ConfigGenXmlNamespace);
             var attribute = element.Attribute(attributeName);
@@ -66,14 +66,14 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 return new ProcessNodeResults(null, null, XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
             }
 
-            ExpressionEvaluationResults evaluationResults = _evaluator.Evaluate(dataset.Name, expression, element.Name);
+            ExpressionEvaluationResults evaluationResults = _evaluator.Evaluate(configuration.ConfigurationName, expression, element.Name);
 
             var usedTokens = new List<string>();
             var unrecognisedTokens = new List<string>();
 
             foreach (var usedToken in evaluationResults.UsedTokens)
             {
-                if (dataset.Contains(usedToken))
+                if (configuration.Contains(usedToken))
                 {
                     usedTokens.Add(usedToken);
                 }

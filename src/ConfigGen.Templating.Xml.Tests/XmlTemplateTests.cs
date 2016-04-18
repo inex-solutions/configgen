@@ -34,14 +34,14 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                Configuration = new Configuration(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
                 });
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -61,7 +61,7 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenOne%]</root>";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                Configuration = new Configuration(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -70,7 +70,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 ExpectedOutput = TemplateContents.Replace("[%TokenOne%]", "One");
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -91,12 +91,12 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenThree%]</root>";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+                Configuration = new Configuration(new Dictionary<string, string>());
 
                 ExpectedOutput = TemplateContents.Replace("[%TokenThree%]", "");
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -120,7 +120,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 TemplateContents = "<root>no closing root tag";
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 

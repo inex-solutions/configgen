@@ -36,7 +36,7 @@ namespace ConfigGen.Templating.Xml.Tests
         protected static string TemplateContents;
 
         [NotNull]
-        protected static TokenDatasetCollection TokenDataset;
+        protected static Configuration Configuration;
         protected static TemplateRenderResults Result;
         protected static string ExpectedOutput;
         protected static Exception CaughtException;
@@ -45,7 +45,7 @@ namespace ConfigGen.Templating.Xml.Tests
         {
             TemplateContents = null;
             lazySubject = new Lazy<XmlTemplate>(() => new XmlTemplate(TemplateContents));
-            TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+            Configuration = new Configuration(new Dictionary<string, string>());
             Result = null;
             ExpectedOutput = null;
             CaughtException = null;

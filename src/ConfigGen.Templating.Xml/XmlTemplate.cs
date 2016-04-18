@@ -69,9 +69,9 @@ namespace ConfigGen.Templating.Xml
         }
 
         [NotNull]
-        public TemplateRenderResults Render([NotNull] ITokenDataset tokenDataset)
+        public TemplateRenderResults Render([NotNull] IConfiguration configuration)
         {
-            if (tokenDataset == null) throw new ArgumentNullException(nameof(tokenDataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             try
             {
@@ -106,9 +106,9 @@ namespace ConfigGen.Templating.Xml
                 var configGenNodeProcessorFactory = new ConfigGenNodeProcessorFactory();
                 while ((configGenNode = GetConfigGenNodes(rawTemplate)) != null)
                 {
-                    var nodeProcessor = configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, tokenDataset);
+                    var nodeProcessor = configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, configuration);
 
-                    var result = nodeProcessor.ProcessNode(configGenNode, tokenDataset);
+                    var result = nodeProcessor.ProcessNode(configGenNode, configuration);
                     if (result.ErrorCode != null)
                     {
                         errors.Add(new XmlTemplateError(result.ErrorCode, result.ErrorMessage));
@@ -148,7 +148,7 @@ namespace ConfigGen.Templating.Xml
                 }
 
                 var tokenValueMatchEvaluator = new TokenValueMatchEvaluator(
-                    tokenDataset: tokenDataset,
+                    configuration: configuration,
                     onTokenUsed: tokenName => usedTokens.AddIfNotPresent(tokenName),
                     onUnrecognisedToken: tokenName => unrecognisedTokens.AddIfNotPresent(tokenName));
 
@@ -156,7 +156,7 @@ namespace ConfigGen.Templating.Xml
 
                 output = TokenRegexp.Replace(output, matchEvaluator);
 
-                foreach (var token in tokenDataset.TokenNames)
+                foreach (var token in configuration.SettingsNames)
                 {
                     if (!usedTokens.Contains(token))
                     {

@@ -34,14 +34,14 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                Configuration = new Configuration(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
                 });
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -61,7 +61,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenOne</root>";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>
+                Configuration = new Configuration(new Dictionary<string, string>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -70,7 +70,7 @@ namespace ConfigGen.Templating.Razor.Tests
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -90,12 +90,12 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenThree</root>";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+                Configuration = new Configuration(new Dictionary<string, string>());
 
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -117,10 +117,10 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+                Configuration = new Configuration(new Dictionary<string, string>());
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -135,10 +135,10 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
-                TokenDataset = new TokenDatasetCollection(new Dictionary<string, string>());
+                Configuration = new Configuration(new Dictionary<string, string>());
             };
 
-            Because of = () => Result = Subject.Render(TokenDataset);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_result_is_not_null = () => Result.ShouldNotBeNull();
 

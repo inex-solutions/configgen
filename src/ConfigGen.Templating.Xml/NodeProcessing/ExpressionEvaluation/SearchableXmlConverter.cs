@@ -36,17 +36,17 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// <summary>
         /// Serialises the instance to "searchable" xml, writing this to the supplied writer.
         /// </summary>
-        /// <param name="tokenDatasetCollection">Instance to serialise to "searchable" xml.</param>
+        /// <param name="configurations">Instance to serialise to "searchable" xml.</param>
         /// <param name="xmlWriter">Writer onto which to serialise the supplied instance.</param>
-        public void ToSearchableXml([NotNull] IEnumerable<ITokenDataset> tokenDatasetCollection, [NotNull]XmlWriter xmlWriter)
+        public void ToSearchableXml([NotNull] IEnumerable<IConfiguration> configurations, [NotNull]XmlWriter xmlWriter)
         {
-            xmlWriter.WriteStartElement("MachineConfigurationRoot");
-            xmlWriter.WriteStartElement("Machines");
-            foreach (var tokenDataset in tokenDatasetCollection)
+            xmlWriter.WriteStartElement("ConfigurationsRoot");
+            xmlWriter.WriteStartElement("Configurations");
+            foreach (var configuration in configurations)
             {
-                if (tokenDataset != null)
+                if (configuration != null)
                 {
-                    ToSearchableXml(tokenDataset, xmlWriter);
+                    ToSearchableXml(configuration, xmlWriter);
                 }
             }
             xmlWriter.WriteEndElement();
@@ -56,14 +56,14 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// <summary>
         /// Serialises the instance to "searchable" xml, writing this to the supplied writer.
         /// </summary>
-        /// <param name="tokenDataset">Instance to serialise to "searchable" xml.</param>
+        /// <param name="configuration">Instance to serialise to "searchable" xml.</param>
         /// <param name="xmlWriter">Writer onto which to serialise the supplied instance.</param>
-        public void ToSearchableXml([NotNull] ITokenDataset tokenDataset, [NotNull]XmlWriter xmlWriter)
+        public void ToSearchableXml([NotNull] IConfiguration configuration, [NotNull]XmlWriter xmlWriter)
         {
-            xmlWriter.WriteStartElement("Machine");
-            xmlWriter.WriteAttributeString("name", tokenDataset.Name);
+            xmlWriter.WriteStartElement("Configuration");
+            xmlWriter.WriteAttributeString("name", configuration.ConfigurationName);
             xmlWriter.WriteStartElement("Values");
-            foreach (var setting in tokenDataset.ToDictionary())
+            foreach (var setting in configuration.ToDictionary())
             {
                 ToSearchableXml(setting, xmlWriter);
             }
@@ -74,13 +74,13 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// <summary>
         /// Serialises the instance to "searchable" xml, writing this to the supplied writer. If the value of this setting is null, nothing is written.
         /// </summary>
-        /// <param name="tokenValue">Instance to serialise to "searchable" xml.</param>
+        /// <param name="setting">Instance to serialise to "searchable" xml.</param>
         /// <param name="xmlWriter">Writer onto which to serialise the supplied instance.</param>
-        public void ToSearchableXml(KeyValuePair<string, object> tokenValue,[NotNull] XmlWriter xmlWriter)
+        public void ToSearchableXml(KeyValuePair<string, object> setting,[NotNull] XmlWriter xmlWriter)
         {
-            if (tokenValue.Value != null)
+            if (setting.Value != null)
             {
-                xmlWriter.WriteElementString(tokenValue.Key, tokenValue.Value?.ToString());
+                xmlWriter.WriteElementString(setting.Key, setting.Value?.ToString());
             }
         }
     }

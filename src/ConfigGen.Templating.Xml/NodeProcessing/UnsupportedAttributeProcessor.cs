@@ -32,10 +32,10 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         [NotNull]
         public ProcessNodeResults ProcessNode(
             [NotNull] XElement element,
-            [NotNull] ITokenDataset dataset)
+            [NotNull] IConfiguration configuration)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
-            if (dataset == null) throw new ArgumentNullException(nameof(dataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             var configGenAttribute = element.Attributes().First(a => a.Name.Namespace == XmlTemplate.ConfigGenXmlNamespace);
 

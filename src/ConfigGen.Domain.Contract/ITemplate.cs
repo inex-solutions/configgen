@@ -27,6 +27,6 @@ namespace ConfigGen.Domain.Contract
     {
         [Pure]
         [NotNull]
-        TemplateRenderResults Render([NotNull] ITokenDataset tokenDataset);
+        TemplateRenderResults Render([NotNull] IConfiguration configuration);
     }
 }

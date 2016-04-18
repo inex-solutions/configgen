@@ -49,7 +49,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// Processes the supplied element.
         /// </summary>
         [NotNull]
-        public abstract ProcessNodeResults ProcessNode([NotNull] XElement element, [NotNull] ITokenDataset dataset);
+        public abstract ProcessNodeResults ProcessNode([NotNull] XElement element, [NotNull] IConfiguration configuration);
 
         /// <summary>
         /// Evaluates the condition specified in the condition attribute on the supplied element, and returns the result of the evaluation.
@@ -57,11 +57,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         [NotNull]
         protected ExpressionEvaluationResults EvaluateCondition(
             [NotNull] XElement element,
-            [NotNull] ITokenDataset dataset,
+            [NotNull] IConfiguration configuration,
             [NotNull] IConfigurationExpressionEvaluator configurationExpressionEvaluator)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
-            if (dataset == null) throw new ArgumentNullException(nameof(dataset));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (configurationExpressionEvaluator == null) throw new ArgumentNullException(nameof(configurationExpressionEvaluator));
 
             string expression = null;
@@ -72,11 +72,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 expression = conditionAttribute.Value;
             }
 
-            ExpressionEvaluationResults evaluationResults = configurationExpressionEvaluator.Evaluate(dataset.Name, expression, element.Name);
+            ExpressionEvaluationResults evaluationResults = configurationExpressionEvaluator.Evaluate(configuration.ConfigurationName, expression, element.Name);
 
             foreach (var usedToken in evaluationResults.UsedTokens)
             {
-                if (dataset.Contains(usedToken))
+                if (configuration.Contains(usedToken))
                 {
                     UsedTokens.Add(usedToken);
                 }

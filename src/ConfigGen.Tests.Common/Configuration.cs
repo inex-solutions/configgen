@@ -27,42 +27,42 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Tests.Common
 {
-    public class TokenDatasetCollection : ITokenDataset
+    public class Configuration : IConfiguration
     {
         [NotNull]
-        private readonly IDictionary<string, string> _tokenValues;
+        private readonly IDictionary<string, string> _settings;
 
-        public TokenDatasetCollection([NotNull] IDictionary<string, string> tokenValues)
+        public Configuration([NotNull] IDictionary<string, string> settings)
         {
-            if (tokenValues == null) throw new ArgumentNullException(nameof(tokenValues));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
 
-            _tokenValues = tokenValues;
+            _settings = settings;
         }
 
-        public string Name => "Test-ITokenDataset";
+        public string ConfigurationName => "Test-IConfiguration";
 
-        public IEnumerable<string> TokenNames => _tokenValues.Keys;
+        public IEnumerable<string> SettingsNames => _settings.Keys;
 
         public IDictionary<string, object> ToDictionary()
         {
-            return _tokenValues.ToDictionary(pair => pair.Key, pair => (object)pair.Value);
+            return _settings.ToDictionary(pair => pair.Key, pair => (object)pair.Value);
         }
 
-        public bool TryGetValue([NotNull] string tokenName, out object value)
+        public bool TryGetValue([NotNull] string settingName, out object settingValue)
         {
-            if (tokenName == null) throw new ArgumentNullException(nameof(tokenName));
+            if (settingName == null) throw new ArgumentNullException(nameof(settingName));
 
             string val;
-            bool ret = _tokenValues.TryGetValue(tokenName, out val);
+            bool ret = _settings.TryGetValue(settingName, out val);
 
-            value = ret ? val : null;
+            settingValue = ret ? val : null;
 
             return ret;
         }
 
-        public bool Contains(string tokenName)
+        public bool Contains(string settingName)
         {
-            return _tokenValues.ContainsKey(tokenName);
+            return _settings.ContainsKey(settingName);
         }
     }
 }

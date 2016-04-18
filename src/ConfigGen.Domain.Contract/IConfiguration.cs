@@ -24,18 +24,19 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
-    public interface ITokenDataset
+    public interface IConfiguration
     {
         [NotNull]
-        string Name { get; }
+        string ConfigurationName { get; }
 
         [NotNull]
-        IEnumerable<string> TokenNames { get; }
+        IEnumerable<string> SettingsNames { get; }
 
         [NotNull]
         IDictionary<string, object> ToDictionary();
 
-        bool TryGetValue([NotNull] string tokenName, out object value);
-        bool Contains(string tokenName);
+        bool TryGetValue([NotNull] string settingName, out object settingValue);
+
+        bool Contains(string settingName);
     }
 }

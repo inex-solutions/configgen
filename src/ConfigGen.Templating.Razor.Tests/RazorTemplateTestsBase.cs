@@ -33,7 +33,7 @@ namespace ConfigGen.Templating.Razor.Tests
         [NotNull]
         private static Lazy<RazorTemplate> lazySubject;
         protected static string TemplateContents;
-        protected static TokenDatasetCollection TokenDataset;
+        protected static Configuration Configuration;
         protected static TemplateRenderResults Result;
         protected static string ExpectedOutput;
 
@@ -41,7 +41,7 @@ namespace ConfigGen.Templating.Razor.Tests
         {
             TemplateContents = null;
             lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-            TokenDataset = null;
+            Configuration = null;
             Result = null;
             ExpectedOutput = null;
         };

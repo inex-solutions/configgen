@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="Error.cs" />
     <Compile Include="ITemplate.cs" />
-    <Compile Include="ITokenDataset.cs" />
+    <Compile Include="IConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateRenderResults.cs" />
     <Compile Include="TemplateRenderResultStatus.cs" />

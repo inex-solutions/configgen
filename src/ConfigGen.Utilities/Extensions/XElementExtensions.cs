@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,15 +19,27 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
+using System;
+using System.IO;
+using System.Xml.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Utilities.Extensions
 {
-    public interface ITemplate
+    public static class XElementExtensions
     {
-        [Pure]
+        //TODO: investigate a better way of cloning an XElement
         [NotNull]
-        RenderResults Render([NotNull] string templateContents, [NotNull] IEnumerable<IConfiguration> configurationsToRender);
+        public static XElement DeepClone([NotNull] this XElement element)
+        {
+            if (element == null) throw new ArgumentNullException(nameof(element));
+
+            using (var ms = new MemoryStream())
+            {
+                element.Save(ms);
+                ms.Position = 0;
+                return XElement.Load(ms);
+            }
+        }
     }
 }

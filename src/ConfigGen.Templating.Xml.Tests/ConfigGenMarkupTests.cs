@@ -21,7 +21,6 @@
 
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
 
@@ -37,21 +36,23 @@ namespace ConfigGen.Templating.Xml.Tests
 @"<root>
   <child key=""value"" />
 </root>";
-                Configuration = new Configuration(new Dictionary<string, string>());
+                SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_unaltered_template_without_the_xml_declaration =
-                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
+                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
 
             It the_resulting_output_should_not_contain_the_xml_declaration =
-                () => Result.RenderedResult.ShouldNotContain("<?");
+                () => FirstResult.RenderedResult.ShouldNotContain("<?");
 
             It the_resulting_output_should_be_the_unaltered_template =
-                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
+                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
         public class when_the_template_contains_the_configgen_xmlns_declaration : XmlTemplateTestsBase
@@ -65,15 +66,17 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                Configuration = new Configuration(new Dictionary<string, string>());
+                SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_template_with_the_configgen_xmlns_declaration_removed =
-                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
         public class when_the_template_contains_a_non_configgen_xmlns_declaration : XmlTemplateTestsBase
@@ -84,15 +87,17 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                Configuration = new Configuration(new Dictionary<string, string>());
+                SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_unaltered_template_with_the_non_configgen_xmlns_declaration =
-                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
+                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
         public class when_the_template_contains_unrecognised_configgen_attribute : XmlTemplateTestsBase
@@ -106,18 +111,20 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                Configuration = new Configuration(new Dictionary<string, string>());
+                SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_render_should_fail = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_render_should_fail = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_result_should_contain_a_bad_markup_error =
-                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
+                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
 
             It the_resulting_output_should_be_the_template_with_the_erroneous_attribute_removed =
-                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
         public class when_the_template_contains_unrecognised_configgen_element : XmlTemplateTestsBase
@@ -132,18 +139,20 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                Configuration = new Configuration(new Dictionary<string, string>());
+                SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_render_should_fail = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_render_should_fail = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_result_should_contain_a_bad_markup_error =
-                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
+                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
 
             It the_resulting_output_should_be_the_template_with_the_erroneous_element_removed =
-                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
     }
 }

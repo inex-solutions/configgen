@@ -45,33 +45,58 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         public static readonly Regex TokenRegexp = new Regex(@"\[%(?<mib>.*)%\]", RegexOptions.Multiline | RegexOptions.Compiled);
 
+        [Pure]
         [NotNull]
-        private readonly Stream _templateContents;
-
-        public XmlTemplate([NotNull] string templateContents)
+        public RenderResults Render([NotNull] string templateContents, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
         {
             if (templateContents == null) throw new ArgumentNullException(nameof(templateContents));
+            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
 
-            _templateContents = new MemoryStream();
+            var templateStream = new MemoryStream();
 
-            var writer = new StreamWriter(_templateContents);
+            var writer = new StreamWriter(templateStream);
             writer.Write(templateContents);
             writer.Flush();
-            _templateContents.Position = 0;
-        }
+            templateStream.Position = 0;
 
-        public XmlTemplate([NotNull] Stream templateContents)
-        {
-            if (templateContents == null) throw new ArgumentNullException(nameof(templateContents));
-            if (!templateContents.CanSeek || !templateContents.CanRead) throw new InvalidOperationException("Supplied stream must be seekable and readable");
-            _templateContents = templateContents;
-            _templateContents.Position = 0;
+            var xmlDeclarationParser = new XmlDeclarationParser();
+            XmlDeclarationInfo xmlDeclarationInfo = xmlDeclarationParser.Parse(templateStream);
+            templateStream.Position = 0;
+            XElement unprocessedTemplate;
+
+            try
+            {
+                unprocessedTemplate = XElement.Load(templateStream, LoadOptions.PreserveWhitespace);
+            }
+            catch (Exception ex)
+            {
+                return new RenderResults(
+                    TemplateRenderResultStatus.Failure,
+                    null,
+                    new XmlTemplateError(XmlTemplateErrorCodes.TemplateLoadError, ex.ToString()).ToSingleEnumerable());
+            }
+
+            var results = new List<SingleTemplateRenderResults>();
+
+            foreach (var configuration in configurationsToRender)
+            {
+                XElement clonedUnprocessedTemplate = unprocessedTemplate.DeepClone();
+                var result = RenderSingleTemplate(clonedUnprocessedTemplate, configuration, xmlDeclarationInfo);
+                results.Add(result);
+            }
+
+            return new RenderResults(TemplateRenderResultStatus.Success, results, null); 
         }
 
         [NotNull]
-        public TemplateRenderResults Render([NotNull] IConfiguration configuration)
+        public SingleTemplateRenderResults RenderSingleTemplate(
+            [NotNull] XElement unprocessedTemplate, 
+            [NotNull] IConfiguration configuration,
+            [NotNull] XmlDeclarationInfo xmlDeclarationInfo)
         {
+            if (unprocessedTemplate == null) throw new ArgumentNullException(nameof(unprocessedTemplate));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (xmlDeclarationInfo == null) throw new ArgumentNullException(nameof(xmlDeclarationInfo));
 
             try
             {
@@ -80,31 +105,11 @@ namespace ConfigGen.Templating.Xml
                 var unusedTokens = new List<string>();
                 var errors = new List<Error>();
 
-                var xmlDeclarationParser = new XmlDeclarationParser();
-                XmlDeclarationInfo xmlDeclarationInfo = xmlDeclarationParser.Parse(_templateContents);
-
-                _templateContents.Position = 0;
-                XElement rawTemplate;
-
-                try
-                {
-                    rawTemplate = XElement.Load(_templateContents, LoadOptions.PreserveWhitespace);
-                }
-                catch (Exception ex)
-                {
-                    return new TemplateRenderResults(
-                        status: TemplateRenderResultStatus.Failure,
-                        renderedResult: null,
-                        usedTokens: usedTokens,
-                        unusedTokens: unusedTokens,
-                        unrecognisedTokens: unrecognisedTokens,
-                        errors: new XmlTemplateError(XmlTemplateErrorCodes.TemplateLoadError, ex.ToString()).ToSingleEnumerable());
-                }
 
                 XElement configGenNode;
 
                 var configGenNodeProcessorFactory = new ConfigGenNodeProcessorFactory();
-                while ((configGenNode = GetConfigGenNodes(rawTemplate)) != null)
+                while ((configGenNode = GetConfigGenNodes(unprocessedTemplate)) != null)
                 {
                     var nodeProcessor = configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, configuration);
 
@@ -119,7 +124,7 @@ namespace ConfigGen.Templating.Xml
                 }
 
                 // remove config gen namespace declaration
-                foreach (var attribute in rawTemplate.Attributes())
+                foreach (var attribute in unprocessedTemplate.Attributes())
                 {
                     if (attribute.Value == ConfigGenXmlNamespace)
                     {
@@ -140,7 +145,7 @@ namespace ConfigGen.Templating.Xml
                 {
                     var xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
 
-                    rawTemplate.Save(xmlWriter);
+                    unprocessedTemplate.Save(xmlWriter);
                     xmlWriter.Flush();
                     stream.Position = 0;
 
@@ -164,7 +169,7 @@ namespace ConfigGen.Templating.Xml
                     }
                 }
 
-                return new TemplateRenderResults(
+                return new SingleTemplateRenderResults(
                             status: errors.Any() ? TemplateRenderResultStatus.Failure : TemplateRenderResultStatus.Success,
                             renderedResult: output,
                             usedTokens: usedTokens,
@@ -174,7 +179,7 @@ namespace ConfigGen.Templating.Xml
             }
             catch (Exception ex)
             {
-                return new TemplateRenderResults(
+                return new SingleTemplateRenderResults(
                        status: TemplateRenderResultStatus.Failure,
                        renderedResult: null,
                        usedTokens: null,

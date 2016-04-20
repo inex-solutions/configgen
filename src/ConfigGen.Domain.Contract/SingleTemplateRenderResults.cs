@@ -25,9 +25,9 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
-    public class TemplateRenderResults
+    public class SingleTemplateRenderResults
     {
-        public TemplateRenderResults(
+        public SingleTemplateRenderResults(
             TemplateRenderResultStatus status, 
             [CanBeNull] string renderedResult, 
             [CanBeNull] IEnumerable<string> usedTokens, 

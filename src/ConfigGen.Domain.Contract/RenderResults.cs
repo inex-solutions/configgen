@@ -20,14 +20,28 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
-    public interface ITemplate
+    public class RenderResults
     {
-        [Pure]
+        public RenderResults(TemplateRenderResultStatus status, [CanBeNull] [ItemNotNull] IEnumerable<SingleTemplateRenderResults> results, [CanBeNull] [ItemNotNull] IEnumerable<Error> errors)
+        {
+            Results = results ?? new SingleTemplateRenderResults[0];
+            Errors = errors ?? new Error[0];
+
+        }
+
         [NotNull]
-        RenderResults Render([NotNull] string templateContents, [NotNull] IEnumerable<IConfiguration> configurationsToRender);
+        [ItemNotNull]
+        public IEnumerable<SingleTemplateRenderResults> Results { get; }
+
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<Error> Errors { get; }
+
+        public int Count => Results.Count();
     }
 }

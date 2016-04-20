@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Infrastructure.RazorTemplateRendering;
 using JetBrains.Annotations;
@@ -32,25 +33,29 @@ namespace ConfigGen.Templating.Razor
         [NotNull]
         private const string RazorTemplateErrorSource = nameof(RazorTemplate);
 
-        [NotNull]
-        private readonly RazorTemplateRenderer _razorTemplateRenderer;
-
-        public RazorTemplate(string templateContents)
-        {
-            _razorTemplateRenderer = new RazorTemplateRenderer(templateContents);
-        }
-
         [Pure]
         [NotNull]
-        public TemplateRenderResults Render([NotNull] IConfiguration configuration)
+        public RenderResults Render([NotNull] string templateContents, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        {
+            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
+
+            var razorTemplateRenderer = new RazorTemplateRenderer(templateContents);
+
+            var allResults = configurationsToRender.Select(configuration => RenderSingleConfiguration(razorTemplateRenderer, configuration)).ToList();
+
+            return new RenderResults(TemplateRenderResultStatus.Success, allResults, null);
+        }
+
+        private SingleTemplateRenderResults RenderSingleConfiguration([NotNull] RazorTemplateRenderer razorTemplateRenderer, [NotNull] IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (razorTemplateRenderer == null) throw new ArgumentNullException(nameof(razorTemplateRenderer));
 
             try
             {
                 var settings = configuration.ToDictionary();
                 var model = new DictionaryBackedDynamicModel(settings);
-                RenderingResult result = _razorTemplateRenderer.Render(model);
+                RenderingResult result = razorTemplateRenderer.Render(model);
 
                 var usedTokens = new List<string>();
                 var unusedTokens = new List<string>();
@@ -69,7 +74,7 @@ namespace ConfigGen.Templating.Razor
 
                 if (result.Status == RenderingResultStatus.Success)
                 {
-                    return new TemplateRenderResults(
+                    return new SingleTemplateRenderResults(
                         status: TemplateRenderResultStatus.Success,
                         renderedResult: result.RenderedResult,
                         usedTokens: usedTokens,
@@ -78,7 +83,7 @@ namespace ConfigGen.Templating.Razor
                         errors: null);
                 }
 
-                return new TemplateRenderResults(
+                return new SingleTemplateRenderResults(
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
                     usedTokens: usedTokens,
@@ -88,13 +93,13 @@ namespace ConfigGen.Templating.Razor
             }
             catch (Exception ex)
             {
-                return new TemplateRenderResults(
+                return new SingleTemplateRenderResults(
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
                     usedTokens: null,
                     unusedTokens: null,
                     unrecognisedTokens: null,
-                    errors: new[] {new UnhandledExceptionError(RazorTemplateErrorSource, ex)});
+                    errors: new[] { new UnhandledExceptionError(RazorTemplateErrorSource, ex) });
             }
         }
 

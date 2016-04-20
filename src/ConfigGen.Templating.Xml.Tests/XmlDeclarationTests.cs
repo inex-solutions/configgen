@@ -21,7 +21,6 @@
 
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
 
@@ -41,18 +40,20 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
                 TemplateContents = XmlDeclaration + TemplateBody;
-                Configuration = new Configuration(new Dictionary<string, string>());
+                SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_contain_the_xml_declaration = 
-                () => Result.RenderedResult.ShouldStartWith(XmlDeclaration);
+                () => FirstResult.RenderedResult.ShouldStartWith(XmlDeclaration);
 
             It the_resulting_output_should_be_the_rest_of_the_template_unaltered =
-                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
+                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
         }
     }
 }

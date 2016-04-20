@@ -21,7 +21,6 @@
 
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
 
@@ -36,12 +35,14 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen="""" /></root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_result_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_errors_collection_should_specify_a_condition_processing_error =
-                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
         public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : XmlTemplateTestsBase
@@ -51,59 +52,65 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen=""$val /+-= 1"" /></root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_result_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_errors_collection_should_specify_a_condition_processing_error =
-                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : XmlTemplateTestsBase
         {
             Establish context = () =>
             {
-                Configuration = new Configuration(new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, string>
                 {
                     {"val", "2"}
-                });
+                };
                 TemplateContents =
                     $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=2"" /></root>";
 
                 ExpectedOutput = @"<root><child1 /><child2 /></root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_result_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_result_should_contain_the_child_element_but_without_the_applyWhen_attribute =
-                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => Result.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => FirstResult.UsedTokens.ShouldContainOnly("val");
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : XmlTemplateTestsBase
         {
             Establish context = () =>
             {
-                Configuration = new Configuration(new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, string>
                 {
                     {"val", "2"}
-                });
+                };
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=3"" /></root>";
 
                 ExpectedOutput = @"<root><child1 /></root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
 
-            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_result_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_result_should_contain_not_the_child_element =
-                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => Result.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => FirstResult.UsedTokens.ShouldContainOnly("val");
         }
 
 

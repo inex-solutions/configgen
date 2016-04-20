@@ -19,7 +19,8 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using Machine.Specifications;
@@ -31,22 +32,32 @@ namespace ConfigGen.Templating.Razor.Tests
     public abstract class RazorTemplateTestsBase
     {
         [NotNull]
-        private static Lazy<RazorTemplate> lazySubject;
+        protected static RazorTemplate Subject;
         protected static string TemplateContents;
-        protected static Configuration Configuration;
-        protected static TemplateRenderResults Result;
+        [NotNull]
+        protected static Dictionary<string, string> SingleConfiguration; 
+        protected static RenderResults Results;
         protected static string ExpectedOutput;
+        private static IEnumerable<Configuration> configurations;
 
         Establish context = () =>
         {
+            SingleConfiguration = new Dictionary<string, string>();
             TemplateContents = null;
-            lazySubject = new Lazy<RazorTemplate>(() => new RazorTemplate(TemplateContents));
-            Configuration = null;
-            Result = null;
+            Subject = new RazorTemplate();
+            configurations = null;
+            Results = null;
             ExpectedOutput = null;
         };
 
         [NotNull]
-        protected static RazorTemplate Subject => lazySubject.Value;
+        protected static IEnumerable<Configuration> Configurations
+        {
+            get { return configurations ?? new [] {new Configuration(SingleConfiguration)}; }
+            set { configurations = value; }
+        }
+   
+        [NotNull]
+        protected static SingleTemplateRenderResults FirstResult => Results?.Results.First();
     }
 }

@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.IO;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
@@ -28,6 +29,6 @@ namespace ConfigGen.Domain.Contract
     {
         [Pure]
         [NotNull]
-        RenderResults Render([NotNull] string templateContents, [NotNull] IEnumerable<IConfiguration> configurationsToRender);
+        RenderResults Render([NotNull] Stream templateStream, [NotNull] IEnumerable<IConfiguration> configurationsToRender);
     }
 }

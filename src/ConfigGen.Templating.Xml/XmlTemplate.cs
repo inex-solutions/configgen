@@ -47,21 +47,17 @@ namespace ConfigGen.Templating.Xml
 
         [Pure]
         [NotNull]
-        public RenderResults Render([NotNull] string templateContents, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        public RenderResults Render([NotNull] Stream templateStream, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
         {
-            if (templateContents == null) throw new ArgumentNullException(nameof(templateContents));
+            if (templateStream == null) throw new ArgumentNullException(nameof(templateStream));
             if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
 
-            var templateStream = new MemoryStream();
+            if (!templateStream.CanRead || !templateStream.CanSeek)
+            {
+                throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
+            }
 
-            var writer = new StreamWriter(templateStream);
-            writer.Write(templateContents);
-            writer.Flush();
-            templateStream.Position = 0;
-
-            var xmlDeclarationParser = new XmlDeclarationParser();
-            XmlDeclarationInfo xmlDeclarationInfo = xmlDeclarationParser.Parse(templateStream);
-            templateStream.Position = 0;
+            var xmlDeclarationInfo = ParseXmlDelcaration(templateStream);
             XElement unprocessedTemplate;
 
             try
@@ -80,12 +76,20 @@ namespace ConfigGen.Templating.Xml
 
             foreach (var configuration in configurationsToRender)
             {
-                XElement clonedUnprocessedTemplate = unprocessedTemplate.DeepClone();
-                var result = RenderSingleTemplate(clonedUnprocessedTemplate, configuration, xmlDeclarationInfo);
+                var result = RenderSingleTemplate(unprocessedTemplate.DeepClone(), configuration, xmlDeclarationInfo);
                 results.Add(result);
             }
 
             return new RenderResults(TemplateRenderResultStatus.Success, results, null); 
+        }
+
+        [NotNull]
+        private static XmlDeclarationInfo ParseXmlDelcaration([NotNull] Stream templateStream)
+        {
+            var xmlDeclarationParser = new XmlDeclarationParser();
+            XmlDeclarationInfo xmlDeclarationInfo = xmlDeclarationParser.Parse(templateStream);
+            templateStream.Position = 0;
+            return xmlDeclarationInfo;
         }
 
         [NotNull]

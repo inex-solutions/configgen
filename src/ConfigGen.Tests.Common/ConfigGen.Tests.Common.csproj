@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="MSpec\ShouldExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateTestsBase.cs" />
     <Compile Include="TestSetupException.cs" />
     <Compile Include="Configuration.cs" />
   </ItemGroup>

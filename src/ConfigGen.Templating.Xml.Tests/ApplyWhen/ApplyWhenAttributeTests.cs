@@ -35,7 +35,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen="""" /></root>";
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -52,7 +52,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen=""$val /+-= 1"" /></root>";
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -76,7 +76,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<root><child1 /><child2 /></root>";
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -101,7 +101,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<root><child1 /></root>";
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 

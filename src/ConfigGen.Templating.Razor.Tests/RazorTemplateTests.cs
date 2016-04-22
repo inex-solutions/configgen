@@ -40,7 +40,7 @@ namespace ConfigGen.Templating.Razor.Tests
                 };
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -69,7 +69,7 @@ namespace ConfigGen.Templating.Razor.Tests
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -94,7 +94,7 @@ namespace ConfigGen.Templating.Razor.Tests
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -119,7 +119,7 @@ namespace ConfigGen.Templating.Razor.Tests
                 SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -137,7 +137,7 @@ namespace ConfigGen.Templating.Razor.Tests
                 SingleConfiguration = new Dictionary<string, string>();
             };
 
-            Because of = () => Results = Subject.Render(TemplateContents, Configurations);
+            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 

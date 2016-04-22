@@ -19,49 +19,13 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using Machine.Specifications;
-using Machine.Specifications.Annotations;
 
 namespace ConfigGen.Templating.Xml.Tests
 {
     [Subject(typeof(XmlTemplate))]
-    public abstract class XmlTemplateTestsBase
+    public abstract class XmlTemplateTestsBase : TemplateTestsBase<XmlTemplate>
     {
-        [NotNull]
-        protected static XmlTemplate Subject;
-        protected static string TemplateContents;
-        [NotNull]
-        protected static Dictionary<string, string> SingleConfiguration;
-        protected static RenderResults Results;
-        protected static string ExpectedOutput;
-        protected static Exception CaughtException;
-
-        private static IEnumerable<Configuration> configurations;
-
-
-        Establish context = () =>
-        {
-            TemplateContents = null;
-            Subject = new XmlTemplate();
-            SingleConfiguration = new Dictionary<string, string>();
-            Results = null;
-            ExpectedOutput = null;
-            CaughtException = null;
-        };
-
-        [NotNull]
-        protected static IEnumerable<Configuration> Configurations
-        {
-            get { return configurations ?? new[] { new Configuration(SingleConfiguration) }; }
-            set { configurations = value; }
-        }
-
-        [NotNull]
-        protected static SingleTemplateRenderResults FirstResult => Results?.Results.First();
     }
 }

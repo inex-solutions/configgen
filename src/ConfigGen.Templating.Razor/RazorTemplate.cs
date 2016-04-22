@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Infrastructure.RazorTemplateRendering;
@@ -35,9 +36,22 @@ namespace ConfigGen.Templating.Razor
 
         [Pure]
         [NotNull]
-        public RenderResults Render([NotNull] string templateContents, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        public RenderResults Render([NotNull] Stream templateStream, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
         {
             if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
+            if (templateStream == null) throw new ArgumentNullException(nameof(templateStream));
+
+            if (!templateStream.CanRead || !templateStream.CanSeek)
+            {
+                throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
+            }
+
+            string templateContents;
+
+            using (var reader = new StreamReader(templateStream))
+            {
+                templateContents = reader.ReadToEnd();
+            }
 
             var razorTemplateRenderer = new RazorTemplateRenderer(templateContents);
 

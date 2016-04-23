@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using System.Xml;
 using System.Xml.Linq;
 using JetBrains.Annotations;
 
@@ -39,6 +40,30 @@ namespace ConfigGen.Utilities.Extensions
                 element.Save(ms);
                 ms.Position = 0;
                 return XElement.Load(ms);
+            }
+        }
+
+        [NotNull]
+        public static string ToXmlString([NotNull] this XElement element, bool includeXmlDeclaration)
+        {
+            if (element == null) throw new ArgumentNullException(nameof(element));
+
+            var xmlWriterSettings = new XmlWriterSettings
+            {
+                OmitXmlDeclaration = !includeXmlDeclaration,
+                Indent = true,
+            };
+
+            using (var stream = new MemoryStream())
+            using (var streamReader = new StreamReader(stream))
+            {
+                var xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
+
+                element.Save(xmlWriter);
+                xmlWriter.Flush();
+                stream.Position = 0;
+
+                return streamReader.ReadToEnd();
             }
         }
     }

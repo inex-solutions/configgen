@@ -36,13 +36,15 @@ namespace ConfigGen.Utilities.Xml
         /// <summary>
         /// Parses the declaration of the supplied XML stream, and returns information about the declaration.
         /// </summary>
-        /// <param name="xmlStream">The XML stream.</param>
+        /// <param name="xmlStream">The XML stream, which is reset to it's starting position after reading</param>
         /// <returns>Information about the xml declaration</returns>
         [Pure]
         [NotNull]
         public XmlDeclarationInfo Parse([NotNull] Stream xmlStream)
         {
             if (xmlStream == null) throw new ArgumentNullException(nameof(xmlStream));
+
+            long startingPosition = xmlStream.Position;
 
             var buffer = new byte[1024];
             int read = xmlStream.Read(buffer, 0, 1024);
@@ -54,32 +56,33 @@ namespace ConfigGen.Utilities.Xml
                     return ReadXmlDeclaration(ms);
                 }
                 catch (XmlException ex)
+                    when (!ex.Message.IsNullOrEmpty()
+                          && ex.Message.ToLower().Contains("cannot switch to unicode"))
                 {
-                    if (!ex.Message.IsNullOrEmpty()
-                        && ex.Message.ToLower().Contains("cannot switch to unicode"))
+                    // The declaration probably says UTF-16, while the file itself is
+                    // UTF-8.
+                    // Read in the string, convert to UTF-16 and try again.
+                    using (var readerStream = new MemoryStream(buffer))
+                    using (var reader = new StreamReader(readerStream))
                     {
-                        // The declaration probably says UTF-16, while the file itself is
-                        // UTF-8.
-                        // Read in the string, convert to UTF-16 and try again.
-                        using (var readerStream = new MemoryStream(buffer))
-                        using (var reader = new StreamReader(readerStream))
+                        var xml = reader.ReadToEnd();
+
+                        using (var writerStream = new MemoryStream())
+                        using (var writer = new StreamWriter(writerStream, Encoding.Unicode))
                         {
-                            var xml = reader.ReadToEnd();
+                            writer.Write(xml);
+                            writer.Flush();
+                            writerStream.Position = 0;
+                            var declarationInfo = ReadXmlDeclaration(writerStream);
 
-                            using (var writerStream = new MemoryStream())
-                            using (var writer = new StreamWriter(writerStream, Encoding.Unicode))
-                            {
-                                writer.Write(xml);
-                                writer.Flush();
-                                writerStream.Position = 0;
-                                var declarationInfo = ReadXmlDeclaration(writerStream);
-
-                                return new XmlDeclarationInfo(declarationInfo.XmlDeclarationPresent, declarationInfo.StatedEncoding, reader.CurrentEncoding);
-                            }
+                            return new XmlDeclarationInfo(declarationInfo.XmlDeclarationPresent,
+                                declarationInfo.StatedEncoding, reader.CurrentEncoding);
                         }
                     }
-
-                    throw;
+                }
+                finally
+                {
+                    xmlStream.Position = startingPosition;
                 }
             }
         }

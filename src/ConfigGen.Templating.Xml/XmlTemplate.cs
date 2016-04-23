@@ -23,11 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Xml;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Templating.Xml.NodeProcessing;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
 using JetBrains.Annotations;
@@ -43,7 +40,37 @@ namespace ConfigGen.Templating.Xml
         public const string XmlTemplateErrorSource = nameof(XmlTemplate);
 
         [NotNull]
-        public static readonly Regex TokenRegexp = new Regex(@"\[%(?<mib>.*)%\]", RegexOptions.Multiline | RegexOptions.Compiled);
+        private readonly XmlDeclarationParser _xmlDeclarationParser;
+
+        [NotNull]
+        private readonly TemplateLoader _templateLoader;
+
+        [NotNull]
+        private readonly TemplatePreprocessor _templatePreprocessor;
+
+        [NotNull]
+        private readonly TokenReplacer _tokenReplacer;
+
+        internal XmlTemplate(
+            [NotNull] XmlDeclarationParser xmlDeclarationParser, 
+            [NotNull] TemplateLoader templateLoader, 
+            [NotNull] TemplatePreprocessor templatePreprocessor,
+            [NotNull] TokenReplacer tokenReplacer)
+        {
+            if (xmlDeclarationParser == null) throw new ArgumentNullException(nameof(xmlDeclarationParser));
+            if (templateLoader == null) throw new ArgumentNullException(nameof(templateLoader));
+            if (templatePreprocessor == null) throw new ArgumentNullException(nameof(templatePreprocessor));
+            if (tokenReplacer == null) throw new ArgumentNullException(nameof(tokenReplacer));
+
+            _xmlDeclarationParser = xmlDeclarationParser;
+            _templateLoader = templateLoader;
+            _templatePreprocessor = templatePreprocessor;
+            _tokenReplacer = tokenReplacer;
+        }
+
+        public XmlTemplate() : this (new XmlDeclarationParser(), new TemplateLoader(), new TemplatePreprocessor(), new TokenReplacer())
+        {
+        }
 
         [Pure]
         [NotNull]
@@ -57,44 +84,27 @@ namespace ConfigGen.Templating.Xml
                 throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
             }
 
-            var xmlDeclarationInfo = ParseXmlDelcaration(templateStream);
-            XElement unprocessedTemplate;
+            XmlDeclarationInfo xmlDeclarationInfo = _xmlDeclarationParser.Parse(templateStream);
 
-            try
-            {
-                unprocessedTemplate = XElement.Load(templateStream, LoadOptions.PreserveWhitespace);
-            }
-            catch (Exception ex)
+            TemplateLoadResults templateLoadResults = _templateLoader.LoadTemplate(templateStream);
+
+            if (!templateLoadResults.Success)
             {
                 return new RenderResults(
                     TemplateRenderResultStatus.Failure,
                     null,
-                    new XmlTemplateError(XmlTemplateErrorCodes.TemplateLoadError, ex.ToString()).ToSingleEnumerable());
+                    templateLoadResults.TemplateLoadErrors);
             }
 
-            var results = new List<SingleTemplateRenderResults>();
-
-            foreach (var configuration in configurationsToRender)
-            {
-                var result = RenderSingleTemplate(unprocessedTemplate.DeepClone(), configuration, xmlDeclarationInfo);
-                results.Add(result);
-            }
+            IEnumerable<SingleTemplateRenderResults> results = configurationsToRender.Select(cfg =>
+                RenderSingleTemplate(templateLoadResults.LoadedTemplate.DeepClone(), cfg, xmlDeclarationInfo));
 
             return new RenderResults(TemplateRenderResultStatus.Success, results, null); 
         }
 
         [NotNull]
-        private static XmlDeclarationInfo ParseXmlDelcaration([NotNull] Stream templateStream)
-        {
-            var xmlDeclarationParser = new XmlDeclarationParser();
-            XmlDeclarationInfo xmlDeclarationInfo = xmlDeclarationParser.Parse(templateStream);
-            templateStream.Position = 0;
-            return xmlDeclarationInfo;
-        }
-
-        [NotNull]
-        public SingleTemplateRenderResults RenderSingleTemplate(
-            [NotNull] XElement unprocessedTemplate, 
+        private SingleTemplateRenderResults RenderSingleTemplate(
+            [NotNull] XElement unprocessedTemplate,
             [NotNull] IConfiguration configuration,
             [NotNull] XmlDeclarationInfo xmlDeclarationInfo)
         {
@@ -104,74 +114,19 @@ namespace ConfigGen.Templating.Xml
 
             try
             {
-                var usedTokens = new HashSet<string>();
-                var unrecognisedTokens = new HashSet<string>();
-                var unusedTokens = new List<string>();
-                var errors = new List<Error>();
+                var preprocessingResults = _templatePreprocessor.PreProcessTemplate(unprocessedTemplate, configuration);
+                string preprocessedTemplate = unprocessedTemplate.ToXmlString(xmlDeclarationInfo.XmlDeclarationPresent);
+                var usedTokens = new HashSet<string>(preprocessingResults.UsedTokens);
+                var unrecognisedTokens = new HashSet<string>(preprocessingResults.UnrecognisedTokens);
+                var errors = new List<Error>(preprocessingResults.Errors);
 
-
-                XElement configGenNode;
-
-                var configGenNodeProcessorFactory = new ConfigGenNodeProcessorFactory();
-                while ((configGenNode = GetConfigGenNodes(unprocessedTemplate)) != null)
-                {
-                    var nodeProcessor = configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, configuration);
-
-                    var result = nodeProcessor.ProcessNode(configGenNode, configuration);
-                    if (result.ErrorCode != null)
-                    {
-                        errors.Add(new XmlTemplateError(result.ErrorCode, result.ErrorMessage));
-                    }
-
-                    usedTokens.AddWhereNotPresent(result.UsedTokens);
-                    unrecognisedTokens.AddWhereNotPresent(result.UnrecognisedTokens);
-                }
-
-                // remove config gen namespace declaration
-                foreach (var attribute in unprocessedTemplate.Attributes())
-                {
-                    if (attribute.Value == ConfigGenXmlNamespace)
-                    {
-                        attribute.Remove();
-                    }
-                }
-                
-                string output;
-
-                var xmlWriterSettings = new XmlWriterSettings
-                {
-                    OmitXmlDeclaration = !xmlDeclarationInfo.XmlDeclarationPresent,
-                    Indent = true,
-                };
-
-                using (var stream = new MemoryStream())
-                using (var streamReader = new StreamReader(stream))
-                {
-                    var xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
-
-                    unprocessedTemplate.Save(xmlWriter);
-                    xmlWriter.Flush();
-                    stream.Position = 0;
-
-                    output = streamReader.ReadToEnd();
-                }
-
-                var tokenValueMatchEvaluator = new TokenValueMatchEvaluator(
+                string output = _tokenReplacer.ReplaceTokens(
                     configuration: configuration,
                     onTokenUsed: tokenName => usedTokens.AddIfNotPresent(tokenName),
-                    onUnrecognisedToken: tokenName => unrecognisedTokens.AddIfNotPresent(tokenName));
+                    onUnrecognisedToken: tokenName => unrecognisedTokens.AddIfNotPresent(tokenName), 
+                    inputTemplate: preprocessedTemplate);
 
-                var matchEvaluator = new MatchEvaluator(tokenValueMatchEvaluator.Target);
-
-                output = TokenRegexp.Replace(output, matchEvaluator);
-
-                foreach (var token in configuration.SettingsNames)
-                {
-                    if (!usedTokens.Contains(token))
-                    {
-                        unusedTokens.Add(token);
-                    }
-                }
+                IEnumerable<string> unusedTokens = configuration.SettingsNames.Where(token => !usedTokens.Contains(token));
 
                 return new SingleTemplateRenderResults(
                             status: errors.Any() ? TemplateRenderResultStatus.Failure : TemplateRenderResultStatus.Success,
@@ -191,17 +146,6 @@ namespace ConfigGen.Templating.Xml
                        unrecognisedTokens: null,
                        errors: new UnhandledExceptionError(XmlTemplateErrorSource, ex).ToSingleEnumerable());
             }
-        }
-
-        [CanBeNull]
-        private static XElement GetConfigGenNodes([NotNull] XElement documentElement)
-        {
-            if (documentElement == null) throw new ArgumentNullException(nameof(documentElement));
-
-            return documentElement
-                .Descendants()
-                .FirstOrDefault(e => e.Name.Namespace == ConfigGenXmlNamespace
-                            || e.Attributes().FirstOrDefault(a => a.Name.Namespace == ConfigGenXmlNamespace) != null);
         }
     }
 }

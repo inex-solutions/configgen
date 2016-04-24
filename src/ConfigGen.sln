@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.ConsoleApp", "ConfigGen.ConsoleApp\ConfigGen.ConsoleApp.csproj", "{B8732EE6-8AEF-4DD8-9C71-14FACE388CF0}"
 EndProject
@@ -24,6 +24,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Utilities", "ConfigGen.Utilities\ConfigGen.Utilities.csproj", "{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Utilities.Tests", "ConfigGen.Utilities.Tests\ConfigGen.Utilities.Tests.csproj", "{26FF5D9E-0FA0-4B37-80E1-E5907A6DB2A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Settings.Excel", "ConfigGen.Settings.Excel\ConfigGen.Settings.Excel.csproj", "{90A5D982-3422-4C11-94C1-E1AA924FC5A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Settings.Excel.Tests", "ConfigGen.Settings.Excel.Tests\ConfigGen.Settings.Excel.Tests.csproj", "{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +79,14 @@ Global
 		{26FF5D9E-0FA0-4B37-80E1-E5907A6DB2A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26FF5D9E-0FA0-4B37-80E1-E5907A6DB2A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26FF5D9E-0FA0-4B37-80E1-E5907A6DB2A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90A5D982-3422-4C11-94C1-E1AA924FC5A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90A5D982-3422-4C11-94C1-E1AA924FC5A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90A5D982-3422-4C11-94C1-E1AA924FC5A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90A5D982-3422-4C11-94C1-E1AA924FC5A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

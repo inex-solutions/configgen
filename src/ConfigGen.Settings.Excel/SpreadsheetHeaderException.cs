@@ -18,25 +18,20 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.Collections.Generic;
-using JetBrains.Annotations;
-
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Settings.Excel
 {
-    public interface IConfiguration : IEnumerable<Setting>
+    /// <summary>
+    /// Thrown if the spreadsheet header format is invalid.
+    /// </summary>
+    public class SpreadsheetHeaderException : SpreadsheetException
     {
-        [NotNull]
-        string ConfigurationName { get; }
-
-        [NotNull]
-        IEnumerable<string> SettingsNames { get; }
-
-        [NotNull]
-        IDictionary<string, object> ToDictionary();
-
-        bool TryGetValue([NotNull] string settingName, out object settingValue);
-
-        bool Contains(string settingName);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpreadsheetHeaderException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public SpreadsheetHeaderException(string message) : base (message)
+        {
+            
+        }
     }
 }

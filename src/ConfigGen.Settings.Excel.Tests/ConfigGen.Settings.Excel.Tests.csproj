@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{26FF5D9E-0FA0-4B37-80E1-E5907A6DB2A5}</ProjectGuid>
+    <ProjectGuid>{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfigGen.Utilities.Tests</RootNamespace>
-    <AssemblyName>ConfigGen.Utilities.Tests</AssemblyName>
+    <RootNamespace>ConfigGen.Settings.Excel.Tests</RootNamespace>
+    <AssemblyName>ConfigGen.Settings.Excel.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,11 +53,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
+    <Compile Include="ExcelSettingsLoaderTestBase.cs" />
+    <Compile Include="ExcelSettingsLoaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Xml\XmlDeclarationParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="SampleFiles\App.Config.Settings.xls" />
+    <EmbeddedResource Include="SampleFiles\App.Config.Settings.xlsx" />
+    <EmbeddedResource Include="SampleFiles\App.Config.Settings_DefaultNamedWorksheet.xlsx" />
+    <EmbeddedResource Include="SampleFiles\BlankConfigFile.App.Config.Settings.xlsx" />
+    <EmbeddedResource Include="SampleFiles\BlankMachineName.App.Config.Settings.xlsx" />
+    <EmbeddedResource Include="SampleFiles\NoEmptyRowAfterHeader.App.Config.Settings.xlsx" />
+    <EmbeddedResource Include="SampleFiles\SettingsPreferences-ColSkip.App.Config.Settings.xls" />
+    <EmbeddedResource Include="SampleFiles\SettingsPreferences-EmptyString.App.Config.Settings.xls" />
+    <EmbeddedResource Include="SampleFiles\SettingsPreferences-Null.App.Config.Settings.xls" />
+    <EmbeddedResource Include="SampleFiles\WhitespaceConfigFile.App.Config.Settings.xlsx" />
+    <EmbeddedResource Include="SampleFiles\WhitespaceMachineName.App.Config.Settings.xlsx" />
+    <EmbeddedResource Include="SampleFiles\WhitespaceSurroundingMachineName.App.Config.Settings.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
+      <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
+      <Name>ConfigGen.Domain.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Settings.Excel\ConfigGen.Settings.Excel.csproj">
+      <Project>{90A5D982-3422-4C11-94C1-E1AA924FC5A6}</Project>
+      <Name>ConfigGen.Settings.Excel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Tests.Common\ConfigGen.Tests.Common.csproj">
       <Project>{3FEBFF76-6425-454A-BEF3-5ACB437B6A5D}</Project>
       <Name>ConfigGen.Tests.Common</Name>
@@ -68,14 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestResources\Simple-NoDeclaration-UTF16.xml" />
-    <EmbeddedResource Include="TestResources\Simple-UTF8-File-With-UTF16-Declaration.xml" />
-    <EmbeddedResource Include="TestResources\Simple-WithDeclaration-ANSI-Windows1252.xml" />
-    <EmbeddedResource Include="TestResources\Simple-WithDeclaration-ANSI.xml" />
-    <EmbeddedResource Include="TestResources\Simple-WithDeclaration-UTF16.xml" />
-    <EmbeddedResource Include="TestResources\Simple-WithDeclaration-UTF8.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

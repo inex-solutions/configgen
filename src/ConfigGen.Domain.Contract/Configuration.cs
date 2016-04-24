@@ -20,39 +20,52 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Tests.Common
+namespace ConfigGen.Domain.Contract
 {
     public class Configuration : IConfiguration
     {
         [NotNull]
-        private readonly IDictionary<string, string> _settings;
+        private readonly IDictionary<string, object> _settings;
 
-        public Configuration([NotNull] IDictionary<string, string> settings)
+        //TODO - remove this ctor
+        public Configuration([NotNull] IDictionary<string, object> settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
             _settings = settings;
+
+            ConfigurationName = "Test-IConfiguration";
         }
 
-        public string ConfigurationName => "Test-IConfiguration";
+        public Configuration([NotNull] string configurationName, [NotNull] IDictionary<string, object> settings)
+        {
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
+
+            _settings = settings;
+            ConfigurationName = configurationName;
+        }
+
+        public string ConfigurationName { get; }
+    
 
         public IEnumerable<string> SettingsNames => _settings.Keys;
 
         public IDictionary<string, object> ToDictionary()
         {
-            return _settings.ToDictionary(pair => pair.Key, pair => (object)pair.Value);
+            return _settings.ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         public bool TryGetValue([NotNull] string settingName, out object settingValue)
         {
             if (settingName == null) throw new ArgumentNullException(nameof(settingName));
 
-            string val;
+            object val;
             bool ret = _settings.TryGetValue(settingName, out val);
 
             settingValue = ret ? val : null;
@@ -63,6 +76,16 @@ namespace ConfigGen.Tests.Common
         public bool Contains(string settingName)
         {
             return _settings.ContainsKey(settingName);
+        }
+
+        public IEnumerator<Setting> GetEnumerator()
+        {
+            return _settings.Select(s => new Setting(s.Key, s.Value)).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

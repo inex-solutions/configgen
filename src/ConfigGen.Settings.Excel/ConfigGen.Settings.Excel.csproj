@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</ProjectGuid>
+    <ProjectGuid>{90A5D982-3422-4C11-94C1-E1AA924FC5A6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfigGen.Utilities</RootNamespace>
-    <AssemblyName>ConfigGen.Utilities</AssemblyName>
+    <RootNamespace>ConfigGen.Settings.Excel</RootNamespace>
+    <AssemblyName>ConfigGen.Settings.Excel</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,8 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -44,17 +49,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DisposableFile.cs" />
-    <Compile Include="Extensions\AssemblyExtensions.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\HashSetExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\XContainerExtensions.cs" />
-    <Compile Include="Extensions\XElementExtensions.cs" />
-    <Compile Include="Result.cs" />
-    <Compile Include="Xml\XmlDeclarationInfo.cs" />
-    <Compile Include="Xml\XmlDeclarationParser.cs" />
+    <Compile Include="CellDataParser.cs" />
+    <Compile Include="ExcelColumnInfo.cs" />
+    <Compile Include="ExcelFileLoader.cs" />
+    <Compile Include="ExcelSettingsLoader.cs" />
+    <Compile Include="ICellDataParser.cs" />
+    <Compile Include="IExcelFileLoader.cs" />
+    <Compile Include="ISettingsLoader.cs" />
+    <Compile Include="ISpreadsheetDataProcessor.cs" />
+    <Compile Include="ISpreadsheetHeaderProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpreadsheetDataException.cs" />
+    <Compile Include="SpreadsheetDataProcessor.cs" />
+    <Compile Include="SpreadsheetException.cs" />
+    <Compile Include="SpreadsheetHeaderException.cs" />
+    <Compile Include="SpreadsheetHeaderProcessor.cs" />
+    <Compile Include="SpreadsheetPreferences.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
+      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
+      <Name>ConfigGen.Domain.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
+      <Project>{19f4fcfe-ceb6-4242-81fd-2a35814e6f59}</Project>
+      <Name>ConfigGen.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

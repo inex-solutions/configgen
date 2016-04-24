@@ -35,7 +35,7 @@ namespace ConfigGen.Tests.Common
         protected static TTemplate Subject;
         protected static string TemplateContents;
         [NotNull]
-        protected static Dictionary<string, string> SingleConfiguration;
+        protected static Dictionary<string, object> SingleConfiguration;
         protected static RenderResults Results;
         protected static string ExpectedOutput;
         private static IEnumerable<Configuration> configurations;
@@ -44,7 +44,7 @@ namespace ConfigGen.Tests.Common
 
         Establish context = () =>
         {
-            SingleConfiguration = new Dictionary<string, string>();
+            SingleConfiguration = new Dictionary<string, object>();
             TemplateContents = null;
             lazyTemplateContentsAsStream = new Lazy<Stream>(() =>
             {

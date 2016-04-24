@@ -33,7 +33,7 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                SingleConfiguration =  new Dictionary<string, string>
+                SingleConfiguration =  new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -60,7 +60,7 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenOne%]</root>";
-                SingleConfiguration =  new Dictionary<string, string>
+                SingleConfiguration =  new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -90,7 +90,7 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenThree%]</root>";
-                SingleConfiguration =  new Dictionary<string, string>();
+                SingleConfiguration =  new Dictionary<string, object>();
 
                 ExpectedOutput = TemplateContents.Replace("[%TokenThree%]", "");
             };
@@ -117,7 +117,7 @@ namespace ConfigGen.Templating.Xml.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenThree%]";
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);

@@ -36,7 +36,7 @@ namespace ConfigGen.Templating.Xml.Tests
 @"<root>
   <child key=""value"" />
 </root>";
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
@@ -66,7 +66,7 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
@@ -87,7 +87,7 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
@@ -111,7 +111,7 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
@@ -139,7 +139,7 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);

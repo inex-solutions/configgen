@@ -269,7 +269,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     {"val", "1"}
                 };
@@ -302,7 +302,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     {"val", "2"}
                 };
@@ -335,7 +335,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     {"val", "3"}
                 };
@@ -368,7 +368,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     {"val", "1"}
                 };
@@ -401,7 +401,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     {"val", "1"}
                 };
@@ -434,7 +434,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     {"val", "1"}
                 };

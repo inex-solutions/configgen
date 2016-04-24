@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
+using Machine.Specifications.Model;
 
 namespace ConfigGen.Templating.Razor.Tests
 {
@@ -33,7 +34,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -60,7 +61,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenOne</root>";
-                SingleConfiguration = new Dictionary<string, string>
+                SingleConfiguration = new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -89,7 +90,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenThree</root>";
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
 
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
             };
@@ -116,7 +117,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
@@ -134,7 +135,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);

@@ -18,25 +18,19 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.Collections.Generic;
-using JetBrains.Annotations;
-
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Settings.Excel
 {
-    public interface IConfiguration : IEnumerable<Setting>
+    public class SpreadsheetPreferences
     {
-        [NotNull]
-        string ConfigurationName { get; }
+        public SpreadsheetPreferences()
+        {
+            NullPlaceholder = null;
+            EmptyStringPlaceholder = "[EmptyString]";
+            NumColumnsToSkip = 0;
+        }
 
-        [NotNull]
-        IEnumerable<string> SettingsNames { get; }
-
-        [NotNull]
-        IDictionary<string, object> ToDictionary();
-
-        bool TryGetValue([NotNull] string settingName, out object settingValue);
-
-        bool Contains(string settingName);
+        public string EmptyStringPlaceholder { get; set; }
+        public string NullPlaceholder { get; set; }
+        public int NumColumnsToSkip { get; set; }
     }
 }

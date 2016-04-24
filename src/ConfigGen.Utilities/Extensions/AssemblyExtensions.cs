@@ -43,5 +43,38 @@ namespace ConfigGen.Utilities.Extensions
             var resourceName = assembly.FullName.Split(',')[0] + "." + resourcePath;
             return assembly.GetManifestResourceStream(resourceName);
         }
+
+        /// <summary>
+        /// Returns a <see cref="DisposableFile"/> instance pointing to a copy of the requested resource.
+        /// </summary>
+        /// <param name="assembly">Assembly from which to get resource</param>
+        /// <param name="resourcePath">Resource path of file, not including the assembly name; e.g. for resource MyDomain.MyAssembly.MyFolder.MyResource 
+        /// in assembly MyDomain.MyAssembly, resource path is MyFolder.MyResource</param>
+        /// <param name="fileName">Target filename</param>
+        /// <returns>Disposable file instance</returns>
+        public static DisposableFile GetEmbeddedResourceFile(this Assembly assembly, string resourcePath, string fileName)
+        {
+            var targetFile = CopyEmbeddedResourceFileTo(assembly, resourcePath, fileName);
+            return new DisposableFile(new FileInfo(targetFile));
+        }
+
+        /// <summary>
+        /// Copies the requested resource to the specified target file name, and returns the full filename of the copy.
+        /// </summary>
+        /// <param name="assembly">Assembly from which to get resource</param>
+        /// <param name="resourcePath">Resource path of file, not including the assembly name; e.g. for resource MyDomain.MyAssembly.MyFolder.MyResource 
+        /// in assembly MyDomain.MyAssembly, resource path is MyFolder.MyResource</param>
+        /// <param name="targetFilename">Target filename</param>
+        /// <returns>Full path of the copy</returns>
+        public static string CopyEmbeddedResourceFileTo(this Assembly assembly, string resourcePath, string targetFilename)
+        {
+            var targetFile = new FileInfo(targetFilename);
+            using (var srcStream = GetEmbeddedResourceFileStream(assembly, resourcePath))
+            using (var destStream = targetFile.OpenWrite())
+            {
+                srcStream.CopyTo(destStream);
+            }
+            return targetFile.FullName;
+        }
     }
 }

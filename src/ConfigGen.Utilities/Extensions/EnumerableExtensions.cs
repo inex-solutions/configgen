@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Extensions
@@ -36,6 +37,17 @@ namespace ConfigGen.Utilities.Extensions
             if (item == null) throw new ArgumentNullException(nameof(item));
 
             return new T[] {item};
+        }
+
+        /// <summary>
+        /// Returns true if the supplied collection is null or empty, or it contains only null, DBNull or empty string values, otherwise false.
+        /// </summary>
+        /// <param name="dataCollection">Collection</param>
+        /// <returns>true if the supplied collection is null or empty, or it contains only null, DBNull or empty string values, otherwise false</returns>
+        public static bool IsCollectionOfNullOrEmpty(this IEnumerable<object> dataCollection)
+        {
+            if (dataCollection == null || !dataCollection.Any()) return true;
+            return dataCollection.All(item => (item == null || item is DBNull || (item is string && string.IsNullOrEmpty((string)item))));
         }
     }
 }

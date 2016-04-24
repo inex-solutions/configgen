@@ -20,23 +20,16 @@
 #endregion
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Linq;
+using ConfigGen.Domain.Contract;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Tests.Common.Extensions
 {
-    public interface IConfiguration : IEnumerable<Setting>
+    public static class ConfigurationExtensions
     {
-        [NotNull]
-        string ConfigurationName { get; }
-
-        [NotNull]
-        IEnumerable<string> SettingsNames { get; }
-
-        [NotNull]
-        IDictionary<string, object> ToDictionary();
-
-        bool TryGetValue([NotNull] string settingName, out object settingValue);
-
-        bool Contains(string settingName);
+        public static IConfiguration Get(this IEnumerable<IConfiguration> configuration, string configurationName)
+        {
+            return configuration.FirstOrDefault(cfg => cfg.ConfigurationName == configurationName);
+        }
     }
 }

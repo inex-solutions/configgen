@@ -19,24 +19,12 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
-using JetBrains.Annotations;
-
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Tests.Common
 {
-    public interface IConfiguration : IEnumerable<Setting>
+    public abstract class MachineSpecificationTestBase<TSubject, TResult>
     {
-        [NotNull]
-        string ConfigurationName { get; }
+        protected static TSubject Subject;
 
-        [NotNull]
-        IEnumerable<string> SettingsNames { get; }
-
-        [NotNull]
-        IDictionary<string, object> ToDictionary();
-
-        bool TryGetValue([NotNull] string settingName, out object settingValue);
-
-        bool Contains(string settingName);
+        protected static TResult Result;
     }
 }

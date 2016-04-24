@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
+using Machine.Specifications.Model;
 
 namespace ConfigGen.Templating.Xml.Tests
 {
@@ -40,7 +41,7 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
                 TemplateContents = XmlDeclaration + TemplateBody;
-                SingleConfiguration = new Dictionary<string, string>();
+                SingleConfiguration = new Dictionary<string, object>();
             };
 
             Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);

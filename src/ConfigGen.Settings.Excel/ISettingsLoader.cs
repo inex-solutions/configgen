@@ -20,23 +20,20 @@
 #endregion
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using ConfigGen.Domain.Contract;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Settings.Excel
 {
-    public interface IConfiguration : IEnumerable<Setting>
+    /// <summary>
+    /// Interface to be implemented by classes responsible for loading settings collections for config generation (e.g. excel settings spreadsheets)
+    /// </summary>
+    public interface ISettingsLoader
     {
-        [NotNull]
-        string ConfigurationName { get; }
-
-        [NotNull]
-        IEnumerable<string> SettingsNames { get; }
-
-        [NotNull]
-        IDictionary<string, object> ToDictionary();
-
-        bool TryGetValue([NotNull] string settingName, out object settingValue);
-
-        bool Contains(string settingName);
+        /// <summary>
+        /// Loads and returns the configuration settings
+        /// </summary>
+        /// <param name="args">Array of arguments for the loader (e.g. filename for excel)</param>
+        /// <returns>collection of loaded configuration settings.</returns>
+        IEnumerable<IConfiguration> LoadSettings(string[] args);
     }
 }

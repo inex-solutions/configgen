@@ -47,7 +47,7 @@ namespace ConfigGen.Domain
             return _preferencesManager.RegisteredPreferences;
         }
 
-        public void GenerateConfigurations([NotNull] IEnumerable<KeyValuePair<string, IDeferedSetter>> preferences)
+        public GenerationResults GenerateConfigurations([NotNull] IEnumerable<KeyValuePair<string, IDeferedSetter>> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
@@ -59,6 +59,32 @@ namespace ConfigGen.Domain
             {
                 Console.WriteLine($"{preference.Key} : {preference.Value.ToDisplayText()}");
             }
+
+            var configGenerationPreferences = new ConfigurationGeneratorPreferences();
+
+            TemplateFactory templateFactory = new TemplateFactory();
+            SettingsLoaderFactory settingsLoaderFactory = new SettingsLoaderFactory(); //TODO: inconsistent naming
+
+            ITemplate template = templateFactory.GetTemplate(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType);
+            ISettingsLoader settings = settingsLoaderFactory.GetSettings(configGenerationPreferences.SettingsFilePath, configGenerationPreferences.SettingsFileType);
+
+            return new GenerationResults();
+        }
+    }
+
+    public class SettingsLoaderFactory
+    {
+        public ISettingsLoader GetSettings(string settingsFilePath, string settingsFileType)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class TemplateFactory
+    {
+        public ITemplate GetTemplate(string templateFilePath, string templateFileType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

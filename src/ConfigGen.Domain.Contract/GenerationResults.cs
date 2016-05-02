@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,24 +18,20 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Domain
+
+using System.Collections.Generic;
+
+namespace ConfigGen.Domain.Contract
 {
-    public class ConfigurationGeneratorPreferences
+    public class GenerationResults
     {
-        public ConfigurationGeneratorPreferences()
+        public GenerationResults()
         {
-            SettingsFilePath = "Simple.App.Config.Settings.xls";
-            TemplateFilePath = "Simple.App.Config.Template.xml";
+            GeneratedFiles = new SingleFileGenerationResult[0];    
         }
 
-        public string SettingsFilePath { get; set; }
+        public bool Success { get; }
 
-        public string SettingsFileType { get; set; }
-
-        public string TemplateFilePath { get; set; }
-
-        public string TemplateFileType { get; set; }
-
-        public bool Verbose { get; set; }
+        public IEnumerable<SingleFileGenerationResult> GeneratedFiles { get; }
     }
 }

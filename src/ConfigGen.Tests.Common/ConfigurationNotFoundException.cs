@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,22 +18,14 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+using System;
 
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract;
-
-namespace ConfigGen.Settings.Excel
+namespace ConfigGen.Tests.Common
 {
-    /// <summary>
-    /// Interface to be implemented by classes responsible for loading settings collections for config generation (e.g. excel settings spreadsheets)
-    /// </summary>
-    public interface ISettingsLoader
+    public class ConfigurationNotFoundException : Exception
     {
-        /// <summary>
-        /// Loads and returns the configuration settings
-        /// </summary>
-        /// <param name="args">Array of arguments for the loader (e.g. filename for excel)</param>
-        /// <returns>collection of loaded configuration settings.</returns>
-        IEnumerable<IConfiguration> LoadSettings(string[] args);
+        public ConfigurationNotFoundException(string configurationName) : base($"The specified configuration was not found: {configurationName}")
+        {
+        }
     }
 }

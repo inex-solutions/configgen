@@ -18,24 +18,18 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
+
 namespace ConfigGen.Domain
 {
-    public class ConfigurationGeneratorPreferences
+    public interface IConfigurationGenerator
     {
-        public ConfigurationGeneratorPreferences()
-        {
-            SettingsFilePath = "Simple.App.Config.Settings.xls";
-            TemplateFilePath = "Simple.App.Config.Template.xml";
-        }
+        [NotNull]
+        IEnumerable<IPreferenceGroup> GetPreferenceGroups();
 
-        public string SettingsFilePath { get; set; }
-
-        public string SettingsFileType { get; set; }
-
-        public string TemplateFilePath { get; set; }
-
-        public string TemplateFileType { get; set; }
-
-        public bool Verbose { get; set; }
+        void GenerateConfigurations([NotNull] IEnumerable<KeyValuePair<IPreferenceInfo, IDeferedSetter>> preferences);
     }
 }

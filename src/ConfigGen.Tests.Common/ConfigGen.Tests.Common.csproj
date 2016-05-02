@@ -57,7 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationNotFoundException.cs" />
     <Compile Include="Extensions\ConfigurationExtensions.cs" />
+    <Compile Include="Extensions\GenerationResultsExtensions.cs" />
     <Compile Include="MachineSpecificationTestBase.cs" />
     <Compile Include="MSpec\ShouldExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

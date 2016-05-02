@@ -18,24 +18,31 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Domain
+
+using System;
+using System.IO;
+using System.Linq;
+using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Tests.Common.Extensions
 {
-    public class ConfigurationGeneratorPreferences
+    public static class GenerationResultsExtensions
     {
-        public ConfigurationGeneratorPreferences()
+        [NotNull]
+        public static string Configuration([NotNull] this GenerationResults generationResults, [NotNull] string configurationName)
         {
-            SettingsFilePath = "Simple.App.Config.Settings.xls";
-            TemplateFilePath = "Simple.App.Config.Template.xml";
+            if (generationResults == null) throw new ArgumentNullException(nameof(generationResults));
+            if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
+
+            var match = generationResults.GeneratedFiles.FirstOrDefault(file => file.ConfigurationName == configurationName);
+
+            if (match == null)
+            {
+                throw new ConfigurationNotFoundException(configurationName);
+            }
+
+            return File.ReadAllText(match.FullPath);
         }
-
-        public string SettingsFilePath { get; set; }
-
-        public string SettingsFileType { get; set; }
-
-        public string TemplateFilePath { get; set; }
-
-        public string TemplateFileType { get; set; }
-
-        public bool Verbose { get; set; }
     }
 }

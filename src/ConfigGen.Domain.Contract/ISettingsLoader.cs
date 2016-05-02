@@ -18,24 +18,21 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Domain
+
+using System.Collections.Generic;
+
+namespace ConfigGen.Domain.Contract
 {
-    public class ConfigurationGeneratorPreferences
+    /// <summary>
+    /// Interface to be implemented by classes responsible for loading settings collections for config generation (e.g. excel settings spreadsheets)
+    /// </summary>
+    public interface ISettingsLoader
     {
-        public ConfigurationGeneratorPreferences()
-        {
-            SettingsFilePath = "Simple.App.Config.Settings.xls";
-            TemplateFilePath = "Simple.App.Config.Template.xml";
-        }
-
-        public string SettingsFilePath { get; set; }
-
-        public string SettingsFileType { get; set; }
-
-        public string TemplateFilePath { get; set; }
-
-        public string TemplateFileType { get; set; }
-
-        public bool Verbose { get; set; }
+        /// <summary>
+        /// Loads and returns the configuration settings
+        /// </summary>
+        /// <param name="args">Array of arguments for the loader (e.g. filename for excel)</param>
+        /// <returns>collection of loaded configuration settings.</returns>
+        IEnumerable<IConfiguration> LoadSettings(string[] args);
     }
 }

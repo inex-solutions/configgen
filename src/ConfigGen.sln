@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain", "ConfigG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.ConsoleApp.Tests", "ConfigGen.ConsoleApp.Tests\ConfigGen.ConsoleApp.Tests.csproj", "{A3697716-1378-46F7-8D3C-EAD05C2D08C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain.Tests", "ConfigGen.Domain.Tests\ConfigGen.Domain.Tests.csproj", "{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

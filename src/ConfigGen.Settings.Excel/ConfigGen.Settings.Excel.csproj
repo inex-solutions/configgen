@@ -57,7 +57,6 @@
     <Compile Include="ExcelSettingsPreferences.cs" />
     <Compile Include="ICellDataParser.cs" />
     <Compile Include="IExcelFileLoader.cs" />
-    <Compile Include="ISettingsLoader.cs" />
     <Compile Include="ISpreadsheetDataProcessor.cs" />
     <Compile Include="ISpreadsheetHeaderProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

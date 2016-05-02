@@ -47,10 +47,13 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Error.cs" />
+    <Compile Include="GenerationResults.cs" />
+    <Compile Include="IConfigurationGenerator.cs" />
     <Compile Include="IDeferedSetter.cs" />
     <Compile Include="IDeferredSetterFactory.cs" />
     <Compile Include="IManagePreferences.cs" />
     <Compile Include="IPreferenceInfo.cs" />
+    <Compile Include="ISettingsLoader.cs" />
     <Compile Include="ITemplate.cs" />
     <Compile Include="IConfiguration.cs" />
     <Compile Include="PreferenceExtensions.cs" />
@@ -61,6 +64,7 @@
     <Compile Include="IPreferenceGroup.cs" />
     <Compile Include="RenderResults.cs" />
     <Compile Include="Setting.cs" />
+    <Compile Include="SingleFileGenerationResult.cs" />
     <Compile Include="SingleTemplateRenderResults.cs" />
     <Compile Include="TemplateRenderResultStatus.cs" />
     <Compile Include="UnhandledExceptionError.cs" />

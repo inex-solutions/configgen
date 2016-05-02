@@ -42,7 +42,7 @@ namespace ConfigGen.ConsoleApp.Tests
             return _preferenceGroups;
         }
 
-        public void GenerateConfigurations(IEnumerable<KeyValuePair<string, IDeferedSetter>> preferences)
+        public GenerationResults GenerateConfigurations(IEnumerable<KeyValuePair<string, IDeferedSetter>> preferences)
         {
             PreferencesPassedToGenerateCall = preferences ?? new KeyValuePair<string, IDeferedSetter>[0];
             PreferenceValues = new IndexedProperty<IPreferenceInfo, KeyValuePair<string, IDeferedSetter>, object>(
@@ -50,6 +50,8 @@ namespace ConfigGen.ConsoleApp.Tests
                 projection: item => item.Value.RawValue);
 
             GenerateConfigurationsWasCalled = true;
+
+            return new GenerationResults();
         }
 
         public IndexedProperty<IPreferenceInfo, KeyValuePair<string, IDeferedSetter>, object> PreferenceValues { get; set; }

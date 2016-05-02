@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,12 +18,28 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
-{
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
-    {
-        protected static TSubject Subject;
 
-        protected static TResult Result;
+using System.Collections;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Domain.Contract
+{
+    public abstract class PreferenceGroupBase : IPreferenceGroup
+    {
+        [CanBeNull]
+        protected abstract IEnumerable<IPreferenceInfo> Preferences { get; }
+
+        public IEnumerator<IPreferenceInfo> GetEnumerator()
+        {
+            return (Preferences ?? new IPreferenceInfo[0]).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public abstract string Name { get; }
     }
 }

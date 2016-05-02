@@ -47,9 +47,18 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Error.cs" />
+    <Compile Include="IDeferedSetter.cs" />
+    <Compile Include="IDeferredSetterFactory.cs" />
+    <Compile Include="IManagePreferences.cs" />
+    <Compile Include="IPreferenceInfo.cs" />
     <Compile Include="ITemplate.cs" />
     <Compile Include="IConfiguration.cs" />
+    <Compile Include="PreferenceExtensions.cs" />
+    <Compile Include="PreferenceGroupBase.cs" />
+    <Compile Include="PreferenceGroupExtensions.cs" />
+    <Compile Include="PreferenceInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IPreferenceGroup.cs" />
     <Compile Include="RenderResults.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="SingleTemplateRenderResults.cs" />
@@ -58,6 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
+      <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>
+      <Name>ConfigGen.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

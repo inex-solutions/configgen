@@ -29,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Settings.Excel", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Settings.Excel.Tests", "ConfigGen.Settings.Excel.Tests\ConfigGen.Settings.Excel.Tests.csproj", "{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain", "ConfigGen.Domain\ConfigGen.Domain.csproj", "{B1F73633-082F-4CA1-8BD5-575283C19839}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.ConsoleApp.Tests", "ConfigGen.ConsoleApp.Tests\ConfigGen.ConsoleApp.Tests.csproj", "{A3697716-1378-46F7-8D3C-EAD05C2D08C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,14 @@ Global
 		{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F45C19A6-7DC2-4FAA-BB15-0CDE9F189E7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1F73633-082F-4CA1-8BD5-575283C19839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1F73633-082F-4CA1-8BD5-575283C19839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1F73633-082F-4CA1-8BD5-575283C19839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1F73633-082F-4CA1-8BD5-575283C19839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,12 +18,20 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
-{
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
-    {
-        protected static TSubject Subject;
 
-        protected static TResult Result;
+using System;
+using System.Collections.Generic;
+using ConfigGen.Utilities;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Domain.Contract
+{
+    public class ArgumentQueueConsumingDeferredSetterFactory : IDeferredSetterFactory
+    {
+        [NotNull]
+        public IDeferedSetter Create<TTargetType, TSetterType>([NotNull] Func<Queue<string>, Result<TSetterType>> parse, [NotNull] Action<TTargetType, TSetterType> set)
+        {
+            return new ArgumentQueueConsumingDeferredSetter<TTargetType, TSetterType>(parse, set);
+        }
     }
 }

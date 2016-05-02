@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConfigGen.ConsoleApp</RootNamespace>
-    <AssemblyName>ConfigGen.ConsoleApp</AssemblyName>
+    <AssemblyName>cfg</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -34,6 +34,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,11 +48,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleInputDeferedSetterFactory.cs" />
+    <Compile Include="ConsoleInputToPreferenceConverter.cs" />
+    <Compile Include="ConsoleRunner.cs" />
+    <Compile Include="ConsoleWriter.cs" />
+    <Compile Include="ConsoleInputDeferedSetter.cs" />
+    <Compile Include="ExitCodes.cs" />
+    <Compile Include="IConsoleWriter.cs" />
+    <Compile Include="ParsedConsoleInput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
+      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
+      <Name>ConfigGen.Domain.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Domain\ConfigGen.Domain.csproj">
+      <Project>{B1F73633-082F-4CA1-8BD5-575283C19839}</Project>
+      <Name>ConfigGen.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
+      <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>
+      <Name>ConfigGen.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

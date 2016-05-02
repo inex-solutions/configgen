@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,12 +18,29 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
-{
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
-    {
-        protected static TSubject Subject;
 
-        protected static TResult Result;
+using System;
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
+
+namespace ConfigGen.ConsoleApp
+{
+    public class ParsedConsoleInput
+    {
+        public ParsedConsoleInput([NotNull] Dictionary<string, IDeferedSetter> parsedPreferences, [NotNull] List<string> parseErrors)
+        {
+            if (parsedPreferences == null) throw new ArgumentNullException(nameof(parsedPreferences));
+            if (parseErrors == null) throw new ArgumentNullException(nameof(parseErrors));
+
+            ParsedPreferences = parsedPreferences;
+            ParseErrors = parseErrors;
+        }
+
+        [NotNull]
+        public Dictionary<string, IDeferedSetter> ParsedPreferences { get; }
+
+        [NotNull]
+        public List<string> ParseErrors { get; }
     }
 }

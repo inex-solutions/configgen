@@ -18,12 +18,13 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
-{
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
-    {
-        protected static TSubject Subject;
 
-        protected static TResult Result;
+using System.Collections.Generic;
+
+namespace ConfigGen.Domain.Contract
+{
+    public interface IPreferenceGroup : IEnumerable<IPreferenceInfo>
+    {
+        string Name { get; }
     }
 }

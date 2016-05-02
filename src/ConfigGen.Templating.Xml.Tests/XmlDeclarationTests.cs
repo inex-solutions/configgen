@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.MSpec;
 using Machine.Specifications;
-using Machine.Specifications.Model;
 
 namespace ConfigGen.Templating.Xml.Tests
 {

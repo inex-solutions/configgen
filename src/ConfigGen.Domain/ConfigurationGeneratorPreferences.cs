@@ -18,12 +18,14 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
+namespace ConfigGen.Domain
 {
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
+    public class ConfigurationGeneratorPreferences
     {
-        protected static TSubject Subject;
+        public string SettingsFilePath { get; set; }
 
-        protected static TResult Result;
+        public string TemplateFilePath { get; set; }
+
+        public bool Verbose { get; set; }
     }
 }

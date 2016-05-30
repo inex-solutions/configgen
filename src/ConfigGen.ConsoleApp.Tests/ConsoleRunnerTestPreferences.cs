@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,12 +18,16 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
+namespace ConfigGen.ConsoleApp.Tests
 {
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
+    public class ConsoleRunnerTestPreferences
     {
-        protected static TSubject Subject;
+        public string StringParameter { get; set; }
 
-        protected static TResult Result;
+        public bool BooleanSwitch { get; set; }
+
+        public int IntParameter { get; set; }
+
+        public bool AnotherBooleanSwitch { get; set; }
     }
 }

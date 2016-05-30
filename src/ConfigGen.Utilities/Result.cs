@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities
@@ -27,25 +28,32 @@ namespace ConfigGen.Utilities
     /// <summary>
     /// Represents the result of an operation which either returns a value, or an error.
     /// </summary>
-    public class Result<T> where T: class
+    public struct Result<T> : IDisplayText
     {
-        public Result([NotNull] T value)
+        private Result(bool success, [CanBeNull] T value, [CanBeNull] string errorMessage)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
             Value = value;
+            ErrorMessage = errorMessage;
+            Success = success;
         }
 
-        public Result([NotNull] string errorMessage)
+        public static Result<T> CreateSuccessResult([NotNull] T value)
+        {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+            return new Result<T>(true, value, null);
+        }
+
+        public static Result<T> CreateFailureResult([NotNull] string errorMessage)
         {
             if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-            ErrorMessage = errorMessage;
+            return new Result<T>(false, default(T), errorMessage);
         }
 
         /// <summary>
         /// Gets the error message if this result represents an unsuccessful operation, otherwise null.
         /// </summary>
         [CanBeNull]
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; }
 
         /// <summary>
         /// Gets the value if this result represents a successful operation, otherwise null.
@@ -57,6 +65,27 @@ namespace ConfigGen.Utilities
         /// True if the operation returned a result (which can be found in <see cref="Value" />, 
         /// or otherwise false (in which case an error message can be found in <see cref="ErrorMessage" />.
         /// </summary>
-        public bool Success => Value != null;
+        public bool Success { get; }
+
+        public override string ToString()
+        {
+            if (Success)
+            {
+                return $"Result<{typeof(T).Namespace}>.Value: {Value.ToDisplayText()}";
+            }
+
+            return $"Result<{typeof(T).Namespace}>.ErrorMessage: {ErrorMessage}";
+        }
+
+        [NotNull]
+        public string ToDisplayText()
+        {
+            if (Success)
+            {
+                return $"{Value.ToDisplayText()}";
+            }
+
+            return $"error: {ErrorMessage}";
+        }
     }
 }

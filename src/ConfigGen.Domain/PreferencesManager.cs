@@ -18,12 +18,26 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
-{
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
-    {
-        protected static TSubject Subject;
 
-        protected static TResult Result;
+using System;
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Domain
+{
+    public class PreferencesManager : IManagePreferences
+    {
+        [NotNull]
+        private readonly IPreferenceGroup[] _preferenceGroups;
+
+        public PreferencesManager([NotNull] params IPreferenceGroup[] preferenceGroups)
+        {
+            if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
+            _preferenceGroups = preferenceGroups;
+        }
+
+        [NotNull]
+        public IEnumerable<IPreferenceGroup> RegisteredPreferences => _preferenceGroups;
     }
 }

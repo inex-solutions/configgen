@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -92,6 +93,54 @@ namespace ConfigGen.Tests.Common.MSpec
             }
 
             return actualXml;
+        }
+        
+        [NotNull]
+        public static ShouldContainOnlyResult ShouldContainOnlyTheParameter([CanBeNull] this IEnumerable<KeyValuePair<string, string>> result, [NotNull] string itemName)
+        {
+            if (result == null) result = Enumerable.Empty<KeyValuePair<string, string>>();
+            if (itemName == null) throw new ArgumentNullException(nameof(itemName));
+
+            var items = result.ToList();
+
+            if (items.Count != 1
+                || items.All(r => r.Key != itemName))
+            {
+                throw new SpecificationException($"Expected a single parameter named '{itemName}', but got [{string.Join(",", items.Select(r => r.Key))}]");
+            }
+
+            return new ShouldContainOnlyResult(items, itemName);
+        }
+
+        public class ShouldContainOnlyResult
+        {
+            [NotNull]
+            private readonly IEnumerable<KeyValuePair<string, string>> _originalResult;
+
+            [NotNull]
+            private readonly string _itemName;
+
+            public ShouldContainOnlyResult([NotNull]IEnumerable<KeyValuePair<string, string>> originalResult, [NotNull] string itemName)
+            {
+                if (originalResult == null) throw new ArgumentNullException(nameof(originalResult));
+                if (itemName == null) throw new ArgumentNullException(nameof(itemName));
+
+                _originalResult = originalResult;
+                _itemName = itemName;
+            }
+
+            [NotNull]
+            public IEnumerable<KeyValuePair<string, string>> WithTheValue(string expectedValue)
+            {
+                var parameterValue = _originalResult.First(r => r.Key == _itemName).Value;
+
+                if (parameterValue != expectedValue)
+                {
+                    throw new SpecificationException($"Expected a value '{expectedValue}', but got '{parameterValue}'");
+                }
+
+                return _originalResult;
+            }
         }
     }
 }

@@ -41,7 +41,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="element"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown if the supplied <paramref name="element"/> is not in the configgen namespace.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the supplied <paramref name="element"/> does not have a name of "When", "ElseWhen" or "Else".</exception>
-        [NotNull]
         public virtual Result<ApplyElementSubNode> Create([NotNull] XElement element, OnNotAppliedAction defaultOnNotAppliedAction)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
@@ -58,7 +57,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     instance.Predicate = element.GetConditionAttribute();
                     if (instance.Predicate == null)
                     {
-                        return new Result<ApplyElementSubNode>("A 'When' element must contain a 'condition' attribute");
+                        return Result<ApplyElementSubNode>.CreateFailureResult("A 'When' element must contain a 'condition' attribute");
                     }
                     break;
                 case "ElseWhen":
@@ -66,7 +65,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     instance.Predicate = element.GetConditionAttribute();
                     if (instance.Predicate == null)
                     {
-                        return new Result<ApplyElementSubNode>("An 'ElseWhen' element must contain a 'condition' attribute");
+                        return Result<ApplyElementSubNode>.CreateFailureResult("An 'ElseWhen' element must contain a 'condition' attribute");
                     }
                     break;
                 case "Else":
@@ -74,7 +73,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     var predicate = element.GetConditionAttribute();
                     if (predicate != null)
                     {
-                        return new Result<ApplyElementSubNode>("An 'Else' element must not contain a 'condition' attribute");
+                        return Result<ApplyElementSubNode>.CreateFailureResult("An 'Else' element must not contain a 'condition' attribute");
                     }
                     break;
                 default:
@@ -96,7 +95,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 }
             }
 
-            return new Result<ApplyElementSubNode>(instance);
+            return Result<ApplyElementSubNode>.CreateSuccessResult(instance);
         }
     }
 }

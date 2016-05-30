@@ -43,5 +43,22 @@ namespace ConfigGen.Utilities.Extensions
         {
             return String.Format(formatString, args);
         }
+
+        [NotNull]
+        public static string ToDisplayText([CanBeNull] this object obj)
+        {
+            if (obj == null)
+            {
+                return "(null)";
+            }
+
+            var hasDisplayText = obj as IDisplayText;
+            if (hasDisplayText != null)
+            {
+                return hasDisplayText.ToDisplayText();
+            }
+
+            return obj.ToString();
+        }
     }
 }

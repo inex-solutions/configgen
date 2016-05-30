@@ -18,12 +18,38 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System;
+using System.Diagnostics;
+using ConfigGen.Domain;
+using JetBrains.Annotations;
+
 namespace ConfigGen.ConsoleApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main([NotNull] string[] args)
         {
+            try
+            {
+                var consoleRunner = new ConsoleRunner(new ConfigurationGenerator(), new ConsoleWriter());
+                consoleRunner.Run(args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("UNHANDLED EXCEPTION:");
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                if (Debugger.IsAttached)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("--");
+                    Console.WriteLine("Execution ended - press enter to exit");
+                    Console.ReadLine();
+                }
+            }
         }
     }
 }

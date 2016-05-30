@@ -18,12 +18,19 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
-{
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
-    {
-        protected static TSubject Subject;
 
-        protected static TResult Result;
+using System;
+using Machine.Specifications.Annotations;
+
+namespace ConfigGen.ConsoleApp.Tests
+{
+    public static class ConsoleTestExtensions
+    {
+        [NotNull]
+        public static string[] ToConsoleArgs([NotNull] this string input)
+        {
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            return input.Split(new [] {" "}, StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 }

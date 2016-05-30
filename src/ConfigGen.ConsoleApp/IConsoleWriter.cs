@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,12 +18,11 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Tests.Common
+namespace ConfigGen.ConsoleApp
 {
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
+    public interface IConsoleWriter
     {
-        protected static TSubject Subject;
-
-        protected static TResult Result;
+        void WriteInfo(string message = null);
+        void WriteInfo(string formatMessage, params object[] args);
     }
 }

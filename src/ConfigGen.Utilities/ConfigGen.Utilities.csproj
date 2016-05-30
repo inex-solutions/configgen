@@ -51,6 +51,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\XContainerExtensions.cs" />
     <Compile Include="Extensions\XElementExtensions.cs" />
+    <Compile Include="IDisplayText.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />
     <Compile Include="Xml\XmlDeclarationParser.cs" />

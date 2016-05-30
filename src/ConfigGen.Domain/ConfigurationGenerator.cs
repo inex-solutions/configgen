@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Settings.Excel;
 using JetBrains.Annotations;
@@ -32,12 +33,18 @@ namespace ConfigGen.Domain
         [NotNull]
         private readonly IManagePreferences _preferencesManager;
 
+        [NotNull]
+        private readonly Dictionary<string, IPreferenceGroup> _mapOfPreferenceNameToPreferenceDefinitionAndGroup;
+
         public ConfigurationGenerator()
         {
             _preferencesManager = new PreferencesManager(
                 new ConfigurationGeneratorPreferenceGroup(),
                 new ExcelSettingsPreferenceGroup()); //TODO: not really happy with this assembly being referenced directly by the domain
 
+            _mapOfPreferenceNameToPreferenceDefinitionAndGroup = _preferencesManager.RegisteredPreferences
+                .SelectMany(group => group, (group, definition) => new {Group = group, Definition = definition})
+                .ToDictionary(p => p.Definition.Name, p => p.Group);
         }
 
         [NotNull]
@@ -50,16 +57,23 @@ namespace ConfigGen.Domain
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
-            //var groupedByPreferenceGroup = preferences.GroupBy(p => p.Key.PreferenceGroup);
-            //var groupedByPreferenceGroupThenPreference = groupedByPreferenceGroup.Select(group => new { PreferenceGroup = group.Key, Preferences = group.Select(p => new KeyValuePair<IPreferenceDefinition, IDeferedSetter>(p.Key, p.Value)).ToList() });
-            //var groupedDictionary = groupedByPreferenceGroupThenPreference.ToDictionary(p => p.PreferenceGroup, p => p.Preferences);
+            var unrecognisedPreferences = new List<string>();
+
+            var configGenerationPreferences = new ConfigurationGeneratorPreferences();
 
             foreach (var preference in preferences)
             {
-                Console.WriteLine($"{preference.PreferenceName} : {preference.DeferredSetter.ToDisplayText()}");
-            }
+                IPreferenceGroup preferenceGroup;
 
-            var configGenerationPreferences = new ConfigurationGeneratorPreferences();
+                if (!_mapOfPreferenceNameToPreferenceDefinitionAndGroup.TryGetValue(preference.PreferenceName, out preferenceGroup))
+                {
+                    unrecognisedPreferences.Add(preference.PreferenceName);
+                }
+                else if (preferenceGroup is ConfigurationGeneratorPreferenceGroup)
+                {
+                    ((IDeferedSetter<ConfigurationGeneratorPreferences>)preference.DeferredSetter).SetOnTarget(configGenerationPreferences);
+                }
+            }
 
             TemplateFactory templateFactory = new TemplateFactory();
             SettingsLoaderFactory settingsLoaderFactory = new SettingsLoaderFactory(); //TODO: inconsistent naming
@@ -67,9 +81,27 @@ namespace ConfigGen.Domain
             ITemplate template = templateFactory.GetTemplate(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType);
             ISettingsLoader settings = settingsLoaderFactory.GetSettings(configGenerationPreferences.SettingsFilePath, configGenerationPreferences.SettingsFileType);
 
-            return new GenerationResults();
+            return new GenerationResults(unrecognisedPreferences);
         }
     }
+
+    //public struct PreferenceDefinitionAndGroup
+    //{
+    //    public PreferenceDefinitionAndGroup([NotNull] IPreferenceDefinition preferenceDefinition, [NotNull] IPreferenceGroup preferenceGroup)
+    //    {
+    //        if (preferenceDefinition == null) throw new ArgumentNullException(nameof(preferenceDefinition));
+    //        if (preferenceGroup == null) throw new ArgumentNullException(nameof(preferenceGroup));
+
+    //        PreferenceDefinition = preferenceDefinition;
+    //        PreferenceGroup = preferenceGroup;
+    //    }
+
+    //    [NotNull]
+    //    public IPreferenceDefinition PreferenceDefinition { get; set; }
+
+    //    [NotNull]
+    //    public IPreferenceGroup PreferenceGroup { get; set; }
+    //}
 
     public class SettingsLoaderFactory
     {

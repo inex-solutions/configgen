@@ -21,6 +21,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.ConsoleApp;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
@@ -45,6 +46,23 @@ namespace ConfigGen.Domain.Tests
             PreferencesToSupplyToGenerator = new List<Preference>();
             Result = null;
         };
+
+        protected static Preference CreatePreference(IPreferenceDefinition definition, string value)
+        {
+            var factory = new ConsoleInputDeferedSetterFactory();
+            var setter = definition.CreateDeferredSetter(factory);
+
+            var args = new Queue<string>();
+
+            if (value != null)
+            {
+                args = new Queue<string>(value.Split(' '));
+            }
+
+            setter.Parse(args);
+
+            return  new Preference(definition.Name, setter);
+        }
     }
 
     namespace SimpleTests
@@ -55,7 +73,7 @@ namespace ConfigGen.Domain.Tests
             {
                 PreferencesToSupplyToGenerator = new List<Preference>
                 {
-                    new Preference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.SettingsFile.Name, null )
+                    CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.SettingsFile,  "tester.xls")
                 };
             };
 

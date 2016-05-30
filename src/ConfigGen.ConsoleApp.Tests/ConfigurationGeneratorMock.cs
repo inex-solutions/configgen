@@ -50,7 +50,7 @@ namespace ConfigGen.ConsoleApp.Tests
 
             GenerateConfigurationsWasCalled = true;
 
-            return new GenerationResults();
+            return new GenerationResults(null);
         }
 
         public IndexedProperty<IPreferenceDefinition, Preference, object> PreferenceValues { get; set; }

@@ -20,18 +20,26 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
     public class GenerationResults
     {
-        public GenerationResults()
+        public GenerationResults(IEnumerable<string> unrecognisedPreferences)
         {
-            GeneratedFiles = new SingleFileGenerationResult[0];    
+            UnrecognisedPreferences = unrecognisedPreferences ?? new string[0];
+            GeneratedFiles = new SingleFileGenerationResult[0];
+            Success = !UnrecognisedPreferences.Any();
         }
 
         public bool Success { get; }
 
+        [NotNull]
         public IEnumerable<SingleFileGenerationResult> GeneratedFiles { get; }
+
+        [NotNull]
+        public IEnumerable<string> UnrecognisedPreferences { get; }
     }
 }

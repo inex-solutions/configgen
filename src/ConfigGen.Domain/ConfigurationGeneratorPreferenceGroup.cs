@@ -26,7 +26,7 @@ namespace ConfigGen.Domain
 {
     public class ConfigurationGeneratorPreferenceGroup : PreferenceGroupBase
     {
-        private static string PreferenceGroupName = "ConfigurationGeneratorPreferenceGroup";
+        public static string PreferenceGroupName = "ConfigurationGeneratorPreferenceGroup";
 
         protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[]
         {

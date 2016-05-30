@@ -57,6 +57,10 @@
     <Compile Include="SimpleTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.ConsoleApp\ConfigGen.ConsoleApp.csproj">
+      <Project>{B8732EE6-8AEF-4DD8-9C71-14FACE388CF0}</Project>
+      <Name>ConfigGen.ConsoleApp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
       <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
@@ -68,6 +72,10 @@
     <ProjectReference Include="..\ConfigGen.Tests.Common\ConfigGen.Tests.Common.csproj">
       <Project>{3FEBFF76-6425-454A-BEF3-5ACB437B6A5D}</Project>
       <Name>ConfigGen.Tests.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
+      <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>
+      <Name>ConfigGen.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

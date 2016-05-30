@@ -26,10 +26,13 @@ namespace ConfigGen.ConsoleApp.Tests
 {
     public class ConsoleRunnerTestPreferencesGroup : PreferenceGroupBase
     {
+        private static string PreferenceGroupName = "ConsoleRunnerTestPreferencesGroup";
+
         public ConsoleRunnerTestPreferencesGroup()
         {
+
             StringParameterPreference = new PreferenceInfo<ConsoleRunnerTestPreferences, string>(
-                preferenceGroup: this,
+                preferenceGroupName: PreferenceGroupName,
                 name: "StringParameter",
                 shortName: "String",
                 description: "specifies the string parameter",
@@ -38,7 +41,7 @@ namespace ConfigGen.ConsoleApp.Tests
                 setAction: (preferences, value) => preferences.StringParameter = value);
 
             BooleanSwitchPreference = new PreferenceInfo<ConsoleRunnerTestPreferences, bool>(
-                preferenceGroup: this,
+                preferenceGroupName: PreferenceGroupName,
                 name: "BooleanSwitch",
                 shortName: "Boolean",
                 description: "a switch",
@@ -54,37 +57,5 @@ namespace ConfigGen.ConsoleApp.Tests
         public override string Name => "ConsoleRunnerTestPreferencesGroup";
 
         protected override IEnumerable<IPreferenceInfo> Preferences => new IPreferenceInfo[] {StringParameterPreference, BooleanSwitchPreference};
-    }
-
-    public class AlternativeConsoleRunnerTestPreferencesGroup : PreferenceGroupBase
-    {
-        public AlternativeConsoleRunnerTestPreferencesGroup()
-        {
-            IntParameterPreference = new PreferenceInfo<ConsoleRunnerTestPreferences, int>(
-                preferenceGroup: this,
-                name: "IntParameter",
-                shortName: "Int",
-                description: "specifies the int parameter",
-                parameters: new[,] { { "<parameter value>", "the value of the parameter" } },
-                parseAction: argsQueue => argsQueue.ParseIntParameterFromArgumentQueue("IntParameter"),
-                setAction: (preferences, value) => preferences.IntParameter = value);
-
-            AnotherBooleanSwitch = new PreferenceInfo<ConsoleRunnerTestPreferences, bool>(
-                preferenceGroup: this,
-                name: "AnotherBooleanSwitch",
-                shortName: "Another",
-                description: "another switch",
-                parameters: new[,] { { "[true|false]", "[optional] the value for the switch, default true." } },
-                parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("AnotherBooleanSwitch"),
-                setAction: (preferences, value) => preferences.AnotherBooleanSwitch = value);
-        }
-
-        public PreferenceInfo<ConsoleRunnerTestPreferences, bool> AnotherBooleanSwitch { get; }
-
-        public PreferenceInfo<ConsoleRunnerTestPreferences, int> IntParameterPreference { get; }
-
-        public override string Name => "AlternativeConsoleRunnerTestPreferencesGroup";
-
-        protected override IEnumerable<IPreferenceInfo> Preferences => new IPreferenceInfo[] { IntParameterPreference, AnotherBooleanSwitch };
     }
 }

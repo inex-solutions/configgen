@@ -26,6 +26,8 @@ namespace ConfigGen.Domain
 {
     public class ConfigurationGeneratorPreferenceGroup : PreferenceGroupBase
     {
+        private static string PreferenceGroupName = "ConfigurationGeneratorPreferenceGroup";
+
         protected override IEnumerable<IPreferenceInfo> Preferences
         {
             get
@@ -35,7 +37,7 @@ namespace ConfigGen.Domain
                 return new IPreferenceInfo[]
                 {
                     new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
-                        preferenceGroup: this,
+                        preferenceGroupName: PreferenceGroupName,
                         name: "SettingsFile",
                         shortName: "Settings",
                         description: "specifies the settings file containing config gen settings",
@@ -44,7 +46,7 @@ namespace ConfigGen.Domain
                         setAction: (preferences, value) => preferences.SettingsFilePath = value),
 
                     new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
-                        preferenceGroup: this,
+                        preferenceGroupName: PreferenceGroupName,
                         name: "TemplateFile",
                         shortName: "Template",
                         description: "specifies the template file",
@@ -53,7 +55,7 @@ namespace ConfigGen.Domain
                         setAction: (preferences, value) => preferences.TemplateFilePath = value),
 
                     new PreferenceInfo<ConfigurationGeneratorPreferences, bool>(
-                        preferenceGroup: this,
+                        preferenceGroupName: PreferenceGroupName,
                         name: "VerboseOutput",
                         shortName: "Verbose",
                         description: "verbose output",

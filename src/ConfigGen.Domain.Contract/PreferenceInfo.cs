@@ -35,7 +35,7 @@ namespace ConfigGen.Domain.Contract
         private readonly Action<TPreferencesType, TSetterType> _setAction;
 
         public PreferenceInfo(
-            [NotNull] IPreferenceGroup preferenceGroup,
+            [NotNull] string preferenceGroupName,
             [NotNull] string name,
             [CanBeNull] string shortName,
             [NotNull] string description,
@@ -45,20 +45,21 @@ namespace ConfigGen.Domain.Contract
         {
             _parseAction = parseAction;
             _setAction = setAction;
-            if (preferenceGroup == null) throw new ArgumentNullException(nameof(preferenceGroup));
+            if (preferenceGroupName == null) throw new ArgumentNullException(nameof(preferenceGroupName));
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (parseAction == null) throw new ArgumentNullException(nameof(parseAction));
             if (setAction == null) throw new ArgumentNullException(nameof(setAction));
 
-            PreferenceGroup = preferenceGroup;
+            PreferenceGroupName = preferenceGroupName;
             Name = name;
             ShortName = shortName;
             Description = description;
             Parameters = parameters;
         }
 
-        public IPreferenceGroup PreferenceGroup { get; }
+        [NotNull]
+        public string PreferenceGroupName { get; }
 
         [NotNull]
         public string Name { get; }

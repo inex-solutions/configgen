@@ -26,6 +26,8 @@ namespace ConfigGen.Settings.Excel
 {
     public class ExcelSettingsPreferenceGroup : PreferenceGroupBase
     {
+        private static string PreferenceGroupName = "ExcelSettingsPreferenceGroup";
+
         protected override IEnumerable<IPreferenceInfo> Preferences
         {
             get
@@ -35,7 +37,7 @@ namespace ConfigGen.Settings.Excel
                 return new[]
                 {
                     new PreferenceInfo<ExcelSettingsPreferences, string>(
-                        preferenceGroup: this,
+                        preferenceGroupName: PreferenceGroupName,
                         name: "ConfigurationNameColumn",
                         shortName: null,
                         description: "specifies the name of the column in the spreadsheet to use as the configuration name",
@@ -44,7 +46,7 @@ namespace ConfigGen.Settings.Excel
                         setAction: (preferences, value) => preferences.ConfigurationNameColumn = value),
 
                     new PreferenceInfo<ExcelSettingsPreferences, string>(
-                        preferenceGroup: this,
+                        preferenceGroupName: PreferenceGroupName,
                         name: "WorksheetName",
                         shortName: null,
                         description: "specifies the name of the worksheet containing configuration settings",

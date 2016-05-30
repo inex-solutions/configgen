@@ -26,7 +26,7 @@ namespace ConfigGen.Domain.Contract
     public interface IPreferenceInfo
     {
         [NotNull]
-        IPreferenceGroup PreferenceGroup { get; }
+        string PreferenceGroupName { get; }
 
         [NotNull]
         string Name { get; }

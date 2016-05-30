@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlternativeConsoleRunnerTestPreferencesGroup.cs" />
     <Compile Include="ConsoleRunnerTestPreferences.cs" />
     <Compile Include="ConsoleRunnerTestPreferencesGroup.cs" />
     <Compile Include="ConsoleRunnerTests.cs" />

@@ -21,7 +21,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Settings.Excel;
 using JetBrains.Annotations;

@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
@@ -31,13 +32,49 @@ namespace ConfigGen.Domain
         [NotNull]
         private readonly IPreferenceGroup[] _preferenceGroups;
 
+        [NotNull]
+        private readonly Dictionary<string, IPreferenceGroup> _preferenceNameToPreferenceGroupMap;
+
         public PreferencesManager([NotNull] params IPreferenceGroup[] preferenceGroups)
         {
             if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
             _preferenceGroups = preferenceGroups;
+
+            _preferenceNameToPreferenceGroupMap =
+                preferenceGroups
+                    .SelectMany(group => group, (group, definition) => new {Group = group, Definition = definition})
+                    .ToDictionary(p => p.Definition.Name, p => p.Group);
         }
 
         [NotNull]
-        public IEnumerable<IPreferenceGroup> RegisteredPreferences => _preferenceGroups;
+        public IEnumerable<IPreferenceGroup> RegisteredPreferences => _preferenceGroups.ToArray();
+
+        [NotNull]
+        public IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<Preference> preferences)
+        {
+            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+
+            return preferences.Where(
+                    preference => !_preferenceNameToPreferenceGroupMap.ContainsKey(preference.PreferenceName))
+                    .Select(preference => preference.PreferenceName);
+        }
+
+        public void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<Preference> preferences, [NotNull] TPreferenceType preferenceInstance)
+        {
+            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+            if (preferenceInstance == null) throw new ArgumentNullException(nameof(preferenceInstance));
+
+            foreach (var preference in preferences)
+            {
+                IPreferenceGroup preferenceGroup;
+
+                if (_preferenceNameToPreferenceGroupMap.TryGetValue(preference.PreferenceName, out preferenceGroup)
+                    && preferenceGroup.PreferenceInstanceType == typeof(TPreferenceType))
+                {
+                    ((IDeferedSetter<TPreferenceType>) preference.DeferredSetter).SetOnTarget(preferenceInstance);
+
+                }
+            }
+        }
     }
 }

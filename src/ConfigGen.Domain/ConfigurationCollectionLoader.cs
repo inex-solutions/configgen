@@ -19,16 +19,20 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using System.Collections.Generic;
-using ConfigGen.Utilities;
-using JetBrains.Annotations;
+using ConfigGen.Domain.Contract;
+using ConfigGen.Settings.Excel;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain
 {
-    public interface IDeferredSetterFactory
+    public class ConfigurationCollectionLoader //TODO: naming relic
     {
-        [NotNull]
-        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
+        public IEnumerable<IConfiguration> GetConfigurations(string settingsFilePath, string settingsFileType)
+        {
+            //TODO: parameter relic
+            var loader = new ExcelSettingsLoader(new SpreadsheetHeaderProcessor(),
+                new SpreadsheetDataProcessor(new CellDataParser()), new ExcelFileLoader());
+            return loader.LoadSettings(new[] {settingsFilePath});
+        }
     }
 }

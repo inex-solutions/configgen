@@ -26,9 +26,6 @@ namespace ConfigGen.Domain.Contract
     public interface IPreferenceDefinition
     {
         [NotNull]
-        string PreferenceGroupName { get; }
-
-        [NotNull]
         string Name { get; }
 
         [CanBeNull]

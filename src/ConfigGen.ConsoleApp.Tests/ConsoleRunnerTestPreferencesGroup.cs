@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 
@@ -26,23 +27,17 @@ namespace ConfigGen.ConsoleApp.Tests
 {
     public class ConsoleRunnerTestPreferencesGroup : PreferenceGroupBase
     {
-        private static string PreferenceGroupName = "ConsoleRunnerTestPreferencesGroup";
-
         public ConsoleRunnerTestPreferencesGroup()
         {
 
-            StringParameterPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, string>(
-                preferenceGroupName: PreferenceGroupName,
-                name: "StringParameter",
+            StringParameterPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, string>(name: "StringParameter",
                 shortName: "String",
                 description: "specifies the string parameter",
                 parameters: new[] { new PreferenceParameterDefinition("<parameter value>", "the value of the parameter") },
                 parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("StringParameter"),
                 setAction: (preferences, value) => preferences.StringParameter = value);
 
-            BooleanSwitchPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, bool>(
-                preferenceGroupName: PreferenceGroupName,
-                name: "BooleanSwitch",
+            BooleanSwitchPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, bool>(name: "BooleanSwitch",
                 shortName: "Boolean",
                 description: "a switch",
                 parameters: new[] { new PreferenceParameterDefinition("[true|false]", "[optional] the value for the switch, default true.") },
@@ -55,6 +50,8 @@ namespace ConfigGen.ConsoleApp.Tests
         public PreferenceDefinition<ConsoleRunnerTestPreferences, string> StringParameterPreference { get; }
 
         public override string Name => "ConsoleRunnerTestPreferencesGroup";
+
+        public override Type PreferenceInstanceType => typeof(ConsoleRunnerTestPreferences);
 
         protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[] {StringParameterPreference, BooleanSwitchPreference};
     }

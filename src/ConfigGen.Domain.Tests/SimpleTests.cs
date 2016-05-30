@@ -19,83 +19,44 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.ConsoleApp;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Tests.Common;
+using System.Reflection;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
-using Machine.Specifications.Annotations;
 
 namespace ConfigGen.Domain.Tests
 {
-    internal abstract class ConfigurationGeneratorTestBase : MachineSpecificationTestBase<ConfigurationGenerator, GenerationResults>
+    namespace ConfigurationGeneratorTests
     {
-        [NotNull]
-        protected static IEnumerable<IPreferenceGroup> PreferenceGroups;
-
-        [NotNull]
-        protected static List<Preference> PreferencesToSupplyToGenerator;
-
-        Establish context = () =>
-        {
-            Subject = new ConfigurationGenerator();
-            PreferenceGroups = Subject.GetPreferenceGroups();
-            PreferencesToSupplyToGenerator = new List<Preference>();
-            Result = null;
-        };
-
-        protected static Preference CreatePreference(IPreferenceDefinition definition, string value)
-        {
-            var factory = new ConsoleInputDeferedSetterFactory();
-            var setter = definition.CreateDeferredSetter(factory);
-
-            var args = new Queue<string>();
-
-            if (value != null)
-            {
-                args = new Queue<string>(value.Split(' '));
-            }
-
-            setter.Parse(args);
-
-            return  new Preference(definition.Name, setter);
-        }
-    }
-
-    namespace SimpleTests
-    {
-        internal class when_invoked_with_a_simple_xml_template_and_simple_xls_file_containing_two_configurations : ConfigurationGeneratorTestBase
+        internal class when_invoked_with_no_preferences : ConfigurationGeneratorTestBase
         {
             Establish context = () =>
             {
-                PreferencesToSupplyToGenerator = new List<Preference>
-                {
-                    CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.SettingsFile,  "tester.xls")
-                };
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
             };
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-            It two_files_were_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
+            It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
 
-            It the_generated_file_for_the_first_row_contained_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
+            It the_file_for_the_first_row_contains_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
 @"<?xml version=""1.0"" encoding=""utf-8""?>
-<root>
+<xmlRoot>
   <Value1>Config1-Value1</Value1>
   <Value2>Config1-Value2</Value2>
-</root>");
+</xmlRoot>");
 
-            It the_generated_file_for_the_second_row_contained_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
+            It the_file_for_the_second_row_contains_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
 @"<?xml version=""1.0"" encoding=""utf-8""?>
-<root>
+<xmlRoot>
   <Value1>Config2-Value1</Value1>
   <Value2>Config2-Value2</Value2>
-</root>");
+</xmlRoot>");
         }
     }
 }

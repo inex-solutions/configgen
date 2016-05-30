@@ -30,7 +30,7 @@ namespace ConfigGen.ConsoleApp
     public class ConsoleInputDeferedSetterFactory : IDeferredSetterFactory
     {
         [NotNull]
-        public IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, Result<TPreferenceType>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set)
+        public IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set)
         {
             return new ConsoleInputDeferedSetter<TPreferenceGroupType, TPreferenceType>(parse, set);
         }

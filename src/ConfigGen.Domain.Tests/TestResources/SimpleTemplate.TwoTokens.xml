@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<root>
+<xmlRoot>
   <Value1>[%Value1%]</Value1>
   <Value2>[%Value2%]</Value2>
-</root>
+</xmlRoot>

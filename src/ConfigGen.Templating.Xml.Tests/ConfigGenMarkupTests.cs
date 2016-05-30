@@ -21,14 +21,16 @@
 
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
 {
     namespace ConfigGenMarkupTests
     {
-        public class when_the_template_does_not_contain_an_xml_declaration : XmlTemplateTestsBase
+        public class when_the_template_does_not_contain_an_xml_declaration : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -37,9 +39,11 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
                 SingleConfiguration = new Dictionary<string, object>();
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -55,7 +59,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
-        public class when_the_template_contains_the_configgen_xmlns_declaration : XmlTemplateTestsBase
+        public class when_the_template_contains_the_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -66,10 +70,12 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
+                Subject.Load(TemplateContents.ToStream());
+
                 SingleConfiguration = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -79,7 +85,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_the_template_contains_a_non_configgen_xmlns_declaration : XmlTemplateTestsBase
+        public class when_the_template_contains_a_non_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -87,10 +93,12 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
+                Subject.Load(TemplateContents.ToStream());
+
                 SingleConfiguration = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -100,7 +108,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
-        public class when_the_template_contains_unrecognised_configgen_attribute : XmlTemplateTestsBase
+        public class when_the_template_contains_unrecognised_configgen_attribute : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -111,10 +119,12 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
+                Subject.Load(TemplateContents.ToStream());
+
                 SingleConfiguration = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -127,7 +137,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_the_template_contains_unrecognised_configgen_element : XmlTemplateTestsBase
+        public class when_the_template_contains_unrecognised_configgen_element : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -139,10 +149,12 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
 
+                Subject.Load(TemplateContents.ToStream());
+
                 SingleConfiguration = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 

@@ -19,16 +19,13 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Utilities;
-using JetBrains.Annotations;
+using ConfigGen.Tests.Common;
+using Machine.Specifications;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Templating.Razor.Tests
 {
-    public interface IDeferredSetterFactory
+    [Subject(typeof(RazorTemplate))]
+    public abstract class RazorTemplateRenderTestBase : TemplateRenderTestBase<RazorTemplate>
     {
-        [NotNull]
-        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
     }
 }

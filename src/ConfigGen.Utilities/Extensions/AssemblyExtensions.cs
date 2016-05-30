@@ -70,7 +70,7 @@ namespace ConfigGen.Utilities.Extensions
         {
             var targetFile = new FileInfo(targetFilename);
             using (var srcStream = GetEmbeddedResourceFileStream(assembly, resourcePath))
-            using (var destStream = targetFile.OpenWrite())
+            using (var destStream = new FileStream(targetFile.FullName, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 srcStream.CopyTo(destStream);
             }

@@ -62,7 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlDeclarationTests.cs" />
     <Compile Include="XmlTemplateTests.cs" />
-    <Compile Include="XmlTemplateTestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

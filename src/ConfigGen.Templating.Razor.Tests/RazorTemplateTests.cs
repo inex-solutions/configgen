@@ -22,13 +22,58 @@
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Razor.Tests
 {
     namespace RazorTemplateTests
     {
-        public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestsBase
+        public class when_rendering_a_template_which_contains_invalid_csharp : RazorTemplateRenderTestBase
+        {
+            //TODO: it might be nice if these failures occurred at template load, not template render
+            Establish context = () =>
+            {
+                TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
+                SingleConfiguration = new Dictionary<string, object>();
+
+                Subject.Load(TemplateContents.ToStream());
+            };
+
+            Because of = () => Results = Subject.Render(Configurations);
+
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_resulting_status_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_resulting_status_should_contain_a_single_error_with_code =
+                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeGenerationError);
+        }
+
+        public class when_rendering_a_template_which_contains_invalid_razor_syntax : RazorTemplateRenderTestBase
+        {
+            //TODO: it might be nice if these failures occurred at template load, not template render
+            Establish context = () =>
+            {
+                TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
+                SingleConfiguration = new Dictionary<string, object>();
+
+                Subject.Load(TemplateContents.ToStream());
+            };
+
+            Because of = () => Results = Subject.Render(Configurations);
+
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_resulting_status_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+
+            It the_resulting_status_should_contain_a_single_error = () => FirstResult.Errors.Length.ShouldEqual(1);
+
+            It the_single_error_should_be_a_code_compilation_error =
+                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeCompilationError);
+        }
+
+        public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateRenderTestBase
         {
             Establish context = () =>
             {
@@ -38,9 +83,11 @@ namespace ConfigGen.Templating.Razor.Tests
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
                 };
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -55,7 +102,7 @@ namespace ConfigGen.Templating.Razor.Tests
             It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
         }
 
-        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : RazorTemplateTestsBase
+        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : RazorTemplateRenderTestBase
         {
             Establish context = () =>
             {
@@ -66,10 +113,12 @@ namespace ConfigGen.Templating.Razor.Tests
                     ["TokenTwo"] = "Two",
                 };
 
+                Subject.Load(TemplateContents.ToStream());
+
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -84,17 +133,19 @@ namespace ConfigGen.Templating.Razor.Tests
             It the_unused_supplied_token_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldContainOnly("TokenTwo");
         }
 
-        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : RazorTemplateTestsBase
+        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : RazorTemplateRenderTestBase
         {
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenThree</root>";
                 SingleConfiguration = new Dictionary<string, object>();
 
+                Subject.Load(TemplateContents.ToStream());
+
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -109,44 +160,6 @@ namespace ConfigGen.Templating.Razor.Tests
             It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
 
             It no_tokens_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldBeEmpty();
-        }
-
-        public class when_rendering_a_template_which_contains_invalid_csharp : RazorTemplateTestsBase
-        {
-            Establish context = () =>
-            {
-                TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
-                SingleConfiguration = new Dictionary<string, object>();
-            };
-
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
-
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_resulting_status_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
-
-            It the_resulting_status_should_contain_a_single_error_with_code =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeGenerationError);
-        }
-
-        public class when_rendering_a_template_which_contains_invalid_razor_syntax : RazorTemplateTestsBase
-        {
-            Establish context = () =>
-            {
-                TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
-                SingleConfiguration = new Dictionary<string, object>();
-            };
-
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
-
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_resulting_status_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
-
-            It the_resulting_status_should_contain_a_single_error = () => FirstResult.Errors.Length.ShouldEqual(1);
-
-            It the_single_error_should_be_a_code_compilation_error =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeCompilationError);
         }
     }
 }

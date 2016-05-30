@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,13 +19,24 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor.Tests
+namespace ConfigGen.Domain.Contract
 {
-    [Subject(typeof(RazorTemplate))]
-    public abstract class RazorTemplateTestsBase : TemplateTestsBase<RazorTemplate>
+    public class LoadResult
     {
+        public LoadResult([NotNull] IEnumerable<Error> templateLoadErrors)
+        {
+            if (templateLoadErrors == null) throw new ArgumentNullException(nameof(templateLoadErrors));
+            TemplateLoadErrors = templateLoadErrors;
+        }
+
+        [NotNull]
+        public IEnumerable<Error> TemplateLoadErrors { get; }
+
+        public bool Success => !TemplateLoadErrors.Any();
     }
 }

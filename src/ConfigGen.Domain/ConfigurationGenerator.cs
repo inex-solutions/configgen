@@ -21,30 +21,26 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Settings.Excel;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
 {
     public class ConfigurationGenerator : IConfigurationGenerator
     {
-        [NotNull]
-        private readonly IManagePreferences _preferencesManager;
-
-        [NotNull]
-        private readonly Dictionary<string, IPreferenceGroup> _mapOfPreferenceNameToPreferenceDefinitionAndGroup;
+        [NotNull] private readonly IManagePreferences _preferencesManager;
 
         public ConfigurationGenerator()
         {
             _preferencesManager = new PreferencesManager(
                 new ConfigurationGeneratorPreferenceGroup(),
-                new ExcelSettingsPreferenceGroup()); //TODO: not really happy with this assembly being referenced directly by the domain
-
-            _mapOfPreferenceNameToPreferenceDefinitionAndGroup = _preferencesManager.RegisteredPreferences
-                .SelectMany(group => group, (group, definition) => new {Group = group, Definition = definition})
-                .ToDictionary(p => p.Definition.Name, p => p.Group);
+                new ExcelSettingsPreferenceGroup(),
+                new FileOutputPreferenceGroup());
+                //TODO: not really happy with this assembly being referenced directly by the domain
         }
 
         [NotNull]
@@ -57,65 +53,69 @@ namespace ConfigGen.Domain
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
-            var unrecognisedPreferences = new List<string>();
+            var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences);
 
             var configGenerationPreferences = new ConfigurationGeneratorPreferences();
-
-            foreach (var preference in preferences)
-            {
-                IPreferenceGroup preferenceGroup;
-
-                if (!_mapOfPreferenceNameToPreferenceDefinitionAndGroup.TryGetValue(preference.PreferenceName, out preferenceGroup))
-                {
-                    unrecognisedPreferences.Add(preference.PreferenceName);
-                }
-                else if (preferenceGroup is ConfigurationGeneratorPreferenceGroup)
-                {
-                    ((IDeferedSetter<ConfigurationGeneratorPreferences>)preference.DeferredSetter).SetOnTarget(configGenerationPreferences);
-                }
-            }
+            _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
 
             TemplateFactory templateFactory = new TemplateFactory();
-            SettingsLoaderFactory settingsLoaderFactory = new SettingsLoaderFactory(); //TODO: inconsistent naming
+            IResult<ITemplate, Error> templateLookupResult = templateFactory.GetTemplate(
+                configGenerationPreferences.TemplateFilePath,
+                configGenerationPreferences.TemplateFileType);
 
-            ITemplate template = templateFactory.GetTemplate(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType);
-            ISettingsLoader settings = settingsLoaderFactory.GetSettings(configGenerationPreferences.SettingsFilePath, configGenerationPreferences.SettingsFileType);
+            if (!templateLookupResult.Success)
+            {
+                return new GenerationResults(
+                    unrecognisedPreferences: Enumerable.Empty<string>(), 
+                    singleFileGenerationResults: new List<SingleFileGenerationResult>(), 
+                    errors: new List<Error> { templateLookupResult.Error });
+            }
 
-            return new GenerationResults(unrecognisedPreferences);
-        }
-    }
+            ITemplate template = templateLookupResult.Value;
 
-    //public struct PreferenceDefinitionAndGroup
-    //{
-    //    public PreferenceDefinitionAndGroup([NotNull] IPreferenceDefinition preferenceDefinition, [NotNull] IPreferenceGroup preferenceGroup)
-    //    {
-    //        if (preferenceDefinition == null) throw new ArgumentNullException(nameof(preferenceDefinition));
-    //        if (preferenceGroup == null) throw new ArgumentNullException(nameof(preferenceGroup));
+            ConfigurationCollectionLoader configurationCollectionLoader = new ConfigurationCollectionLoader();
+                //TODO: inconsistent naming
 
-    //        PreferenceDefinition = preferenceDefinition;
-    //        PreferenceGroup = preferenceGroup;
-    //    }
+            IEnumerable<IConfiguration> configurations =
+                configurationCollectionLoader.GetConfigurations(configGenerationPreferences.SettingsFilePath,
+                    configGenerationPreferences.SettingsFileType);
 
-    //    [NotNull]
-    //    public IPreferenceDefinition PreferenceDefinition { get; set; }
+            FileOutputWriter fileOutputWriter = new FileOutputWriter();
+            var fileOutputPreferences = new FileOutputPreferences();
+            _preferencesManager.ApplyPreferences(preferences, fileOutputPreferences);
 
-    //    [NotNull]
-    //    public IPreferenceGroup PreferenceGroup { get; set; }
-    //}
+            //TODO: make this pipeline async and parallelised
+            //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
 
-    public class SettingsLoaderFactory
-    {
-        public ISettingsLoader GetSettings(string settingsFilePath, string settingsFileType)
-        {
-            throw new NotImplementedException();
-        }
-    }
+            using (var templateStream = File.OpenRead(configGenerationPreferences.TemplateFilePath))
+            {
+                var loadResults = template.Load(templateStream);
 
-    public class TemplateFactory
-    {
-        public ITemplate GetTemplate(string templateFilePath, string templateFileType)
-        {
-            throw new NotImplementedException();
+                if (!loadResults.Success)
+                {
+                    return new GenerationResults(
+                        unrecognisedPreferences: Enumerable.Empty<string>(),
+                        singleFileGenerationResults: new List<SingleFileGenerationResult>(),
+                        errors: loadResults.TemplateLoadErrors);
+                }
+
+                var renderResults = template.Render(configurations);
+
+                var singleFileGenerationResults = new List<SingleFileGenerationResult>();
+                foreach (var renderResult in renderResults.Results)
+                {
+                    WriteOutputResult writeResults = fileOutputWriter.WriteOutput(
+                        renderResult, 
+                        fileOutputPreferences);
+                    singleFileGenerationResults.Add(new SingleFileGenerationResult //TODO: move to ctor
+                    {
+                        ConfigurationName = renderResult.ConfigurationName,
+                        FullPath = writeResults.FullPath
+                    });
+                }
+
+                return new GenerationResults(unrecognisedPreferences, singleFileGenerationResults, null);
+            }
         }
     }
 }

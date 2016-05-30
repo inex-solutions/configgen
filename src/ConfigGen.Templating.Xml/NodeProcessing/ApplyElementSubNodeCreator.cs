@@ -41,7 +41,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="element"/> is null.</exception>
         /// <exception cref="ArgumentException">Thrown if the supplied <paramref name="element"/> is not in the configgen namespace.</exception>
         /// <exception cref="InvalidOperationException">Thrown if the supplied <paramref name="element"/> does not have a name of "When", "ElseWhen" or "Else".</exception>
-        public virtual Result<ApplyElementSubNode> Create([NotNull] XElement element, OnNotAppliedAction defaultOnNotAppliedAction)
+        public virtual Result<ApplyElementSubNode,string> Create([NotNull] XElement element, OnNotAppliedAction defaultOnNotAppliedAction)
         {
             if (element == null) throw new ArgumentNullException(nameof(element));
             if (element.Name.Namespace != XmlTemplate.ConfigGenXmlNamespace)

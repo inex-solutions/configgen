@@ -20,15 +20,48 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
 {
     namespace XmlTemplateTests
     {
-        public class when_rendering_a_template_which_contains_no_tokens : XmlTemplateTestsBase
+        public class when_loading_a_template_which_is_not_well_formed : TemplateLoadTestBase<XmlTemplate>
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>[%TokenThree%]";
+                SingleConfiguration = new Dictionary<string, object>();
+            };
+
+            Because of = () => Result = Subject.Load(TemplateContents.ToStream());
+
+            It the_load_fails = () => Result.Success.ShouldBeFalse();
+
+            It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count().ShouldEqual(1);
+
+            It the_error_indicates_an_xml_load_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(XmlTemplateErrorCodes.TemplateLoadError);
+        }
+
+        public class when_loading_a_template_which_is_well_formed : TemplateLoadTestBase<XmlTemplate>
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>some template</root>";
+                SingleConfiguration = new Dictionary<string, object>();
+            };
+
+            Because of = () => Result = Subject.Load(TemplateContents.ToStream());
+
+            It the_load_passes = () => Result.Success.ShouldBeTrue();
+        }
+
+        public class when_rendering_a_template_which_contains_no_tokens : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -38,9 +71,11 @@ namespace ConfigGen.Templating.Xml.Tests
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
                 };
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -55,7 +90,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
         }
 
-        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : XmlTemplateTestsBase
+        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -67,9 +102,11 @@ namespace ConfigGen.Templating.Xml.Tests
                 };
 
                 ExpectedOutput = TemplateContents.Replace("[%TokenOne%]", "One");
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -85,7 +122,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_unused_supplied_token_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldContainOnly("TokenTwo");
         }
 
-        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : XmlTemplateTestsBase
+        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -93,9 +130,11 @@ namespace ConfigGen.Templating.Xml.Tests
                 SingleConfiguration =  new Dictionary<string, object>();
 
                 ExpectedOutput = TemplateContents.Replace("[%TokenThree%]", "");
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -110,22 +149,6 @@ namespace ConfigGen.Templating.Xml.Tests
             It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
 
             It no_tokens_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldBeEmpty();
-        }
-
-        public class when_attempting_to_render_a_template_which_is_not_well_formed : XmlTemplateTestsBase
-        {
-            Establish context = () =>
-            {
-                TemplateContents = "<root>[%TokenThree%]";
-                SingleConfiguration = new Dictionary<string, object>();
-            };
-
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
-
-            It the_resulting_status_should_indicate_a_template_load_error =
-                () => Results.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.TemplateLoadError);
-
-            It there_should_be_no_individual_render_results = () => Results.Count.ShouldEqual(0);
         }
     }
 }

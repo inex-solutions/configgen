@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 
@@ -32,24 +33,22 @@ namespace ConfigGen.Settings.Excel
 
         public override string Name => "Excel Settings";
 
+        public override Type PreferenceInstanceType => typeof(ExcelSettingsPreferences);
+
         private static class PreferenceDefinitions
         {
             static PreferenceDefinitions()
             {
                 // ReSharper disable AssignNullToNotNullAttribute
                 // ReSharper disable PossibleNullReferenceException
-                ConfigurationNameColumn = new PreferenceDefinition<ExcelSettingsPreferences, string>(
-                    preferenceGroupName: PreferenceGroupName,
-                    name: "ConfigurationNameColumn",
+                ConfigurationNameColumn = new PreferenceDefinition<ExcelSettingsPreferences, string>(name: "ConfigurationNameColumn",
                     shortName: null,
                     description: "specifies the name of the column in the spreadsheet to use as the configuration name",
                     parameters: new [] { new PreferenceParameterDefinition("column name", "name of the column") },
                     parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameColumn"),
                     setAction: (preferences, value) => preferences.ConfigurationNameColumn = value);
 
-                WorksheetName = new PreferenceDefinition<ExcelSettingsPreferences, string>(
-                    preferenceGroupName: PreferenceGroupName,
-                    name: "WorksheetName",
+                WorksheetName = new PreferenceDefinition<ExcelSettingsPreferences, string>(name: "WorksheetName",
                     shortName: null,
                     description: "specifies the name of the worksheet containing configuration settings",
                     parameters: new[] { new PreferenceParameterDefinition("worksheet name", "name of the worksheet") },

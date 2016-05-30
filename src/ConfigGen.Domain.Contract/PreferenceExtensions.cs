@@ -29,7 +29,8 @@ namespace ConfigGen.Domain.Contract
 {
     public static class PreferenceExtensions
     {
-        public static Result<string> ParseSingleStringParameterFromArgumentQueue(
+        [NotNull]
+        public static IResult<string, string> ParseSingleStringParameterFromArgumentQueue(
             [NotNull] this Queue<string> argsQueue,
             [NotNull] string parameterName)
         {
@@ -55,7 +56,8 @@ namespace ConfigGen.Domain.Contract
             return $"No arguments supplied for {parameterName} parameter";
         }
 
-        public static Result<int> ParseIntParameterFromArgumentQueue(
+        [NotNull]
+        public static IResult<int, string> ParseIntParameterFromArgumentQueue(
             [NotNull] this Queue<string> argsQueue,
             [NotNull] string parameterName)
         {
@@ -80,7 +82,7 @@ namespace ConfigGen.Domain.Contract
             return Result<int>.CreateSuccessResult(returnValue);
         }
 
-        public static Result<bool> ParseSwitchParameterFromArgumentQueue(
+        public static IResult<bool,string> ParseSwitchParameterFromArgumentQueue(
             [NotNull] this Queue<string> argsQueue,
             [NotNull] string parameterName)
         {

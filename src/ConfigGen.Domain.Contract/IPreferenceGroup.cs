@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 
 namespace ConfigGen.Domain.Contract
@@ -26,5 +27,7 @@ namespace ConfigGen.Domain.Contract
     public interface IPreferenceGroup : IEnumerable<IPreferenceDefinition>
     {
         string Name { get; }
+
+        Type PreferenceInstanceType { get; }
     }
 }

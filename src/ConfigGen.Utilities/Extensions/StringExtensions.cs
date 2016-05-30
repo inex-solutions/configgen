@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.IO;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Extensions
@@ -59,6 +60,17 @@ namespace ConfigGen.Utilities.Extensions
             }
 
             return obj.ToString();
+        }
+
+        [NotNull]
+        public static Stream ToStream([NotNull] this string s)
+        {
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(s);
+            writer.Flush();
+            ms.Position = 0;
+            return ms;
         }
     }
 }

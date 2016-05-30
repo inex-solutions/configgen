@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -28,13 +29,18 @@ namespace ConfigGen.Domain.Contract
     public class SingleTemplateRenderResults
     {
         public SingleTemplateRenderResults(
-            TemplateRenderResultStatus status, 
+            [NotNull] IConfiguration configuration,
+            TemplateRenderResultStatus status,
             [CanBeNull] string renderedResult, 
             [CanBeNull] IEnumerable<string> usedTokens, 
             [CanBeNull] IEnumerable<string> unusedTokens,
             [CanBeNull] IEnumerable<string> unrecognisedTokens,
             [CanBeNull] IEnumerable<Error> errors)
         {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            Configuration = configuration;
+            ConfigurationName = configuration.ConfigurationName;
             Status = status;
             RenderedResult = renderedResult;
             UsedTokens = usedTokens?.ToArray() ?? new string[0];
@@ -42,6 +48,12 @@ namespace ConfigGen.Domain.Contract
             UnrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];
             Errors = errors?.ToArray() ?? new Error[0];
         }
+
+        [NotNull]
+        public IConfiguration Configuration { get; }
+
+        [NotNull]
+        public string ConfigurationName { get; }
 
         public TemplateRenderResultStatus Status { get; }
 

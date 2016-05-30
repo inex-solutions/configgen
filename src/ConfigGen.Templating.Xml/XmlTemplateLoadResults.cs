@@ -27,9 +27,9 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    internal class TemplateLoadResults
+    internal class XmlTemplateLoadResults
     {
-        public TemplateLoadResults([NotNull] XElement loadedTemplate)
+        public XmlTemplateLoadResults([NotNull] XElement loadedTemplate)
         {
             if (loadedTemplate == null) throw new ArgumentNullException(nameof(loadedTemplate));
 
@@ -38,7 +38,7 @@ namespace ConfigGen.Templating.Xml
             TemplateLoadErrors = Enumerable.Empty<XmlTemplateError>();
         }
 
-        public TemplateLoadResults([NotNull] XmlTemplateError error, [NotNull] XElement nullTemplate)
+        public XmlTemplateLoadResults([NotNull] XmlTemplateError error, [NotNull] XElement nullTemplate)
         {
             if (error == null) throw new ArgumentNullException(nameof(error));
 

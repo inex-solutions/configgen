@@ -32,17 +32,17 @@ namespace ConfigGen.Templating.Xml
         public static readonly XElement NullXmlTemplate = XElement.Parse($@"<cfg:null-xml-template xmlns:cfg=""{XmlTemplate.ConfigGenXmlNamespace}"">Template Load Failed</cfg:null-xml-template>");
 
         [NotNull]
-        public TemplateLoadResults LoadTemplate(Stream templateStream)
+        public XmlTemplateLoadResults LoadTemplate(Stream templateStream)
         {
             try
             {
                 var template = XElement.Load(templateStream, LoadOptions.PreserveWhitespace);
-                return new TemplateLoadResults(template);
+                return new XmlTemplateLoadResults(template);
             }
             catch (Exception ex)
             {
                 var templateLoadError = new XmlTemplateError(XmlTemplateErrorCodes.TemplateLoadError, ex.ToString());
-                return new TemplateLoadResults(templateLoadError, NullXmlTemplate);
+                return new XmlTemplateLoadResults(templateLoadError, NullXmlTemplate);
             }
         }
     }

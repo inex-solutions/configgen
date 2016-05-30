@@ -31,14 +31,14 @@ namespace ConfigGen.Templating.Razor
 {
     public class RazorTemplate : ITemplate
     {
+        private string _loadedTemplate;
+
         [NotNull]
         private const string RazorTemplateErrorSource = nameof(RazorTemplate);
 
-        [Pure]
         [NotNull]
-        public RenderResults Render([NotNull] Stream templateStream, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        public LoadResult Load(Stream templateStream)
         {
-            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
             if (templateStream == null) throw new ArgumentNullException(nameof(templateStream));
 
             if (!templateStream.CanRead || !templateStream.CanSeek)
@@ -46,14 +46,27 @@ namespace ConfigGen.Templating.Razor
                 throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
             }
 
-            string templateContents;
-
             using (var reader = new StreamReader(templateStream))
             {
-                templateContents = reader.ReadToEnd();
+                _loadedTemplate = reader.ReadToEnd();
             }
 
-            var razorTemplateRenderer = new RazorTemplateRenderer(templateContents);
+            //TODO: really?
+            return new LoadResult(Enumerable.Empty<Error>());
+        }
+
+        [Pure]
+        [NotNull]
+        public RenderResults Render([NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        {
+            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
+
+            if (_loadedTemplate == null)
+            {
+                throw new InvalidOperationException("Cannot render a template that has not been loaded.");
+            }
+
+            var razorTemplateRenderer = new RazorTemplateRenderer(_loadedTemplate);
 
             var allResults = configurationsToRender.Select(configuration => RenderSingleConfiguration(razorTemplateRenderer, configuration)).ToList();
 
@@ -89,7 +102,8 @@ namespace ConfigGen.Templating.Razor
                 if (result.Status == RenderingResultStatus.Success)
                 {
                     return new SingleTemplateRenderResults(
-                        status: TemplateRenderResultStatus.Success,
+                        configuration: configuration,
+                        status: TemplateRenderResultStatus.Success,   
                         renderedResult: result.RenderedResult,
                         usedTokens: usedTokens,
                         unusedTokens: unusedTokens,
@@ -98,6 +112,7 @@ namespace ConfigGen.Templating.Razor
                 }
 
                 return new SingleTemplateRenderResults(
+                    configuration: configuration,
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
                     usedTokens: usedTokens,
@@ -108,12 +123,13 @@ namespace ConfigGen.Templating.Razor
             catch (Exception ex)
             {
                 return new SingleTemplateRenderResults(
+                    configuration: configuration,
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
                     usedTokens: null,
                     unusedTokens: null,
                     unrecognisedTokens: null,
-                    errors: new[] { new UnhandledExceptionError(RazorTemplateErrorSource, ex) });
+                    errors: new[] {new UnhandledExceptionError(RazorTemplateErrorSource, ex)});
             }
         }
 

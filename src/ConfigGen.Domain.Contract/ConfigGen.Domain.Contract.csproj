@@ -68,6 +68,7 @@
     <Compile Include="Setting.cs" />
     <Compile Include="SingleFileGenerationResult.cs" />
     <Compile Include="SingleTemplateRenderResults.cs" />
+    <Compile Include="LoadResult.cs" />
     <Compile Include="TemplateRenderResultStatus.cs" />
     <Compile Include="UnhandledExceptionError.cs" />
   </ItemGroup>

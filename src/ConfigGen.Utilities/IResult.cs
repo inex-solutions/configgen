@@ -19,16 +19,18 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Utilities
 {
-    public interface IDeferredSetterFactory
+    public interface IResult<out TResult, out TError> : IDisplayText
     {
-        [NotNull]
-        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
+        [CanBeNull]
+        TError Error { get; }
+
+        [CanBeNull]
+        TResult Value { get; }
+
+        bool Success { get; }
     }
 }

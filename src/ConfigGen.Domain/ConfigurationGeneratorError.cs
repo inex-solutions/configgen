@@ -19,34 +19,18 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
+using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain
 {
-    public class GenerationResults
+    public class ConfigurationGeneratorError : Error
     {
-        public GenerationResults(
-            [CanBeNull] IEnumerable<string> unrecognisedPreferences, 
-            [CanBeNull] IEnumerable<SingleFileGenerationResult> singleFileGenerationResults,
-            [CanBeNull] IEnumerable<Error> errors)
+        public const string ConfigurationGeneratorErrorSource = "ConfigurationGenerator";
+
+        public ConfigurationGeneratorError([NotNull] string code, [NotNull] string detail)
+            : base(ConfigurationGeneratorErrorSource, code, detail)
         {
-            UnrecognisedPreferences = unrecognisedPreferences ?? new string[0];
-            GeneratedFiles = singleFileGenerationResults ?? new SingleFileGenerationResult[0];
-            Errors = errors ?? new Error[0];
-            Success = !Errors.Any();
         }
-
-        public bool Success { get; }
-
-        [NotNull]
-        public IEnumerable<SingleFileGenerationResult> GeneratedFiles { get; }
-
-        [NotNull]
-        public IEnumerable<string> UnrecognisedPreferences { get; }
-
-        [NotNull]
-        public IEnumerable<Error> Errors { get; }
     }
 }

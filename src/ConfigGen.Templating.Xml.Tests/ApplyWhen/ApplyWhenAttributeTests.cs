@@ -21,21 +21,24 @@
 
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 {
     namespace ApplyWhenAttributeTests 
     {
-        public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : XmlTemplateTestsBase
+        public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen="""" /></root>";
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -45,14 +48,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : XmlTemplateTestsBase
+        public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen=""$val /+-= 1"" /></root>";
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -62,7 +66,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : XmlTemplateTestsBase
+        public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -74,9 +78,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                     $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=2"" /></root>";
 
                 ExpectedOutput = @"<root><child1 /><child2 /></root>";
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 
@@ -88,7 +94,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_indicate_the_token_had_been_used = () => FirstResult.UsedTokens.ShouldContainOnly("val");
         }
 
-        public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : XmlTemplateTestsBase
+        public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
         {
             Establish context = () =>
             {
@@ -99,9 +105,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=3"" /></root>";
 
                 ExpectedOutput = @"<root><child1 /></root>";
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 

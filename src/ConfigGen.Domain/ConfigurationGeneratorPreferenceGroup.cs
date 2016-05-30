@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 
@@ -32,10 +33,13 @@ namespace ConfigGen.Domain
         {
             PreferenceDefinitions.SettingsFile,
             PreferenceDefinitions.TemplateFile,
+            PreferenceDefinitions.TemplateFileType,
             PreferenceDefinitions.Verbose
         };
 
         public override string Name => "General preferences";
+
+        public override Type PreferenceInstanceType => typeof(ConfigurationGeneratorPreferences);
 
         public static class PreferenceDefinitions
         {
@@ -44,7 +48,6 @@ namespace ConfigGen.Domain
                 // ReSharper disable AssignNullToNotNullAttribute
                 // ReSharper disable PossibleNullReferenceException
                 SettingsFile = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
-                    preferenceGroupName: PreferenceGroupName,
                     name: "SettingsFile",
                     shortName: "Settings",
                     description: "specifies the settings file containing config gen settings",
@@ -53,7 +56,6 @@ namespace ConfigGen.Domain
                     setAction: (preferences, value) => preferences.SettingsFilePath = value);
 
                 TemplateFile = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
-                    preferenceGroupName: PreferenceGroupName,
                     name: "TemplateFile",
                     shortName: "Template",
                     description: "specifies the template file",
@@ -61,13 +63,19 @@ namespace ConfigGen.Domain
                     parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFile"),
                     setAction: (preferences, value) => preferences.TemplateFilePath = value);
 
-                Verbose = new PreferenceDefinition<ConfigurationGeneratorPreferences, bool>(
-                    preferenceGroupName: PreferenceGroupName,
+
+                TemplateFileType = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
+                    name: "TemplateFileType",
+                    shortName: "TemplateType",
+                    description: "specifies the template file type (e.g. xml, razor)",
+                    parameters: new[] { new PreferenceParameterDefinition("template file type", "type of template: xml, razor") },
+                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFileType"),
+                    setAction: (preferences, value) => preferences.TemplateFileType = value);
+
+                Verbose = new SwitchPreferenceDefinition<ConfigurationGeneratorPreferences>(
                     name: "VerboseOutput",
                     shortName: "Verbose",
                     description: "verbose output",
-                    parameters: new[] { new PreferenceParameterDefinition("[true|false]", "[optional] the value for the verbose flag") },
-                    parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("VerboseOutput"),
                     setAction: (preferences, value) => preferences.Verbose = value);
 
                 // ReSharper restore AssignNullToNotNullAttribute
@@ -77,6 +85,8 @@ namespace ConfigGen.Domain
             public static PreferenceDefinition<ConfigurationGeneratorPreferences, bool> Verbose { get; }
 
             public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> TemplateFile { get; }
+
+            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> TemplateFileType { get; }
 
             public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> SettingsFile { get; }
         }

@@ -39,7 +39,8 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         /// Returns an <see cref="Result{ApplyElement}"/> containing either a <see cref="ApplyElement"/> if creation was successful, 
         /// otherwise error text.
         /// </summary>
-        public virtual Result<ApplyElement> Create(XElement applyElement)
+        [NotNull]
+        public virtual IResult<ApplyElement, string> Create(XElement applyElement)
         {
             if (applyElement == null) throw new ArgumentNullException();
 
@@ -57,7 +58,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             var result = _applyElementSubNodeCreator.Create(primaryPredicate, onNotAppliedAttribute);
             if (!result.Success)
             {
-                return Result<ApplyElement>.CreateFailureResult(result.ErrorMessage);
+                return Result<ApplyElement>.CreateFailureResult(result.Error);
             }
 
             returnValue.PredicateSubNodes.Enqueue(result.Value);
@@ -76,7 +77,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                         result = _applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute);
                         if (!result.Success)
                         {
-                            return Result<ApplyElement>.CreateFailureResult(result.ErrorMessage);
+                            return Result<ApplyElement>.CreateFailureResult(result.Error);
                         }
                         returnValue.PredicateSubNodes.Enqueue(result.Value);
                     }
@@ -85,7 +86,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                         result = _applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute);
                         if (!result.Success)
                         {
-                            return Result<ApplyElement>.CreateFailureResult(result.ErrorMessage);
+                            return Result<ApplyElement>.CreateFailureResult(result.Error);
                         }
                         returnValue.FinalElseSubNode = result.Value;
                     }

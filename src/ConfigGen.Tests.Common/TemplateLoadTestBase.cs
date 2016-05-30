@@ -19,45 +19,31 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
 {
-    public abstract class TemplateTestsBase<TTemplate> where TTemplate : new()
+    public abstract class TemplateLoadTestBase<TTemplate> where TTemplate : new()
     {
         [NotNull]
         protected static TTemplate Subject;
         protected static string TemplateContents;
         [NotNull]
         protected static Dictionary<string, object> SingleConfiguration;
-        protected static RenderResults Results;
+        protected static LoadResult Result;
         protected static string ExpectedOutput;
         private static IEnumerable<Configuration> configurations;
-        [NotNull]
-        private static Lazy<Stream> lazyTemplateContentsAsStream;
 
         Establish context = () =>
         {
             SingleConfiguration = new Dictionary<string, object>();
             TemplateContents = null;
-            lazyTemplateContentsAsStream = new Lazy<Stream>(() =>
-            {
-                var ms = new MemoryStream();
-                var writer = new StreamWriter(ms);
-                writer.Write(TemplateContents);
-                writer.Flush();
-                ms.Position = 0;
-                return ms;
-            });
             Subject = new TTemplate();
             configurations = null;
-            Results = null;
+            Result = null;
             ExpectedOutput = null;
         };
 
@@ -66,15 +52,6 @@ namespace ConfigGen.Tests.Common
         {
             get { return configurations ?? new[] { new Configuration(SingleConfiguration) }; }
             set { configurations = value; }
-        }
-
-        [NotNull]
-        protected static SingleTemplateRenderResults FirstResult => Results?.Results.First();
-
-        [NotNull]
-        protected static Stream TemplateContentsAsStream
-        {
-            get { return lazyTemplateContentsAsStream.Value; }
         }
     }
 }

@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -30,16 +31,22 @@ namespace ConfigGen.Domain.Contract
         [CanBeNull]
         protected abstract IEnumerable<IPreferenceDefinition> Preferences { get; }
 
+        [NotNull]
         public IEnumerator<IPreferenceDefinition> GetEnumerator()
         {
             return (Preferences ?? new IPreferenceDefinition[0]).GetEnumerator();
         }
 
+        [NotNull]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
+        [NotNull]
         public abstract string Name { get; }
+
+        [NotNull]
+        public abstract Type PreferenceInstanceType { get; }
     }
 }

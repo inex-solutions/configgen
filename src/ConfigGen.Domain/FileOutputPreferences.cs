@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,17 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System;
-using System.Collections.Generic;
-using ConfigGen.Utilities;
-using JetBrains.Annotations;
-
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain
 {
-    public interface IDeferredSetterFactory
+    public class FileOutputPreferences
     {
-        [NotNull]
-        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
+        public string FilenameSetting { get; set; }
+
+        public string ForceFilename { get; set; }
     }
 }

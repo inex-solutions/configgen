@@ -66,12 +66,12 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 throw new ArgumentException("Supplied element should have name 'Apply' in the configgen namespace.", nameof(element));
             }
 
-            Result<ApplyElement> result = _applyElementCreator.Create(element);
+            IResult<ApplyElement, string> result = _applyElementCreator.Create(element);
 
             if (!result.Success)
             {
                 element.Remove();
-                return new ProcessNodeResults(UsedTokens, UnrecognisedTokens, XmlTemplateErrorCodes.ApplyWhenElseFormatError, result.ErrorMessage);
+                return new ProcessNodeResults(UsedTokens, UnrecognisedTokens, XmlTemplateErrorCodes.ApplyWhenElseFormatError, result.Error);
             }
 
             bool trueConditionAlreadyEvaluated = false;

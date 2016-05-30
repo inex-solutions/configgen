@@ -19,16 +19,16 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain
 {
-    public interface IDeferredSetterFactory
+    public static class ConfigurationGeneratorErrorCodes
     {
         [NotNull]
-        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
+        public static readonly string UnknownTemplateType = "UnknownTemplateType";
+
+        [NotNull]
+        public static readonly string TemplateTypeResolutionFailure = "TemplateTypeResolutionFailure";
     }
 }

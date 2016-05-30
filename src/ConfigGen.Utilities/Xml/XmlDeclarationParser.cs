@@ -38,7 +38,6 @@ namespace ConfigGen.Utilities.Xml
         /// </summary>
         /// <param name="xmlStream">The XML stream, which is reset to it's starting position after reading</param>
         /// <returns>Information about the xml declaration</returns>
-        [Pure]
         [NotNull]
         public XmlDeclarationInfo Parse([NotNull] Stream xmlStream)
         {

@@ -24,8 +24,8 @@ namespace ConfigGen.Domain
     {
         public ConfigurationGeneratorPreferences()
         {
-            SettingsFilePath = "Simple.App.Config.Settings.xls";
-            TemplateFilePath = "Simple.App.Config.Template.xml";
+            SettingsFilePath = "App.Config.Settings.xls";
+            TemplateFilePath = "App.Config.Template.xml";
         }
 
         public string SettingsFilePath { get; set; }

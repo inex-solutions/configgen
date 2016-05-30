@@ -21,14 +21,16 @@
 
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Templating.Xml.Tests
 {
     namespace XmlDeclarationTests
     {
-        public class when_the_template_contains_an_xml_declaration : XmlTemplateTestsBase
+        public class when_the_template_contains_an_xml_declaration : TemplateRenderTestBase<XmlTemplate>
         {
             private static string XmlDeclaration;
             private static string TemplateBody;
@@ -41,9 +43,11 @@ namespace ConfigGen.Templating.Xml.Tests
 </root>";
                 TemplateContents = XmlDeclaration + TemplateBody;
                 SingleConfiguration = new Dictionary<string, object>();
+
+                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(TemplateContentsAsStream, Configurations);
+            Because of = () => Results = Subject.Render(Configurations);
 
             It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
 

@@ -28,42 +28,44 @@ namespace ConfigGen.Utilities
     /// <summary>
     /// Represents the result of an operation which either returns a value, or an error.
     /// </summary>
-    public struct Result<T> : IDisplayText
+    public class Result<TResult, TError> : IResult<TResult, TError>
     {
-        private Result(bool success, [CanBeNull] T value, [CanBeNull] string errorMessage)
+        protected Result(bool success, [CanBeNull] TResult value, [CanBeNull] TError error)
         {
             Value = value;
-            ErrorMessage = errorMessage;
+            Error = error;
             Success = success;
         }
 
-        public static Result<T> CreateSuccessResult([NotNull] T value)
+        [NotNull]
+        public static Result<TResult, TError> CreateSuccessResult([NotNull] TResult value)
         {
             if (value == null) throw new ArgumentNullException(nameof(value));
-            return new Result<T>(true, value, null);
+            return new Result<TResult, TError>(true, value, default(TError));
         }
 
-        public static Result<T> CreateFailureResult([NotNull] string errorMessage)
+        [NotNull]
+        public static Result<TResult, TError> CreateFailureResult([NotNull] TError error)
         {
-            if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
-            return new Result<T>(false, default(T), errorMessage);
+            if (error == null) throw new ArgumentNullException(nameof(error));
+            return new Result<TResult, TError>(false, default(TResult), error);
         }
 
         /// <summary>
         /// Gets the error message if this result represents an unsuccessful operation, otherwise null.
         /// </summary>
         [CanBeNull]
-        public string ErrorMessage { get; }
+        public TError Error { get; }
 
         /// <summary>
         /// Gets the value if this result represents a successful operation, otherwise null.
         /// </summary>
         [CanBeNull]
-        public T Value { get; }
+        public TResult Value { get; }
 
         /// <summary>
         /// True if the operation returned a result (which can be found in <see cref="Value" />, 
-        /// or otherwise false (in which case an error message can be found in <see cref="ErrorMessage" />.
+        /// or otherwise false (in which case an error message can be found in <see cref="Error" />.
         /// </summary>
         public bool Success { get; }
 
@@ -71,10 +73,10 @@ namespace ConfigGen.Utilities
         {
             if (Success)
             {
-                return $"Result<{typeof(T).Namespace}>.Value: {Value.ToDisplayText()}";
+                return $"Result<{typeof(TResult).Name},{typeof(TError).Name}>.Value: {Value.ToDisplayText()}";
             }
 
-            return $"Result<{typeof(T).Namespace}>.ErrorMessage: {ErrorMessage}";
+            return $"Result<{typeof(TResult).Name},{typeof(TError).Name}>.ErrorMessage: {Error}";
         }
 
         [NotNull]
@@ -85,7 +87,34 @@ namespace ConfigGen.Utilities
                 return $"{Value.ToDisplayText()}";
             }
 
-            return $"error: {ErrorMessage}";
+            return $"error: {Error}";
+        }
+    }
+
+    /// <summary>
+    /// Represents the result of an operation which either returns a value, or an error.
+    /// </summary>
+    public class Result<T> : Result<T, string>
+    {
+        //private Result(bool success, [CanBeNull] T value, [CanBeNull] string error)
+        //{
+        //    Value = value;
+        //    Error = error;
+        //    Success = success;
+        //}
+
+        private Result(bool success, [CanBeNull] T value, [CanBeNull] string error) : base(success, value, error)
+        {
+        }
+
+        public override string ToString()
+        {
+            if (Success)
+            {
+                return $"Result<{typeof(T).Namespace}>.Value: {Value.ToDisplayText()}";
+            }
+
+            return $"Result<{typeof(T).Namespace}>.ErrorMessage: {Error}";
         }
     }
 }

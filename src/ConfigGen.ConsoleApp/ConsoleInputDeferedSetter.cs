@@ -30,14 +30,14 @@ namespace ConfigGen.ConsoleApp
     public class ConsoleInputDeferedSetter<TPreferenceGroupType, TPreferenceType> : IDeferedSetter<TPreferenceGroupType>
     {
         [NotNull]
-        private readonly Func<Queue<string>, Result<TPreferenceType>> _parse;
+        private readonly Func<Queue<string>, IResult<TPreferenceType, string>> _parse;
         [NotNull]
         private readonly Action<TPreferenceGroupType, TPreferenceType> _set;
 
         private bool _parsed;
-        private Result<TPreferenceType> _result;
+        private IResult<TPreferenceType, string> _result;
 
-        public ConsoleInputDeferedSetter([NotNull] Func<Queue<string>, Result<TPreferenceType>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set)
+        public ConsoleInputDeferedSetter([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set)
         {
             if (parse == null) throw new ArgumentNullException(nameof(parse));
             if (set == null) throw new ArgumentNullException(nameof(set));
@@ -46,7 +46,8 @@ namespace ConfigGen.ConsoleApp
         }
 
         //TODO: can't say I love this Result<object> or how we get to it.
-        public Result<object> Parse(Queue<string> argsQueue)
+        [NotNull]
+        public IResult<object, string> Parse(Queue<string> argsQueue)
         {
             _result = _parse(argsQueue);
             _parsed = true;
@@ -57,7 +58,7 @@ namespace ConfigGen.ConsoleApp
                 return Result<object>.CreateSuccessResult(_result.Value);
             }
 
-            return Result<object>.CreateFailureResult(_result.ErrorMessage);
+            return Result<object>.CreateFailureResult(_result.Error);
         }
 
         public string ToDisplayText()

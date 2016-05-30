@@ -18,14 +18,10 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using ConfigGen.Tests.Common;
-using Machine.Specifications;
-
-namespace ConfigGen.Templating.Xml.Tests
+namespace ConfigGen.Domain
 {
-    [Subject(typeof(XmlTemplate))]
-    public abstract class XmlTemplateTestsBase : TemplateTestsBase<XmlTemplate>
+    public class WriteOutputResult
     {
+        public string FullPath { get; set; }
     }
 }

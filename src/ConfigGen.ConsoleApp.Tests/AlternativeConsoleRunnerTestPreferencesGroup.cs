@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 
@@ -26,12 +27,9 @@ namespace ConfigGen.ConsoleApp.Tests
 {
     public class AlternativeConsoleRunnerTestPreferencesGroup : PreferenceGroupBase
     {
-        private static string PreferenceGroupName = "AlternativeConsoleRunnerTestPreferencesGroup";
-
         public AlternativeConsoleRunnerTestPreferencesGroup()
         {
             IntParameterPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, int>(
-                preferenceGroupName: PreferenceGroupName,
                 name: "IntParameter",
                 shortName: "Int",
                 description: "specifies the int parameter",
@@ -39,13 +37,10 @@ namespace ConfigGen.ConsoleApp.Tests
                 parseAction: argsQueue => argsQueue.ParseIntParameterFromArgumentQueue("IntParameter"),
                 setAction: (preferences, value) => preferences.IntParameter = value);
 
-            AnotherBooleanSwitch = new PreferenceDefinition<ConsoleRunnerTestPreferences, bool>(
-                preferenceGroupName: PreferenceGroupName,
+            AnotherBooleanSwitch = new SwitchPreferenceDefinition<ConsoleRunnerTestPreferences>(
                 name: "AnotherBooleanSwitch",
                 shortName: "Another",
                 description: "another switch",
-                parameters: new[] { new PreferenceParameterDefinition("[true|false]", "[optional] the value for the switch, default true.") },
-                parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("AnotherBooleanSwitch"),
                 setAction: (preferences, value) => preferences.AnotherBooleanSwitch = value);
         }
 
@@ -54,6 +49,8 @@ namespace ConfigGen.ConsoleApp.Tests
         public PreferenceDefinition<ConsoleRunnerTestPreferences, int> IntParameterPreference { get; }
 
         public override string Name => "AlternativeConsoleRunnerTestPreferencesGroup";
+
+        public override Type PreferenceInstanceType => typeof(ConsoleRunnerTestPreferences);
 
         protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[] { IntParameterPreference, AnotherBooleanSwitch };
     }

@@ -45,11 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationCollectionLoader.cs" />
     <Compile Include="ConfigurationGenerator.cs" />
+    <Compile Include="ConfigurationGeneratorError.cs" />
+    <Compile Include="ConfigurationGeneratorErrorCodes.cs" />
     <Compile Include="ConfigurationGeneratorPreferenceGroup.cs" />
     <Compile Include="ConfigurationGeneratorPreferences.cs" />
+    <Compile Include="FileOutputPreferenceGroup.cs" />
+    <Compile Include="FileOutputPreferences.cs" />
+    <Compile Include="FileOutputWriter.cs" />
     <Compile Include="PreferencesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateFactory.cs" />
+    <Compile Include="WriteOutputResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
@@ -59,6 +67,14 @@
     <ProjectReference Include="..\ConfigGen.Settings.Excel\ConfigGen.Settings.Excel.csproj">
       <Project>{90A5D982-3422-4C11-94C1-E1AA924FC5A6}</Project>
       <Name>ConfigGen.Settings.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj">
+      <Project>{C96CB4FE-EFD6-4673-B587-71E1053B970E}</Project>
+      <Name>ConfigGen.Templating.Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Templating.Xml\ConfigGen.Templating.Xml.csproj">
+      <Project>{A2A596E2-B503-4311-9AD4-7EDAE03D7B1F}</Project>
+      <Name>ConfigGen.Templating.Xml</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
       <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>

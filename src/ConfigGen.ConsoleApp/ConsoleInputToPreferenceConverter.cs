@@ -111,7 +111,7 @@ namespace ConfigGen.ConsoleApp
                     }
                     else
                     {
-                        parseErrors.Add(parseResult.ErrorMessage);
+                        parseErrors.Add(parseResult.Error);
                     }
                 }
             }

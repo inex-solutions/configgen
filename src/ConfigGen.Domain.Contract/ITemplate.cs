@@ -27,8 +27,11 @@ namespace ConfigGen.Domain.Contract
 {
     public interface ITemplate
     {
+        [NotNull]
+        LoadResult Load([NotNull] Stream templateStream);
+
         [Pure]
         [NotNull]
-        RenderResults Render([NotNull] Stream templateStream, [NotNull] IEnumerable<IConfiguration> configurationsToRender);
+        RenderResults Render([NotNull] IEnumerable<IConfiguration> configurationsToRender);
     }
 }

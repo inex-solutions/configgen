@@ -51,6 +51,9 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         private readonly TokenReplacer _tokenReplacer;
 
+        private XmlDeclarationInfo _xmlDeclarationInfo;
+        private XElement _loadedTemplate;
+
         internal XmlTemplate(
             [NotNull] XmlDeclarationParser xmlDeclarationParser, 
             [NotNull] TemplateLoader templateLoader, 
@@ -72,32 +75,44 @@ namespace ConfigGen.Templating.Xml
         {
         }
 
-        [Pure]
         [NotNull]
-        public RenderResults Render([NotNull] Stream templateStream, [NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        public LoadResult Load([NotNull] Stream templateStream)
         {
             if (templateStream == null) throw new ArgumentNullException(nameof(templateStream));
-            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
+
 
             if (!templateStream.CanRead || !templateStream.CanSeek)
             {
                 throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
             }
 
-            XmlDeclarationInfo xmlDeclarationInfo = _xmlDeclarationParser.Parse(templateStream);
+            _xmlDeclarationInfo = _xmlDeclarationParser.Parse(templateStream);
 
-            TemplateLoadResults templateLoadResults = _templateLoader.LoadTemplate(templateStream);
+            XmlTemplateLoadResults xmlTemplateLoadResults = _templateLoader.LoadTemplate(templateStream);
 
-            if (!templateLoadResults.Success)
+            if (xmlTemplateLoadResults.Success)
             {
-                return new RenderResults(
-                    TemplateRenderResultStatus.Failure,
-                    null,
-                    templateLoadResults.TemplateLoadErrors);
+                _loadedTemplate = xmlTemplateLoadResults.LoadedTemplate;
             }
 
-            IEnumerable<SingleTemplateRenderResults> results = configurationsToRender.Select(cfg =>
-                RenderSingleTemplate(templateLoadResults.LoadedTemplate.DeepClone(), cfg, xmlDeclarationInfo));
+            //TODO: make result returning more general - this is just another mapping from one result to another
+            return new LoadResult(xmlTemplateLoadResults.TemplateLoadErrors);
+        }
+
+        [Pure]
+        [NotNull]
+        public RenderResults Render([NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        {
+            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
+
+            if (_loadedTemplate == null)
+            {
+                throw new InvalidOperationException("Cannot render a template that has not been loaded.");
+            }
+
+            IEnumerable<SingleTemplateRenderResults> results = 
+                configurationsToRender.Select(cfg =>
+                RenderSingleTemplate(_loadedTemplate.DeepClone(), cfg, _xmlDeclarationInfo));
 
             return new RenderResults(TemplateRenderResultStatus.Success, results, null); 
         }
@@ -129,6 +144,7 @@ namespace ConfigGen.Templating.Xml
                 IEnumerable<string> unusedTokens = configuration.SettingsNames.Where(token => !usedTokens.Contains(token));
 
                 return new SingleTemplateRenderResults(
+                            configuration: configuration,
                             status: errors.Any() ? TemplateRenderResultStatus.Failure : TemplateRenderResultStatus.Success,
                             renderedResult: output,
                             usedTokens: usedTokens,
@@ -139,12 +155,13 @@ namespace ConfigGen.Templating.Xml
             catch (Exception ex)
             {
                 return new SingleTemplateRenderResults(
-                       status: TemplateRenderResultStatus.Failure,
-                       renderedResult: null,
-                       usedTokens: null,
-                       unusedTokens: null,
-                       unrecognisedTokens: null,
-                       errors: new UnhandledExceptionError(XmlTemplateErrorSource, ex).ToSingleEnumerable());
+                    configuration: configuration,
+                    status: TemplateRenderResultStatus.Failure,
+                    renderedResult: null,
+                    usedTokens: null,
+                    unusedTokens: null,
+                    unrecognisedTokens: null,
+                    errors: new UnhandledExceptionError(XmlTemplateErrorSource, ex).ToSingleEnumerable());
             }
         }
     }

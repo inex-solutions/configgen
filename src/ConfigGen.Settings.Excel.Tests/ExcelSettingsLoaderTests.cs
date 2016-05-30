@@ -19,6 +19,8 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
+using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.Extensions;
@@ -109,6 +111,54 @@ namespace ConfigGen.Settings.Excel.Tests
                     new Setting("ConfigFilePath", "Configuration2\\App.Config"),
                     new Setting("Setting1", "Configuration2_Setting1"),
                     new Setting("Setting2", "Configuration2_Setting2"));
+        }
+
+        [Subject(typeof(ExcelSettingsLoader))]
+        public class when_loading_a_simple_xls_file_that_is_locked_for_writing : ExcelSettingsLoaderTestBase
+        {
+            private static Exception CaughtException;
+
+            Establish context = () =>
+            {
+                SourceTestFileName = "App.Config.Settings.xls";
+                TargetTestFileName = "App.Config.Settings.xls";
+            };
+
+            Because of = () =>
+            {
+                using (var fileStream = new FileStream(SettingsFileFullPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+                {
+                    CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(new[] { SettingsFileFullPath }));
+                }
+            };
+
+            It then_the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();
+
+            It then_the_result_should_contain_two_configurations = () => Result.Count().ShouldEqual(2);
+        }
+
+        [Subject(typeof(ExcelSettingsLoader))]
+        public class when_loading_a_simple_xls_file_that_e_sethas_its_readonly_file_attribut : ExcelSettingsLoaderTestBase
+        {
+            private static Exception CaughtException;
+
+            Establish context = () =>
+            {
+                SourceTestFileName = "App.Config.Settings.xls";
+                TargetTestFileName = "App.Config.Settings.xls";
+            };
+
+            Because of = () =>
+            {
+                var settingsFile = new FileInfo(SettingsFileFullPath);
+                settingsFile.Attributes |= FileAttributes.ReadOnly;
+
+                Result = Subject.LoadSettings(new[] { SettingsFileFullPath });
+            };
+
+            It then_the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();
+
+            It then_the_result_should_contain_two_configurations = () => Result.Count().ShouldEqual(2);
         }
     }
 }

@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
@@ -29,37 +30,30 @@ namespace ConfigGen.Domain.Contract
     public class PreferenceDefinition<TPreferenceGroupType, TPreferenceType> : IPreferenceDefinition
     {
         [NotNull]
-        private readonly Func<Queue<string>, Result<TPreferenceType>> _parseAction;
+        private readonly Func<Queue<string>, IResult<TPreferenceType, string>> _parseAction;
 
         [NotNull]
         private readonly Action<TPreferenceGroupType, TPreferenceType> _setAction;
 
-        public PreferenceDefinition(
-            [NotNull] string preferenceGroupName,
-            [NotNull] string name,
+        public PreferenceDefinition([NotNull] string name,
             [CanBeNull] string shortName,
             [NotNull] string description,
             [CanBeNull] PreferenceParameterDefinition[] parameters,
-            [NotNull] Func<Queue<string>, Result<TPreferenceType>> parseAction,
+            [NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parseAction,
             [NotNull] Action<TPreferenceGroupType, TPreferenceType> setAction)
         {
             _parseAction = parseAction;
             _setAction = setAction;
-            if (preferenceGroupName == null) throw new ArgumentNullException(nameof(preferenceGroupName));
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (description == null) throw new ArgumentNullException(nameof(description));
             if (parseAction == null) throw new ArgumentNullException(nameof(parseAction));
             if (setAction == null) throw new ArgumentNullException(nameof(setAction));
 
-            PreferenceGroupName = preferenceGroupName;
             Name = name;
             ShortName = shortName;
             Description = description;
             Parameters = parameters;
         }
-
-        [NotNull]
-        public string PreferenceGroupName { get; }
 
         [NotNull]
         public string Name { get; }
@@ -80,4 +74,57 @@ namespace ConfigGen.Domain.Contract
             return deferredSetterFactory.Create(_parseAction, _setAction);
         }
     }
+
+    public class SwitchPreferenceDefinition<TPreferenceGroupType> : PreferenceDefinition<TPreferenceGroupType, bool>
+    {
+        public SwitchPreferenceDefinition(
+            [NotNull] string name,
+            [CanBeNull] string shortName,
+            [NotNull] string description,
+            [NotNull] Action<TPreferenceGroupType, bool> setAction)
+            : base(name,
+                shortName,
+                description,
+                new PreferenceParameterDefinition[]
+                {
+                    new PreferenceParameterDefinition("[true|false]", "[optional] the value for the switch; default true.")
+                },
+                args => ParseSwitchParameterFromArgumentQueue(args, name),
+                setAction)
+        {
+
+        }
+
+        [NotNull]
+        private static IResult<bool, string> ParseSwitchParameterFromArgumentQueue([NotNull] Queue<string> argsQueue, [NotNull] string parameterName)
+        {
+            if (argsQueue == null) throw new ArgumentNullException(nameof(argsQueue));
+            if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
+
+            bool returnValue = true;
+
+            if (argsQueue.Any())
+            {
+                var arg = argsQueue.Peek();
+                if (arg != null
+                    && !arg.StartsWith("-"))
+                {
+                    if (!Boolean.TryParse(argsQueue.Dequeue(), out returnValue))
+                    {
+                        return Result<bool>.CreateFailureResult(GetParseFailErrorText(parameterName, arg));
+                    }
+                }
+            }
+
+            return Result<bool>.CreateSuccessResult(returnValue);
+        }
+
+        [NotNull]
+        public static string GetParseFailErrorText(string parameterName, string value)
+        {
+            return $"Failed to parse supplied value \"{value}\" for parameter {parameterName}";
+        }
+    }
+
+
 }

@@ -28,5 +28,10 @@ namespace ConfigGen.Domain.Contract
     {
         [NotNull]
         IEnumerable<IPreferenceGroup> RegisteredPreferences { get; }
+
+        [NotNull]
+        IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<Preference> preferences);
+
+        void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<Preference> preferences, [NotNull] TPreferenceType preferenceInstance);
     }
 }

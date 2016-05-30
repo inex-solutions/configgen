@@ -21,6 +21,7 @@
 
 using System.Collections.Generic;
 using ConfigGen.Utilities;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
@@ -31,7 +32,8 @@ namespace ConfigGen.Domain.Contract
 
     public interface IDeferedSetter
     {
-        Result<object> Parse(Queue<string> argsQueue);
+        [NotNull]
+        IResult<object, string> Parse(Queue<string> argsQueue);
 
         string ToDisplayText();
 

@@ -36,13 +36,13 @@ namespace ConfigGen.Domain.Tests
         protected static IEnumerable<IPreferenceGroup> PreferenceGroups;
 
         [NotNull]
-        protected static List<KeyValuePair<string, IDeferedSetter>> PreferencesToSupplyToGenerator;
+        protected static List<Preference> PreferencesToSupplyToGenerator;
 
         Establish context = () =>
         {
             Subject = new ConfigurationGenerator();
             PreferenceGroups = Subject.GetPreferenceGroups();
-            PreferencesToSupplyToGenerator = new List<KeyValuePair<string, IDeferedSetter>>();
+            PreferencesToSupplyToGenerator = new List<Preference>();
             Result = null;
         };
     }
@@ -53,9 +53,9 @@ namespace ConfigGen.Domain.Tests
         {
             Establish context = () =>
             {
-                PreferencesToSupplyToGenerator = new List<KeyValuePair<string, IDeferedSetter>>
+                PreferencesToSupplyToGenerator = new List<Preference>
                 {
-                    new KeyValuePair<string, IDeferedSetter>()
+                    new Preference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.SettingsFile.Name, null )
                 };
             };
 

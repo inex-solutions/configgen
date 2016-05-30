@@ -41,24 +41,24 @@ namespace ConfigGen.ConsoleApp.Tests
             return _preferenceGroups;
         }
 
-        public GenerationResults GenerateConfigurations(IEnumerable<KeyValuePair<string, IDeferedSetter>> preferences)
+        public GenerationResults GenerateConfigurations(IEnumerable<Preference> preferences)
         {
-            PreferencesPassedToGenerateCall = preferences ?? new KeyValuePair<string, IDeferedSetter>[0];
-            PreferenceValues = new IndexedProperty<IPreferenceInfo, KeyValuePair<string, IDeferedSetter>, object>(
-                selectionPredicate: indexer => PreferencesPassedToGenerateCall.FirstOrDefault(p => indexer != null && p.Key == indexer.Name),
-                projection: item => item.Value.RawValue);
+            PreferencesPassedToGenerateCall = preferences;
+            PreferenceValues = new IndexedProperty<IPreferenceInfo, Preference, object>(
+                selectionPredicate: indexer => PreferencesPassedToGenerateCall.FirstOrDefault(p => indexer != null && p.PreferenceName == indexer.Name),
+                projection: item => item.DeferredSetter.RawValue);
 
             GenerateConfigurationsWasCalled = true;
 
             return new GenerationResults();
         }
 
-        public IndexedProperty<IPreferenceInfo, KeyValuePair<string, IDeferedSetter>, object> PreferenceValues { get; set; }
+        public IndexedProperty<IPreferenceInfo, Preference, object> PreferenceValues { get; set; }
 
         public bool GenerateConfigurationsWasCalled { get; private set; }
 
         [NotNull]
-        public IEnumerable<KeyValuePair<string, IDeferedSetter>> PreferencesPassedToGenerateCall { get; private set; }
+        public IEnumerable<Preference> PreferencesPassedToGenerateCall { get; private set; }
 
 
         [NotNull]
@@ -91,7 +91,7 @@ namespace ConfigGen.ConsoleApp.Tests
         [NotNull]
         public ConfigurationGeneratorMock WithPreferences(params IPreferenceInfo[] preferences)
         {
-            PreferencesPassedToGenerateCall.Select(p => p.Key).ShouldContainOnly(preferences.Select(p => p.Name));
+            PreferencesPassedToGenerateCall.Select(p => p.PreferenceName).ShouldContainOnly(preferences.Select(p => p.Name));
             return this;
         }
     }

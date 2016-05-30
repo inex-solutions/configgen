@@ -28,37 +28,40 @@ namespace ConfigGen.Settings.Excel
     {
         private static string PreferenceGroupName = "ExcelSettingsPreferenceGroup";
 
-        protected override IEnumerable<IPreferenceInfo> Preferences
+        protected override IEnumerable<IPreferenceInfo> Preferences => new[] { PreferenceDefinitions.ConfigurationNameColumn, PreferenceDefinitions.WorksheetName };
+
+        public override string Name => "Excel Settings";
+
+        private static class PreferenceDefinitions
         {
-            get
+            static PreferenceDefinitions()
             {
                 // ReSharper disable AssignNullToNotNullAttribute
                 // ReSharper disable PossibleNullReferenceException
-                return new[]
-                {
-                    new PreferenceInfo<ExcelSettingsPreferences, string>(
-                        preferenceGroupName: PreferenceGroupName,
-                        name: "ConfigurationNameColumn",
-                        shortName: null,
-                        description: "specifies the name of the column in the spreadsheet to use as the configuration name",
-                        parameters: new[,] {{"<column name>", "name of the column"}},
-                        parseAction: (argsQueue) => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameColumn"),
-                        setAction: (preferences, value) => preferences.ConfigurationNameColumn = value),
+                ConfigurationNameColumn = new PreferenceInfo<ExcelSettingsPreferences, string>(
+                    preferenceGroupName: PreferenceGroupName,
+                    name: "ConfigurationNameColumn",
+                    shortName: null,
+                    description: "specifies the name of the column in the spreadsheet to use as the configuration name",
+                    parameters: new[,] { { "<column name>", "name of the column" } },
+                    parseAction: (argsQueue) => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameColumn"),
+                    setAction: (preferences, value) => preferences.ConfigurationNameColumn = value);
 
-                    new PreferenceInfo<ExcelSettingsPreferences, string>(
-                        preferenceGroupName: PreferenceGroupName,
-                        name: "WorksheetName",
-                        shortName: null,
-                        description: "specifies the name of the worksheet containing configuration settings",
-                        parameters: new[,] {{"<worksheet name>", "name of the worksheet"}},
-                        parseAction: (argsQueue) => argsQueue.ParseSingleStringParameterFromArgumentQueue("WorksheetName"),
-                        setAction: (preferences, value) => preferences.WorksheetName = value),
-                };
+                WorksheetName = new PreferenceInfo<ExcelSettingsPreferences, string>(
+                    preferenceGroupName: PreferenceGroupName,
+                    name: "WorksheetName",
+                    shortName: null,
+                    description: "specifies the name of the worksheet containing configuration settings",
+                    parameters: new[,] { { "<worksheet name>", "name of the worksheet" } },
+                    parseAction: (argsQueue) => argsQueue.ParseSingleStringParameterFromArgumentQueue("WorksheetName"),
+                    setAction: (preferences, value) => preferences.WorksheetName = value);
                 // ReSharper restore AssignNullToNotNullAttribute
                 // ReSharper restore PossibleNullReferenceException
             }
-        }
 
-        public override string Name => "Excel Settings";
+            public static PreferenceInfo<ExcelSettingsPreferences, string> WorksheetName { get; }
+
+            public static PreferenceInfo<ExcelSettingsPreferences, string> ConfigurationNameColumn { get; }
+        }
     }
 }

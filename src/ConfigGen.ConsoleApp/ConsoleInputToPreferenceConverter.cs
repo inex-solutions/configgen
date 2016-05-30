@@ -81,7 +81,7 @@ namespace ConfigGen.ConsoleApp
 
             IList<IPreferenceInfo> preferenceInfos = preferenceGroups.SelectMany(pg => pg).ToList();
 
-            var parsedPreferences = new Dictionary<string, IDeferedSetter>();
+            var parsedPreferences = new List<Preference>();
             var parseErrors = new List<string>();
 
             var argsQueue = new Queue<string>(args);
@@ -106,7 +106,7 @@ namespace ConfigGen.ConsoleApp
 
                     if (parseResult.Success)
                     {
-                        parsedPreferences.Add(preferenceInfo.Name, deferredSetter);
+                        parsedPreferences.Add(new Preference(preferenceInfo.Name, deferredSetter));
 
                     }
                     else

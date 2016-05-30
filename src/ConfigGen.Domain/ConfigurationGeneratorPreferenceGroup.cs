@@ -28,46 +28,57 @@ namespace ConfigGen.Domain
     {
         private static string PreferenceGroupName = "ConfigurationGeneratorPreferenceGroup";
 
-        protected override IEnumerable<IPreferenceInfo> Preferences
+        protected override IEnumerable<IPreferenceInfo> Preferences => new IPreferenceInfo[]
         {
-            get
+            PreferenceDefinitions.SettingsFile,
+            PreferenceDefinitions.TemplateFile,
+            PreferenceDefinitions.Verbose
+        };
+
+        public override string Name => "General preferences";
+
+        public static class PreferenceDefinitions
+        {
+            static PreferenceDefinitions()
             {
                 // ReSharper disable AssignNullToNotNullAttribute
                 // ReSharper disable PossibleNullReferenceException
-                return new IPreferenceInfo[]
-                {
-                    new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
-                        preferenceGroupName: PreferenceGroupName,
-                        name: "SettingsFile",
-                        shortName: "Settings",
-                        description: "specifies the settings file containing config gen settings",
-                        parameters: new[,] {{"<settings file path>", "path to the settings file"}},
-                        parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
-                        setAction: (preferences, value) => preferences.SettingsFilePath = value),
+                SettingsFile = new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
+                    preferenceGroupName: PreferenceGroupName,
+                    name: "SettingsFile",
+                    shortName: "Settings",
+                    description: "specifies the settings file containing config gen settings",
+                    parameters: new[,] { { "<settings file path>", "path to the settings file" } },
+                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
+                    setAction: (preferences, value) => preferences.SettingsFilePath = value);
 
-                    new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
-                        preferenceGroupName: PreferenceGroupName,
-                        name: "TemplateFile",
-                        shortName: "Template",
-                        description: "specifies the template file",
-                        parameters: new[,] {{"<template file path>", "path to the template file"}},
-                        parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFile"),
-                        setAction: (preferences, value) => preferences.TemplateFilePath = value),
+                TemplateFile = new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
+                    preferenceGroupName: PreferenceGroupName,
+                    name: "TemplateFile",
+                    shortName: "Template",
+                    description: "specifies the template file",
+                    parameters: new[,] { { "<template file path>", "path to the template file" } },
+                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFile"),
+                    setAction: (preferences, value) => preferences.TemplateFilePath = value);
 
-                    new PreferenceInfo<ConfigurationGeneratorPreferences, bool>(
-                        preferenceGroupName: PreferenceGroupName,
-                        name: "VerboseOutput",
-                        shortName: "Verbose",
-                        description: "verbose output",
-                        parameters: new[,] {{"[true|false]", "[optional] the value for the verbose flag"}},
-                        parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("VerboseOutput"),
-                        setAction: (preferences, value) => preferences.Verbose = value)
-                };
+                Verbose = new PreferenceInfo<ConfigurationGeneratorPreferences, bool>(
+                    preferenceGroupName: PreferenceGroupName,
+                    name: "VerboseOutput",
+                    shortName: "Verbose",
+                    description: "verbose output",
+                    parameters: new[,] { { "[true|false]", "[optional] the value for the verbose flag" } },
+                    parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("VerboseOutput"),
+                    setAction: (preferences, value) => preferences.Verbose = value);
+
                 // ReSharper restore AssignNullToNotNullAttribute
                 // ReSharper restore PossibleNullReferenceException
             }
-        }
 
-        public override string Name => "General preferences";
+            public static PreferenceInfo<ConfigurationGeneratorPreferences, bool> Verbose { get; }
+
+            public static PreferenceInfo<ConfigurationGeneratorPreferences, string> TemplateFile { get; }
+
+            public static PreferenceInfo<ConfigurationGeneratorPreferences, string> SettingsFile { get; }
+        }
     }
 }

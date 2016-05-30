@@ -28,7 +28,7 @@ namespace ConfigGen.ConsoleApp
 {
     public class ParsedConsoleInput
     {
-        public ParsedConsoleInput([NotNull] Dictionary<string, IDeferedSetter> parsedPreferences, [NotNull] List<string> parseErrors)
+        public ParsedConsoleInput([NotNull] List<Preference> parsedPreferences, [NotNull] List<string> parseErrors)
         {
             if (parsedPreferences == null) throw new ArgumentNullException(nameof(parsedPreferences));
             if (parseErrors == null) throw new ArgumentNullException(nameof(parseErrors));
@@ -38,7 +38,7 @@ namespace ConfigGen.ConsoleApp
         }
 
         [NotNull]
-        public Dictionary<string, IDeferedSetter> ParsedPreferences { get; }
+        public List<Preference> ParsedPreferences { get; }
 
         [NotNull]
         public List<string> ParseErrors { get; }

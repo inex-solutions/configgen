@@ -56,6 +56,7 @@
     <Compile Include="ISettingsLoader.cs" />
     <Compile Include="ITemplate.cs" />
     <Compile Include="IConfiguration.cs" />
+    <Compile Include="Preference.cs" />
     <Compile Include="PreferenceExtensions.cs" />
     <Compile Include="PreferenceGroupBase.cs" />
     <Compile Include="PreferenceGroupExtensions.cs" />

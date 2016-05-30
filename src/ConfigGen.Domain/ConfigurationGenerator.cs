@@ -46,7 +46,7 @@ namespace ConfigGen.Domain
             return _preferencesManager.RegisteredPreferences;
         }
 
-        public GenerationResults GenerateConfigurations([NotNull] IEnumerable<KeyValuePair<string, IDeferedSetter>> preferences)
+        public GenerationResults GenerateConfigurations([NotNull] IEnumerable<Preference> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
@@ -56,7 +56,7 @@ namespace ConfigGen.Domain
 
             foreach (var preference in preferences)
             {
-                Console.WriteLine($"{preference.Key} : {preference.Value.ToDisplayText()}");
+                Console.WriteLine($"{preference.PreferenceName} : {preference.DeferredSetter.ToDisplayText()}");
             }
 
             var configGenerationPreferences = new ConfigurationGeneratorPreferences();

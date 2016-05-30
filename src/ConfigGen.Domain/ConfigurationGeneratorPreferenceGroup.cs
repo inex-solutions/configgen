@@ -48,7 +48,7 @@ namespace ConfigGen.Domain
                     name: "SettingsFile",
                     shortName: "Settings",
                     description: "specifies the settings file containing config gen settings",
-                    parameters: new[,] { { "<settings file path>", "path to the settings file" } },
+                    parameters: new[] { new PreferenceParameterDefinition("settings file path", "path to the settings file") },
                     parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
                     setAction: (preferences, value) => preferences.SettingsFilePath = value);
 
@@ -57,7 +57,7 @@ namespace ConfigGen.Domain
                     name: "TemplateFile",
                     shortName: "Template",
                     description: "specifies the template file",
-                    parameters: new[,] { { "<template file path>", "path to the template file" } },
+                    parameters: new[] { new PreferenceParameterDefinition("template file path", "path to the template file") },
                     parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFile"),
                     setAction: (preferences, value) => preferences.TemplateFilePath = value);
 
@@ -66,7 +66,7 @@ namespace ConfigGen.Domain
                     name: "VerboseOutput",
                     shortName: "Verbose",
                     description: "verbose output",
-                    parameters: new[,] { { "[true|false]", "[optional] the value for the verbose flag" } },
+                    parameters: new[] { new PreferenceParameterDefinition("[true|false]", "[optional] the value for the verbose flag") },
                     parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("VerboseOutput"),
                     setAction: (preferences, value) => preferences.Verbose = value);
 

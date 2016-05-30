@@ -43,8 +43,8 @@ namespace ConfigGen.Settings.Excel
                     name: "ConfigurationNameColumn",
                     shortName: null,
                     description: "specifies the name of the column in the spreadsheet to use as the configuration name",
-                    parameters: new[,] { { "<column name>", "name of the column" } },
-                    parseAction: (argsQueue) => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameColumn"),
+                    parameters: new [] { new PreferenceParameterDefinition("column name", "name of the column") },
+                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameColumn"),
                     setAction: (preferences, value) => preferences.ConfigurationNameColumn = value);
 
                 WorksheetName = new PreferenceDefinition<ExcelSettingsPreferences, string>(
@@ -52,8 +52,8 @@ namespace ConfigGen.Settings.Excel
                     name: "WorksheetName",
                     shortName: null,
                     description: "specifies the name of the worksheet containing configuration settings",
-                    parameters: new[,] { { "<worksheet name>", "name of the worksheet" } },
-                    parseAction: (argsQueue) => argsQueue.ParseSingleStringParameterFromArgumentQueue("WorksheetName"),
+                    parameters: new[] { new PreferenceParameterDefinition("worksheet name", "name of the worksheet") },
+                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("WorksheetName"),
                     setAction: (preferences, value) => preferences.WorksheetName = value);
                 // ReSharper restore AssignNullToNotNullAttribute
                 // ReSharper restore PossibleNullReferenceException

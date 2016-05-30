@@ -35,7 +35,7 @@ namespace ConfigGen.ConsoleApp.Tests
                 name: "IntParameter",
                 shortName: "Int",
                 description: "specifies the int parameter",
-                parameters: new[,] { { "<parameter value>", "the value of the parameter" } },
+                parameters: new[] {new PreferenceParameterDefinition("<parameter value>", "the value of the parameter")},
                 parseAction: argsQueue => argsQueue.ParseIntParameterFromArgumentQueue("IntParameter"),
                 setAction: (preferences, value) => preferences.IntParameter = value);
 
@@ -44,7 +44,7 @@ namespace ConfigGen.ConsoleApp.Tests
                 name: "AnotherBooleanSwitch",
                 shortName: "Another",
                 description: "another switch",
-                parameters: new[,] { { "[true|false]", "[optional] the value for the switch, default true." } },
+                parameters: new[] { new PreferenceParameterDefinition("[true|false]", "[optional] the value for the switch, default true.") },
                 parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("AnotherBooleanSwitch"),
                 setAction: (preferences, value) => preferences.AnotherBooleanSwitch = value);
         }

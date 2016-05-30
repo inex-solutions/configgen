@@ -39,7 +39,7 @@ namespace ConfigGen.Domain.Contract
             [NotNull] string name,
             [CanBeNull] string shortName,
             [NotNull] string description,
-            [CanBeNull] string[,] parameters,
+            [CanBeNull] PreferenceParameterDefinition[] parameters,
             [NotNull] Func<Queue<string>, Result<TPreferenceType>> parseAction,
             [NotNull] Action<TPreferenceGroupType, TPreferenceType> setAction)
         {
@@ -71,7 +71,7 @@ namespace ConfigGen.Domain.Contract
         public string Description { get; }
 
         [CanBeNull]
-        public string[,] Parameters { get; }
+        public PreferenceParameterDefinition[] Parameters { get; }
 
         [NotNull]
         public IDeferedSetter CreateDeferredSetter([NotNull] IDeferredSetterFactory deferredSetterFactory)

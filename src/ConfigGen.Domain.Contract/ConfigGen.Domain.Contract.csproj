@@ -61,6 +61,7 @@
     <Compile Include="PreferenceGroupBase.cs" />
     <Compile Include="PreferenceGroupExtensions.cs" />
     <Compile Include="PreferenceDefinition.cs" />
+    <Compile Include="PreferenceParameterDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IPreferenceGroup.cs" />
     <Compile Include="RenderResults.cs" />

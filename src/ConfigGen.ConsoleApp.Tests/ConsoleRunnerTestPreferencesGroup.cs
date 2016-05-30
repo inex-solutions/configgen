@@ -36,7 +36,7 @@ namespace ConfigGen.ConsoleApp.Tests
                 name: "StringParameter",
                 shortName: "String",
                 description: "specifies the string parameter",
-                parameters: new[,] {{"<parameter value>", "the value of the parameter"}},
+                parameters: new[] { new PreferenceParameterDefinition("<parameter value>", "the value of the parameter") },
                 parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("StringParameter"),
                 setAction: (preferences, value) => preferences.StringParameter = value);
 
@@ -45,7 +45,7 @@ namespace ConfigGen.ConsoleApp.Tests
                 name: "BooleanSwitch",
                 shortName: "Boolean",
                 description: "a switch",
-                parameters: new[,] {{"[true|false]", "[optional] the value for the switch, default true."}},
+                parameters: new[] { new PreferenceParameterDefinition("[true|false]", "[optional] the value for the switch, default true.") },
                 parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("BooleanSwitch"),
                 setAction: (preferences, value) => preferences.BooleanSwitch = value);
         }

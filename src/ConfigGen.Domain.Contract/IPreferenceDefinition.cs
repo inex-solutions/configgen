@@ -38,7 +38,7 @@ namespace ConfigGen.Domain.Contract
         string Description { get; }
 
         [CanBeNull]
-        string[,] Parameters { get; }
+        PreferenceParameterDefinition[] Parameters { get; }
 
         [NotNull]
         IDeferedSetter CreateDeferredSetter([NotNull] IDeferredSetterFactory deferredSetterFactory);

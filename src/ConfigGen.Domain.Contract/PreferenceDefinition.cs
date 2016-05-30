@@ -26,22 +26,22 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
-    public class PreferenceInfo<TPreferencesType, TSetterType> : IPreferenceInfo
+    public class PreferenceDefinition<TPreferenceGroupType, TPreferenceType> : IPreferenceDefinition
     {
         [NotNull]
-        private readonly Func<Queue<string>, Result<TSetterType>> _parseAction;
+        private readonly Func<Queue<string>, Result<TPreferenceType>> _parseAction;
 
         [NotNull]
-        private readonly Action<TPreferencesType, TSetterType> _setAction;
+        private readonly Action<TPreferenceGroupType, TPreferenceType> _setAction;
 
-        public PreferenceInfo(
+        public PreferenceDefinition(
             [NotNull] string preferenceGroupName,
             [NotNull] string name,
             [CanBeNull] string shortName,
             [NotNull] string description,
             [CanBeNull] string[,] parameters,
-            [NotNull] Func<Queue<string>, Result<TSetterType>> parseAction,
-            [NotNull] Action<TPreferencesType, TSetterType> setAction)
+            [NotNull] Func<Queue<string>, Result<TPreferenceType>> parseAction,
+            [NotNull] Action<TPreferenceGroupType, TPreferenceType> setAction)
         {
             _parseAction = parseAction;
             _setAction = setAction;

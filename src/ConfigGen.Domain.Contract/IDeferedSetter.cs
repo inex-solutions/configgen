@@ -24,9 +24,9 @@ using ConfigGen.Utilities;
 
 namespace ConfigGen.Domain.Contract
 {
-    public interface IDeferedSetter<in TTargetType> : IDeferedSetter
+    public interface IDeferedSetter<in TPreferenceGroupType> : IDeferedSetter
     {
-        void SetOnTarget(TTargetType target);
+        void SetOnTarget(TPreferenceGroupType target);
     }
 
     public interface IDeferedSetter

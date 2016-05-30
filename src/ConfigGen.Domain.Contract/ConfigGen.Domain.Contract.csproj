@@ -52,7 +52,7 @@
     <Compile Include="IDeferedSetter.cs" />
     <Compile Include="IDeferredSetterFactory.cs" />
     <Compile Include="IManagePreferences.cs" />
-    <Compile Include="IPreferenceInfo.cs" />
+    <Compile Include="IPreferenceDefinition.cs" />
     <Compile Include="ISettingsLoader.cs" />
     <Compile Include="ITemplate.cs" />
     <Compile Include="IConfiguration.cs" />
@@ -60,7 +60,7 @@
     <Compile Include="PreferenceExtensions.cs" />
     <Compile Include="PreferenceGroupBase.cs" />
     <Compile Include="PreferenceGroupExtensions.cs" />
-    <Compile Include="PreferenceInfo.cs" />
+    <Compile Include="PreferenceDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IPreferenceGroup.cs" />
     <Compile Include="RenderResults.cs" />

@@ -31,7 +31,7 @@ namespace ConfigGen.ConsoleApp.Tests
         public ConsoleRunnerTestPreferencesGroup()
         {
 
-            StringParameterPreference = new PreferenceInfo<ConsoleRunnerTestPreferences, string>(
+            StringParameterPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, string>(
                 preferenceGroupName: PreferenceGroupName,
                 name: "StringParameter",
                 shortName: "String",
@@ -40,7 +40,7 @@ namespace ConfigGen.ConsoleApp.Tests
                 parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("StringParameter"),
                 setAction: (preferences, value) => preferences.StringParameter = value);
 
-            BooleanSwitchPreference = new PreferenceInfo<ConsoleRunnerTestPreferences, bool>(
+            BooleanSwitchPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, bool>(
                 preferenceGroupName: PreferenceGroupName,
                 name: "BooleanSwitch",
                 shortName: "Boolean",
@@ -50,12 +50,12 @@ namespace ConfigGen.ConsoleApp.Tests
                 setAction: (preferences, value) => preferences.BooleanSwitch = value);
         }
 
-        public PreferenceInfo<ConsoleRunnerTestPreferences, bool> BooleanSwitchPreference { get; }
+        public PreferenceDefinition<ConsoleRunnerTestPreferences, bool> BooleanSwitchPreference { get; }
 
-        public PreferenceInfo<ConsoleRunnerTestPreferences, string> StringParameterPreference { get; }
+        public PreferenceDefinition<ConsoleRunnerTestPreferences, string> StringParameterPreference { get; }
 
         public override string Name => "ConsoleRunnerTestPreferencesGroup";
 
-        protected override IEnumerable<IPreferenceInfo> Preferences => new IPreferenceInfo[] {StringParameterPreference, BooleanSwitchPreference};
+        protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[] {StringParameterPreference, BooleanSwitchPreference};
     }
 }

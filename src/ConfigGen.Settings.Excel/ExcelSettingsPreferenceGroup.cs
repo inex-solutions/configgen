@@ -28,7 +28,7 @@ namespace ConfigGen.Settings.Excel
     {
         private static string PreferenceGroupName = "ExcelSettingsPreferenceGroup";
 
-        protected override IEnumerable<IPreferenceInfo> Preferences => new[] { PreferenceDefinitions.ConfigurationNameColumn, PreferenceDefinitions.WorksheetName };
+        protected override IEnumerable<IPreferenceDefinition> Preferences => new[] { PreferenceDefinitions.ConfigurationNameColumn, PreferenceDefinitions.WorksheetName };
 
         public override string Name => "Excel Settings";
 
@@ -38,7 +38,7 @@ namespace ConfigGen.Settings.Excel
             {
                 // ReSharper disable AssignNullToNotNullAttribute
                 // ReSharper disable PossibleNullReferenceException
-                ConfigurationNameColumn = new PreferenceInfo<ExcelSettingsPreferences, string>(
+                ConfigurationNameColumn = new PreferenceDefinition<ExcelSettingsPreferences, string>(
                     preferenceGroupName: PreferenceGroupName,
                     name: "ConfigurationNameColumn",
                     shortName: null,
@@ -47,7 +47,7 @@ namespace ConfigGen.Settings.Excel
                     parseAction: (argsQueue) => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameColumn"),
                     setAction: (preferences, value) => preferences.ConfigurationNameColumn = value);
 
-                WorksheetName = new PreferenceInfo<ExcelSettingsPreferences, string>(
+                WorksheetName = new PreferenceDefinition<ExcelSettingsPreferences, string>(
                     preferenceGroupName: PreferenceGroupName,
                     name: "WorksheetName",
                     shortName: null,
@@ -59,9 +59,9 @@ namespace ConfigGen.Settings.Excel
                 // ReSharper restore PossibleNullReferenceException
             }
 
-            public static PreferenceInfo<ExcelSettingsPreferences, string> WorksheetName { get; }
+            public static PreferenceDefinition<ExcelSettingsPreferences, string> WorksheetName { get; }
 
-            public static PreferenceInfo<ExcelSettingsPreferences, string> ConfigurationNameColumn { get; }
+            public static PreferenceDefinition<ExcelSettingsPreferences, string> ConfigurationNameColumn { get; }
         }
     }
 }

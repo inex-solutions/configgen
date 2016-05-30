@@ -51,7 +51,7 @@ namespace ConfigGen.Domain
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
             //var groupedByPreferenceGroup = preferences.GroupBy(p => p.Key.PreferenceGroup);
-            //var groupedByPreferenceGroupThenPreference = groupedByPreferenceGroup.Select(group => new { PreferenceGroup = group.Key, Preferences = group.Select(p => new KeyValuePair<IPreferenceInfo, IDeferedSetter>(p.Key, p.Value)).ToList() });
+            //var groupedByPreferenceGroupThenPreference = groupedByPreferenceGroup.Select(group => new { PreferenceGroup = group.Key, Preferences = group.Select(p => new KeyValuePair<IPreferenceDefinition, IDeferedSetter>(p.Key, p.Value)).ToList() });
             //var groupedDictionary = groupedByPreferenceGroupThenPreference.ToDictionary(p => p.PreferenceGroup, p => p.Preferences);
 
             foreach (var preference in preferences)

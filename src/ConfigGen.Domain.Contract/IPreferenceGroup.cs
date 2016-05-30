@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
 namespace ConfigGen.Domain.Contract
 {
-    public interface IPreferenceGroup : IEnumerable<IPreferenceInfo>
+    public interface IPreferenceGroup : IEnumerable<IPreferenceDefinition>
     {
         string Name { get; }
     }

@@ -33,10 +33,10 @@ namespace ConfigGen.ConsoleApp.Tests
 
             protected static TestConsoleWriter ConsoleWriter;
             protected static ConfigurationGeneratorMock ConfigurationGeneratorMock;
-            protected static IPreferenceInfo StringParameterPreference;
-            protected static IPreferenceInfo BooleanSwitchPreference;
-            protected static IPreferenceInfo IntParameterPreference;
-            protected static IPreferenceInfo AnotherBooleanSwitch;
+            protected static IPreferenceDefinition StringParameterPreference;
+            protected static IPreferenceDefinition BooleanSwitchPreference;
+            protected static IPreferenceDefinition IntParameterPreference;
+            protected static IPreferenceDefinition AnotherBooleanSwitch;
 
             Establish context = () =>
             {

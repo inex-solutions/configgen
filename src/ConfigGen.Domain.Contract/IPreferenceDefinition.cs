@@ -23,7 +23,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
-    public interface IPreferenceInfo
+    public interface IPreferenceDefinition
     {
         [NotNull]
         string PreferenceGroupName { get; }

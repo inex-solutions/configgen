@@ -29,6 +29,6 @@ namespace ConfigGen.Domain.Contract
     public interface IDeferredSetterFactory
     {
         [NotNull]
-        IDeferedSetter Create<TTargetType, TSetterType>([NotNull] Func<Queue<string>, Result<TSetterType>> parse, [NotNull] Action<TTargetType, TSetterType> set);
+        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, Result<TPreferenceType>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
     }
 }

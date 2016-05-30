@@ -27,17 +27,17 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {
-    public class ConsoleInputDeferedSetter<TTargetType, TSetterType> : IDeferedSetter<TTargetType>
+    public class ConsoleInputDeferedSetter<TPreferenceGroupType, TPreferenceType> : IDeferedSetter<TPreferenceGroupType>
     {
         [NotNull]
-        private readonly Func<Queue<string>, Result<TSetterType>> _parse;
+        private readonly Func<Queue<string>, Result<TPreferenceType>> _parse;
         [NotNull]
-        private readonly Action<TTargetType, TSetterType> _set;
+        private readonly Action<TPreferenceGroupType, TPreferenceType> _set;
 
         private bool _parsed;
-        private Result<TSetterType> _result;
+        private Result<TPreferenceType> _result;
 
-        public ConsoleInputDeferedSetter([NotNull] Func<Queue<string>, Result<TSetterType>> parse, [NotNull] Action<TTargetType, TSetterType> set)
+        public ConsoleInputDeferedSetter([NotNull] Func<Queue<string>, Result<TPreferenceType>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set)
         {
             if (parse == null) throw new ArgumentNullException(nameof(parse));
             if (set == null) throw new ArgumentNullException(nameof(set));
@@ -72,7 +72,7 @@ namespace ConfigGen.ConsoleApp
 
         public object RawValue { get; private set; }
 
-        public void SetOnTarget(TTargetType target)
+        public void SetOnTarget(TPreferenceGroupType target)
         {
             //TODO: check result before assigning
             _set(target, _result.Value);

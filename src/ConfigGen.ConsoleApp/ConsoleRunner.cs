@@ -111,7 +111,7 @@ namespace ConfigGen.ConsoleApp
             }
         }
 
-        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<IPreferenceInfo> preferences)
+        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<IPreferenceDefinition> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 

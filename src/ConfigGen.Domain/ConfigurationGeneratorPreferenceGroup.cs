@@ -28,7 +28,7 @@ namespace ConfigGen.Domain
     {
         private static string PreferenceGroupName = "ConfigurationGeneratorPreferenceGroup";
 
-        protected override IEnumerable<IPreferenceInfo> Preferences => new IPreferenceInfo[]
+        protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[]
         {
             PreferenceDefinitions.SettingsFile,
             PreferenceDefinitions.TemplateFile,
@@ -43,7 +43,7 @@ namespace ConfigGen.Domain
             {
                 // ReSharper disable AssignNullToNotNullAttribute
                 // ReSharper disable PossibleNullReferenceException
-                SettingsFile = new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
+                SettingsFile = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
                     preferenceGroupName: PreferenceGroupName,
                     name: "SettingsFile",
                     shortName: "Settings",
@@ -52,7 +52,7 @@ namespace ConfigGen.Domain
                     parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
                     setAction: (preferences, value) => preferences.SettingsFilePath = value);
 
-                TemplateFile = new PreferenceInfo<ConfigurationGeneratorPreferences, string>(
+                TemplateFile = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
                     preferenceGroupName: PreferenceGroupName,
                     name: "TemplateFile",
                     shortName: "Template",
@@ -61,7 +61,7 @@ namespace ConfigGen.Domain
                     parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFile"),
                     setAction: (preferences, value) => preferences.TemplateFilePath = value);
 
-                Verbose = new PreferenceInfo<ConfigurationGeneratorPreferences, bool>(
+                Verbose = new PreferenceDefinition<ConfigurationGeneratorPreferences, bool>(
                     preferenceGroupName: PreferenceGroupName,
                     name: "VerboseOutput",
                     shortName: "Verbose",
@@ -74,11 +74,11 @@ namespace ConfigGen.Domain
                 // ReSharper restore PossibleNullReferenceException
             }
 
-            public static PreferenceInfo<ConfigurationGeneratorPreferences, bool> Verbose { get; }
+            public static PreferenceDefinition<ConfigurationGeneratorPreferences, bool> Verbose { get; }
 
-            public static PreferenceInfo<ConfigurationGeneratorPreferences, string> TemplateFile { get; }
+            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> TemplateFile { get; }
 
-            public static PreferenceInfo<ConfigurationGeneratorPreferences, string> SettingsFile { get; }
+            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> SettingsFile { get; }
         }
     }
 }

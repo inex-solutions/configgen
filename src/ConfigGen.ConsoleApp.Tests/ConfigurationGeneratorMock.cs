@@ -44,7 +44,7 @@ namespace ConfigGen.ConsoleApp.Tests
         public GenerationResults GenerateConfigurations(IEnumerable<Preference> preferences)
         {
             PreferencesPassedToGenerateCall = preferences;
-            PreferenceValues = new IndexedProperty<IPreferenceInfo, Preference, object>(
+            PreferenceValues = new IndexedProperty<IPreferenceDefinition, Preference, object>(
                 selectionPredicate: indexer => PreferencesPassedToGenerateCall.FirstOrDefault(p => indexer != null && p.PreferenceName == indexer.Name),
                 projection: item => item.DeferredSetter.RawValue);
 
@@ -53,7 +53,7 @@ namespace ConfigGen.ConsoleApp.Tests
             return new GenerationResults();
         }
 
-        public IndexedProperty<IPreferenceInfo, Preference, object> PreferenceValues { get; set; }
+        public IndexedProperty<IPreferenceDefinition, Preference, object> PreferenceValues { get; set; }
 
         public bool GenerateConfigurationsWasCalled { get; private set; }
 
@@ -89,7 +89,7 @@ namespace ConfigGen.ConsoleApp.Tests
         }
 
         [NotNull]
-        public ConfigurationGeneratorMock WithPreferences(params IPreferenceInfo[] preferences)
+        public ConfigurationGeneratorMock WithPreferences(params IPreferenceDefinition[] preferences)
         {
             PreferencesPassedToGenerateCall.Select(p => p.PreferenceName).ShouldContainOnly(preferences.Select(p => p.Name));
             return this;

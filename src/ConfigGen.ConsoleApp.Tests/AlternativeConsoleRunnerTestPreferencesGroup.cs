@@ -30,7 +30,7 @@ namespace ConfigGen.ConsoleApp.Tests
 
         public AlternativeConsoleRunnerTestPreferencesGroup()
         {
-            IntParameterPreference = new PreferenceInfo<ConsoleRunnerTestPreferences, int>(
+            IntParameterPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, int>(
                 preferenceGroupName: PreferenceGroupName,
                 name: "IntParameter",
                 shortName: "Int",
@@ -39,7 +39,7 @@ namespace ConfigGen.ConsoleApp.Tests
                 parseAction: argsQueue => argsQueue.ParseIntParameterFromArgumentQueue("IntParameter"),
                 setAction: (preferences, value) => preferences.IntParameter = value);
 
-            AnotherBooleanSwitch = new PreferenceInfo<ConsoleRunnerTestPreferences, bool>(
+            AnotherBooleanSwitch = new PreferenceDefinition<ConsoleRunnerTestPreferences, bool>(
                 preferenceGroupName: PreferenceGroupName,
                 name: "AnotherBooleanSwitch",
                 shortName: "Another",
@@ -49,12 +49,12 @@ namespace ConfigGen.ConsoleApp.Tests
                 setAction: (preferences, value) => preferences.AnotherBooleanSwitch = value);
         }
 
-        public PreferenceInfo<ConsoleRunnerTestPreferences, bool> AnotherBooleanSwitch { get; }
+        public PreferenceDefinition<ConsoleRunnerTestPreferences, bool> AnotherBooleanSwitch { get; }
 
-        public PreferenceInfo<ConsoleRunnerTestPreferences, int> IntParameterPreference { get; }
+        public PreferenceDefinition<ConsoleRunnerTestPreferences, int> IntParameterPreference { get; }
 
         public override string Name => "AlternativeConsoleRunnerTestPreferencesGroup";
 
-        protected override IEnumerable<IPreferenceInfo> Preferences => new IPreferenceInfo[] { IntParameterPreference, AnotherBooleanSwitch };
+        protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[] { IntParameterPreference, AnotherBooleanSwitch };
     }
 }

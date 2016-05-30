@@ -28,11 +28,11 @@ namespace ConfigGen.Domain.Contract
     public abstract class PreferenceGroupBase : IPreferenceGroup
     {
         [CanBeNull]
-        protected abstract IEnumerable<IPreferenceInfo> Preferences { get; }
+        protected abstract IEnumerable<IPreferenceDefinition> Preferences { get; }
 
-        public IEnumerator<IPreferenceInfo> GetEnumerator()
+        public IEnumerator<IPreferenceDefinition> GetEnumerator()
         {
-            return (Preferences ?? new IPreferenceInfo[0]).GetEnumerator();
+            return (Preferences ?? new IPreferenceDefinition[0]).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

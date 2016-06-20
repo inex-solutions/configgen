@@ -18,6 +18,11 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System.IO;
+using ConfigGen.Utilities;
+using Machine.Specifications;
+
 namespace ConfigGen.Tests.Common
 {
     public abstract class MachineSpecificationTestBase<TSubject, TResult>
@@ -25,5 +30,22 @@ namespace ConfigGen.Tests.Common
         protected static TSubject Subject;
 
         protected static TResult Result;
+
+        protected static DisposableDirectory TestDirectory;
+
+        private static string InitialDirectory;
+
+        Establish context = () =>
+        {
+            InitialDirectory = Directory.GetCurrentDirectory();
+            TestDirectory = new DisposableDirectory(throwOnFailedCleanup: false);
+            Directory.SetCurrentDirectory(TestDirectory.FullName);
+        };
+
+        Cleanup cleanup = () =>
+        {
+            Directory.SetCurrentDirectory(InitialDirectory);
+           TestDirectory.Dispose();
+        };
     }
 }

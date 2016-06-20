@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using ConfigGen.ConsoleApp;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
+using ConfigGen.Utilities;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 
@@ -42,6 +43,11 @@ namespace ConfigGen.Domain.Tests
             PreferenceGroups = Subject.GetPreferenceGroups();
             PreferencesToSupplyToGenerator = new List<Preference>();
             Result = null;
+        };
+
+        Cleanup cleanup = () =>
+        {
+
         };
 
         protected static Preference CreatePreference(IPreferenceDefinition definition, string value)

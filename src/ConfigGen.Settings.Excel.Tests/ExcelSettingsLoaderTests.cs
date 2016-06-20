@@ -138,7 +138,7 @@ namespace ConfigGen.Settings.Excel.Tests
         }
 
         [Subject(typeof(ExcelSettingsLoader))]
-        public class when_loading_a_simple_xls_file_that_e_sethas_its_readonly_file_attribut : ExcelSettingsLoaderTestBase
+        public class when_loading_a_simple_xls_file_that_has_its_readonly_file_attribute_set : ExcelSettingsLoaderTestBase
         {
             private static Exception CaughtException;
 
@@ -153,7 +153,7 @@ namespace ConfigGen.Settings.Excel.Tests
                 var settingsFile = new FileInfo(SettingsFileFullPath);
                 settingsFile.Attributes |= FileAttributes.ReadOnly;
 
-                Result = Subject.LoadSettings(new[] { SettingsFileFullPath });
+                CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(new[] { SettingsFileFullPath }));
             };
 
             It then_the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();

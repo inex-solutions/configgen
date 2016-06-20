@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.FileOutput;
+using ConfigGen.Domain.Filtering;
 using ConfigGen.Settings.Excel;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
@@ -39,8 +41,9 @@ namespace ConfigGen.Domain
             _preferencesManager = new PreferencesManager(
                 new ConfigurationGeneratorPreferenceGroup(),
                 new ExcelSettingsPreferenceGroup(),
+                new ConfigurationCollectionFilterPreferencesGroup(),
                 new FileOutputPreferenceGroup());
-                //TODO: not really happy with this assembly being referenced directly by the domain
+            //TODO: not really happy with this assembly being referenced directly by the domain
         }
 
         [NotNull]
@@ -77,8 +80,14 @@ namespace ConfigGen.Domain
                 //TODO: inconsistent naming
 
             IEnumerable<IConfiguration> configurations =
-                configurationCollectionLoader.GetConfigurations(configGenerationPreferences.SettingsFilePath,
+                configurationCollectionLoader.GetConfigurations(
+                    configGenerationPreferences.SettingsFilePath,
                     configGenerationPreferences.SettingsFileType);
+
+            ConfigurationCollectionFilter filter = new ConfigurationCollectionFilter();
+            var configurationCollectionFilterPreferences = new ConfigurationCollectionFilterPreferences();
+            _preferencesManager.ApplyPreferences(preferences, configurationCollectionFilterPreferences);
+            configurations = filter.Filter(configurationCollectionFilterPreferences, configurations);
 
             FileOutputWriter fileOutputWriter = new FileOutputWriter();
             var fileOutputPreferences = new FileOutputPreferences();

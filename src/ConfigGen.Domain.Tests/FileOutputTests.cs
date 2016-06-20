@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.FileOutput;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;

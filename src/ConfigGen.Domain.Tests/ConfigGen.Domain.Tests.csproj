@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="ConfigurationGeneratorTestBase.cs" />
     <Compile Include="FileOutputTests.cs" />
+    <Compile Include="FilteringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleTests.cs" />
     <Compile Include="TemplateTypeSelectionTests.cs" />

@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,10 +18,14 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Domain
+namespace ConfigGen.Domain.Filtering
 {
-    public class WriteOutputResult
+    public class ConfigurationCollectionFilterPreferences
     {
-        public string FullPath { get; set; }
+        public string GenerateSpecifiedOnly { get; set; }
+
+        public string FilterMachinesRegexp { get; set; }
+
+        public bool LocalOnly { get; set; }
     }
 }

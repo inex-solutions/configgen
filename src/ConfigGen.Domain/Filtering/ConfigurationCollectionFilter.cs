@@ -18,12 +18,17 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Domain
-{
-    public class FileOutputPreferences
-    {
-        public string FilenameSetting { get; set; }
 
-        public string ForceFilename { get; set; }
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
+
+namespace ConfigGen.Domain.Filtering
+{
+    public class ConfigurationCollectionFilter
+    {
+        public IEnumerable<IConfiguration> Filter(ConfigurationCollectionFilterPreferences configurationCollectionFilterPreferences, IEnumerable<IConfiguration> configurations)
+        {
+            return configurations;
+        }
     }
 }

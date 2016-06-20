@@ -25,7 +25,7 @@ using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain
+namespace ConfigGen.Domain.FileOutput
 {
     public class FileOutputWriter
     {

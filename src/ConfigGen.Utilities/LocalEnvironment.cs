@@ -18,10 +18,13 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Utilities.Tests
+
+using System;
+
+namespace ConfigGen.Utilities
 {
-    class FileFinderTests
+    public class LocalEnvironment
     {
-        //TODO: File Finder Tests
+        public string MachineName => Environment.MachineName;
     }
 }

@@ -54,7 +54,9 @@
     <Compile Include="Extensions\XElementExtensions.cs" />
     <Compile Include="FileFinder.cs" />
     <Compile Include="IDisplayText.cs" />
+    <Compile Include="ILocalEnvironment.cs" />
     <Compile Include="IResult.cs" />
+    <Compile Include="LocalEnvironment.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />
     <Compile Include="Xml\XmlDeclarationParser.cs" />

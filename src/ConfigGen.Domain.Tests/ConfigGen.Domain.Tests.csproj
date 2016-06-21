@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationGeneratorTestBase.cs" />
+    <Compile Include="FakeLocalEnvironment.cs" />
     <Compile Include="FileOutputTests.cs" />
     <Compile Include="FilteringTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +87,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="TestResources\SimpleSettings.TwoConfigurations.TwoValues.xls" />
     <EmbeddedResource Include="TestResources\SimpleSettings.OneConfiguration.TwoValues.xls" />
+    <EmbeddedResource Include="TestResources\SimpleSettings.FiveConfigurations.TwoValues.xls" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestResources\SimpleTemplate.TwoTokens.xml">

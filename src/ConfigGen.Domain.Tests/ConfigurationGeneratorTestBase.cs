@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using ConfigGen.ConsoleApp;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
-using ConfigGen.Utilities;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 

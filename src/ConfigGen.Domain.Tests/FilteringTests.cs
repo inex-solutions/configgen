@@ -31,7 +31,7 @@ using Machine.Specifications;
 
 namespace ConfigGen.Domain.Tests
 {
-    namespace FileOutputTests
+    namespace FilteringTests
     {
         internal class when_invoked_with_LocalOnly_preference_and_with_a_matching_configuration_in_the_settings_file : ConfigurationGeneratorTestBase
         {
@@ -168,9 +168,6 @@ namespace ConfigGen.Domain.Tests
             It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It no_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(0);
-
-            It the_two_generated_files_are_for_the_two_specified_configurations =
-                () => Result.GeneratedFiles.Select(c => c.ConfigurationName).ShouldContainOnly("Configuration2", "Configuration3");
         }
 
         internal class when_invoked_with_FilterMachinesRegexp_preference_that_matches_two_machines : ConfigurationGeneratorTestBase
@@ -216,7 +213,7 @@ namespace ConfigGen.Domain.Tests
 
             It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
             It the_generated_file_is_the_intersection_of_the_two_filters =
                 () => Result.GeneratedFiles.Select(c => c.ConfigurationName).ShouldContainOnly("Configuration3");

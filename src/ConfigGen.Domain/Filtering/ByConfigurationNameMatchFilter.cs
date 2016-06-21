@@ -21,32 +21,31 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Filtering
 {
-    public class ConfigurationCollectionFilter
+    public class ByConfigurationNameMatchFilter : IConfigurationFilter
     {
-        public IEnumerable<IConfiguration> Filter(
-            [NotNull] ConfigurationCollectionFilterPreferences preferences, 
-            [NotNull] IEnumerable<IConfiguration> configurations)
+        [NotNull]
+        private readonly HashSet<string> _namesToInclude;
+
+        public ByConfigurationNameMatchFilter([NotNull] string commaSeparatedNameList)
         {
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+            if (commaSeparatedNameList == null) throw new ArgumentNullException(nameof(commaSeparatedNameList));
+
+            var names = commaSeparatedNameList.Split(',').Select(s => s.Trim());
+            _namesToInclude = new HashSet<string>(names);
+        }
+
+        [NotNull]
+        public IEnumerable<IConfiguration> Filter([NotNull] IEnumerable<IConfiguration> configurations)
+        {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
 
-            if (!preferences.GenerateSpecifiedOnly.IsNullOrEmpty())
-            {
-                configurations = new ByConfigurationNameMatchFilter(preferences.GenerateSpecifiedOnly).Filter(configurations);
-            }
-
-            if (!preferences.FilterMachinesRegexp.IsNullOrEmpty())
-            {
-                configurations = new ByConfigurationNameRegexFilter(preferences.FilterMachinesRegexp).Filter(configurations);
-            }
-
-            return configurations;
+            return configurations.Where(c => _namesToInclude.Contains(c.ConfigurationName));
         }
     }
 }

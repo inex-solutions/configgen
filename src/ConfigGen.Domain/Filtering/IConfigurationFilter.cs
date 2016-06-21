@@ -19,34 +19,15 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Filtering
 {
-    public class ConfigurationCollectionFilter
+    public interface IConfigurationFilter
     {
-        public IEnumerable<IConfiguration> Filter(
-            [NotNull] ConfigurationCollectionFilterPreferences preferences, 
-            [NotNull] IEnumerable<IConfiguration> configurations)
-        {
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-            if (configurations == null) throw new ArgumentNullException(nameof(configurations));
-
-            if (!preferences.GenerateSpecifiedOnly.IsNullOrEmpty())
-            {
-                configurations = new ByConfigurationNameMatchFilter(preferences.GenerateSpecifiedOnly).Filter(configurations);
-            }
-
-            if (!preferences.FilterMachinesRegexp.IsNullOrEmpty())
-            {
-                configurations = new ByConfigurationNameRegexFilter(preferences.FilterMachinesRegexp).Filter(configurations);
-            }
-
-            return configurations;
-        }
+        [NotNull]
+        IEnumerable<IConfiguration> Filter([NotNull] IEnumerable<IConfiguration> configurations);
     }
 }

@@ -41,7 +41,7 @@ namespace ConfigGen.ConsoleApp.Tests
             return _preferenceGroups;
         }
 
-        public GenerationResults GenerateConfigurations(IEnumerable<Preference> preferences)
+        public GenerationResults GenerateConfigurations(IReadOnlyCollection<Preference> preferences)
         {
             PreferencesPassedToGenerateCall = preferences;
             PreferenceValues = new IndexedProperty<IPreferenceDefinition, Preference, object>(
@@ -50,7 +50,7 @@ namespace ConfigGen.ConsoleApp.Tests
 
             GenerateConfigurationsWasCalled = true;
 
-            return new GenerationResults(null, null, null);
+            return GenerationResults.CreateFail(Enumerable.Empty<Error>());
         }
 
         public IndexedProperty<IPreferenceDefinition, Preference, object> PreferenceValues { get; set; }

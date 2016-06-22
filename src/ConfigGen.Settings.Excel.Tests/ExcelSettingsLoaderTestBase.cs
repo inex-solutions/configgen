@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Autofac;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
 using ConfigGen.Utilities.Extensions;
@@ -39,7 +40,11 @@ namespace ConfigGen.Settings.Excel.Tests
 
         Establish context = () =>
         {
-            Subject = new ExcelSettingsLoader(new SpreadsheetHeaderProcessor(), new SpreadsheetDataProcessor(new CellDataParser()), new ExcelFileLoader());
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<ExcelSettingsLoaderModule>();
+            var container = containerBuilder.Build();
+            Subject = (ExcelSettingsLoader)container.Resolve<ISettingsLoader>();
+
             SourceTestFileName = null;
             lazySettingsFileFullPath = new Lazy<string>(WriteOutTestFile);
             TargetTestFileName = "App.Config.Settings.xlsx";

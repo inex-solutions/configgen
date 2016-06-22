@@ -38,7 +38,7 @@ namespace ConfigGen.Settings.Excel.Tests
                 SourceTestFileName = "App.Config.Settings.xlsx";
             };
 
-            Because of = () => Result = Subject.LoadSettings(new[] {SettingsFileFullPath});
+            Because of = () => Result = Subject.LoadSettings(SettingsFileFullPath);
 
             It then_the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -80,7 +80,7 @@ namespace ConfigGen.Settings.Excel.Tests
                 TargetTestFileName = "App.Config.Settings.xls";
             };
 
-            Because of = () => Result = Subject.LoadSettings(new[] { SettingsFileFullPath });
+            Because of = () => Result = Subject.LoadSettings(SettingsFileFullPath);
 
             It then_the_result_is_not_null = () => Result.ShouldNotBeNull();
 
@@ -128,7 +128,7 @@ namespace ConfigGen.Settings.Excel.Tests
             {
                 using (var fileStream = new FileStream(SettingsFileFullPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
                 {
-                    CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(new[] { SettingsFileFullPath }));
+                    CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(SettingsFileFullPath));
                 }
             };
 
@@ -153,7 +153,7 @@ namespace ConfigGen.Settings.Excel.Tests
                 var settingsFile = new FileInfo(SettingsFileFullPath);
                 settingsFile.Attributes |= FileAttributes.ReadOnly;
 
-                CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(new[] { SettingsFileFullPath }));
+                CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(SettingsFileFullPath));
             };
 
             It then_the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();

@@ -30,7 +30,7 @@ namespace ConfigGen.Templating.Xml.Tests
 {
     namespace ConfigGenMarkupTests
     {
-        public class when_the_template_does_not_contain_an_xml_declaration : TemplateRenderTestBase<XmlTemplate>
+        public class when_the_template_does_not_contain_an_xml_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -59,7 +59,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
-        public class when_the_template_contains_the_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate>
+        public class when_the_template_contains_the_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -85,7 +85,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_the_template_contains_a_non_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate>
+        public class when_the_template_contains_a_non_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -108,7 +108,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
-        public class when_the_template_contains_unrecognised_configgen_attribute : TemplateRenderTestBase<XmlTemplate>
+        public class when_the_template_contains_unrecognised_configgen_attribute : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -137,7 +137,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_the_template_contains_unrecognised_configgen_element : TemplateRenderTestBase<XmlTemplate>
+        public class when_the_template_contains_unrecognised_configgen_element : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {

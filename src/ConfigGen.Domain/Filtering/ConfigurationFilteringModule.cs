@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,19 +19,16 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
+using Autofac;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Utilities;
-using JetBrains.Annotations;
 
-namespace ConfigGen.Domain
+namespace ConfigGen.Domain.Filtering
 {
-    public class TemplateFactory : ItemFactoryByTypeOrExtensionBase<ITemplate>
+    public class ConfigurationFilteringModule : Module
     {
-        public TemplateFactory(
-            [NotNull] Func<ITemplate>[] itemFactories) 
-            : base(itemFactories, template => template.TemplateType , template => template.SupportedExtensions)
+        protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<ConfigurationCollectionFilterPreferencesGroup>().As<IPreferenceGroup>();
         }
     }
 }

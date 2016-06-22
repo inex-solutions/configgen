@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.4.0.0-rc2-240\lib\netstandard1.1\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Excel, Version=2.1.2.3, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll</HintPath>
       <Private>True</Private>
@@ -38,6 +41,9 @@
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,6 +58,7 @@
     <Compile Include="CellDataParser.cs" />
     <Compile Include="ExcelColumnInfo.cs" />
     <Compile Include="ExcelFileLoader.cs" />
+    <Compile Include="ExcelSettingsLoaderModule.cs" />
     <Compile Include="ExcelSettingsPreferenceGroup.cs" />
     <Compile Include="ExcelSettingsLoader.cs" />
     <Compile Include="ExcelSettingsPreferences.cs" />

@@ -31,6 +31,6 @@ namespace ConfigGen.Domain.Contract
         IEnumerable<IPreferenceGroup> GetPreferenceGroups();
 
         [NotNull]
-        GenerationResults GenerateConfigurations([NotNull] IEnumerable<Preference> preferences);
+        GenerationResults GenerateConfigurations([NotNull] IReadOnlyCollection<Preference> preferences);
     }
 }

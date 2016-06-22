@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using Autofac;
 using ConfigGen.ConsoleApp;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common;
@@ -28,7 +29,7 @@ using Machine.Specifications.Annotations;
 
 namespace ConfigGen.Domain.Tests
 {
-    internal abstract class ConfigurationGeneratorTestBase : MachineSpecificationTestBase<ConfigurationGenerator, GenerationResults>
+    internal abstract class ConfigurationGeneratorTestBase : MachineSpecificationTestBase<IConfigurationGenerator, GenerationResults>
     {
         [NotNull]
         protected static IEnumerable<IPreferenceGroup> PreferenceGroups;
@@ -38,7 +39,11 @@ namespace ConfigGen.Domain.Tests
 
         Establish context = () =>
         {
-            Subject = new ConfigurationGenerator();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<ConfigurationGeneratorModule>();
+
+            var container = containerBuilder.Build();
+            Subject = container.Resolve<IConfigurationGenerator>();
             PreferenceGroups = Subject.GetPreferenceGroups();
             PreferencesToSupplyToGenerator = new List<Preference>();
             Result = null;

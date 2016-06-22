@@ -27,7 +27,7 @@ namespace ConfigGen.Domain.Contract
 {
     public class GenerationResults
     {
-        public GenerationResults(
+        private GenerationResults(
             [CanBeNull] IEnumerable<string> unrecognisedPreferences, 
             [CanBeNull] IEnumerable<SingleFileGenerationResult> singleFileGenerationResults,
             [CanBeNull] IEnumerable<Error> errors)
@@ -48,5 +48,25 @@ namespace ConfigGen.Domain.Contract
 
         [NotNull]
         public IEnumerable<Error> Errors { get; }
+
+        [NotNull]
+        public static GenerationResults CreateFail([NotNull] Error error)
+        {
+            return CreateFail(new[] {error});
+        }
+
+        [NotNull]
+        public static GenerationResults CreateFail([NotNull] IEnumerable<Error> errors)
+        {
+            return new GenerationResults(new string[0], new SingleFileGenerationResult[0], errors);
+        }
+
+        [NotNull]
+        public static GenerationResults CreateSuccess(
+            [NotNull] IEnumerable<string> unrecognisedPreferences,
+            [NotNull] IEnumerable<SingleFileGenerationResult> singleFileGenerationResults)
+        {
+            return new GenerationResults(unrecognisedPreferences, singleFileGenerationResults, new Error[0]);
+        }
     }
 }

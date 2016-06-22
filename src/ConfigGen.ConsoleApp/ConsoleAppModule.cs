@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,20 +19,18 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Settings.Excel;
+using Autofac;
+using ConfigGen.Domain;
 
-namespace ConfigGen.Domain
+namespace ConfigGen.ConsoleApp
 {
-    public class ConfigurationCollectionLoader //TODO: naming relic
+    public class ConsoleAppModule : Module
     {
-        public IEnumerable<IConfiguration> GetConfigurations(string settingsFilePath, string settingsFileType)
+        protected override void Load(ContainerBuilder builder)
         {
-            //TODO: parameter relic
-            var loader = new ExcelSettingsLoader(new SpreadsheetHeaderProcessor(),
-                new SpreadsheetDataProcessor(new CellDataParser()), new ExcelFileLoader());
-            return loader.LoadSettings(new[] {settingsFilePath});
+            builder.RegisterModule<ConfigurationGeneratorModule>();
+            builder.RegisterType<ConsoleWriter>().As<IConsoleWriter>();
+            builder.RegisterType<ConsoleRunner>();
         }
     }
 }

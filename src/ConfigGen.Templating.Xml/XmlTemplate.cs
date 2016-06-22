@@ -117,6 +117,10 @@ namespace ConfigGen.Templating.Xml
             return new RenderResults(TemplateRenderResultStatus.Success, results, null); 
         }
 
+        public string TemplateType => "xml";
+
+        public string[] SupportedExtensions => new[] { ".xml" };
+
         [NotNull]
         private SingleTemplateRenderResults RenderSingleTemplate(
             [NotNull] XElement unprocessedTemplate,
@@ -163,6 +167,10 @@ namespace ConfigGen.Templating.Xml
                     unrecognisedTokens: null,
                     errors: new UnhandledExceptionError(XmlTemplateErrorSource, ex).ToSingleEnumerable());
             }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -61,7 +61,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_load_passes = () => Result.Success.ShouldBeTrue();
         }
 
-        public class when_rendering_a_template_which_contains_no_tokens : TemplateRenderTestBase<XmlTemplate>
+        public class when_rendering_a_template_which_contains_no_tokens : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -90,7 +90,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
         }
 
-        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate>
+        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -122,7 +122,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_unused_supplied_token_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldContainOnly("TokenTwo");
         }
 
-        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate>
+        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {

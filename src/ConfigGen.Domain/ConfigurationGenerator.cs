@@ -22,11 +22,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
-using ConfigGen.Settings.Excel;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
@@ -34,16 +32,39 @@ namespace ConfigGen.Domain
 {
     public class ConfigurationGenerator : IConfigurationGenerator
     {
-        [NotNull] private readonly IManagePreferences _preferencesManager;
+        [NotNull]
+        private readonly IManagePreferences _preferencesManager;
 
-        public ConfigurationGenerator()
+        [NotNull]
+        private readonly TemplateFactory _templateFactory;
+
+        [NotNull]
+        private readonly ConfigurationCollectionLoaderFactory _configurationCollectionLoaderFactory;
+
+        [NotNull]
+        private readonly ConfigurationCollectionFilter _configurationCollectionFilter;
+
+        [NotNull]
+        private readonly FileOutputWriter _fileOutputWriter;
+
+        public ConfigurationGenerator(
+            [NotNull] TemplateFactory templateFactory,
+            [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
+            [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
+            [NotNull] FileOutputWriter fileOutputWriter,
+            [NotNull] IManagePreferences preferencesManager)
         {
-            _preferencesManager = new PreferencesManager(
-                new ConfigurationGeneratorPreferenceGroup(),
-                new ExcelSettingsPreferenceGroup(),
-                new ConfigurationCollectionFilterPreferencesGroup(),
-                new FileOutputPreferenceGroup());
-            //TODO: not really happy with this assembly being referenced directly by the domain
+            if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
+            if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
+            if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
+            if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+
+            _templateFactory = templateFactory;
+            _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
+            _configurationCollectionFilter = configurationCollectionFilter;
+            _fileOutputWriter = fileOutputWriter;
+             _preferencesManager = preferencesManager;
         }
 
         [NotNull]
@@ -52,7 +73,7 @@ namespace ConfigGen.Domain
             return _preferencesManager.RegisteredPreferences;
         }
 
-        public GenerationResults GenerateConfigurations([NotNull] IEnumerable<Preference> preferences)
+        public GenerationResults GenerateConfigurations([NotNull] IReadOnlyCollection<Preference> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
@@ -61,35 +82,48 @@ namespace ConfigGen.Domain
             var configGenerationPreferences = new ConfigurationGeneratorPreferences();
             _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
 
-            TemplateFactory templateFactory = new TemplateFactory();
-            IResult<ITemplate, Error> templateLookupResult = templateFactory.GetTemplate(
-                configGenerationPreferences.TemplateFilePath,
-                configGenerationPreferences.TemplateFileType);
+            ITemplate template;
+            var templateFileExtension = new FileInfo(configGenerationPreferences.TemplateFilePath).Extension;
+            TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(templateFileExtension, configGenerationPreferences.TemplateFileType, out template);
 
-            if (!templateLookupResult.Success)
+            switch (templateCreationResult)
             {
-                return new GenerationResults(
-                    unrecognisedPreferences: Enumerable.Empty<string>(), 
-                    singleFileGenerationResults: new List<SingleFileGenerationResult>(), 
-                    errors: new List<Error> { templateLookupResult.Error });
+                case TryCreateResult.FailedByExtension:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                            ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure,
+                            $"Failed to resolve template type from file extension: {templateFileExtension}"));
+
+                case TryCreateResult.FailedByType:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                         ConfigurationGeneratorErrorCodes.UnknownTemplateType,
+                         $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
             }
 
-            ITemplate template = templateLookupResult.Value;
+            ISettingsLoader settingsLoader;
+            var settingsFileExtension = new FileInfo(configGenerationPreferences.SettingsFilePath).Extension;
+            TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(settingsFileExtension, configGenerationPreferences.SettingsFileType, out settingsLoader);
 
-            ConfigurationCollectionLoader configurationCollectionLoader = new ConfigurationCollectionLoader();
-                //TODO: inconsistent naming
+            switch (settingsLoaderCreationResult)
+            {
+                case TryCreateResult.FailedByExtension:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                            ConfigurationGeneratorErrorCodes.SettingsLoaderTypeResolutionFailure,
+                            $"Failed to resolve settings loader type from file extension: {settingsFileExtension}"));
 
-            IEnumerable<IConfiguration> configurations =
-                configurationCollectionLoader.GetConfigurations(
-                    configGenerationPreferences.SettingsFilePath,
-                    configGenerationPreferences.SettingsFileType);
+                case TryCreateResult.FailedByType:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                         ConfigurationGeneratorErrorCodes.UnknownSettingsLoaderType,
+                         $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
+            }
 
-            ConfigurationCollectionFilter filter = new ConfigurationCollectionFilter();
+            IEnumerable<IConfiguration> configurations = settingsLoader.LoadSettings(
+                configGenerationPreferences.SettingsFilePath,
+                configGenerationPreferences.SettingsFileType);
+
             var configurationCollectionFilterPreferences = new ConfigurationCollectionFilterPreferences();
             _preferencesManager.ApplyPreferences(preferences, configurationCollectionFilterPreferences);
-            configurations = filter.Filter(configurationCollectionFilterPreferences, configurations);
+            configurations = _configurationCollectionFilter.Filter(configurationCollectionFilterPreferences, configurations);
 
-            FileOutputWriter fileOutputWriter = new FileOutputWriter();
             var fileOutputPreferences = new FileOutputPreferences();
             _preferencesManager.ApplyPreferences(preferences, fileOutputPreferences);
 
@@ -102,10 +136,7 @@ namespace ConfigGen.Domain
 
                 if (!loadResults.Success)
                 {
-                    return new GenerationResults(
-                        unrecognisedPreferences: Enumerable.Empty<string>(),
-                        singleFileGenerationResults: new List<SingleFileGenerationResult>(),
-                        errors: loadResults.TemplateLoadErrors);
+                    return GenerationResults.CreateFail(loadResults.TemplateLoadErrors);
                 }
 
                 var renderResults = template.Render(configurations);
@@ -113,7 +144,7 @@ namespace ConfigGen.Domain
                 var singleFileGenerationResults = new List<SingleFileGenerationResult>();
                 foreach (var renderResult in renderResults.Results)
                 {
-                    WriteOutputResult writeResults = fileOutputWriter.WriteOutput(
+                    WriteOutputResult writeResults = _fileOutputWriter.WriteOutput(
                         renderResult, 
                         fileOutputPreferences);
                     singleFileGenerationResults.Add(new SingleFileGenerationResult //TODO: move to ctor
@@ -123,7 +154,7 @@ namespace ConfigGen.Domain
                     });
                 }
 
-                return new GenerationResults(unrecognisedPreferences, singleFileGenerationResults, null);
+                return GenerationResults.CreateSuccess(unrecognisedPreferences, singleFileGenerationResults);
             }
         }
     }

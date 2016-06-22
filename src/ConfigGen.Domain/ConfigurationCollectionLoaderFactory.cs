@@ -26,11 +26,11 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
 {
-    public class TemplateFactory : ItemFactoryByTypeOrExtensionBase<ITemplate>
+    public class ConfigurationCollectionLoaderFactory : ItemFactoryByTypeOrExtensionBase<ISettingsLoader>
     {
-        public TemplateFactory(
-            [NotNull] Func<ITemplate>[] itemFactories) 
-            : base(itemFactories, template => template.TemplateType , template => template.SupportedExtensions)
+        public ConfigurationCollectionLoaderFactory(
+            [NotNull] Func<ISettingsLoader>[] itemFactories) 
+            : base(itemFactories, loader => loader.LoaderType, loader => loader.SupportedExtensions)
         {
         }
     }

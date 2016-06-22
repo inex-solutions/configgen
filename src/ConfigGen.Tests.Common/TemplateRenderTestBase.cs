@@ -21,13 +21,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Autofac;
+using Autofac.Core;
 using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
 {
-    public abstract class TemplateRenderTestBase<TTemplate> where TTemplate : new()
+    public abstract class TemplateRenderTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new()
     {
         [NotNull]
         protected static TTemplate Subject;
@@ -42,10 +44,14 @@ namespace ConfigGen.Tests.Common
         {
             SingleConfiguration = new Dictionary<string, object>();
             TemplateContents = null;
-            Subject = new TTemplate();
             configurations = null;
             Results = null;
             ExpectedOutput = null;
+
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<TContainerModule>();
+            var container = containerBuilder.Build();
+            Subject = container.Resolve<TTemplate>();
         };
 
         [NotNull]

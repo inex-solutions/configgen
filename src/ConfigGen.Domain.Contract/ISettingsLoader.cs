@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
@@ -31,8 +32,10 @@ namespace ConfigGen.Domain.Contract
         /// <summary>
         /// Loads and returns the configuration settings
         /// </summary>
-        /// <param name="args">Array of arguments for the loader (e.g. filename for excel)</param>
-        /// <returns>collection of loaded configuration settings.</returns>
-        IEnumerable<IConfiguration> LoadSettings(string[] args);
+        IEnumerable<IConfiguration> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
+
+        string LoaderType { get; }
+
+        string[] SupportedExtensions { get; }
     }
 }

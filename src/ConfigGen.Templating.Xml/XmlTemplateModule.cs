@@ -19,19 +19,16 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
+using Autofac;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Utilities;
-using JetBrains.Annotations;
 
-namespace ConfigGen.Domain
+namespace ConfigGen.Templating.Xml
 {
-    public class TemplateFactory : ItemFactoryByTypeOrExtensionBase<ITemplate>
+    public class XmlTemplateModule : Module
     {
-        public TemplateFactory(
-            [NotNull] Func<ITemplate>[] itemFactories) 
-            : base(itemFactories, template => template.TemplateType , template => template.SupportedExtensions)
+        protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<XmlTemplate>().As<ITemplate>().As<XmlTemplate>();
         }
     }
 }

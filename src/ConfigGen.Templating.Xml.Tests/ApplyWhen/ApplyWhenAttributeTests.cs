@@ -30,7 +30,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 {
     namespace ApplyWhenAttributeTests 
     {
-        public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -48,7 +48,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -66,7 +66,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -94,7 +94,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_indicate_the_token_had_been_used = () => FirstResult.UsedTokens.ShouldContainOnly("val");
         }
 
-        public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {

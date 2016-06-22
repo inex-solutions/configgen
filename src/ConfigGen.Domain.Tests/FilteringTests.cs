@@ -25,7 +25,6 @@ using System.Reflection;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Tests.Common.MSpec;
-using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 

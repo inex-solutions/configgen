@@ -19,13 +19,14 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
-    public interface ITemplate
+    public interface ITemplate : IDisposable
     {
         [NotNull]
         LoadResult Load([NotNull] Stream templateStream);
@@ -33,5 +34,11 @@ namespace ConfigGen.Domain.Contract
         [Pure]
         [NotNull]
         RenderResults Render([NotNull] IEnumerable<IConfiguration> configurationsToRender);
+
+        [NotNull]
+        string TemplateType { get; }
+
+        [NotNull]
+        string[] SupportedExtensions { get; }
     }
 }

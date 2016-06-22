@@ -30,5 +30,11 @@ namespace ConfigGen.Domain
 
         [NotNull]
         public static readonly string TemplateTypeResolutionFailure = "TemplateTypeResolutionFailure";
+
+        [NotNull]
+        public static readonly string SettingsLoaderTypeResolutionFailure = "SettingsLoaderTypeResolutionFailure";
+
+        [NotNull]
+        public static readonly string UnknownSettingsLoaderType = "UnknownSettingsLoaderType";
     }
 }

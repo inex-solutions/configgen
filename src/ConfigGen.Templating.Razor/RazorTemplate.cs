@@ -73,6 +73,10 @@ namespace ConfigGen.Templating.Razor
             return new RenderResults(TemplateRenderResultStatus.Success, allResults, null);
         }
 
+        public string TemplateType => "razor";
+
+        public string[] SupportedExtensions => new[] {".razor", ".cshtml"};
+
         private SingleTemplateRenderResults RenderSingleConfiguration([NotNull] RazorTemplateRenderer razorTemplateRenderer, [NotNull] IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
@@ -151,6 +155,10 @@ namespace ConfigGen.Templating.Razor
             {
                 yield return new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, detail);
             }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

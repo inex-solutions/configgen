@@ -30,7 +30,7 @@ namespace ConfigGen.Templating.Xml.Tests
 {
     namespace XmlDeclarationTests
     {
-        public class when_the_template_contains_an_xml_declaration : TemplateRenderTestBase<XmlTemplate>
+        public class when_the_template_contains_an_xml_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             private static string XmlDeclaration;
             private static string TemplateBody;

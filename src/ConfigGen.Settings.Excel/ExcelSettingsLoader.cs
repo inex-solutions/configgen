@@ -25,6 +25,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Settings.Excel
 {
@@ -44,11 +45,14 @@ namespace ConfigGen.Settings.Excel
         /// <param name="dataProcessor">Class responsible for processing the spreadsheet data.</param>
         /// <param name="excelFileLoader">Class responsible for loading the spreadsheet and converting is contents into a dataset.</param>
         /// <exception cref="ArgumentNullException">Thrown if any argument is null</exception>
-        public ExcelSettingsLoader(ISpreadsheetHeaderProcessor headerProcessor, ISpreadsheetDataProcessor dataProcessor, IExcelFileLoader excelFileLoader)
+        public ExcelSettingsLoader(
+            [NotNull] ISpreadsheetHeaderProcessor headerProcessor, 
+            [NotNull] ISpreadsheetDataProcessor dataProcessor, 
+            [NotNull] IExcelFileLoader excelFileLoader)
         {
-            if (headerProcessor == null) throw new ArgumentNullException("headerProcessor");
-            if (dataProcessor == null) throw new ArgumentNullException("dataProcessor");
-            if (excelFileLoader == null) throw new ArgumentNullException("excelFileLoader");
+            if (headerProcessor == null) throw new ArgumentNullException(nameof(headerProcessor));
+            if (dataProcessor == null) throw new ArgumentNullException(nameof(dataProcessor));
+            if (excelFileLoader == null) throw new ArgumentNullException(nameof(excelFileLoader));
             _headerProcessor = headerProcessor;
             _dataProcessor = dataProcessor;
             _excelFileLoader = excelFileLoader;
@@ -59,33 +63,16 @@ namespace ConfigGen.Settings.Excel
         /// <summary>
         /// Loads and returns the configuration settings
         /// </summary>
-        /// <param name="args">Array of arguments for the loader: 1st argument is the spreadsheet path, 
-        /// 2nd (optional) is the worksheet name (defaults to "Settings")</param>
+        /// <param name="settingsFile">Spreadsheet path</param>
+        /// <param name="worksheetName">worksheet name (defaults to "Settings")</param>
         /// <returns>
         /// Collection of loaded configuration settings.
         /// </returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="args"/> is null.</exception>
-        /// <exception cref="ArgumentException">Thrown if the length of the arguments array is less than one or greater than two.</exception>
         /// <exception cref="FileNotFoundException">Thrown if the specified excel spreadsheet is not found.</exception>
-        public IEnumerable<IConfiguration> LoadSettings(string[] args)
+        public IEnumerable<IConfiguration> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName = null)
         {
-            if (args == null)
-            {
-                throw new ArgumentNullException("args");
-            }
-
-            if (args.Length < 1 || args.Length > 2)
-            {
-                throw new ArgumentException("One or two string arguments expected", "args");
-            }
-
-            var settingsFile = args[0];
-            var worksheetName = "Settings";
-
-            if (args.Length > 1)
-            {
-                worksheetName = args[1];
-            }
+            if (settingsFile == null) throw new ArgumentNullException(nameof(settingsFile));
+            worksheetName = worksheetName ?? "Settings";
 
             DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile);
 
@@ -107,6 +94,11 @@ namespace ConfigGen.Settings.Excel
 
             return machineSettings;
         }
+
+        public string LoaderType => "Excel";
+
+        public string[] SupportedExtensions => new[] {".xls", ".xlsx"};
+
         #endregion
     }
 }

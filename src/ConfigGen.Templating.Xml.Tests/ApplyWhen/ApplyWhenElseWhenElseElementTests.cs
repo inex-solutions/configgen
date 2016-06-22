@@ -30,7 +30,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 {
     namespace ApplyWhenElseWhenElseElementTests
     {
-        public class when_an_Apply_element_with_no_child_node_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_no_child_node_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -50,7 +50,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             //TODO: - what should the output be?
         }
 
-        public class when_an_Apply_element_with_an_incorrect_child_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_an_incorrect_child_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -75,7 +75,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             //TODO: - what should the output be?
         }
 
-        public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -100,7 +100,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_errors_collection_should_be_empty = () => FirstResult.Errors.ShouldBeEmpty();
         }
 
-        public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_in_the_wrong_order_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_in_the_wrong_order_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -127,7 +127,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
         }
 
-        public class when_an_Apply_element_with_too_many_Else_elements_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_too_many_Else_elements_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -153,7 +153,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
         }
 
-        public class when_an_Apply_element_with_an_empty_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_an_empty_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -177,7 +177,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_Apply_element_with_an_empty_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_an_empty_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -202,7 +202,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_Apply_element_with_an_unparseable_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_an_unparseable_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -226,7 +226,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_Apply_element_with_an_unparseable_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_with_an_unparseable_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -251,7 +251,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
         }
 
-        public class when_an_Apply_element_containing_an_unexpected_child_node_is_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_Apply_element_containing_an_unexpected_child_node_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -276,7 +276,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
         }
 
-        public class when_ApplyWhenElseWhenElse_elements_with_a_true_When_condition_are_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_ApplyWhenElseWhenElse_elements_with_a_true_When_condition_are_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -311,7 +311,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_ApplyWhenElseWhenElse_elements_with_a_true_ElseWhen_condition_are_rendered : TemplateRenderTestBase<XmlTemplate>
+        public class when_ApplyWhenElseWhenElse_elements_with_a_true_ElseWhen_condition_are_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -346,7 +346,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_neither_When_nor_ElseWhen_conditions_are_true : TemplateRenderTestBase<XmlTemplate>
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_neither_When_nor_ElseWhen_conditions_are_true : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -381,7 +381,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_both_When_and_ElseWhen_conditions_are_true : TemplateRenderTestBase<XmlTemplate>
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_both_When_and_ElseWhen_conditions_are_true : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -416,7 +416,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_ApplyWhenElseWhenElse_elements_are_rendered_with_an_onNotApplied_action_of_CommentOut : TemplateRenderTestBase<XmlTemplate>
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_with_an_onNotApplied_action_of_CommentOut : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -451,7 +451,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
-        public class when_an_onCommentedOutComment_value_is_specfied_on_nodes_which_are_commented_out : TemplateRenderTestBase<XmlTemplate>
+        public class when_an_onCommentedOutComment_value_is_specfied_on_nodes_which_are_commented_out : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {

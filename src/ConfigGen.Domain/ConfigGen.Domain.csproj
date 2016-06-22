@@ -31,8 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="Autofac, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.0.0-rc2-240\lib\netstandard1.1\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -45,12 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationGeneratorModule.cs" />
+    <Compile Include="FileOutput\FileOutputModule.cs" />
     <Compile Include="Filtering\ByConfigurationNameMatchFilter.cs" />
     <Compile Include="Filtering\ByConfigurationNameRegexFilter.cs" />
     <Compile Include="Filtering\ConfigurationCollectionFilter.cs" />
     <Compile Include="Filtering\ConfigurationCollectionFilterPreferences.cs" />
     <Compile Include="Filtering\ConfigurationCollectionFilterPreferencesGroup.cs" />
-    <Compile Include="ConfigurationCollectionLoader.cs" />
+    <Compile Include="ConfigurationCollectionLoaderFactory.cs" />
     <Compile Include="ConfigurationGenerator.cs" />
     <Compile Include="ConfigurationGeneratorError.cs" />
     <Compile Include="ConfigurationGeneratorErrorCodes.cs" />
@@ -59,6 +65,7 @@
     <Compile Include="FileOutput\FileOutputPreferenceGroup.cs" />
     <Compile Include="FileOutput\FileOutputPreferences.cs" />
     <Compile Include="FileOutput\FileOutputWriter.cs" />
+    <Compile Include="Filtering\ConfigurationFilteringModule.cs" />
     <Compile Include="Filtering\IConfigurationFilter.cs" />
     <Compile Include="PreferencesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

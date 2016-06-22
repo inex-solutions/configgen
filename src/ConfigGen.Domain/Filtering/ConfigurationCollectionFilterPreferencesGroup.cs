@@ -33,7 +33,7 @@ namespace ConfigGen.Domain.Filtering
         {
             PreferenceDefinitions.FilterMachinesRegexp,
             PreferenceDefinitions.GenerateSpecifiedOnly,
-            PreferenceDefinitions.LocalOnly,
+        //    PreferenceDefinitions.LocalOnly,
         };
 
         public override string Name => "Filter preferences";
@@ -62,17 +62,17 @@ namespace ConfigGen.Domain.Filtering
                     parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
                     setAction: (preferences, value) => preferences.FilterMachinesRegexp = value);
 
-                LocalOnly = new SwitchPreferenceDefinition<ConfigurationCollectionFilterPreferences>(
-                    name: "LocalOnly",
-                    shortName: "Local",
-                    description: "generate configuration for the local machine only or, if a matching entry for the local machine is not present, generate a configuration named 'default'.",
-                    setAction: (preferences, value) => preferences.LocalOnly = value);
+                //LocalOnly = new SwitchPreferenceDefinition<ConfigurationCollectionFilterPreferences>(
+                //    name: "LocalOnly",
+                //    shortName: "Local",
+                //    description: "generate configuration for the local machine only or, if a matching entry for the local machine is not present, generate a configuration named 'default'.",
+                //    setAction: (preferences, value) => preferences.LocalOnly = value);
 
                 // ReSharper restore AssignNullToNotNullAttribute
                 // ReSharper restore PossibleNullReferenceException
             }
 
-            public static PreferenceDefinition<ConfigurationCollectionFilterPreferences, bool> LocalOnly { get; }
+         //   public static PreferenceDefinition<ConfigurationCollectionFilterPreferences, bool> LocalOnly { get; }
 
             public static PreferenceDefinition<ConfigurationCollectionFilterPreferences, string> GenerateSpecifiedOnly { get; }
 

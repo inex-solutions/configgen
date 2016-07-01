@@ -147,11 +147,8 @@ namespace ConfigGen.Domain
                     WriteOutputResult writeResults = _fileOutputWriter.WriteOutput(
                         renderResult, 
                         fileOutputPreferences);
-                    singleFileGenerationResults.Add(new SingleFileGenerationResult //TODO: move to ctor
-                    {
-                        ConfigurationName = renderResult.ConfigurationName,
-                        FullPath = writeResults.FullPath
-                    });
+
+                    singleFileGenerationResults.Add(new SingleFileGenerationResult(renderResult.ConfigurationName, writeResults.FullPath));
                 }
 
                 return GenerationResults.CreateSuccess(unrecognisedPreferences, singleFileGenerationResults);

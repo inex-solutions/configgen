@@ -18,10 +18,21 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System;
+using JetBrains.Annotations;
+
 namespace ConfigGen.Domain.FileOutput
 {
     public class WriteOutputResult
     {
-        public string FullPath { get; set; }
+        public WriteOutputResult([NotNull] string fullPath)
+        {
+            if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
+            FullPath = fullPath;
+        }
+
+        [NotNull]
+        public string FullPath { get; }
     }
 }

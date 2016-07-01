@@ -48,7 +48,6 @@ namespace ConfigGen.Domain.FileOutput
                 outputFilename = $"{resultToWrite.ConfigurationName}.xml";
             }
 
-            //TODO: Remove this hard coding once you've installed ReSharper MSpec runner, so you can debug this in the IDE
             var fullPath = new FileInfo(Path.Combine($"{resultToWrite.ConfigurationName}", outputFilename));
             if (!fullPath.Directory.Exists)
             {
@@ -58,7 +57,7 @@ namespace ConfigGen.Domain.FileOutput
             using (var writer = new StreamWriter(fullPath.FullName))
             {
                 writer.Write(resultToWrite.RenderedResult);
-                return new WriteOutputResult {FullPath = fullPath.FullName}; //TODO: move to ctor
+                return new WriteOutputResult(fullPath.FullName);
             }
         }
     }

@@ -89,8 +89,8 @@ namespace ConfigGen.ConsoleApp
         {
             var version = typeof(ConfigurationGenerator).Assembly.GetName().Version;
             _consoleWriter.WriteInfo();
-            _consoleWriter.WriteInfo("ConfigGen v{0} - Configuration file generation tool", version); //TODO: fix version number
-            _consoleWriter.WriteInfo("Copyright (C)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen"); //TODO: fix old url
+            _consoleWriter.WriteInfo("ConfigGen v{0} - Configuration file generation tool", version);
+            _consoleWriter.WriteInfo("Copyright (C)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
             _consoleWriter.WriteInfo("--");
         }
 

@@ -22,8 +22,14 @@ namespace ConfigGen.Domain.FileOutput
 {
     public class FileOutputPreferences
     {
+        /// <summary>
+        /// Specifies the setting to use for the filename of the generated configuration file.
+        /// </summary>
         public string FilenameSetting { get; set; }
 
+        /// <summary>
+        /// Forces all generated files to have the specified filename.
+        /// </summary>
         public string ForceFilename { get; set; }
     }
 }

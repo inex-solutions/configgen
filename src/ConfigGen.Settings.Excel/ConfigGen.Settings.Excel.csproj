@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CellDataParser.cs" />
     <Compile Include="ExcelColumnInfo.cs" />
     <Compile Include="ExcelFileLoader.cs" />

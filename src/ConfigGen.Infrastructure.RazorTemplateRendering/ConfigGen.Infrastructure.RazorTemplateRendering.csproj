@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CodeGenerationResults.cs" />
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="DictionaryBackedDynamicModel.cs" />

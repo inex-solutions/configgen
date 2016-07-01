@@ -78,7 +78,5 @@ namespace ConfigGen.ConsoleApp
             //TODO: check result before assigning
             _set(target, _result.Value);
         }
-
-
     }
 }

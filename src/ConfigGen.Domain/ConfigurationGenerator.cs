@@ -144,7 +144,7 @@ namespace ConfigGen.Domain
                 var singleFileGenerationResults = new List<SingleFileGenerationResult>();
                 foreach (var renderResult in renderResults.Results)
                 {
-                    WriteOutputResult writeResults = _fileOutputWriter.WriteOutput(
+                    var writeResults = _fileOutputWriter.WriteOutput(
                         renderResult, 
                         fileOutputPreferences);
 

@@ -65,12 +65,17 @@ namespace ConfigGen.Domain.FileOutput
                 // ReSharper restore PossibleNullReferenceException
             }
 
+            /// <summary>
+            /// Specifies the setting to use for the filename of the generated configuration file.
+            /// </summary>
             [NotNull]
             public static PreferenceDefinition<FileOutputPreferences, string> FilenameSetting { get; }
 
+            /// <summary>
+            /// Forces all generated files to have the specified filename.
+            /// </summary>
             [NotNull]
             public static PreferenceDefinition<FileOutputPreferences, string> ForceFilename { get; }
-
         }
     }
 }

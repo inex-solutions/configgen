@@ -1,4 +1,4 @@
-ï»¿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,20 +19,11 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using JetBrains.Annotations;
+using System.Reflection;
 
-namespace ConfigGen.Domain.FileOutput
-{
-    public class WriteOutputResult
-    {
-        public WriteOutputResult([NotNull] string fullPath)
-        {
-            if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
-            FullPath = fullPath;
-        }
+[assembly: AssemblyCompany("Rob Levine")]
+[assembly: AssemblyCopyright("Copyright © Rob Levine 2010-2016 and other contributors")]
+[assembly: AssemblyTrademark("")]
 
-        [NotNull]
-        public string FullPath { get; }
-    }
-}
+[assembly: AssemblyVersion("2.0.1.0")]
+[assembly: AssemblyFileVersion("2.0.1.0")]

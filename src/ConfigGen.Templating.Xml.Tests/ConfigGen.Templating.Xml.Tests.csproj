@@ -60,6 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ApplyWhen\ApplyWhenAttributeTests.cs" />
     <Compile Include="ApplyWhen\ApplyWhenElseWhenElseElementTests.cs" />
     <Compile Include="ConfigGenMarkupTests.cs" />

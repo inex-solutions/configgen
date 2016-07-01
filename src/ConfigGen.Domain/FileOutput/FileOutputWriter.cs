@@ -27,17 +27,23 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.FileOutput
 {
+    /// <summary>
+    /// Writes result output to files.
+    /// </summary>
     public class FileOutputWriter
     {
-        public WriteOutputResult WriteOutput([NotNull] SingleTemplateRenderResults resultToWrite, [NotNull] FileOutputPreferences fileOutputPreferences)
+        /// <summary>
+        /// Writes a single rendering <paramref name="result"/> as a file, as specified by the supplied <paramref name="fileOutputPreferences"/>.
+        /// </summary>
+        public WriteOutputResult WriteOutput([NotNull] SingleTemplateRenderResults result, [NotNull] FileOutputPreferences fileOutputPreferences)
         {
-            if (resultToWrite == null) throw new ArgumentNullException(nameof(resultToWrite));
+            if (result == null) throw new ArgumentNullException(nameof(result));
             if (fileOutputPreferences == null) throw new ArgumentNullException(nameof(fileOutputPreferences));
 
             string outputFilename = fileOutputPreferences.ForceFilename;
             object val;
             if (!fileOutputPreferences.FilenameSetting.IsNullOrEmpty()
-                && resultToWrite.Configuration.TryGetValue(fileOutputPreferences.FilenameSetting, out val)
+                && result.Configuration.TryGetValue(fileOutputPreferences.FilenameSetting, out val)
                 && val != null)
             {
                 outputFilename = val.ToString();
@@ -45,10 +51,10 @@ namespace ConfigGen.Domain.FileOutput
 
             if (outputFilename.IsNullOrEmpty())
             {
-                outputFilename = $"{resultToWrite.ConfigurationName}.xml";
+                outputFilename = $"{result.ConfigurationName}.xml";
             }
 
-            var fullPath = new FileInfo(Path.Combine($"{resultToWrite.ConfigurationName}", outputFilename));
+            var fullPath = new FileInfo(Path.Combine($"{result.ConfigurationName}", outputFilename));
             if (!fullPath.Directory.Exists)
             {
                 fullPath.Directory.Create();
@@ -56,9 +62,27 @@ namespace ConfigGen.Domain.FileOutput
 
             using (var writer = new StreamWriter(fullPath.FullName))
             {
-                writer.Write(resultToWrite.RenderedResult);
+                writer.Write(result.RenderedResult);
                 return new WriteOutputResult(fullPath.FullName);
             }
+        }
+
+        /// <summary>
+        /// Represents the results of a file write operation.
+        /// </summary>
+        public class WriteOutputResult
+        {
+            public WriteOutputResult([NotNull] string fullPath)
+            {
+                if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
+                FullPath = fullPath;
+            }
+
+            /// <summary>
+            /// Gets the full path to the generated file.
+            /// </summary>
+            [NotNull]
+            public string FullPath { get; }
         }
     }
 }

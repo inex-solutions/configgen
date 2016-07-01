@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.ConsoleApp", "ConfigGen.ConsoleApp\ConfigGen.ConsoleApp.csproj", "{B8732EE6-8AEF-4DD8-9C71-14FACE388CF0}"
 EndProject
@@ -34,6 +34,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.ConsoleApp.Tests", "ConfigGen.ConsoleApp.Tests\ConfigGen.ConsoleApp.Tests.csproj", "{A3697716-1378-46F7-8D3C-EAD05C2D08C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain.Tests", "ConfigGen.Domain.Tests\ConfigGen.Domain.Tests.csproj", "{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F7FEE994-4445-4B60-ACB0-FA7C7ABB4CEC}"
+	ProjectSection(SolutionItems) = preProject
+		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

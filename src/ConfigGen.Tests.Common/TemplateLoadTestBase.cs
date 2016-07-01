@@ -50,7 +50,7 @@ namespace ConfigGen.Tests.Common
         [NotNull]
         protected static IEnumerable<Configuration> Configurations
         {
-            get { return configurations ?? new[] { new Configuration(SingleConfiguration) }; }
+            get { return configurations ?? new[] { new Configuration("Test-IConfiguration", SingleConfiguration) }; }
             set { configurations = value; }
         }
     }

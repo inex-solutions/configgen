@@ -32,16 +32,6 @@ namespace ConfigGen.Domain.Contract
         [NotNull]
         private readonly IDictionary<string, object> _settings;
 
-        //TODO - remove this ctor
-        public Configuration([NotNull] IDictionary<string, object> settings)
-        {
-            if (settings == null) throw new ArgumentNullException(nameof(settings));
-
-            _settings = settings;
-
-            ConfigurationName = "Test-IConfiguration";
-        }
-
         public Configuration([NotNull] string configurationName, [NotNull] IDictionary<string, object> settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));

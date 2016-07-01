@@ -29,6 +29,29 @@ namespace ConfigGen.Domain.Filtering
 {
     public class ConfigurationCollectionFilter
     {
+        [NotNull]
+        private readonly ByConfigurationNameMatchFilter _byConfigurationNameMatchFilter;
+
+        [NotNull]
+        private readonly ByConfigurationNameRegexFilter _byConfigurationNameRegexFilter;
+
+        [NotNull]
+        private readonly LocalOnlyConfigurationFilter _localOnlyConfigurationFilter;
+
+        public ConfigurationCollectionFilter(
+            [NotNull] ByConfigurationNameMatchFilter byConfigurationNameMatchFilter,
+            [NotNull] ByConfigurationNameRegexFilter byConfigurationNameRegexFilter,
+            [NotNull] LocalOnlyConfigurationFilter localOnlyConfigurationFilter)
+        {
+            if (byConfigurationNameMatchFilter == null) throw new ArgumentNullException(nameof(byConfigurationNameMatchFilter));
+            if (byConfigurationNameRegexFilter == null) throw new ArgumentNullException(nameof(byConfigurationNameRegexFilter));
+            if (localOnlyConfigurationFilter == null) throw new ArgumentNullException(nameof(localOnlyConfigurationFilter));
+
+            _byConfigurationNameMatchFilter = byConfigurationNameMatchFilter;
+            _byConfigurationNameRegexFilter = byConfigurationNameRegexFilter;
+            _localOnlyConfigurationFilter = localOnlyConfigurationFilter;
+        }
+
         public IEnumerable<IConfiguration> Filter(
             [NotNull] ConfigurationCollectionFilterPreferences preferences, 
             [NotNull] IEnumerable<IConfiguration> configurations)
@@ -38,12 +61,17 @@ namespace ConfigGen.Domain.Filtering
 
             if (!preferences.GenerateSpecifiedOnly.IsNullOrEmpty())
             {
-                configurations = new ByConfigurationNameMatchFilter(preferences.GenerateSpecifiedOnly).Filter(configurations);
+                configurations = _byConfigurationNameMatchFilter.Filter(preferences.GenerateSpecifiedOnly, configurations);
             }
 
             if (!preferences.FilterMachinesRegexp.IsNullOrEmpty())
             {
-                configurations = new ByConfigurationNameRegexFilter(preferences.FilterMachinesRegexp).Filter(configurations);
+                configurations = _byConfigurationNameRegexFilter.Filter(preferences.FilterMachinesRegexp, configurations);
+            }
+
+            if (preferences.LocalOnly)
+            {
+                configurations = _localOnlyConfigurationFilter.Filter(configurations);
             }
 
             return configurations;

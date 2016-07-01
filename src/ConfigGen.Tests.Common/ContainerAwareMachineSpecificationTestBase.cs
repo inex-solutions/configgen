@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,34 +19,50 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.IO;
+using Autofac;
 using ConfigGen.Utilities;
 using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
 {
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
+    public abstract class ContainerAwareMachineSpecificationTestBase<TSubject, TResult>
     {
-        protected static TSubject Subject;
+        protected static Lazy<TSubject> LazySubject;
 
-        protected static TResult Result;
+        protected static TResult Result; 
 
         protected static DisposableDirectory TestDirectory;
 
         private static string InitialDirectory;
+
+        protected static ContainerBuilder ContainerBuilder;
+
+        protected static IContainer Container;
 
         Establish context = () =>
         {
             InitialDirectory = Directory.GetCurrentDirectory();
             TestDirectory = new DisposableDirectory(throwOnFailedCleanup: false);
             Directory.SetCurrentDirectory(TestDirectory.FullName);
+
+            ContainerBuilder = new ContainerBuilder();
+
+            LazySubject = new Lazy<TSubject>(() =>
+            {
+                Container = ContainerBuilder.Build();
+                return Container.Resolve<TSubject>();
+            });
         };
 
         Cleanup cleanup = () =>
         {
+            Container.Disposer.Dispose();
             Directory.SetCurrentDirectory(InitialDirectory);
-           TestDirectory.Dispose();
+            TestDirectory.Dispose();
         };
 
+        public static TSubject Subject => LazySubject.Value;
     }
 }

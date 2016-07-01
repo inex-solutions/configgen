@@ -23,7 +23,7 @@ using System;
 
 namespace ConfigGen.Utilities
 {
-    public class LocalEnvironment
+    public class LocalEnvironment : ILocalEnvironment
     {
         public string MachineName => Environment.MachineName;
     }

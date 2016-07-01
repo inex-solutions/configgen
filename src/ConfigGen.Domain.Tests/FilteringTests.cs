@@ -19,12 +19,16 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Autofac;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
@@ -32,77 +36,84 @@ namespace ConfigGen.Domain.Tests
 {
     namespace FilteringTests
     {
-        //internal class when_invoked_with_LocalOnly_preference_and_with_a_matching_configuration_in_the_settings_file : ConfigurationGeneratorTestBase
-        //{
-        //    Establish context = () =>
-        //    {
-        //        Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
-        //        Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+        internal class when_invoked_with_LocalOnly_preference_and_with_a_matching_configuration_in_the_settings_file : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-        //        PreferencesToSupplyToGenerator = new List<Preference>
-        //        {
-        //            CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
-        //        };
+                PreferencesToSupplyToGenerator = new List<Preference>
+                {
+                    CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
+                };
 
-        //        ILocalEnvironment localEnvironment = new FakeLocalEnvironment(machineName: "Configuration3");
-        //    };
+                ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "Configuration3")).As<ILocalEnvironment>();
+            };
 
-        //    Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-        //    It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-        //    It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
-        //    It the_one_generated_files_is_for_the_local_machine_named_configuration =
-        //        () => Result.GeneratedFiles.Select(c => c.ConfigurationName).ShouldContainOnly("Configuration3");
-        //}
+            It the_one_generated_files_is_for_the_local_machine_named_configuration =
+                () => Result.GeneratedFiles.Select(c => c.ConfigurationName).ShouldContainOnly("Configuration3");
+        }
 
-        //internal class when_invoked_with_LocalOnly_preference_and_without_a_matching_configuration_in_the_settings_file_but_with_a_default : ConfigurationGeneratorTestBase
-        //{
-        //    Establish context = () =>
-        //    {
-        //        Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls", "App.Config.Settings.xls");
-        //        Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+        internal class when_invoked_with_LocalOnly_preference_and_without_a_matching_configuration_in_the_settings_file_but_with_a_default : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls", "App.Config.Settings.xls");
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-        //        PreferencesToSupplyToGenerator = new List<Preference>
-        //        {
-        //            CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
-        //        };
+                PreferencesToSupplyToGenerator = new List<Preference>
+                {
+                    CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
+                };
 
-        //        ILocalEnvironment localEnvironment = new FakeLocalEnvironment(machineName: "Configuration99");
-        //    };
+                ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "SomeMachineNameOrOther")).As<ILocalEnvironment>();
+            };
 
-        //    Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-        //    It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-        //    It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
-        //    It the_one_generated_files_is_for_the_default_named_configuration = //TODO: invalid test - need to check contents, surely?
-        //        () => Result.GeneratedFiles.Select(c => c.ConfigurationName).ShouldContainOnly("Configuration3");
-        //}
+            It the_one_generated_file_has_the_correct_configuration_name =
+                () => Result.GeneratedFiles.First().ConfigurationName.ShouldEqual("Default");
 
-        //internal class when_invoked_with_LocalOnly_preference_and_without_a_matching_configuration_in_the_settings_file_and_with_no_default : ConfigurationGeneratorTestBase
-        //{
-        //    Establish context = () =>
-        //    {
-        //        Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
-        //        Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+            It the_one_generated_file_has_the_contents_from_the_default_named_configuration = 
+                () => File.ReadAllText(Result.GeneratedFiles.First().FullPath).ShouldContainXml(
+@"<xmlRoot>
+  <Value1>Default-Value1</Value1>
+  <Value2>Default-Value2</Value2>
+ </xmlRoot>");
+        }
 
-        //        PreferencesToSupplyToGenerator = new List<Preference>
-        //        {
-        //            CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
-        //        };
+        internal class when_invoked_with_LocalOnly_preference_and_without_a_matching_configuration_in_the_settings_file_and_with_no_default : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-        //        ILocalEnvironment localEnvironment = new FakeLocalEnvironment(machineName: "Configuration99");
-        //    };
+                PreferencesToSupplyToGenerator = new List<Preference>
+                {
+                    CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
+                };
 
-        //    Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+                ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "SomeMachineNameOrOther")).As<ILocalEnvironment>();
+            };
 
-        //    It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-        //    It no_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(0);
-        //}
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+            It no_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(0);
+        }
 
         internal class when_invoked_with_GenerateSpecifiedOnly_preference_that_matches_no_machines : ConfigurationGeneratorTestBase
         {

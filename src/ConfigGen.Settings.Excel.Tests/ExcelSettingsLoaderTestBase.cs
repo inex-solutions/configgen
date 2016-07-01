@@ -43,7 +43,7 @@ namespace ConfigGen.Settings.Excel.Tests
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<ExcelSettingsLoaderModule>();
             var container = containerBuilder.Build();
-            Subject = (ExcelSettingsLoader)container.Resolve<ISettingsLoader>();
+            Subject = container.Resolve<ExcelSettingsLoader>();
 
             SourceTestFileName = null;
             lazySettingsFileFullPath = new Lazy<string>(WriteOutTestFile);

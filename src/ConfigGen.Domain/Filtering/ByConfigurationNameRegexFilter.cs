@@ -28,24 +28,17 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Filtering
 {
-    public class ByConfigurationNameRegexFilter : IConfigurationFilter
+    public class ByConfigurationNameRegexFilter
     {
         [NotNull]
-        private readonly Regex _nameFilterRegex;
-
-        public ByConfigurationNameRegexFilter([NotNull] string nameFilterRegex)
-        {
-            if (nameFilterRegex == null) throw new ArgumentNullException(nameof(nameFilterRegex));
-
-            _nameFilterRegex = new Regex(nameFilterRegex);
-        }
-
-        [NotNull]
-        public IEnumerable<IConfiguration> Filter([NotNull] IEnumerable<IConfiguration> configurations)
+        public IEnumerable<IConfiguration> Filter([NotNull] string nameFilterRegularExpression, [NotNull] IEnumerable<IConfiguration> configurations)
         {
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
+            if (nameFilterRegularExpression == null) throw new ArgumentNullException(nameof(nameFilterRegularExpression));
 
-            return configurations.Where(c => _nameFilterRegex.IsMatch(c.ConfigurationName));
+            var nameFilterRegex = new Regex(nameFilterRegularExpression);
+
+            return configurations.Where(c => nameFilterRegex.IsMatch(c.ConfigurationName));
         }
     }
 }

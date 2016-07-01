@@ -19,8 +19,10 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities;
 
 namespace ConfigGen.Domain.Filtering
 {
@@ -29,6 +31,10 @@ namespace ConfigGen.Domain.Filtering
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ConfigurationCollectionFilterPreferencesGroup>().As<IPreferenceGroup>();
+            builder.RegisterType<ByConfigurationNameMatchFilter>();
+            builder.RegisterType<ByConfigurationNameRegexFilter>();
+            builder.RegisterType<LocalOnlyConfigurationFilter>();
+            builder.RegisterType<LocalEnvironment>().As<ILocalEnvironment>();
         }
     }
 }

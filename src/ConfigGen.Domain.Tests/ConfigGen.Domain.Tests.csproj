@@ -91,6 +91,7 @@
     <EmbeddedResource Include="TestResources\SimpleSettings.TwoConfigurations.TwoValues.xls" />
     <EmbeddedResource Include="TestResources\SimpleSettings.OneConfiguration.TwoValues.xls" />
     <EmbeddedResource Include="TestResources\SimpleSettings.FiveConfigurations.TwoValues.xls" />
+    <EmbeddedResource Include="TestResources\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestResources\SimpleTemplate.TwoTokens.xml">

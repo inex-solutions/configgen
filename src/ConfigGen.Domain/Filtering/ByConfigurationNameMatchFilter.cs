@@ -27,25 +27,19 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Filtering
 {
-    public class ByConfigurationNameMatchFilter : IConfigurationFilter
+    public class ByConfigurationNameMatchFilter
     {
+        [Pure]
         [NotNull]
-        private readonly HashSet<string> _namesToInclude;
-
-        public ByConfigurationNameMatchFilter([NotNull] string commaSeparatedNameList)
+        public IEnumerable<IConfiguration> Filter([NotNull] string commaSeparatedNameList, [NotNull] IEnumerable<IConfiguration> configurations)
         {
+            if (configurations == null) throw new ArgumentNullException(nameof(configurations));
             if (commaSeparatedNameList == null) throw new ArgumentNullException(nameof(commaSeparatedNameList));
 
             var names = commaSeparatedNameList.Split(',').Select(s => s.Trim());
-            _namesToInclude = new HashSet<string>(names);
-        }
+            var namesToInclude = new HashSet<string>(names);
 
-        [NotNull]
-        public IEnumerable<IConfiguration> Filter([NotNull] IEnumerable<IConfiguration> configurations)
-        {
-            if (configurations == null) throw new ArgumentNullException(nameof(configurations));
-
-            return configurations.Where(c => _namesToInclude.Contains(c.ConfigurationName));
+            return configurations.Where(c => namesToInclude.Contains(c.ConfigurationName));
         }
     }
 }

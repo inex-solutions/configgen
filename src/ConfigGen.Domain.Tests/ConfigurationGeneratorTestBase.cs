@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Autofac;
 using ConfigGen.ConsoleApp;
@@ -29,22 +30,18 @@ using Machine.Specifications.Annotations;
 
 namespace ConfigGen.Domain.Tests
 {
-    internal abstract class ConfigurationGeneratorTestBase : MachineSpecificationTestBase<IConfigurationGenerator, GenerationResults>
+    internal abstract class ConfigurationGeneratorTestBase : ContainerAwareMachineSpecificationTestBase<IConfigurationGenerator, GenerationResults>
     {
-        [NotNull]
-        protected static IEnumerable<IPreferenceGroup> PreferenceGroups;
+        private static Lazy<IEnumerable<IPreferenceGroup>> lazyPreferenceGroups;
 
         [NotNull]
         protected static List<Preference> PreferencesToSupplyToGenerator;
 
         Establish context = () =>
         {
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterModule<ConfigurationGeneratorModule>();
-
-            var container = containerBuilder.Build();
-            Subject = container.Resolve<IConfigurationGenerator>();
-            PreferenceGroups = Subject.GetPreferenceGroups();
+            ContainerBuilder.RegisterModule<ConfigurationGeneratorModule>();
+            
+            lazyPreferenceGroups = new Lazy<IEnumerable<IPreferenceGroup>>(() =>  Subject.GetPreferenceGroups());
             PreferencesToSupplyToGenerator = new List<Preference>();
             Result = null;
         };
@@ -53,6 +50,9 @@ namespace ConfigGen.Domain.Tests
         {
 
         };
+
+        [NotNull]
+        protected static IEnumerable<IPreferenceGroup> PreferenceGroups => lazyPreferenceGroups.Value;
 
         protected static Preference CreatePreference(IPreferenceDefinition definition, string value)
         {

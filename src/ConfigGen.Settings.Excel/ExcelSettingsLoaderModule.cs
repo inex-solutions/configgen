@@ -32,7 +32,7 @@ namespace ConfigGen.Settings.Excel
             builder.RegisterType<CellDataParser>().As<ICellDataParser>();
             builder.RegisterType<ExcelFileLoader>().As<IExcelFileLoader>();
             builder.RegisterType<SpreadsheetDataProcessor>().As<ISpreadsheetDataProcessor>();
-            builder.RegisterType<ExcelSettingsLoader>().As<ISettingsLoader>();
+            builder.RegisterType<ExcelSettingsLoader>().As<ISettingsLoader>().As<ExcelSettingsLoader>();
             builder.RegisterType<ExcelSettingsPreferenceGroup>().As<IPreferenceGroup>();
 
         }

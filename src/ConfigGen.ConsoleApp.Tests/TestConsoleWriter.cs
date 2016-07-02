@@ -32,12 +32,42 @@ namespace ConfigGen.ConsoleApp.Tests
         [NotNull]
         private readonly List<string> _loggedLines = new List<string>();
 
+        public void Error(string message = null)
+        {
+            _loggedLines.Add(message);
+        }
+
+        public void Error(string formatString, params object[] args)
+        {
+            _loggedLines.Add(string.Format(formatString, args));
+        }
+
+        public void Warn(string message = null)
+        {
+            _loggedLines.Add(message);
+        }
+
+        public void Warn(string formatString, params object[] args)
+        {
+            _loggedLines.Add(string.Format(formatString, args));
+        }
+
         public void Info(string message = null)
         {
             _loggedLines.Add(message);
         }
 
         public void Info(string formatString, params object[] args)
+        {
+            _loggedLines.Add(string.Format(formatString, args));
+        }
+
+        public void Debug(string message = null)
+        {
+            _loggedLines.Add(message);
+        }
+
+        public void Debug(string formatString, params object[] args)
         {
             _loggedLines.Add(string.Format(formatString, args));
         }

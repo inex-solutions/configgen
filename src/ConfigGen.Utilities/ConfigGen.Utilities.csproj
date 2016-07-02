@@ -74,9 +74,12 @@
     <Compile Include="ItemFactoryByTypeOrExtensionBase.cs" />
     <Compile Include="LocalEnvironment.cs" />
     <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\ILoggerControler.cs" />
     <Compile Include="Logging\Log4NetLoggerModule.cs" />
     <Compile Include="Logging\Log4NetLogger.cs" />
     <Compile Include="ReadOnlyCollection.cs" />
+    <Compile Include="Logging\Log4NetLoggerControler.cs" />
+    <Compile Include="Logging\LoggingVerbosity.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="TextEncodingDetector.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />

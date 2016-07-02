@@ -22,11 +22,6 @@
 using System;
 using JetBrains.Annotations;
 using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Core;
-using log4net.Filter;
-using log4net.Layout;
 
 namespace ConfigGen.Utilities.Logging
 {
@@ -35,16 +30,31 @@ namespace ConfigGen.Utilities.Logging
         [NotNull]
         private readonly ILog _log4NetLogger;
 
-        static Log4NetLogger()
+        public Log4NetLogger([NotNull] ILog log4NetLogger)
         {
+            if (log4NetLogger == null) throw new ArgumentNullException(nameof(log4NetLogger));
 
+            _log4NetLogger = log4NetLogger;
         }
 
-        public Log4NetLogger([NotNull] ILog log4netLogger)
+        public void Error(string message = null)
         {
-            if (log4netLogger == null) throw new ArgumentNullException(nameof(log4netLogger));
+            _log4NetLogger.Error(message);
+        }
 
-            _log4NetLogger = log4netLogger;
+        public void Error(string formatString, params object[] args)
+        {
+            _log4NetLogger.ErrorFormat(formatString, args);
+        }
+
+        public void Warn(string message = null)
+        {
+            _log4NetLogger.Warn(message);
+        }
+
+        public void Warn(string formatString, params object[] args)
+        {
+            _log4NetLogger.WarnFormat(formatString, args);
         }
 
         public void Info(string message = null)
@@ -55,6 +65,16 @@ namespace ConfigGen.Utilities.Logging
         public void Info(string formatString, params object[] args)
         {
             _log4NetLogger.InfoFormat(formatString, args);
+        }
+
+        public void Debug(string message = null)
+        {
+            _log4NetLogger.Debug(message);
+        }
+
+        public void Debug(string formatString, params object[] args)
+        {
+            _log4NetLogger.DebugFormat(formatString, args);
         }
     }
 }

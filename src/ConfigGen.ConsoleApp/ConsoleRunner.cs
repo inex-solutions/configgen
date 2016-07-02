@@ -71,7 +71,7 @@ namespace ConfigGen.ConsoleApp
             }
 
             ParsedConsoleInput preferences = _consoleInputToPreferenceConverter.ParseConsoleInput(args, preferenceGroups);
-
+            
             if (preferences.ParseErrors.Any())
             {
                 foreach (var parseError in preferences.ParseErrors)
@@ -96,6 +96,7 @@ namespace ConfigGen.ConsoleApp
             _logger.Info($"ConfigGen v{version} - Configuration file generation tool");
             _logger.Info("Copyright (C)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
             _logger.Info("--");
+            _logger.Info();
         }
 
         private void ShowHelp([NotNull][ItemNotNull] IEnumerable<IPreferenceGroup> preferencesCollections)

@@ -20,15 +20,9 @@
 #endregion
 namespace ConfigGen.Utilities.Logging
 {
-    public interface ILogger
+    public enum LoggingVerbosity
     {
-        void Error(string message = null);
-        void Error(string formatString, params object[] args);
-        void Warn(string message = null);
-        void Warn(string formatString, params object[] args);
-        void Info(string message = null);
-        void Info(string formatString, params object[] args);
-        void Debug(string message = null);
-        void Debug(string formatString, params object[] args);
+        Normal,
+        Verbose,
     }
 }

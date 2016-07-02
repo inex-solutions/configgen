@@ -40,32 +40,9 @@ namespace ConfigGen.Utilities.Logging
     {
         protected override void Load(ContainerBuilder builder)
         {
-            const string layout = @"%message%newline";
-
-            var ConsoleOutAppender = new ColoredConsoleAppender();
-            var ConsoleErrorAppender = new ColoredConsoleAppender();
-
-            ConsoleOutAppender.Threshold = Level.Info;
-            ConsoleOutAppender.AddFilter(new LevelMatchFilter() { AcceptOnMatch = false, LevelToMatch = Level.Error });
-            ConsoleOutAppender.AddFilter(new LevelMatchFilter() { AcceptOnMatch = false, LevelToMatch = Level.Fatal });
-            ConsoleOutAppender.Layout = new PatternLayout(layout);
-            ConsoleOutAppender.AddMapping(new ColoredConsoleAppender.LevelColors { Level = Level.Warn, ForeColor = ColoredConsoleAppender.Colors.Yellow | ColoredConsoleAppender.Colors.HighIntensity });
-            ConsoleOutAppender.AddMapping(new ColoredConsoleAppender.LevelColors { Level = Level.Info, ForeColor = ColoredConsoleAppender.Colors.White | ColoredConsoleAppender.Colors.HighIntensity });
-            ConsoleOutAppender.ActivateOptions();
-            BasicConfigurator.Configure(ConsoleOutAppender);
-
-            ConsoleErrorAppender.Target = "Console.Error";
-            ConsoleErrorAppender.Threshold = Level.Error;
-            ConsoleErrorAppender.Layout = new PatternLayout(layout);
-            ConsoleErrorAppender.AddMapping(new ColoredConsoleAppender.LevelColors
-            {
-                Level = Level.Error,
-                ForeColor =
-                    ColoredConsoleAppender.Colors.Red |
-                    ColoredConsoleAppender.Colors.HighIntensity
-            });
-            ConsoleErrorAppender.ActivateOptions();
-            BasicConfigurator.Configure(ConsoleErrorAppender);
+            var loggerController = new Log4NetLoggerControler();
+            loggerController.InitialiseLogging();
+            builder.RegisterInstance(loggerController).As<ILoggerControler>();
         }
 
         private static void InjectLoggerProperties(object instance)

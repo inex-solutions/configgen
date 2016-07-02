@@ -49,8 +49,6 @@ namespace ConfigGen.Domain
             builder.RegisterType<FileOutputWriter>();
             builder.RegisterType<ConfigurationGeneratorPreferenceGroup>().As<IPreferenceGroup>();
             builder.RegisterType<PreferencesManager>().As<IManagePreferences>();
-
-
         }
     }
 }

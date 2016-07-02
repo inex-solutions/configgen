@@ -38,6 +38,10 @@
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -69,6 +73,9 @@
     <Compile Include="IResult.cs" />
     <Compile Include="ItemFactoryByTypeOrExtensionBase.cs" />
     <Compile Include="LocalEnvironment.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Log4NetLoggerModule.cs" />
+    <Compile Include="Logging\Log4NetLogger.cs" />
     <Compile Include="ReadOnlyCollection.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="TextEncodingDetector.cs" />

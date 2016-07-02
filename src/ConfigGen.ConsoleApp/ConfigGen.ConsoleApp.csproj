@@ -59,10 +59,8 @@
     <Compile Include="ConsoleInputDeferedSetterFactory.cs" />
     <Compile Include="ConsoleInputToPreferenceConverter.cs" />
     <Compile Include="ConsoleRunner.cs" />
-    <Compile Include="ConsoleWriter.cs" />
     <Compile Include="ConsoleInputDeferedSetter.cs" />
     <Compile Include="ExitCodes.cs" />
-    <Compile Include="IConsoleWriter.cs" />
     <Compile Include="ParsedConsoleInput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

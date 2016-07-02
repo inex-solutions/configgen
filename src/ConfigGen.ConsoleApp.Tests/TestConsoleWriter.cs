@@ -21,25 +21,25 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Utilities.Logging;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 
 namespace ConfigGen.ConsoleApp.Tests
 {
-    public class TestConsoleWriter : IConsoleWriter
+    public class TestConsoleWriter : ILogger
     {
         [NotNull]
         private readonly List<string> _loggedLines = new List<string>();
 
-        public void WriteInfo(string message = null)
+        public void Info(string message = null)
         {
             _loggedLines.Add(message);
         }
 
-        [NotNull]
-        public void WriteInfo([NotNull] string formatMessage, [NotNull]params object[] args)
+        public void Info(string formatString, params object[] args)
         {
-            _loggedLines.Add(string.Format(formatMessage, args));
+            _loggedLines.Add(string.Format(formatString, args));
         }
 
         public TestConsoleWriter ShouldContainMessage(string message)

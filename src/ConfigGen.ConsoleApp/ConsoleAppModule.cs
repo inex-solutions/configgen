@@ -29,7 +29,6 @@ namespace ConfigGen.ConsoleApp
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<ConsoleWriter>().As<IConsoleWriter>();
             builder.RegisterType<ConsoleRunner>();
         }
     }

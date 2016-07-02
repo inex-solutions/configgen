@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,11 +18,11 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.ConsoleApp
+namespace ConfigGen.Utilities.Logging
 {
-    public interface IConsoleWriter
+    public interface ILogger
     {
-        void WriteInfo(string message = null);
-        void WriteInfo(string formatMessage, params object[] args);
+        void Info(string message = null);
+        void Info(string formatString, params object[] args);
     }
 }

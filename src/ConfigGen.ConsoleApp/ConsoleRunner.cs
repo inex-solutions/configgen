@@ -25,6 +25,7 @@ using System.Linq;
 using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
@@ -35,18 +36,20 @@ namespace ConfigGen.ConsoleApp
         private readonly IConfigurationGenerator _configurationGenerator;
 
         [NotNull]
-        private readonly IConsoleWriter _consoleWriter;
+        private readonly ILogger _logger;
 
         [NotNull]
         private readonly ConsoleInputToPreferenceConverter _consoleInputToPreferenceConverter;
 
-        public ConsoleRunner([NotNull] IConfigurationGenerator configurationGenerator, [NotNull] IConsoleWriter consoleWriter)
+        public ConsoleRunner(
+            [NotNull] IConfigurationGenerator configurationGenerator, 
+            [NotNull] ILogger logger)
         {
             if (configurationGenerator == null) throw new ArgumentNullException(nameof(configurationGenerator));
-            if (consoleWriter == null) throw new ArgumentNullException(nameof(consoleWriter));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
 
             _configurationGenerator = configurationGenerator;
-            _consoleWriter = consoleWriter;
+            _logger = logger;
             _consoleInputToPreferenceConverter = new ConsoleInputToPreferenceConverter();
         }
 
@@ -73,7 +76,7 @@ namespace ConfigGen.ConsoleApp
             {
                 foreach (var parseError in preferences.ParseErrors)
                 {
-                    _consoleWriter.WriteInfo(parseError);
+                    _logger.Info(parseError);
                 }
 
                 Environment.ExitCode = (int)ExitCodes.ParseError;
@@ -89,26 +92,26 @@ namespace ConfigGen.ConsoleApp
         private void ShowTitle()
         {
             var version = typeof(ConfigurationGenerator).Assembly.GetName().Version;
-            _consoleWriter.WriteInfo();
-            _consoleWriter.WriteInfo("ConfigGen v{0} - Configuration file generation tool", version);
-            _consoleWriter.WriteInfo("Copyright (C)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
-            _consoleWriter.WriteInfo("--");
+            _logger.Info();
+            _logger.Info($"ConfigGen v{version} - Configuration file generation tool");
+            _logger.Info("Copyright (C)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
+            _logger.Info("--");
         }
 
         private void ShowHelp([NotNull][ItemNotNull] IEnumerable<IPreferenceGroup> preferencesCollections)
         {
             if (preferencesCollections == null) throw new ArgumentNullException(nameof(preferencesCollections));
 
-            _consoleWriter.WriteInfo();
-            _consoleWriter.WriteInfo("ConfigGen help: ");
-            _consoleWriter.WriteInfo();
+            _logger.Info();
+            _logger.Info("ConfigGen help: ");
+            _logger.Info();
 
             foreach (var preferencesCollection in preferencesCollections)
             {
-                _consoleWriter.WriteInfo($"******** {preferencesCollection.Name} ********");
-                _consoleWriter.WriteInfo();
+                _logger.Info($"******** {preferencesCollection.Name} ********");
+                _logger.Info();
                 ShowCommands(preferencesCollection);
-                _consoleWriter.WriteInfo();
+                _logger.Info();
             }
         }
 
@@ -118,7 +121,7 @@ namespace ConfigGen.ConsoleApp
 
             foreach (var preference in preferences)
             {
-                _consoleWriter.WriteInfo("{0} or {1} : {2}", 
+                _logger.Info("{0} or {1} : {2}", 
                     _consoleInputToPreferenceConverter.GetShortConsoleCommandWithArgumentText(preference), 
                     _consoleInputToPreferenceConverter.GetLongConsoleCommandWithArgumentText(preference), 
                     preference.Description);

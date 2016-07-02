@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -21,20 +21,40 @@
 
 using System;
 using JetBrains.Annotations;
+using log4net;
+using log4net.Appender;
+using log4net.Config;
+using log4net.Core;
+using log4net.Filter;
+using log4net.Layout;
 
-namespace ConfigGen.ConsoleApp
+namespace ConfigGen.Utilities.Logging
 {
-    public class ConsoleWriter : IConsoleWriter
+    public class Log4NetLogger : ILogger
     {
-        public void WriteInfo(string message = null)
+        [NotNull]
+        private readonly ILog _log4NetLogger;
+
+        static Log4NetLogger()
         {
-            Console.WriteLine(message);
+
         }
 
-        public void WriteInfo([NotNull] string formatMessage, params object[] args)
+        public Log4NetLogger([NotNull] ILog log4netLogger)
         {
-            if (formatMessage == null) throw new ArgumentNullException(nameof(formatMessage));
-            Console.WriteLine(formatMessage, args);
+            if (log4netLogger == null) throw new ArgumentNullException(nameof(log4netLogger));
+
+            _log4NetLogger = log4netLogger;
+        }
+
+        public void Info(string message = null)
+        {
+            _log4NetLogger.Info(message);
+        }
+
+        public void Info(string formatString, params object[] args)
+        {
+            _log4NetLogger.InfoFormat(formatString, args);
         }
     }
 }

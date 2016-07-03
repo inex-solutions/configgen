@@ -81,6 +81,23 @@ namespace ConfigGen.Tests.Common.MSpec
         }
 
         /// <summary>
+        /// Asserts the supplied result indicates success.
+        /// </summary>
+        [NotNull]
+        public static LoadResult ShouldIndicateSuccess([NotNull] this LoadResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+
+            if (result.Success
+                && !result.TemplateLoadErrors.Any())
+            {
+                return result;
+            }
+
+            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", result.TemplateLoadErrors.Select(e => e.ToString()))}");
+        }
+
+        /// <summary>
         /// Asserts that the supplied <paramref name="actualXml"/> xml string contains semantically identical xml to <paramref name="expectedXml"/>.
         /// </summary>
         [CanBeNull]

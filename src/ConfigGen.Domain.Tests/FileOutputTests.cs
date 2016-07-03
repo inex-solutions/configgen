@@ -95,7 +95,7 @@ namespace ConfigGen.Domain.Tests
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
 
@@ -123,7 +123,7 @@ namespace ConfigGen.Domain.Tests
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
@@ -146,7 +146,7 @@ namespace ConfigGen.Domain.Tests
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
@@ -169,7 +169,7 @@ namespace ConfigGen.Domain.Tests
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
@@ -194,7 +194,7 @@ namespace ConfigGen.Domain.Tests
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
@@ -218,7 +218,7 @@ namespace ConfigGen.Domain.Tests
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
@@ -242,7 +242,7 @@ namespace ConfigGen.Domain.Tests
 
             Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
             It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 

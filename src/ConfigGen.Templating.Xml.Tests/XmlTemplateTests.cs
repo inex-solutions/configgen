@@ -59,7 +59,7 @@ namespace ConfigGen.Templating.Xml.Tests
 
             Because of = () => Result = Subject.Load(TemplateContents.ToStream());
 
-            It the_load_passes = () => Result.Success.ShouldBeTrue();
+            It the_load_passes = () => Result.ShouldIndicateSuccess();
         }
 
         public class when_rendering_a_template_without_calling_load_first : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>

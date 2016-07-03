@@ -46,25 +46,24 @@ namespace ConfigGen.Domain
 
         [NotNull]
         private readonly FileOutputWriter _fileOutputWriter;
-
         public ConfigurationGenerator(
-            [NotNull] TemplateFactory templateFactory,
-            [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
-            [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
-            [NotNull] FileOutputWriter fileOutputWriter,
-            [NotNull] IManagePreferences preferencesManager)
+            [NotNull] IManagePreferences preferencesManager, 
+            [NotNull] TemplateFactory templateFactory, 
+            [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory, 
+            [NotNull] ConfigurationCollectionFilter configurationCollectionFilter, 
+            [NotNull] FileOutputWriter fileOutputWriter)
         {
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
-            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
 
             _templateFactory = templateFactory;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
             _fileOutputWriter = fileOutputWriter;
-             _preferencesManager = preferencesManager;
+            _preferencesManager = preferencesManager;
         }
 
         [NotNull]
@@ -85,7 +84,7 @@ namespace ConfigGen.Domain
             ITemplate template;
             var templateFileExtension = new FileInfo(configGenerationPreferences.TemplateFilePath).Extension;
             TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(templateFileExtension, configGenerationPreferences.TemplateFileType, out template);
-
+            
             switch (templateCreationResult)
             {
                 case TryCreateResult.FailedByExtension:
@@ -145,8 +144,8 @@ namespace ConfigGen.Domain
                 foreach (var renderResult in renderResults.Results)
                 {
                     var writeResults = _fileOutputWriter.WriteOutput(
-                        renderResult, 
-                        fileOutputPreferences);
+                       renderResult,
+                       fileOutputPreferences);
 
                     singleFileGenerationResults.Add(new SingleFileGenerationResult(renderResult.ConfigurationName, writeResults.FullPath));
                 }

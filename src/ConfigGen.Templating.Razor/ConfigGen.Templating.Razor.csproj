@@ -66,6 +66,10 @@
       <Project>{295f8721-adf4-4276-9ce4-3a5fc17af4a9}</Project>
       <Name>ConfigGen.Infrastructure.RazorTemplateRendering</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
+      <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>
+      <Name>ConfigGen.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
@@ -32,6 +33,7 @@ namespace ConfigGen.Domain.Contract
             [NotNull] IConfiguration configuration,
             TemplateRenderResultStatus status,
             [CanBeNull] string renderedResult, 
+            [CanBeNull] Encoding encoding,
             [CanBeNull] IEnumerable<string> usedTokens, 
             [CanBeNull] IEnumerable<string> unusedTokens,
             [CanBeNull] IEnumerable<string> unrecognisedTokens,
@@ -43,6 +45,7 @@ namespace ConfigGen.Domain.Contract
             ConfigurationName = configuration.ConfigurationName;
             Status = status;
             RenderedResult = renderedResult;
+            Encoding = encoding;
             UsedTokens = usedTokens?.ToArray() ?? new string[0];
             UnusedTokens = unusedTokens?.ToArray() ?? new string[0];
             UnrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];
@@ -59,6 +62,9 @@ namespace ConfigGen.Domain.Contract
 
         [CanBeNull]
         public string RenderedResult { get; }
+
+        [CanBeNull]
+        public Encoding Encoding { get; }
 
         [NotNull]
         public Error[] Errors { get; }

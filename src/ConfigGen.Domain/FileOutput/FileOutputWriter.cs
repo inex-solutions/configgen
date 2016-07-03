@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
@@ -60,7 +61,9 @@ namespace ConfigGen.Domain.FileOutput
                 fullPath.Directory.Create();
             }
 
-            using (var writer = new StreamWriter(fullPath.FullName))
+            Encoding encoding = result.Encoding ?? Encoding.UTF8;
+            using (var fileStream = fullPath.OpenWrite())
+            using (var writer = new StreamWriter(fileStream, encoding))
             {
                 writer.Write(result.RenderedResult);
                 return new WriteOutputResult(fullPath.FullName);

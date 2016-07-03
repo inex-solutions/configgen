@@ -23,8 +23,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Infrastructure.RazorTemplateRendering;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Razor
@@ -32,6 +34,7 @@ namespace ConfigGen.Templating.Razor
     public class RazorTemplate : ITemplate
     {
         private string _loadedTemplate;
+        private Encoding _encoding;
 
         [NotNull]
         private const string RazorTemplateErrorSource = nameof(RazorTemplate);
@@ -45,6 +48,8 @@ namespace ConfigGen.Templating.Razor
             {
                 throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
             }
+
+            _encoding = TextEncodingDetector.GetEncoding(templateStream);
 
             using (var reader = new StreamReader(templateStream))
             {
@@ -109,6 +114,7 @@ namespace ConfigGen.Templating.Razor
                         configuration: configuration,
                         status: TemplateRenderResultStatus.Success,   
                         renderedResult: result.RenderedResult,
+                        encoding: _encoding,
                         usedTokens: usedTokens,
                         unusedTokens: unusedTokens,
                         unrecognisedTokens: model.UnrecognisedTokens,
@@ -119,6 +125,7 @@ namespace ConfigGen.Templating.Razor
                     configuration: configuration,
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
+                    encoding: null,
                     usedTokens: usedTokens,
                     unusedTokens: unusedTokens,
                     unrecognisedTokens: model.UnrecognisedTokens,
@@ -130,6 +137,7 @@ namespace ConfigGen.Templating.Razor
                     configuration: configuration,
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
+                    encoding: _encoding,
                     usedTokens: null,
                     unusedTokens: null,
                     unrecognisedTokens: null,

@@ -23,8 +23,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 using Machine.Specifications;
 
@@ -104,9 +106,25 @@ namespace ConfigGen.Tests.Common.Extensions
         }
 
         [NotNull]
+        public static SingleFileGenerationResult ShouldHaveEncoding([NotNull] this SingleFileGenerationResult result, [NotNull] Encoding expectedEncoding)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+            if (expectedEncoding == null) throw new ArgumentNullException(nameof(expectedEncoding));
+
+            var actual = TextEncodingDetector.GetEncoding(result.FullPath);
+
+            if (actual != expectedEncoding)
+            {
+                throw new SpecificationException($"Incorrect encoding for configuration '{result.ConfigurationName}'. Expected {expectedEncoding}, but was {actual}.");
+            }
+
+            return result;
+        }
+
+        [NotNull]
         public static SingleFileGenerationResult ShouldHaveExtension([NotNull] this SingleFileGenerationResult result, [NotNull] string expectedExtension)
         {
-            return ShouldHaveExtension(new [] {result}, expectedExtension).FirstOrDefault();
+            return ShouldHaveExtension(new[] { result }, expectedExtension).FirstOrDefault();
         }
 
         [NotNull]

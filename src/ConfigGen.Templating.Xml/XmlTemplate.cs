@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.Extensions;
@@ -151,6 +152,7 @@ namespace ConfigGen.Templating.Xml
                             configuration: configuration,
                             status: errors.Any() ? TemplateRenderResultStatus.Failure : TemplateRenderResultStatus.Success,
                             renderedResult: output,
+                            encoding: xmlDeclarationInfo.StatedEncoding ?? xmlDeclarationInfo.ActualEncoding,
                             usedTokens: usedTokens,
                             unusedTokens: unusedTokens,
                             unrecognisedTokens: unrecognisedTokens,
@@ -162,6 +164,7 @@ namespace ConfigGen.Templating.Xml
                     configuration: configuration,
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
+                    encoding: null,
                     usedTokens: null,
                     unusedTokens: null,
                     unrecognisedTokens: null,

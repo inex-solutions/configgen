@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Tests.Common.Extensions;
@@ -103,6 +104,149 @@ namespace ConfigGen.Domain.Tests
 
             It the_file_for_the_second_row_defaults_to_using_the_configuration_for_the_filename = () =>
                 Result.Configuration("Configuration2").ShouldHaveFilename(configName => "ForcedFilename.xml");
+        }
+
+        internal class when_writing_a_file_from_an_xml_template_specified_as_utf8 : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+
+                string contents = 
+@"<?xml version=""1.0"" encoding=""utf-8""?>
+<xmlRoot>
+    [%Value1%][%Value2%]
+</xmlRoot>";
+
+                File.WriteAllText("App.Config.Template.xml", contents, Encoding.UTF8);
+            };
+
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It the_file_is_writen_as_utf8 = () => Result.Configuration("Configuration1").ShouldHaveEncoding(Encoding.UTF8);
+        }
+
+        internal class when_writing_a_file_from_an_xml_template_specified_as_utf16 : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+                string contents =
+@"<?xml version=""1.0"" encoding=""utf-16""?>
+<xmlRoot>
+    [%Value1%][%Value2%]
+</xmlRoot>";
+
+                File.WriteAllText("App.Config.Template.xml", contents, Encoding.Unicode);
+            };
+
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It the_file_is_writen_as_utf16 = () => Result.Configuration("Configuration1").ShouldHaveEncoding(Encoding.Unicode);
+        }
+
+        internal class when_writing_a_file_from_an_xml_template_specified_as_ascii : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+                string contents =
+@"<?xml version=""1.0"" encoding=""ASCII""?>
+<xmlRoot>
+    [%Value1%][%Value2%]
+</xmlRoot>";
+
+                File.WriteAllText("App.Config.Template.xml", contents, Encoding.ASCII);
+            };
+
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It the_file_is_writen_as_ascii = () => Result.Configuration("Configuration1").ShouldHaveEncoding(Encoding.ASCII);
+        }
+
+        internal class when_writing_a_file_from_a_razor_template_encoded_as_utf8 : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+
+                string contents = @"<root>@Model.Value1 @Model.Value2</root>";
+
+                File.WriteAllText("App.Config.Template.razor", contents, Encoding.UTF8);
+
+                PreferencesToSupplyToGenerator = new List<Preference>
+                {
+                    CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                };
+            };
+
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It the_file_is_writen_as_utf8 = () => Result.Configuration("Configuration1").ShouldHaveEncoding(Encoding.UTF8);
+        }
+
+        internal class when_writing_a_file_from_a_razor_template_encoded_as_utf16 : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+                string contents = @"<root>@Model.Value1 @Model.Value2</root>";
+
+                File.WriteAllText("App.Config.Template.razor", contents, Encoding.Unicode);
+
+                PreferencesToSupplyToGenerator = new List<Preference>
+                {
+                    CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                };
+            };
+
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It the_file_is_writen_as_utf16 = () => Result.Configuration("Configuration1").ShouldHaveEncoding(Encoding.Unicode);
+        }
+
+        internal class when_writing_a_file_from_a_razor_template_encoded_as_ascii : ConfigurationGeneratorTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+                string contents = @"<root>@Model.Value1 @Model.Value2</root>";
+
+                File.WriteAllText("App.Config.Template.razor", contents, Encoding.ASCII);
+
+                PreferencesToSupplyToGenerator = new List<Preference>
+                {
+                    CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                };
+            };
+
+            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It the_file_is_writen_as_ascii = () => Result.Configuration("Configuration1").ShouldHaveEncoding(Encoding.ASCII);
         }
     }
 }

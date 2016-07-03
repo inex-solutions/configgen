@@ -161,5 +161,34 @@ namespace ConfigGen.Templating.Razor.Tests
 
             It no_tokens_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldBeEmpty();
         }
+
+        public class when_rendering_a_template_which_has_a_utf8_encoding : RazorTemplateRenderTestBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>@Model.TokenThree</root>";
+                SingleConfiguration = new Dictionary<string, object>();
+
+                Subject.Load(TemplateContents.ToStream());
+
+                ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
+            };
+
+            Because of = () => Results = Subject.Render(Configurations);
+
+            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+
+            It the_resulting_status_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => FirstResult.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_be_the_template_with_the_token_removed = () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+
+            It the_unrecognised_token_should_be_listed_as_unrecognised = () => FirstResult.UnrecognisedTokens.ShouldContainOnly("TokenThree");
+
+            It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
+
+            It no_tokens_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldBeEmpty();
+        }
     }
 }

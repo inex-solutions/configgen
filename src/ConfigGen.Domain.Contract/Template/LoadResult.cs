@@ -24,19 +24,28 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Template
 {
+    /// <summary>
+    /// Represents the result of a <see cref="ITemplate.Load"/> operation.
+    /// </summary>
     public class LoadResult
     {
-        public LoadResult([NotNull] IEnumerable<Error> templateLoadErrors)
+        public LoadResult([NotNull] IReadOnlyCollection<Error> templateLoadErrors)
         {
             if (templateLoadErrors == null) throw new ArgumentNullException(nameof(templateLoadErrors));
             TemplateLoadErrors = templateLoadErrors;
         }
 
+        /// <summary>
+        /// Gets a collection of any errors that occurred during the template load operation.
+        /// </summary>
         [NotNull]
-        public IEnumerable<Error> TemplateLoadErrors { get; }
+        public IReadOnlyCollection<Error> TemplateLoadErrors { get; }
 
+        /// <summary>
+        /// Gets a flag indicating if the template load operation was successful.
+        /// </summary>
         public bool Success => !TemplateLoadErrors.Any();
     }
 }

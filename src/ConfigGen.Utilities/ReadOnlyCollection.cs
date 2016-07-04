@@ -21,14 +21,25 @@
 
 using System;
 using System.Collections.Generic;
-using ConfigGen.Utilities;
+using System.Collections.ObjectModel;
+using System.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Utilities
 {
-    public interface IDeferredSetterFactory
+    public static class ReadOnlyCollection
     {
         [NotNull]
-        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
+        public static IReadOnlyCollection<T> Empty<T>()
+        {
+            return new ReadOnlyCollection<T>(new List<T>());
+        }
+
+        [NotNull]
+        public static IReadOnlyCollection<T> ToReadOnlyCollection<T>([NotNull] this IEnumerable<T> enumerable)
+        {
+            if (enumerable == null) throw new ArgumentNullException(nameof(enumerable));
+            return new ReadOnlyCollection<T>(enumerable.ToList());
+        }
     }
 }

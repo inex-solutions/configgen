@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,34 +19,23 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Settings
 {
-    public abstract class PreferenceGroupBase : IPreferenceGroup
+    /// <summary>
+    /// Interface to be implemented by classes responsible for loading settings collections for config generation (e.g. excel settings spreadsheets)
+    /// </summary>
+    public interface ISettingsLoader
     {
-        [CanBeNull]
-        protected abstract IEnumerable<IPreferenceDefinition> Preferences { get; }
+        /// <summary>
+        /// Loads and returns the configuration settings
+        /// </summary>
+        IEnumerable<IConfiguration> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
 
-        [NotNull]
-        public IEnumerator<IPreferenceDefinition> GetEnumerator()
-        {
-            return (Preferences ?? new IPreferenceDefinition[0]).GetEnumerator();
-        }
+        string LoaderType { get; }
 
-        [NotNull]
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        [NotNull]
-        public abstract string Name { get; }
-
-        [NotNull]
-        public abstract Type PreferenceInstanceType { get; }
+        string[] SupportedExtensions { get; }
     }
 }

@@ -22,6 +22,7 @@
 using System;
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities;
 
 namespace ConfigGen.Domain.Filtering

@@ -18,18 +18,27 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Domain.Contract
-{
-    public static class PreferenceGroupExtensions
-    {
-        public static bool ParseSwitch(this string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return true;
-            }
 
-            return bool.Parse(value);
+using System;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Domain.Contract.Preferences
+{
+    public struct PreferenceParameterDefinition
+    {
+        public PreferenceParameterDefinition([NotNull] string name, [NotNull] string helpText)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (helpText == null) throw new ArgumentNullException(nameof(helpText));
+
+            Name = name;
+            HelpText = helpText;
         }
+
+        [NotNull]
+        public string Name { get; set; }
+
+        [NotNull]
+        public string HelpText { get; set; }
     }
 }

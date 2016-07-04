@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,14 +20,33 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Preferences
 {
-    public interface IPreferenceGroup : IEnumerable<IPreferenceDefinition>
+    public abstract class PreferenceGroupBase : IPreferenceGroup
     {
-        string Name { get; }
+        [CanBeNull]
+        protected abstract IEnumerable<IPreferenceDefinition> Preferences { get; }
 
-        Type PreferenceInstanceType { get; }
+        [NotNull]
+        public IEnumerator<IPreferenceDefinition> GetEnumerator()
+        {
+            return (Preferences ?? new IPreferenceDefinition[0]).GetEnumerator();
+        }
+
+        [NotNull]
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        [NotNull]
+        public abstract string Name { get; }
+
+        [NotNull]
+        public abstract Type PreferenceInstanceType { get; }
     }
 }

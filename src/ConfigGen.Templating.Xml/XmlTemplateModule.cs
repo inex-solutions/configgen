@@ -21,6 +21,7 @@
 
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Template;
 
 namespace ConfigGen.Templating.Xml
 {

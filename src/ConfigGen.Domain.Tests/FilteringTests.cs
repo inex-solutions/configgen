@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities;

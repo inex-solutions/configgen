@@ -19,24 +19,15 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Preferences
 {
-    public interface IConfiguration : IEnumerable<Setting>
+    public interface IPreferenceGroup : IEnumerable<IPreferenceDefinition>
     {
-        [NotNull]
-        string ConfigurationName { get; }
+        string Name { get; }
 
-        [NotNull]
-        IEnumerable<string> SettingsNames { get; }
-
-        [NotNull]
-        IDictionary<string, object> ToDictionary();
-
-        bool TryGetValue([NotNull] string settingName, out object settingValue);
-
-        bool Contains(string settingName);
+        Type PreferenceInstanceType { get; }
     }
 }

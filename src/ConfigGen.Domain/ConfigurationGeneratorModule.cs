@@ -21,6 +21,7 @@
 
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Settings.Excel;

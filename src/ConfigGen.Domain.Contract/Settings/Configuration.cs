@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Settings
 {
     public class Configuration : IConfiguration
     {

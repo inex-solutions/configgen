@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
@@ -35,7 +36,7 @@ namespace ConfigGen.Templating.Xml
 
             Success = true;
             LoadedTemplate = loadedTemplate;
-            TemplateLoadErrors = Enumerable.Empty<XmlTemplateError>();
+            TemplateLoadErrors = ReadOnlyCollection.Empty<XmlTemplateError>();
         }
 
         public XmlTemplateLoadResults([NotNull] XmlTemplateError error, [NotNull] XElement nullTemplate)
@@ -53,6 +54,6 @@ namespace ConfigGen.Templating.Xml
         public XElement LoadedTemplate { get; }
 
         [NotNull]
-        public IEnumerable<XmlTemplateError> TemplateLoadErrors { get; }
+        public IReadOnlyCollection<XmlTemplateError> TemplateLoadErrors { get; }
     }
 }

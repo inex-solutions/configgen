@@ -19,26 +19,19 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Preferences
 {
-    public struct Preference
+    public interface IManagePreferences
     {
-        public Preference([NotNull] string preferenceName, [NotNull] IDeferedSetter deferredSetter)
-        {
-            if (preferenceName == null) throw new ArgumentNullException(nameof(preferenceName));
-            if (deferredSetter == null) throw new ArgumentNullException(nameof(deferredSetter));
-
-            PreferenceName = preferenceName;
-            DeferredSetter = deferredSetter;
-        }
+        [NotNull]
+        IEnumerable<IPreferenceGroup> RegisteredPreferences { get; }
 
         [NotNull]
-        public string PreferenceName { get; }
+        IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<Preference> preferences);
 
-        [NotNull]
-        public IDeferedSetter DeferredSetter { get; }
+        void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<Preference> preferences, [NotNull] TPreferenceType preferenceInstance);
     }
 }

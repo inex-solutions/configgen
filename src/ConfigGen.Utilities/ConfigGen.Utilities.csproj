@@ -69,6 +69,7 @@
     <Compile Include="IResult.cs" />
     <Compile Include="ItemFactoryByTypeOrExtensionBase.cs" />
     <Compile Include="LocalEnvironment.cs" />
+    <Compile Include="ReadOnlyCollection.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="TextEncodingDetector.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />

@@ -23,10 +23,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Template
 {
+    /// <summary>
+    /// Represents the result of the rendering of a single <see cref="IConfiguration"/> by a templte render operation.
+    /// </summary>
     public class SingleTemplateRenderResults
     {
         public SingleTemplateRenderResults(
@@ -46,6 +50,8 @@ namespace ConfigGen.Domain.Contract
             Status = status;
             RenderedResult = renderedResult;
             Encoding = encoding;
+
+            //TODO: change these arrays to ReadOnlyCollections?
             UsedTokens = usedTokens?.ToArray() ?? new string[0];
             UnusedTokens = unusedTokens?.ToArray() ?? new string[0];
             UnrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];

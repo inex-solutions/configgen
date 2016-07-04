@@ -21,6 +21,7 @@
 
 using System;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 

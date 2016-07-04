@@ -22,20 +22,21 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Settings
 {
-    /// <summary>
-    /// Interface to be implemented by classes responsible for loading settings collections for config generation (e.g. excel settings spreadsheets)
-    /// </summary>
-    public interface ISettingsLoader
+    public interface IConfiguration : IEnumerable<Setting>
     {
-        /// <summary>
-        /// Loads and returns the configuration settings
-        /// </summary>
-        IEnumerable<IConfiguration> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
+        [NotNull]
+        string ConfigurationName { get; }
 
-        string LoaderType { get; }
+        [NotNull]
+        IEnumerable<string> SettingsNames { get; }
 
-        string[] SupportedExtensions { get; }
+        [NotNull]
+        IDictionary<string, object> ToDictionary();
+
+        bool TryGetValue([NotNull] string settingName, out object settingValue);
+
+        bool Contains(string settingName);
     }
 }

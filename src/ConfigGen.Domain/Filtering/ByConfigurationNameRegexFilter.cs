@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Filtering

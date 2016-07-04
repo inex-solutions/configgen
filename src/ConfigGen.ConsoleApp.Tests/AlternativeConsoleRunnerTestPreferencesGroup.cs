@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 
 namespace ConfigGen.ConsoleApp.Tests
 {

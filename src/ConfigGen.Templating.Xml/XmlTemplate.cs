@@ -23,9 +23,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Settings;
+using ConfigGen.Domain.Contract.Template;
+using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
 using JetBrains.Annotations;
@@ -111,9 +113,10 @@ namespace ConfigGen.Templating.Xml
                 throw new InvalidOperationException("Cannot render a template that has not been loaded.");
             }
 
-            IEnumerable<SingleTemplateRenderResults> results = 
-                configurationsToRender.Select(cfg =>
-                RenderSingleTemplate(_loadedTemplate.DeepClone(), cfg, _xmlDeclarationInfo));
+            IReadOnlyCollection<SingleTemplateRenderResults> results =
+                configurationsToRender
+                    .Select(cfg => RenderSingleTemplate(_loadedTemplate.DeepClone(), cfg, _xmlDeclarationInfo))
+                    .ToReadOnlyCollection();
 
             return new RenderResults(TemplateRenderResultStatus.Success, results, null); 
         }

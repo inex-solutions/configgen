@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,30 +18,18 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
-
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Preferences
 {
-    public class RenderResults
+    public static class PreferenceGroupExtensions
     {
-        public RenderResults(TemplateRenderResultStatus status, [CanBeNull] [ItemNotNull] IEnumerable<SingleTemplateRenderResults> results, [CanBeNull] [ItemNotNull] IEnumerable<Error> errors)
+        public static bool ParseSwitch(this string value)
         {
-            Results = results ?? new SingleTemplateRenderResults[0];
-            Errors = errors ?? new Error[0];
+            if (string.IsNullOrEmpty(value))
+            {
+                return true;
+            }
 
+            return bool.Parse(value);
         }
-
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable<SingleTemplateRenderResults> Results { get; }
-
-        [NotNull]
-        [ItemNotNull]
-        public IEnumerable<Error> Errors { get; }
-
-        public int Count => Results.Count();
     }
 }

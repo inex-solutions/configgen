@@ -25,6 +25,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Settings;
+using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Infrastructure.RazorTemplateRendering;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
@@ -57,7 +59,7 @@ namespace ConfigGen.Templating.Razor
             }
 
             //TODO: really?
-            return new LoadResult(Enumerable.Empty<Error>());
+            return new LoadResult(ReadOnlyCollection.Empty<Error>());
         }
 
         [Pure]
@@ -73,7 +75,9 @@ namespace ConfigGen.Templating.Razor
 
             var razorTemplateRenderer = new RazorTemplateRenderer(_loadedTemplate);
 
-            var allResults = configurationsToRender.Select(configuration => RenderSingleConfiguration(razorTemplateRenderer, configuration)).ToList();
+            var allResults = configurationsToRender
+                .Select(configuration => RenderSingleConfiguration(razorTemplateRenderer, configuration))
+                .ToReadOnlyCollection();
 
             return new RenderResults(TemplateRenderResultStatus.Success, allResults, null);
         }

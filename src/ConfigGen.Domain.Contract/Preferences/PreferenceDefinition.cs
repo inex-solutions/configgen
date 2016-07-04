@@ -25,7 +25,7 @@ using System.Linq;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Preferences
 {
     public class PreferenceDefinition<TPreferenceGroupType, TPreferenceType> : IPreferenceDefinition
     {

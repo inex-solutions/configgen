@@ -22,22 +22,40 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Template
 {
+    /// <summary>
+    /// Implemented by templates.
+    /// </summary>
     public interface ITemplate : IDisposable
     {
+        /// <summary>
+        /// Loads the template form the supplied stream, and returns a result indicating if the load was successfull, 
+        /// or the errors which occurred during load.
+        /// </summary>
         [NotNull]
         LoadResult Load([NotNull] Stream templateStream);
 
+        /// <summary>
+        /// Renders output for each of the the configurations in the supplied configuration collection, returning results on the rendering
+        /// process.
+        /// </summary>
         [Pure]
         [NotNull]
         RenderResults Render([NotNull] IEnumerable<IConfiguration> configurationsToRender);
 
+        /// <summary>
+        /// Gets a string indicating the type of template the class represents, e.g. xml, razor.
+        /// </summary>
         [NotNull]
         string TemplateType { get; }
 
+        /// <summary>
+        /// Gets an array indicating the file extensions supported by the template, e.g. .xml for xml, .cshtml/.razor for razor.
+        /// </summary>
         [NotNull]
         string[] SupportedExtensions { get; }
     }

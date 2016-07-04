@@ -26,6 +26,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;

@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Domain.Contract.Settings
 {
     public class Setting : IEquatable<Setting>
     {

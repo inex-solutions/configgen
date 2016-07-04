@@ -22,7 +22,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Tests.Common.Extensions;
 using Machine.Specifications;

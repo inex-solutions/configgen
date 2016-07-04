@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract.Template
@@ -31,10 +32,29 @@ namespace ConfigGen.Domain.Contract.Template
     /// </summary>
     public class LoadResult
     {
-        public LoadResult([NotNull] IReadOnlyCollection<Error> templateLoadErrors)
+        private LoadResult([NotNull] IEnumerable<Error> templateLoadErrors)
         {
             if (templateLoadErrors == null) throw new ArgumentNullException(nameof(templateLoadErrors));
-            TemplateLoadErrors = templateLoadErrors;
+            TemplateLoadErrors = templateLoadErrors.ToReadOnlyCollection();
+        }
+
+        [NotNull]
+        public static LoadResult CreateSuccessResult()
+        {
+            return new LoadResult(new Error[0]);
+        }
+
+        [NotNull]
+        public static LoadResult CreateFailResult([NotNull] IEnumerable<Error> templateLoadErrors)
+        {
+            return new LoadResult(templateLoadErrors);
+        }
+
+        [NotNull]
+        public static LoadResult CreateFailResult([NotNull] Error templateLoadError)
+        {
+            if (templateLoadError == null) throw new ArgumentNullException(nameof(templateLoadError));
+            return new LoadResult(new [] { templateLoadError });
         }
 
         /// <summary>

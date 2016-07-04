@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
 

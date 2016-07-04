@@ -35,11 +35,20 @@ namespace ConfigGen.Templating.Razor
 {
     public class RazorTemplate : ITemplate
     {
+        [NotNull]
+        private readonly RazorTemplateRenderer<DictionaryBackedDynamicModel> _razorTemplateRenderer;
+
         private string _loadedTemplate;
         private Encoding _encoding;
 
         [NotNull]
         private const string RazorTemplateErrorSource = nameof(RazorTemplate);
+
+        public RazorTemplate([NotNull] RazorTemplateRenderer<DictionaryBackedDynamicModel> razorTemplateRenderer)
+        {
+            if (razorTemplateRenderer == null) throw new ArgumentNullException(nameof(razorTemplateRenderer));
+            _razorTemplateRenderer = razorTemplateRenderer;
+        }
 
         [NotNull]
         public LoadResult Load(Stream templateStream)
@@ -58,8 +67,9 @@ namespace ConfigGen.Templating.Razor
                 _loadedTemplate = reader.ReadToEnd();
             }
 
-            //TODO: really?
-            return new LoadResult(ReadOnlyCollection.Empty<Error>());
+            RazorTemplateLoadResult razorTemplateLoadResult = _razorTemplateRenderer.LoadTemplate(_loadedTemplate);
+
+            return MapToLoadResult(razorTemplateLoadResult);
         }
 
         [Pure]
@@ -73,10 +83,8 @@ namespace ConfigGen.Templating.Razor
                 throw new InvalidOperationException("Cannot render a template that has not been loaded.");
             }
 
-            var razorTemplateRenderer = new RazorTemplateRenderer(_loadedTemplate);
-
-            var allResults = configurationsToRender
-                .Select(configuration => RenderSingleConfiguration(razorTemplateRenderer, configuration))
+            IReadOnlyCollection<SingleTemplateRenderResults> allResults = configurationsToRender
+                .Select(configuration => RenderSingleConfiguration(_razorTemplateRenderer, configuration))
                 .ToReadOnlyCollection();
 
             return new RenderResults(TemplateRenderResultStatus.Success, allResults, null);
@@ -86,7 +94,7 @@ namespace ConfigGen.Templating.Razor
 
         public string[] SupportedExtensions => new[] {".razor", ".cshtml"};
 
-        private SingleTemplateRenderResults RenderSingleConfiguration([NotNull] RazorTemplateRenderer razorTemplateRenderer, [NotNull] IConfiguration configuration)
+        private SingleTemplateRenderResults RenderSingleConfiguration([NotNull] RazorTemplateRenderer<DictionaryBackedDynamicModel> razorTemplateRenderer, [NotNull] IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (razorTemplateRenderer == null) throw new ArgumentNullException(nameof(razorTemplateRenderer));
@@ -95,7 +103,7 @@ namespace ConfigGen.Templating.Razor
             {
                 var settings = configuration.ToDictionary();
                 var model = new DictionaryBackedDynamicModel(settings);
-                RenderingResult result = razorTemplateRenderer.Render(model);
+                string result = razorTemplateRenderer.Render(model);
 
                 var usedTokens = new List<string>();
                 var unusedTokens = new List<string>();
@@ -112,28 +120,15 @@ namespace ConfigGen.Templating.Razor
                     }
                 }
 
-                if (result.Status == RenderingResultStatus.Success)
-                {
-                    return new SingleTemplateRenderResults(
+                return new SingleTemplateRenderResults(
                         configuration: configuration,
-                        status: TemplateRenderResultStatus.Success,   
-                        renderedResult: result.RenderedResult,
+                        status: TemplateRenderResultStatus.Success,
+                        renderedResult: result,
                         encoding: _encoding,
                         usedTokens: usedTokens,
                         unusedTokens: unusedTokens,
                         unrecognisedTokens: model.UnrecognisedTokens,
                         errors: null);
-                }
-
-                return new SingleTemplateRenderResults(
-                    configuration: configuration,
-                    status: TemplateRenderResultStatus.Failure,
-                    renderedResult: null,
-                    encoding: null,
-                    usedTokens: usedTokens,
-                    unusedTokens: unusedTokens,
-                    unrecognisedTokens: model.UnrecognisedTokens,
-                    errors: MapErrors(result));
             }
             catch (Exception ex)
             {
@@ -150,23 +145,33 @@ namespace ConfigGen.Templating.Razor
         }
 
         [NotNull]
-        private IEnumerable<Error> MapErrors([NotNull] RenderingResult renderingResult)
+        private LoadResult MapToLoadResult([NotNull] RazorTemplateLoadResult razorTemplateLoadResult)
         {
-            if (renderingResult == null) throw new ArgumentNullException(nameof(renderingResult));
+            if (razorTemplateLoadResult == null) throw new ArgumentNullException(nameof(razorTemplateLoadResult));
 
-            var detail = string.Join("\n", renderingResult.Errors ?? new string[0]);
-            if (renderingResult.Status == RenderingResultStatus.CodeCompilationFailed)
+            var detail = string.Join("\n", razorTemplateLoadResult.Errors ?? new string[0]);
+
+            Error loadError;
+
+            switch (razorTemplateLoadResult.Status)
             {
-                yield return new RazorTemplateError(RazorTemplateErrorCodes.CodeCompilationError, detail);
+                case RazorTemplateLoadResult.LoadResultStatus.Success:
+                    return LoadResult.CreateSuccessResult();
+
+                case RazorTemplateLoadResult.LoadResultStatus.CodeCompilationFailed:
+                    loadError = new RazorTemplateError(RazorTemplateErrorCodes.CodeCompilationError, detail);
+                    break;
+
+                case RazorTemplateLoadResult.LoadResultStatus.CodeGenerationFailed:
+                    loadError = new RazorTemplateError(RazorTemplateErrorCodes.CodeGenerationError, detail);
+                    break;
+
+                default:
+                    loadError = new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, detail);
+                    break;
             }
-            else if (renderingResult.Status == RenderingResultStatus.CodeGenerationFailed)
-            {
-                yield return new RazorTemplateError(RazorTemplateErrorCodes.CodeGenerationError, detail);
-            }
-            else
-            {
-                yield return new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, detail);
-            }
+           
+            return LoadResult.CreateFailResult(loadError);
         }
 
         public void Dispose()

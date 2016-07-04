@@ -20,6 +20,7 @@
 #endregion
 namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
+    //TODO: now longer used?
     public enum RenderingResultStatus
     {
         Unknown,

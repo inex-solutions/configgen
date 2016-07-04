@@ -22,7 +22,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;

@@ -20,8 +20,8 @@
 #endregion
 
 using Autofac;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Template;
+using ConfigGen.Infrastructure.RazorTemplateRendering;
 
 namespace ConfigGen.Templating.Razor
 {
@@ -30,6 +30,7 @@ namespace ConfigGen.Templating.Razor
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<RazorTemplate>().As<ITemplate>().As<RazorTemplate>();
+            builder.RegisterType<RazorTemplateRenderer<DictionaryBackedDynamicModel>>();
         }
     }
 }

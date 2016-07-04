@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;

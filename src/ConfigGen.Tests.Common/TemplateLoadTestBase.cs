@@ -20,7 +20,8 @@
 #endregion
 
 using System.Collections.Generic;
-using ConfigGen.Domain.Contract;
+using Autofac;
+using Autofac.Core;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using JetBrains.Annotations;
@@ -28,7 +29,7 @@ using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
 {
-    public abstract class TemplateLoadTestBase<TTemplate> where TTemplate : new()
+    public abstract class TemplateLoadTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new()
     {
         [NotNull]
         protected static TTemplate Subject;
@@ -43,10 +44,14 @@ namespace ConfigGen.Tests.Common
         {
             SingleConfiguration = new Dictionary<string, object>();
             TemplateContents = null;
-            Subject = new TTemplate();
             configurations = null;
             Result = null;
             ExpectedOutput = null;
+
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<TContainerModule>();
+            var container = containerBuilder.Build();
+            Subject = container.Resolve<TTemplate>();
         };
 
         [NotNull]

@@ -27,65 +27,64 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
 {
     namespace RazorTemplateRendererTests
     {
-        [Subject(typeof(RazorTemplateRenderer))]
+        [Subject(typeof(RazorTemplateRenderer<DictionaryBackedDynamicModel>))]
         public abstract class RazorTemplateTestsBase
         {
             protected const string Value = "TestValue";
 
-            private static Lazy<RazorTemplateRenderer> LazyRazorRenderer;
+            private static Lazy<RazorTemplateRenderer<DictionaryBackedDynamicModel>> LazyRazorRenderer;
             protected static string TemplateContents;
             protected static DictionaryBackedDynamicModel Model;
-            protected static RenderingResult Result;
+            protected static string RenderResult;
+            protected static RazorTemplateLoadResult TemplateLoadResult;
+            protected static Exception CaughtException;
 
-            protected static RazorTemplateRenderer Subject => LazyRazorRenderer.Value;
+            protected static RazorTemplateRenderer<DictionaryBackedDynamicModel> Subject => LazyRazorRenderer.Value;
 
             Establish context = () =>
             {
-                Result = null;
+                CaughtException = null;
+                TemplateLoadResult = null;
+                RenderResult = null;
                 Model = null;
 
                 TemplateContents = null;
-                LazyRazorRenderer = new Lazy<RazorTemplateRenderer>(() => new RazorTemplateRenderer(TemplateContents));
+                LazyRazorRenderer = new Lazy<RazorTemplateRenderer<DictionaryBackedDynamicModel>>(() => new RazorTemplateRenderer<DictionaryBackedDynamicModel>());
             };
         }
 
-        public class when_rendering_a_template_which_contains_invalid_csharp : RazorTemplateTestsBase
+        public class when_loading_a_template_which_contains_invalid_csharp : RazorTemplateTestsBase
         {
             Establish context = () =>
             {
                 TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
-
-                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
             };
 
-            Because of = () => Result = Subject.Render(Model);
+            Because of = () => TemplateLoadResult = Subject.LoadTemplate(TemplateContents);
 
-            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+            It the_result_is_not_null = () => TemplateLoadResult.ShouldNotBeNull();
 
-            It the_resulting_status_should_indicate_code_compilation_failed = () => Result.Status.ShouldEqual(RenderingResultStatus.CodeGenerationFailed);
+            It the_load_status_should_indicate_code_compilation_failed =
+                () => TemplateLoadResult.Status.ShouldEqual(RazorTemplateLoadResult.LoadResultStatus.CodeGenerationFailed);
 
-            It the_resulting_status_should_contain_errors = () => Result.Errors.ShouldNotBeEmpty();
         }
 
-        public class when_rendering_a_template_which_contains_invalid_razor_syntax : RazorTemplateTestsBase
+        public class when_loading_a_template_which_contains_invalid_razor_syntax : RazorTemplateTestsBase
         {
             Establish context = () =>
             {
                 TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
-
-                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
             };
 
-            Because of = () => Result = Subject.Render(Model);
+            Because of = () => TemplateLoadResult = Subject.LoadTemplate(TemplateContents);
 
-            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+            It the_result_is_not_null = () => TemplateLoadResult.ShouldNotBeNull();
 
-            It the_resulting_status_should_indicate_code_compilation_failed = () => Result.Status.ShouldEqual(RenderingResultStatus.CodeCompilationFailed);
-
-            It the_resulting_status_should_contain_errors = () => Result.Errors.ShouldNotBeEmpty();
+            It the_load_status_should_indicate_code_compilation_failed = 
+                () => TemplateLoadResult.Status.ShouldEqual(RazorTemplateLoadResult.LoadResultStatus.CodeCompilationFailed);
         }
 
-        public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestsBase
+        public class when_rendering_a_template_before_Load_has_been_called : RazorTemplateTestsBase
         {
             Establish context = () =>
             {
@@ -94,15 +93,40 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
                 Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
             };
 
-            Because of = () => Result = Subject.Render(Model);
+            Because of = () => CaughtException = Catch.Exception(() => RenderResult = Subject.Render(Model));
 
-            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+            It an_InvalidOperationException_is_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
+        }
 
-            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(RenderingResultStatus.Success);
+        public class when_rendering_a_template_after_Load_has_failed : RazorTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
 
-            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
+            };
 
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+            Because of = () => CaughtException = Catch.Exception(() => RenderResult = Subject.Render(Model));
+
+            It an_InvalidOperationException_is_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
+        }
+
+        public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestsBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>hello</root>";
+                Subject.LoadTemplate(TemplateContents);
+
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>());
+            };
+
+            Because of = () => RenderResult = Subject.Render(Model);
+
+            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
+
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.ShouldEqual(TemplateContents);
         }
 
         public class when_rendering_a_template_containing_a_single_token_with_a_model_with_the_same_single_token : RazorTemplateTestsBase
@@ -112,6 +136,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.key</root>";
+                Subject.LoadTemplate(TemplateContents);
 
                 Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
                 {
@@ -121,15 +146,11 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
                 ExpectedOutput = TemplateContents.Replace("@Model.key", Value);
             };
 
-            Because of = () => Result = Subject.Render(Model);
+            Because of = () => RenderResult = Subject.Render(Model);
 
-            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
 
-            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(RenderingResultStatus.Success);
-
-            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
-
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.ShouldEqual(ExpectedOutput);
         }
 
         public class when_rendering_a_template_containing_a_single_token_with_a_model_with_a_different_single_token : RazorTemplateTestsBase
@@ -139,6 +160,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.key</root>";
+                Subject.LoadTemplate(TemplateContents);
 
                 Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
                 {
@@ -148,15 +170,94 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
                 ExpectedOutput = TemplateContents.Replace("@Model.key", string.Empty);
             };
 
-            Because of = () => Result = Subject.Render(Model);
+            Because of = () => RenderResult = Subject.Render(Model);
 
-            It the_result_is_not_null = () => Result.ShouldNotBeNull();
+            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
 
-            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(RenderingResultStatus.Success);
+            //TODO: error handling for errors in render?
+            //It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(RenderingResultStatus.Success);
 
-            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+            //It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.ShouldEqual(ExpectedOutput);
+        }
+
+        public class when_rendering_the_same_template_a_second_time : RazorTemplateTestsBase
+        {
+            private static string ExpectedOutput;
+
+            Establish context = () =>
+            {
+                TemplateContents = "<root>@Model.key</root>";
+                Subject.LoadTemplate(TemplateContents);
+
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
+                {
+                    {"key", Value}
+                });
+
+                ExpectedOutput = TemplateContents.Replace("@Model.key", Value);
+                RenderResult = Subject.Render(Model);
+
+                RenderResult.ShouldEqual(ExpectedOutput);
+
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
+                {
+                    {"key", "SecondValue"}
+                });
+
+                ExpectedOutput = TemplateContents.Replace("@Model.key", "SecondValue");
+            };
+
+            Because of = () => RenderResult = Subject.Render(Model);
+
+            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
+
+            It the_resulting_output_contains_the_correct_contents_for_the_second_render_call = () => RenderResult.ShouldEqual(ExpectedOutput);
+        }
+
+        public class when_reusing_the_renderer_by_reloading_and_rerendering : RazorTemplateTestsBase
+        {
+            private static string ExpectedOutput;
+
+            Establish context = () =>
+            {
+                TemplateContents = "<root>@Model.key</root>";
+                Subject.LoadTemplate(TemplateContents);
+
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
+                {
+                    {"key", Value}
+                });
+
+                ExpectedOutput = TemplateContents.Replace("@Model.key", Value);
+                RenderResult = Subject.Render(Model);
+
+                RenderResult.ShouldEqual(ExpectedOutput);
+
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
+                {
+                    {"key", "SecondValue"}
+                });
+
+                TemplateContents = "<root2>@Model.key</root2>";
+                ExpectedOutput = TemplateContents.Replace("@Model.key", "SecondValue");
+            };
+
+            Because of = () =>
+            {
+                TemplateLoadResult = Subject.LoadTemplate(TemplateContents);
+                RenderResult = Subject.Render(Model);
+            };
+
+            It the_second_load_result_is_not_null = () => TemplateLoadResult.ShouldNotBeNull();
+
+            It the_second_load_result_indicates_success =
+                () => TemplateLoadResult.Status.ShouldEqual(RazorTemplateLoadResult.LoadResultStatus.Success);
+
+            It the_second_render_result_is_not_null = () => RenderResult.ShouldNotBeNull();
+
+            It the_second_render_output_contains_the_correct_contents_for_the_second_render_call = () => RenderResult.ShouldEqual(ExpectedOutput);
         }
     }
 }

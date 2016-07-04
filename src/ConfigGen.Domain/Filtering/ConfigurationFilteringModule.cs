@@ -19,9 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using Autofac;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities;
 

@@ -20,6 +20,7 @@
 #endregion
 namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
+    //TODO: remove unused?
     public sealed class RenderingResult
     {
         public RenderingResult(RenderingResultStatus status, string renderedResult = null, string[] errors = null)

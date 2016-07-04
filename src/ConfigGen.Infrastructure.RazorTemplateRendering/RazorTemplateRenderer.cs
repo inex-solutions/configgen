@@ -26,50 +26,65 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Infrastructure.RazorTemplateRendering
 {
-    public sealed class RazorTemplateRenderer
+    public sealed class RazorTemplateRenderer<TModel>
     {
-        private readonly string _templateContents;
-        private readonly string[] _additionalNamespaces;
-        private readonly string[] _referencedAssemblies;
+        private string _templateContents;
 
-        public RazorTemplateRenderer(string templateContents, string[] referencedAssemblies = null, string[] additionalNamespaces = null)
+        private Type _compiledType;
+
+        [NotNull]
+        public RazorTemplateLoadResult LoadTemplate(
+            string templateContents, 
+            string[] referencedAssemblies = null,
+            string[] additionalNamespaces = null)
         {
+            _compiledType = null;
+
             _templateContents = templateContents;
-            _additionalNamespaces = additionalNamespaces;
-            var defaultReferencedAssemblies = new [] { Assembly.GetExecutingAssembly().Location, typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).Assembly.Location };
-            _referencedAssemblies = defaultReferencedAssemblies;
+            var defaultReferencedAssemblies = new[] { Assembly.GetExecutingAssembly().Location, typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException).Assembly.Location };
+
+            var allReferencedAssemblies = defaultReferencedAssemblies;
 
             if (referencedAssemblies != null)
             {
-                _referencedAssemblies = _referencedAssemblies.Union(referencedAssemblies).ToArray();
+                allReferencedAssemblies = allReferencedAssemblies.Union(referencedAssemblies).ToArray();
             }
-        }
 
-        [NotNull]
-        public RenderingResult Render<TModel>(TModel model)
-        {
-            var engine = new RazorTemplateEngineFactory().CreateEngine<TemplateBase<TModel>>(_additionalNamespaces);
+            var engine = new RazorTemplateEngineFactory().CreateEngine<TemplateBase<TModel>>(additionalNamespaces);
             var generator = new CodeGenerator();
             var codeGenerationResults = generator.Generate(engine, _templateContents);
 
             if (!codeGenerationResults.Success)
             {
-                return new RenderingResult(status: RenderingResultStatus.CodeGenerationFailed, errors: codeGenerationResults.Errors);
+                return new RazorTemplateLoadResult(status: RazorTemplateLoadResult.LoadResultStatus.CodeGenerationFailed, errors: codeGenerationResults.Errors);
             }
-            
+
             var templateCompiler = new TemplateCompiler();
-            var compilationResults = templateCompiler.Compile(codeGenerationResults.Result, _referencedAssemblies);
+            var compilationResults = templateCompiler.Compile(codeGenerationResults.Result, allReferencedAssemblies);
 
             if (!compilationResults.Success)
             {
-                return new RenderingResult(status: RenderingResultStatus.CodeCompilationFailed, errors: compilationResults.Errors);
+                return new RazorTemplateLoadResult(status: RazorTemplateLoadResult.LoadResultStatus.CodeCompilationFailed, errors: compilationResults.Errors);
             }
 
-            var template = (TemplateBase<TModel>)Activator.CreateInstance(compilationResults.CompiledType);
+            _compiledType = compilationResults.CompiledType;
+
+            return new RazorTemplateLoadResult(RazorTemplateLoadResult.LoadResultStatus.Success);
+        }
+
+        [NotNull]
+        public string Render<TModel>(TModel model)
+        {
+            if (_compiledType == null)
+            {
+                throw new InvalidOperationException("Cannot call Render until LoadTemplate has been called");
+            }
+
+            var template = (TemplateBase<TModel>)Activator.CreateInstance(_compiledType);
             template.SetModel(model);
             template.Execute();
 
-            return new RenderingResult(status: RenderingResultStatus.Success, renderedResult: template.ToString());
+            return template.ToString();
         }
     }
 }

@@ -26,7 +26,6 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
 

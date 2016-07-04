@@ -19,9 +19,11 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
-using ConfigGen.Domain.Contract;
+using System.Linq;
 using ConfigGen.Domain.Contract.Template;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
@@ -30,52 +32,55 @@ namespace ConfigGen.Templating.Razor.Tests
 {
     namespace RazorTemplateTests
     {
-        public class when_rendering_a_template_which_contains_invalid_csharp : RazorTemplateRenderTestBase
+        public class when_loading_a_template_which_contains_invalid_csharp : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
         {
-            //TODO: it might be nice if these failures occurred at template load, not template render
             Establish context = () =>
             {
                 TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
-                SingleConfiguration = new Dictionary<string, object>();
-
-                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Load(TemplateContents.ToStream());
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+            It the_load_fails = () => Result.Success.ShouldBeFalse();
 
-            It the_resulting_status_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count().ShouldEqual(1);
 
-            It the_resulting_status_should_contain_a_single_error_with_code =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeGenerationError);
-
-            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
+            It the_single_error_should_be_a_code_compilation_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeGenerationError);
         }
 
-        public class when_rendering_a_template_which_contains_invalid_razor_syntax : RazorTemplateRenderTestBase
+        public class when_loading_a_template_which_contains_invalid_razor_syntax : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
         {
-            //TODO: it might be nice if these failures occurred at template load, not template render
             Establish context = () =>
             {
                 TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
-                SingleConfiguration = new Dictionary<string, object>();
-
-                Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Load(TemplateContents.ToStream());
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+            It the_load_fails = () => Result.Success.ShouldBeFalse();
 
-            It the_resulting_status_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count().ShouldEqual(1);
 
-            It the_resulting_status_should_contain_a_single_error = () => FirstResult.Errors.Length.ShouldEqual(1);
+            It the_single_error_should_be_a_code_compilation_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeCompilationError);
+        }
 
-            It the_single_error_should_be_a_code_compilation_error =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeCompilationError);
+        public class when_rendering_a_template_without_calling_load_first : TemplateRenderTestBase<RazorTemplate, RazorTemplateModule>
+        {
+            private static Exception CaughtException;
 
-            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
+            Establish context = () =>
+            {
+                CaughtException = null;
+                TemplateContents = "<root>@Model.TokenOne</root>";
+                SingleConfiguration = new Dictionary<string, object>
+                {
+                    ["TokenOne"] = "One",
+                };
+            };
+
+            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configurations));
+
+            It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
         }
 
         public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateRenderTestBase

@@ -99,7 +99,9 @@ namespace ConfigGen.Templating.Xml
             }
 
             //TODO: make result returning more general - this is just another mapping from one result to another
-            return new LoadResult(xmlTemplateLoadResults.TemplateLoadErrors);
+            return xmlTemplateLoadResults.TemplateLoadErrors.Any()
+                ? LoadResult.CreateFailResult(xmlTemplateLoadResults.TemplateLoadErrors)
+                : LoadResult.CreateSuccessResult();
         }
 
         [Pure]

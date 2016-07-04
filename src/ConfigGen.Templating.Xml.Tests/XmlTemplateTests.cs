@@ -19,9 +19,9 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
@@ -32,7 +32,7 @@ namespace ConfigGen.Templating.Xml.Tests
 {
     namespace XmlTemplateTests
     {
-        public class when_loading_a_template_which_is_not_well_formed : TemplateLoadTestBase<XmlTemplate>
+        public class when_loading_a_template_which_is_not_well_formed : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -49,7 +49,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_error_indicates_an_xml_load_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(XmlTemplateErrorCodes.TemplateLoadError);
         }
 
-        public class when_loading_a_template_which_is_well_formed : TemplateLoadTestBase<XmlTemplate>
+        public class when_loading_a_template_which_is_well_formed : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -60,6 +60,25 @@ namespace ConfigGen.Templating.Xml.Tests
             Because of = () => Result = Subject.Load(TemplateContents.ToStream());
 
             It the_load_passes = () => Result.Success.ShouldBeTrue();
+        }
+
+        public class when_rendering_a_template_without_calling_load_first : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        {
+            private static Exception CaughtException;
+
+            Establish context = () =>
+            {
+                CaughtException = null;
+                TemplateContents = "<root>[%TokenOne%]</root>";
+                SingleConfiguration = new Dictionary<string, object>
+                {
+                    ["TokenOne"] = "One",
+                };
+            };
+
+            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configurations));
+
+            It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
         }
 
         public class when_rendering_a_template_which_contains_no_tokens : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>

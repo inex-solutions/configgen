@@ -141,7 +141,19 @@ namespace ConfigGen.Templating.Xml
                 string preprocessedTemplate = unprocessedTemplate.ToXmlString(xmlDeclarationInfo.XmlDeclarationPresent);
                 var usedTokens = new HashSet<string>(preprocessingResults.UsedTokens);
                 var unrecognisedTokens = new HashSet<string>(preprocessingResults.UnrecognisedTokens);
-                var errors = new List<Error>(preprocessingResults.Errors);
+
+                if (preprocessingResults.Errors.Any())
+                {
+                    return new SingleTemplateRenderResults(
+                        configuration: configuration,
+                        status: TemplateRenderResultStatus.Failure,
+                        renderedResult: null,
+                        encoding: xmlDeclarationInfo.StatedEncoding ?? xmlDeclarationInfo.ActualEncoding,
+                        usedTokens: null,
+                        unusedTokens: null,
+                        unrecognisedTokens: null,
+                        errors: preprocessingResults.Errors);
+                }
 
                 string output = _tokenReplacer.ReplaceTokens(
                     configuration: configuration,
@@ -153,13 +165,13 @@ namespace ConfigGen.Templating.Xml
 
                 return new SingleTemplateRenderResults(
                             configuration: configuration,
-                            status: errors.Any() ? TemplateRenderResultStatus.Failure : TemplateRenderResultStatus.Success,
+                            status: TemplateRenderResultStatus.Success,
                             renderedResult: output,
                             encoding: xmlDeclarationInfo.StatedEncoding ?? xmlDeclarationInfo.ActualEncoding,
                             usedTokens: usedTokens,
                             unusedTokens: unusedTokens,
                             unrecognisedTokens: unrecognisedTokens,
-                            errors: errors);
+                            errors: null);
             }
             catch (Exception ex)
             {

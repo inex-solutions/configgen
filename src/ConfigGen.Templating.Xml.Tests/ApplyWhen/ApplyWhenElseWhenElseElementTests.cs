@@ -21,6 +21,7 @@
 
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;

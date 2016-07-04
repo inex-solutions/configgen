@@ -115,9 +115,6 @@ namespace ConfigGen.Templating.Xml.Tests
                 TemplateContents = @"<root xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
   <child key=""value"" cg:unknownAttribute=""what??""/>
 </root>";
-                ExpectedOutput = @"<root>
-  <child key=""value"" />
-</root>";
 
                 Subject.Load(TemplateContents.ToStream());
 
@@ -133,8 +130,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_result_should_contain_a_bad_markup_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
 
-            It the_resulting_output_should_be_the_template_with_the_erroneous_attribute_removed =
-                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_the_template_contains_unrecognised_configgen_element : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -145,9 +141,6 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
   <cg:unknownElement>what??</cg:unknownElement>
 </root>";
-                ExpectedOutput = @"<root>
-  <child key=""value"" />
-</root>";
 
                 Subject.Load(TemplateContents.ToStream());
 
@@ -163,8 +156,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_result_should_contain_a_bad_markup_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
 
-            It the_resulting_output_should_be_the_template_with_the_erroneous_element_removed =
-                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
     }
 }

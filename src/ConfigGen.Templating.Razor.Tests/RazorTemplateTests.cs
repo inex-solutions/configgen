@@ -48,6 +48,8 @@ namespace ConfigGen.Templating.Razor.Tests
 
             It the_resulting_status_should_contain_a_single_error_with_code =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeGenerationError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_rendering_a_template_which_contains_invalid_razor_syntax : RazorTemplateRenderTestBase
@@ -71,6 +73,8 @@ namespace ConfigGen.Templating.Razor.Tests
 
             It the_single_error_should_be_a_code_compilation_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.CodeCompilationError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateRenderTestBase

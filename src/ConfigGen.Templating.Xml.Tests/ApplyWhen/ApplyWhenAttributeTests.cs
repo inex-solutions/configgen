@@ -46,6 +46,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_a_condition_processing_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -64,6 +66,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_a_condition_processing_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -121,7 +125,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_indicate_the_token_had_been_used = () => FirstResult.UsedTokens.ShouldContainOnly("val");
         }
 
-
+        //TODO: remove these commented out tests
      
         ///// <summary>
         ///// Regression test for http://configgen.codeplex.com/workitem/8 - "applyWhen attribute processor errors on empty string comparisons"

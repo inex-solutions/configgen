@@ -47,7 +47,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_errors_collection_should_specify_an_applyWhenElse_format_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
 
-            //TODO: - what should the output be?
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_with_an_incorrect_child_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -72,7 +72,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_errors_collection_should_specify_an_applyWhenElse_format_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
 
-            //TODO: - what should the output be?
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -125,6 +125,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_an_applyWhenElse_format_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_with_too_many_Else_elements_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -151,6 +153,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_an_applyWhenElse_format_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_with_an_empty_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -175,6 +179,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_a_condition_processing_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_with_an_empty_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -200,6 +206,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_a_condition_processing_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_with_an_unparseable_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -224,6 +232,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_a_condition_processing_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_with_an_unparseable_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -249,6 +259,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_a_condition_processing_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_Apply_element_containing_an_unexpected_child_node_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -274,6 +286,8 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_specify_a_condition_processing_error =
                 () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+
+            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
         }
 
         public class when_ApplyWhenElseWhenElse_elements_with_a_true_When_condition_are_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>

@@ -124,9 +124,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
 
             Because of = () => RenderResult = Subject.Render(Model);
 
-            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
-
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.ShouldEqual(TemplateContents);
+            It the_resulting_output_is_the_contents_of_the_template = () => RenderResult.ShouldEqual(TemplateContents);
         }
 
         public class when_rendering_a_template_containing_a_single_token_with_a_model_with_the_same_single_token : RazorTemplateTestsBase
@@ -148,9 +146,8 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
 
             Because of = () => RenderResult = Subject.Render(Model);
 
-            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
-
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.ShouldEqual(ExpectedOutput);
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = 
+                () => RenderResult.ShouldEqual(ExpectedOutput);
         }
 
         public class when_rendering_a_template_containing_a_single_token_with_a_model_with_a_different_single_token : RazorTemplateTestsBase
@@ -172,14 +169,34 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
 
             Because of = () => RenderResult = Subject.Render(Model);
 
-            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
+            It the_resulting_output_contains_the_template_with_the_non_supplied_token_removed =
+                () => RenderResult.ShouldEqual(ExpectedOutput);
+        }
 
-            //TODO: error handling for errors in render?
-            //It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(RenderingResultStatus.Success);
+        public class when_rendering_a_template_which_contains_code_that_will_throw_an_exception_on_evaluation : RazorTemplateTestsBase
+        {
+            private static string ExpectedOutput;
 
-            //It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
+            private static Exception CaughtException;
 
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.ShouldEqual(ExpectedOutput);
+            Establish context = () =>
+            {
+                TemplateContents = "<root>@(100/Model.key)</root>"; // this will result in a DivideByZeroException
+                var loadResult = Subject.LoadTemplate(TemplateContents);
+                loadResult.Status.ShouldEqual(RazorTemplateLoadResult.LoadResultStatus.Success);
+
+                Model = new DictionaryBackedDynamicModel(new Dictionary<string, object>
+                {
+                    {"key", 0}
+                });
+
+                ExpectedOutput = TemplateContents.Replace("@Model.key", string.Empty);
+            };
+
+            Because of = () => CaughtException = Catch.Exception( () =>  RenderResult = Subject.Render(Model));
+
+            It the_correct_exception_is_thrown_by_the_call_to_render =
+                () => CaughtException.ShouldBeOfExactType<DivideByZeroException>();
         }
 
         public class when_rendering_the_same_template_a_second_time : RazorTemplateTestsBase
@@ -211,9 +228,8 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
 
             Because of = () => RenderResult = Subject.Render(Model);
 
-            It the_result_is_not_null = () => RenderResult.ShouldNotBeNull();
-
-            It the_resulting_output_contains_the_correct_contents_for_the_second_render_call = () => RenderResult.ShouldEqual(ExpectedOutput);
+            It the_resulting_output_contains_the_correct_contents_for_the_second_render_call =
+                () => RenderResult.ShouldEqual(ExpectedOutput);
         }
 
         public class when_reusing_the_renderer_by_reloading_and_rerendering : RazorTemplateTestsBase
@@ -255,9 +271,8 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering.Tests
             It the_second_load_result_indicates_success =
                 () => TemplateLoadResult.Status.ShouldEqual(RazorTemplateLoadResult.LoadResultStatus.Success);
 
-            It the_second_render_result_is_not_null = () => RenderResult.ShouldNotBeNull();
-
-            It the_second_render_output_contains_the_correct_contents_for_the_second_render_call = () => RenderResult.ShouldEqual(ExpectedOutput);
+            It the_second_render_output_contains_the_correct_contents_for_the_second_render_call =
+                () => RenderResult.ShouldEqual(ExpectedOutput);
         }
     }
 }

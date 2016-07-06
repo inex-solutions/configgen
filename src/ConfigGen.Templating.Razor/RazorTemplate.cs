@@ -103,7 +103,7 @@ namespace ConfigGen.Templating.Razor
             {
                 var settings = configuration.ToDictionary();
                 var model = new DictionaryBackedDynamicModel(settings);
-                string result = razorTemplateRenderer.Render(model);
+                string renderResult = razorTemplateRenderer.Render(model);
 
                 var usedTokens = new List<string>();
                 var unusedTokens = new List<string>();
@@ -123,7 +123,7 @@ namespace ConfigGen.Templating.Razor
                 return new SingleTemplateRenderResults(
                         configuration: configuration,
                         status: TemplateRenderResultStatus.Success,
-                        renderedResult: result,
+                        renderedResult: renderResult,
                         encoding: _encoding,
                         usedTokens: usedTokens,
                         unusedTokens: unusedTokens,
@@ -140,7 +140,7 @@ namespace ConfigGen.Templating.Razor
                     usedTokens: null,
                     unusedTokens: null,
                     unrecognisedTokens: null,
-                    errors: new[] {new UnhandledExceptionError(RazorTemplateErrorSource, ex)});
+                    errors: new[] { new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, $"{ex.GetType().Name}: {ex.Message}") });
             }
         }
 

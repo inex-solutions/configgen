@@ -80,7 +80,7 @@ namespace ConfigGen.Infrastructure.RazorTemplateRendering
                 throw new InvalidOperationException("Cannot call Render until LoadTemplate has been called");
             }
 
-            var template = (TemplateBase<TModel>)Activator.CreateInstance(_compiledType);
+            var template = (TemplateBase<TModel>) Activator.CreateInstance(_compiledType);
             template.SetModel(model);
             template.Execute();
 

@@ -36,7 +36,8 @@ namespace ConfigGen.ConsoleApp
         [NotNull]
         private static readonly Regex MatchLowers = new Regex("[a-z]*");
 
-        [NotNull] private readonly ConsoleInputDeferedSetterFactory _deferredSetterFactory = new ConsoleInputDeferedSetterFactory();
+        [NotNull]
+        private readonly ConsoleInputDeferedSetterFactory _deferredSetterFactory = new ConsoleInputDeferedSetterFactory();
 
         [Pure]
         [NotNull]

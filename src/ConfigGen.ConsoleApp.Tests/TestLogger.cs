@@ -27,7 +27,7 @@ using Machine.Specifications.Annotations;
 
 namespace ConfigGen.ConsoleApp.Tests
 {
-    public class TestConsoleWriter : ILogger
+    public class TestLogger : ILogger
     {
         [NotNull]
         private readonly List<string> _loggedLines = new List<string>();
@@ -72,7 +72,7 @@ namespace ConfigGen.ConsoleApp.Tests
             _loggedLines.Add(string.Format(formatString, args));
         }
 
-        public TestConsoleWriter ShouldContainMessage(string message)
+        public TestLogger ShouldContainMessage(string message)
         {
             if (!_loggedLines.Any(l => l != null && l.Contains(message)))
             {

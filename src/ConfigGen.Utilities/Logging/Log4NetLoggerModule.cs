@@ -24,11 +24,6 @@ using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Core;
-using log4net.Filter;
-using log4net.Layout;
 
 namespace ConfigGen.Utilities.Logging
 {

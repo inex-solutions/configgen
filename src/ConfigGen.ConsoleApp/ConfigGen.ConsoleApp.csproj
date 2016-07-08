@@ -60,10 +60,15 @@
     <Compile Include="ConsoleInputToPreferenceConverter.cs" />
     <Compile Include="ConsoleRunner.cs" />
     <Compile Include="ConsoleInputDeferedSetter.cs" />
+    <Compile Include="ConsoleRunnerFactory.cs" />
     <Compile Include="ExitCodes.cs" />
+    <Compile Include="HelpWriter.cs" />
+    <Compile Include="IHelpWriter.cs" />
+    <Compile Include="IResultWriter.cs" />
     <Compile Include="ParsedConsoleInput.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

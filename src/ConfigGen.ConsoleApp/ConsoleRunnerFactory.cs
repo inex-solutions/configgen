@@ -19,36 +19,21 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Diagnostics;
+using Autofac;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {
-    public class Program
+    public class ConsoleRunnerFactory
     {
-        public static void Main([NotNull] string[] args)
+        [NotNull]
+        public static ConsoleRunner GetConsoleRunner()
         {
-            try
-            {
-                var consoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
-                consoleRunner.Run(args);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("UNHANDLED EXCEPTION:");
-                Console.WriteLine(ex);
-            }
-            finally
-            {
-                if (Debugger.IsAttached)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("--");
-                    Console.WriteLine("Execution ended - press enter to exit");
-                    Console.ReadLine();
-                }
-            }
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<ConsoleAppModule>();
+            var container = containerBuilder.Build();
+
+            return container.Resolve<ConsoleRunner>();
         }
     }
 }

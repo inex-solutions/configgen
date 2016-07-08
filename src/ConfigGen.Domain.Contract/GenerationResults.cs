@@ -27,12 +27,9 @@ namespace ConfigGen.Domain.Contract
 {
     public class GenerationResults
     {
-        private GenerationResults(
-            [CanBeNull] IEnumerable<string> unrecognisedPreferences, 
-            [CanBeNull] IEnumerable<SingleFileGenerationResult> singleFileGenerationResults,
+        private GenerationResults([CanBeNull] IEnumerable<SingleFileGenerationResult> singleFileGenerationResults,
             [CanBeNull] IEnumerable<Error> errors)
         {
-            UnrecognisedPreferences = unrecognisedPreferences ?? new string[0];
             GeneratedFiles = singleFileGenerationResults ?? new SingleFileGenerationResult[0];
             Errors = errors ?? new Error[0];
             Success = !Errors.Any();
@@ -42,9 +39,6 @@ namespace ConfigGen.Domain.Contract
 
         [NotNull]
         public IEnumerable<SingleFileGenerationResult> GeneratedFiles { get; }
-
-        [NotNull]
-        public IEnumerable<string> UnrecognisedPreferences { get; }
 
         [NotNull]
         public IEnumerable<Error> Errors { get; }
@@ -58,7 +52,7 @@ namespace ConfigGen.Domain.Contract
         [NotNull]
         public static GenerationResults CreateFail([NotNull] IEnumerable<Error> errors)
         {
-            return new GenerationResults(new string[0], new SingleFileGenerationResult[0], errors);
+            return new GenerationResults(new SingleFileGenerationResult[0], errors);
         }
 
         [NotNull]
@@ -66,7 +60,7 @@ namespace ConfigGen.Domain.Contract
             [NotNull] IEnumerable<string> unrecognisedPreferences,
             [NotNull] IEnumerable<SingleFileGenerationResult> singleFileGenerationResults)
         {
-            return new GenerationResults(unrecognisedPreferences, singleFileGenerationResults, new Error[0]);
+            return new GenerationResults(singleFileGenerationResults, new Error[0]);
         }
     }
 }

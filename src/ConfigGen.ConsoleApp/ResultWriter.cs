@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,35 +20,25 @@
 #endregion
 
 using System;
-using System.Diagnostics;
+using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {
-    public class Program
+    public class ResultWriter : IResultWriter
     {
-        public static void Main([NotNull] string[] args)
+        [NotNull]
+        private readonly ILogger _logger;
+
+        public ResultWriter([NotNull] ILogger logger)
         {
-            try
-            {
-                var consoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
-                consoleRunner.Run(args);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("UNHANDLED EXCEPTION:");
-                Console.WriteLine(ex);
-            }
-            finally
-            {
-                if (Debugger.IsAttached)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("--");
-                    Console.WriteLine("Execution ended - press enter to exit");
-                    Console.ReadLine();
-                }
-            }
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            _logger = logger;
+        }
+
+        public void Report(GenerationResults results)
+        {
         }
     }
 }

@@ -20,11 +20,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
@@ -39,18 +37,26 @@ namespace ConfigGen.ConsoleApp
         private readonly ILogger _logger;
 
         [NotNull]
-        private readonly ConsoleInputToPreferenceConverter _consoleInputToPreferenceConverter;
+        private readonly IHelpWriter _helpWriter;
+
+        [NotNull]
+        private readonly IResultWriter _resultWriter;
 
         public ConsoleRunner(
             [NotNull] IConfigurationGenerator configurationGenerator, 
-            [NotNull] ILogger logger)
+            [NotNull] ILogger logger,
+            [NotNull] IHelpWriter helpWriter,
+            [NotNull] IResultWriter resultWriter)
         {
             if (configurationGenerator == null) throw new ArgumentNullException(nameof(configurationGenerator));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (resultWriter == null) throw new ArgumentNullException(nameof(resultWriter));
+            if (helpWriter == null) throw new ArgumentNullException(nameof(helpWriter));
 
             _configurationGenerator = configurationGenerator;
             _logger = logger;
-            _consoleInputToPreferenceConverter = new ConsoleInputToPreferenceConverter();
+            _helpWriter = helpWriter;
+            _resultWriter = resultWriter;
         }
 
         public int Run([NotNull] string[] args)
@@ -64,13 +70,14 @@ namespace ConfigGen.ConsoleApp
                    || args.Contains("-?", StringComparer.OrdinalIgnoreCase)
                    || args.Contains("--?", StringComparer.OrdinalIgnoreCase))
             {
-                ShowHelp(preferenceGroups);
+                _helpWriter.WriteHelp(preferenceGroups);
 
                 Environment.ExitCode = (int)ExitCodes.HelpShown;
                 return Environment.ExitCode;
             }
+            var consoleInputToPreferenceConverter = new ConsoleInputToPreferenceConverter();
 
-            ParsedConsoleInput preferences = _consoleInputToPreferenceConverter.ParseConsoleInput(args, preferenceGroups);
+            ParsedConsoleInput preferences = consoleInputToPreferenceConverter.ParseConsoleInput(args, preferenceGroups);
             
             if (preferences.ParseErrors.Any())
             {
@@ -79,11 +86,12 @@ namespace ConfigGen.ConsoleApp
                     _logger.Info(parseError);
                 }
 
-                Environment.ExitCode = (int)ExitCodes.ParseError;
-                return Environment.ExitCode; ;
+                Environment.ExitCode = (int)ExitCodes.ConsoleInputParseError;
+                return Environment.ExitCode;
             }
 
-            _configurationGenerator.GenerateConfigurations(preferences.ParsedPreferences);
+            GenerationResults results = _configurationGenerator.GenerateConfigurations(preferences.ParsedPreferences);
+            _resultWriter.Report(results);
 
             Environment.ExitCode = (int)ExitCodes.Success;
             return Environment.ExitCode;
@@ -94,39 +102,9 @@ namespace ConfigGen.ConsoleApp
             var version = typeof(ConfigurationGenerator).Assembly.GetName().Version;
             _logger.Info();
             _logger.Info($"ConfigGen v{version} - Configuration file generation tool");
-            _logger.Info("Copyright (C)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
+            _logger.Info("(c)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
             _logger.Info("--");
             _logger.Info();
-        }
-
-        private void ShowHelp([NotNull][ItemNotNull] IEnumerable<IPreferenceGroup> preferencesCollections)
-        {
-            if (preferencesCollections == null) throw new ArgumentNullException(nameof(preferencesCollections));
-
-            _logger.Info();
-            _logger.Info("ConfigGen help: ");
-            _logger.Info();
-
-            foreach (var preferencesCollection in preferencesCollections)
-            {
-                _logger.Info($"******** {preferencesCollection.Name} ********");
-                _logger.Info();
-                ShowCommands(preferencesCollection);
-                _logger.Info();
-            }
-        }
-
-        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<IPreferenceDefinition> preferences)
-        {
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            foreach (var preference in preferences)
-            {
-                _logger.Info("{0} or {1} : {2}", 
-                    _consoleInputToPreferenceConverter.GetShortConsoleCommandWithArgumentText(preference), 
-                    _consoleInputToPreferenceConverter.GetLongConsoleCommandWithArgumentText(preference), 
-                    preference.Description);
-            }
         }
     }
 }

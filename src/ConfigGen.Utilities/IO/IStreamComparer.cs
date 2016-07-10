@@ -19,20 +19,15 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
-using ConfigGen.Domain;
-using ConfigGen.Utilities.IO;
+using System.IO;
+using JetBrains.Annotations;
 
-namespace ConfigGen.ConsoleApp
+namespace ConfigGen.Utilities.IO
 {
-    public class ConsoleAppModule : Module
+    public interface IStreamComparer
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<HelpWriter>().As<IHelpWriter>();
-            builder.RegisterType<ResultWriter>().As<IResultWriter>();
-            builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<ConsoleRunner>();
-        }
+        bool AreEqual([NotNull] Stream stream1, [NotNull] Stream stream2);
+
+        bool AreEqual([NotNull] Stream stream1, [NotNull] string filePath);
     }
 }

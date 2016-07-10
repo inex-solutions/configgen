@@ -24,6 +24,7 @@ using System.IO;
 using System.Text;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Extensions;
+using ConfigGen.Utilities.IO;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.FileOutput
@@ -33,6 +34,15 @@ namespace ConfigGen.Domain.FileOutput
     /// </summary>
     public class FileOutputWriter
     {
+        [NotNull]
+        private readonly IStreamComparer _streamComparer;
+
+        public FileOutputWriter([NotNull] IStreamComparer streamComparer)
+        {
+            if (streamComparer == null) throw new ArgumentNullException(nameof(streamComparer));
+            _streamComparer = streamComparer;
+        }
+
         /// <summary>
         /// Writes a single rendering <paramref name="result"/> as a file, as specified by the supplied <paramref name="fileOutputPreferences"/>.
         /// </summary>
@@ -62,11 +72,22 @@ namespace ConfigGen.Domain.FileOutput
             }
 
             Encoding encoding = result.Encoding ?? Encoding.UTF8;
-            using (var fileStream = fullPath.OpenWrite())
-            using (var writer = new StreamWriter(fileStream, encoding))
+            using (var stream = new MemoryStream())
+            using (var writer = new StreamWriter(stream, encoding))
             {
                 writer.Write(result.RenderedResult);
-                return new WriteOutputResult(fullPath.FullName);
+                writer.Flush();
+                stream.Position = 0;
+
+                bool hasChanged = !_streamComparer.AreEqual(stream, fullPath.FullName);
+
+                if (hasChanged)
+                {
+                    stream.Position = 0;
+                    File.WriteAllBytes(fullPath.FullName, stream.ToArray());
+                }
+
+                return new WriteOutputResult(fullPath.FullName, hasChanged, hasChanged);
             }
         }
 
@@ -75,10 +96,15 @@ namespace ConfigGen.Domain.FileOutput
         /// </summary>
         public class WriteOutputResult
         {
-            public WriteOutputResult([NotNull] string fullPath)
+            public WriteOutputResult(
+                [NotNull] string fullPath,
+                bool fileChanged,
+                bool wasWritten)
             {
                 if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
                 FullPath = fullPath;
+                FileChanged = fileChanged;
+                WasWritten = wasWritten;
             }
 
             /// <summary>
@@ -86,6 +112,16 @@ namespace ConfigGen.Domain.FileOutput
             /// </summary>
             [NotNull]
             public string FullPath { get; }
+
+            /// <summary>
+            /// True if the generation of this file resulted in different contents to the any preexisting version of the file (and if no previous version existed), otherwise false.
+            /// </summary>
+            public bool FileChanged { get; }
+
+            /// <summary>
+            /// True if the file was written, otherwise false.
+            /// </summary>
+            public bool WasWritten { get; }
         }
     }
 }

@@ -70,6 +70,8 @@
     <Compile Include="FileFinder.cs" />
     <Compile Include="IDisplayText.cs" />
     <Compile Include="ILocalEnvironment.cs" />
+    <Compile Include="IO\IStreamComparer.cs" />
+    <Compile Include="IO\StreamComparer.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="ItemFactoryByTypeOrExtensionBase.cs" />
     <Compile Include="LocalEnvironment.cs" />

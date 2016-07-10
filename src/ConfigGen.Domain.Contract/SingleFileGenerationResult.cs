@@ -26,13 +26,19 @@ namespace ConfigGen.Domain.Contract
 {
     public class SingleFileGenerationResult
     {
-        public SingleFileGenerationResult([NotNull] string configurationName, [NotNull] string fullPath)
+        public SingleFileGenerationResult(
+            [NotNull] string configurationName, 
+            [NotNull] string fullPath, 
+            bool hasChanged,
+            bool wasWritten)
         {
             if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
             if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
 
             ConfigurationName = configurationName;
             FullPath = fullPath;
+            HasChanged = hasChanged;
+            WasWritten = wasWritten;
         }
 
         [NotNull]
@@ -40,5 +46,9 @@ namespace ConfigGen.Domain.Contract
 
         [NotNull]
         public string FullPath { get; }
+
+        public bool HasChanged { get; }
+
+        public bool WasWritten { get; }
     }
 }

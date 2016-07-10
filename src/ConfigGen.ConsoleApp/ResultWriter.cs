@@ -20,7 +20,9 @@
 #endregion
 
 using System;
+using System.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
@@ -39,6 +41,25 @@ namespace ConfigGen.ConsoleApp
 
         public void Report(GenerationResults results)
         {
+            if (results.Errors.Any())
+            {
+                _logger.Error("Generation process failed: ");
+                foreach (Error error in results.Errors)
+                {
+                    _logger.Error(error.ToDisplayText());
+                }
+
+                return;
+            }
+
+            foreach (SingleFileGenerationResult result in results.GeneratedFiles)
+            {
+                string configurationName = result.ConfigurationName.PadRight(20);
+                string changedMessage = result.HasChanged ? "[FILE CHANGED]  " : "[FILE UNCHANGED]";
+                string warningsMessage = "WITHOUT WARNINGS";
+
+                _logger.Info($"{configurationName} - {changedMessage} - {warningsMessage}");
+            }
         }
     }
 }

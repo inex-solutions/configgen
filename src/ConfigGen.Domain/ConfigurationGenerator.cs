@@ -167,7 +167,12 @@ namespace ConfigGen.Domain
                        renderResult,
                        fileOutputPreferences);
 
-                    singleFileGenerationResults.Add(new SingleFileGenerationResult(renderResult.ConfigurationName, writeResults.FullPath));
+                    singleFileGenerationResults.Add(
+                        new SingleFileGenerationResult(
+                            renderResult.ConfigurationName,
+                            writeResults.FullPath,
+                            writeResults.FileChanged,
+                            writeResults.WasWritten));
                 }
 
                 return GenerationResults.CreateSuccess(unrecognisedPreferences, singleFileGenerationResults);

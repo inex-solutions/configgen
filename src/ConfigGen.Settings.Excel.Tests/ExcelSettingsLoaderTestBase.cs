@@ -23,14 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
-using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Tests.Common;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Settings.Excel.Tests
 {
-    public abstract class ExcelSettingsLoaderTestBase : MachineSpecificationTestBase<ExcelSettingsLoader, IEnumerable<IConfiguration>>
+    public abstract class ExcelSettingsLoaderTestBase : MachineSpecificationTestBase<ExcelSettingsLoader, IEnumerable<IDictionary<string, object>>>
     {
         private static Lazy<string> lazySettingsFileFullPath;
         private static IDisposable disposableFile;

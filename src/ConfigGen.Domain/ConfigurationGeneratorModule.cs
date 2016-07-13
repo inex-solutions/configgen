@@ -42,6 +42,7 @@ namespace ConfigGen.Domain
 
             builder.RegisterType<ConfigurationGenerator>().As<IConfigurationGenerator>();
             builder.RegisterType<TemplateFactory>();
+            builder.RegisterType<ConfigurationNameSelector>();
             builder.RegisterType<ConfigurationCollectionLoaderFactory>();
             builder.RegisterType<ConfigurationCollectionFilter>();
             builder.RegisterType<FileOutputWriter>();

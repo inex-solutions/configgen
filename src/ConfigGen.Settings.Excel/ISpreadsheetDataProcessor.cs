@@ -39,7 +39,7 @@ namespace ConfigGen.Settings.Excel
         /// <param name="columnList">List of columns in the spreadhseet</param>
         /// <returns>A list of machine configuration settings.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="dataRows"/>, <paramref name="columnList"/> or <paramref name="spreadsheetPreferences"/> are null.</exception>
-        IEnumerable<IConfiguration> ProcessDataRows(
+        IEnumerable<IDictionary<string, object>> ProcessDataRows(
             IEnumerable<object[]> dataRows,
             IList<ExcelColumnInfo> columnList,
             SpreadsheetPreferences spreadsheetPreferences);

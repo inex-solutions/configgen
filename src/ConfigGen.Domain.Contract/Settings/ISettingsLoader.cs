@@ -34,7 +34,7 @@ namespace ConfigGen.Domain.Contract.Settings
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        IEnumerable<IConfiguration> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
+        IEnumerable<IDictionary<string, object>> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
 
         string LoaderType { get; }
 

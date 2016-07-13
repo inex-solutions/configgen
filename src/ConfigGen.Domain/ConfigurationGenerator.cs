@@ -20,8 +20,10 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
@@ -42,6 +44,9 @@ namespace ConfigGen.Domain
         private readonly TemplateFactory _templateFactory;
 
         [NotNull]
+        private readonly ConfigurationNameSelector _configurationNameSelector;
+
+        [NotNull]
         private readonly ConfigurationCollectionLoaderFactory _configurationCollectionLoaderFactory;
 
         [NotNull]
@@ -51,18 +56,22 @@ namespace ConfigGen.Domain
         private readonly FileOutputWriter _fileOutputWriter;
         public ConfigurationGenerator(
             [NotNull] IManagePreferences preferencesManager, 
-            [NotNull] TemplateFactory templateFactory, 
+            [NotNull] TemplateFactory templateFactory,
+            [NotNull] ConfigurationNameSelector configurationNameSelector,
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory, 
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter, 
             [NotNull] FileOutputWriter fileOutputWriter)
         {
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
+            if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
+
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
 
             _templateFactory = templateFactory;
+            _configurationNameSelector = configurationNameSelector;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
             _fileOutputWriter = fileOutputWriter;
@@ -118,9 +127,11 @@ namespace ConfigGen.Domain
                          $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
             }
 
-            IEnumerable<IConfiguration> configurations = settingsLoader.LoadSettings(
+            IEnumerable<IDictionary<string, object>> settings = settingsLoader.LoadSettings(
                 configGenerationPreferences.SettingsFilePath,
                 configGenerationPreferences.SettingsFileType);
+
+            IEnumerable<IConfiguration> configurations = settings.Select(s => new Configuration(_configurationNameSelector.GetName(s), s));
 
             var configurationCollectionFilterPreferences = new ConfigurationCollectionFilterPreferences();
             _preferencesManager.ApplyPreferences(preferences, configurationCollectionFilterPreferences);
@@ -156,6 +167,14 @@ namespace ConfigGen.Domain
 
                 return GenerationResults.CreateSuccess(unrecognisedPreferences, singleFileGenerationResults);
             }
+        }
+    }
+
+    public class ConfigurationNameSelector
+    {
+        public string GetName(IDictionary<string, object> dictionary)
+        {
+            return dictionary["MachineName"].ToString(); //NOPUSH - VERY naieve implementation
         }
     }
 }

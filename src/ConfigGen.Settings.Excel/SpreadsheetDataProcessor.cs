@@ -55,7 +55,7 @@ namespace ConfigGen.Settings.Excel
         /// <param name="spreadsheetPreferences">Spreadsheet preferences</param>
         /// <returns>A list of machine configuration settings.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="dataRows"/>, <paramref name="columnList"/> or <paramref name="spreadsheetPreferences"/> are null.</exception>
-        public IEnumerable<IConfiguration> ProcessDataRows(
+        public IEnumerable<IDictionary<string, object>> ProcessDataRows(
             IEnumerable<object[]> dataRows, 
             IList<ExcelColumnInfo> columnList,
             SpreadsheetPreferences spreadsheetPreferences)
@@ -97,17 +97,8 @@ namespace ConfigGen.Settings.Excel
             }
         }
 
-        private IConfiguration ProcessRow(object[] rowValues, IEnumerable<ExcelColumnInfo> columnList)
+        private IDictionary<string, object> ProcessRow(object[] rowValues, IEnumerable<ExcelColumnInfo> columnList)
         {
-            string machineName = ConvertToStringOrNull(rowValues[0]);
-            string configFilePath = ConvertToStringOrNull(rowValues[1]);
-
-            if (machineName == null
-                || configFilePath == null)
-            {
-                return null;
-            }
-
             var settings = new Dictionary<string, object>();
             foreach (var columnItem in columnList)
             {
@@ -115,7 +106,7 @@ namespace ConfigGen.Settings.Excel
                 settings.Add(columnItem.ColumnName, cellData);
             }
 
-            return new Configuration(machineName, settings);
+            return settings;
         }
 
         private static string ConvertToStringOrNull(object o)

@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract.Settings;
@@ -52,10 +53,10 @@ namespace ConfigGen.Settings.Excel.Tests
 
             It then_Configuration1_should_contain_the_correct_settings_and_values =
                 () => Result.Get("Configuration1").ShouldContainOnly(
-                    new Setting("MachineName", "Configuration1"),
-                    new Setting("ConfigFilePath", "Configuration1\\App.Config"),
-                    new Setting("Setting1", "Configuration1_Setting1"),
-                    new Setting("Setting2", "Configuration1_Setting2"));
+                    new KeyValuePair<string, object>("MachineName", "Configuration1"),
+                    new KeyValuePair<string, object>("ConfigFilePath", "Configuration1\\App.Config"),
+                    new KeyValuePair<string, object>("Setting1", "Configuration1_Setting1"),
+                    new KeyValuePair<string, object>("Setting2", "Configuration1_Setting2"));
 
             It then_result_should_contain_a_configuration_named_Configuration2 =
                 () => Result.Get("Configuration2").ShouldNotBeNull();
@@ -65,10 +66,10 @@ namespace ConfigGen.Settings.Excel.Tests
 
             It then_Configuration2_should_contain_the_correct_settings_and_values =
                 () => Result.Get("Configuration2").ShouldContainOnly(
-                    new Setting("MachineName", "Configuration2"),
-                    new Setting("ConfigFilePath", "Configuration2\\App.Config"),
-                    new Setting("Setting1", "Configuration2_Setting1"),
-                    new Setting("Setting2", "Configuration2_Setting2"));
+                    new KeyValuePair<string, object>("MachineName", "Configuration2"),
+                    new KeyValuePair<string, object>("ConfigFilePath", "Configuration2\\App.Config"),
+                    new KeyValuePair<string, object>("Setting1", "Configuration2_Setting1"),
+                    new KeyValuePair<string, object>("Setting2", "Configuration2_Setting2"));
         }
 
         [Subject(typeof(ExcelSettingsLoader))]
@@ -94,10 +95,10 @@ namespace ConfigGen.Settings.Excel.Tests
 
             It then_Configuration1_should_contain_the_correct_settings_and_values =
                 () => Result.Get("Configuration1").ShouldContainOnly(
-                    new Setting("MachineName", "Configuration1"),
-                    new Setting("ConfigFilePath", "Configuration1\\App.Config"),
-                    new Setting("Setting1", "Configuration1_Setting1"),
-                    new Setting("Setting2", "Configuration1_Setting2"));
+                    new KeyValuePair<string, object>("MachineName", "Configuration1"),
+                    new KeyValuePair<string, object>("ConfigFilePath", "Configuration1\\App.Config"),
+                    new KeyValuePair<string, object>("Setting1", "Configuration1_Setting1"),
+                    new KeyValuePair<string, object>("Setting2", "Configuration1_Setting2"));
 
             It then_result_should_contain_a_configuration_named_Configuration2 =
                 () => Result.Get("Configuration2").ShouldNotBeNull();
@@ -107,10 +108,10 @@ namespace ConfigGen.Settings.Excel.Tests
 
             It then_Configuration2_should_contain_the_correct_settings_and_values =
                 () => Result.Get("Configuration2").ShouldContainOnly(
-                    new Setting("MachineName", "Configuration2"),
-                    new Setting("ConfigFilePath", "Configuration2\\App.Config"),
-                    new Setting("Setting1", "Configuration2_Setting1"),
-                    new Setting("Setting2", "Configuration2_Setting2"));
+                    new KeyValuePair<string, object>("MachineName", "Configuration2"),
+                    new KeyValuePair<string, object>("ConfigFilePath", "Configuration2\\App.Config"),
+                    new KeyValuePair<string, object>("Setting1", "Configuration2_Setting1"),
+                    new KeyValuePair<string, object>("Setting2", "Configuration2_Setting2"));
         }
 
         [Subject(typeof(ExcelSettingsLoader))]

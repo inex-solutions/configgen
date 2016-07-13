@@ -27,9 +27,9 @@ namespace ConfigGen.Tests.Common.Extensions
 {
     public static class ConfigurationExtensions
     {
-        public static IConfiguration Get(this IEnumerable<IConfiguration> configuration, string configurationName)
+        public static IDictionary<string, object> Get(this IEnumerable<IDictionary<string, object>> configurations, string configurationName)
         {
-            return configuration.FirstOrDefault(cfg => cfg.ConfigurationName == configurationName);
+            return configurations.FirstOrDefault(cfg => string.Equals(cfg["MachineName"], configurationName));
         }
     }
 }

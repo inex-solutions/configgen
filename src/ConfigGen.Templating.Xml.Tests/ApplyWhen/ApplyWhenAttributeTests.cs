@@ -38,16 +38,14 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_result_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_errors_collection_should_specify_a_condition_processing_error =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
+            It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -58,23 +56,21 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_result_should_indicate_failure = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_errors_collection_should_specify_a_condition_processing_error =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
+            It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, object>
+                ConfigurationSettings = new Dictionary<string, object>
                 {
                     {"val", "2"}
                 };
@@ -86,23 +82,21 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_result_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_result_should_contain_the_child_element_but_without_the_applyWhen_attribute =
-                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => FirstResult.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => Result.UsedTokens.ShouldContainOnly("val");
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
-                SingleConfiguration = new Dictionary<string, object>
+                ConfigurationSettings = new Dictionary<string, object>
                 {
                     {"val", "2"}
                 };
@@ -113,16 +107,14 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_result_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_result_should_contain_not_the_child_element =
-                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => FirstResult.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => Result.UsedTokens.ShouldContainOnly("val");
         }
 
         //TODO: remove these commented out tests

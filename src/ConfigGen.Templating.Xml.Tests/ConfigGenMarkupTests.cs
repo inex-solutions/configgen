@@ -38,25 +38,23 @@ namespace ConfigGen.Templating.Xml.Tests
 @"<root>
   <child key=""value"" />
 </root>";
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
 
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_unaltered_template_without_the_xml_declaration =
-                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
 
             It the_resulting_output_should_not_contain_the_xml_declaration =
-                () => FirstResult.RenderedResult.ShouldNotContain("<?");
+                () => Result.RenderedResult.ShouldNotContain("<?");
 
             It the_resulting_output_should_be_the_unaltered_template =
-                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
         public class when_the_template_contains_the_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -72,17 +70,15 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_template_with_the_configgen_xmlns_declaration_removed =
-                () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
         public class when_the_template_contains_a_non_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -95,17 +91,15 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_be_the_unaltered_template_with_the_non_configgen_xmlns_declaration =
-                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
         public class when_the_template_contains_unrecognised_configgen_attribute : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -118,19 +112,17 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_render_should_fail = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It the_render_should_fail = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_result_should_contain_a_bad_markup_error =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
 
-            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
+            It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
         }
 
         public class when_the_template_contains_unrecognised_configgen_element : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -144,19 +136,17 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_render_should_fail = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+            It the_render_should_fail = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
             It the_result_should_contain_a_bad_markup_error =
-                () => FirstResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
+                () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.BadMarkupError);
 
-            It the_result_should_contain_no_generated_output = () => FirstResult.RenderedResult.ShouldBeNull();
+            It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
         }
     }
 }

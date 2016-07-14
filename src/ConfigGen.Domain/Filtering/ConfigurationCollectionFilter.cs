@@ -52,6 +52,8 @@ namespace ConfigGen.Domain.Filtering
             _localOnlyConfigurationFilter = localOnlyConfigurationFilter;
         }
 
+        [NotNull]
+        [ItemNotNull]
         public IEnumerable<IConfiguration> Filter(
             [NotNull] ConfigurationCollectionFilterPreferences preferences, 
             [NotNull] IEnumerable<IConfiguration> configurations)

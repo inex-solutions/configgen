@@ -22,7 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
@@ -74,36 +73,20 @@ namespace ConfigGen.Templating.Razor
 
         [Pure]
         [NotNull]
-        public RenderResults Render([NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration)
         {
-            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             if (_loadedTemplate == null)
             {
                 throw new InvalidOperationException("Cannot render a template that has not been loaded.");
             }
 
-            IReadOnlyCollection<SingleTemplateRenderResults> allResults = configurationsToRender
-                .Select(configuration => RenderSingleConfiguration(_razorTemplateRenderer, configuration))
-                .ToReadOnlyCollection();
-
-            return new RenderResults(TemplateRenderResultStatus.Success, allResults, null);
-        }
-
-        public string TemplateType => "razor";
-
-        public string[] SupportedExtensions => new[] {".razor", ".cshtml"};
-
-        private SingleTemplateRenderResults RenderSingleConfiguration([NotNull] RazorTemplateRenderer<DictionaryBackedDynamicModel> razorTemplateRenderer, [NotNull] IConfiguration configuration)
-        {
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (razorTemplateRenderer == null) throw new ArgumentNullException(nameof(razorTemplateRenderer));
-
             try
             {
                 var settings = configuration.ToDictionary();
                 var model = new DictionaryBackedDynamicModel(settings);
-                string renderResult = razorTemplateRenderer.Render(model);
+                string renderResult = _razorTemplateRenderer.Render(model);
 
                 var usedTokens = new List<string>();
                 var unusedTokens = new List<string>();
@@ -121,14 +104,14 @@ namespace ConfigGen.Templating.Razor
                 }
 
                 return new SingleTemplateRenderResults(
-                        configuration: configuration,
-                        status: TemplateRenderResultStatus.Success,
-                        renderedResult: renderResult,
-                        encoding: _encoding,
-                        usedTokens: usedTokens,
-                        unusedTokens: unusedTokens,
-                        unrecognisedTokens: model.UnrecognisedTokens,
-                        errors: null);
+                    configuration: configuration,
+                    status: TemplateRenderResultStatus.Success,
+                    renderedResult: renderResult,
+                    encoding: _encoding,
+                    usedTokens: usedTokens,
+                    unusedTokens: unusedTokens,
+                    unrecognisedTokens: model.UnrecognisedTokens,
+                    errors: null);
             }
             catch (Exception ex)
             {
@@ -143,6 +126,10 @@ namespace ConfigGen.Templating.Razor
                     errors: new[] { new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, $"{ex.GetType().Name}: {ex.Message}") });
             }
         }
+
+        public string TemplateType => "razor";
+
+        public string[] SupportedExtensions => new[] {".razor", ".cshtml"};
 
         [NotNull]
         private LoadResult MapToLoadResult([NotNull] RazorTemplateLoadResult razorTemplateLoadResult)

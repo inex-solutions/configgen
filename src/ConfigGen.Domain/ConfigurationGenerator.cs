@@ -141,11 +141,12 @@ namespace ConfigGen.Domain
                     return GenerationResults.CreateFail(loadResults.TemplateLoadErrors);
                 }
 
-                var renderResults = template.Render(configurations);
-
                 var singleFileGenerationResults = new List<SingleFileGenerationResult>();
-                foreach (var renderResult in renderResults.Results)
+
+                foreach (var configuration in configurations)
                 {
+                    SingleTemplateRenderResults renderResult = template.Render(configuration);
+
                     var writeResults = _fileOutputWriter.WriteOutput(
                        renderResult,
                        fileOutputPreferences);

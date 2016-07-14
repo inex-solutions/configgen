@@ -27,7 +27,6 @@ using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
 using JetBrains.Annotations;
@@ -106,41 +105,21 @@ namespace ConfigGen.Templating.Xml
 
         [Pure]
         [NotNull]
-        public RenderResults Render([NotNull] [ItemNotNull] IEnumerable<IConfiguration> configurationsToRender)
+        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration)
         {
-            if (configurationsToRender == null) throw new ArgumentNullException(nameof(configurationsToRender));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
             if (_loadedTemplate == null)
             {
                 throw new InvalidOperationException("Cannot render a template that has not been loaded.");
             }
 
-            IReadOnlyCollection<SingleTemplateRenderResults> results =
-                configurationsToRender
-                    .Select(cfg => RenderSingleTemplate(_loadedTemplate.DeepClone(), cfg, _xmlDeclarationInfo))
-                    .ToReadOnlyCollection();
-
-            return new RenderResults(TemplateRenderResultStatus.Success, results, null); 
-        }
-
-        public string TemplateType => "xml";
-
-        public string[] SupportedExtensions => new[] { ".xml" };
-
-        [NotNull]
-        private SingleTemplateRenderResults RenderSingleTemplate(
-            [NotNull] XElement unprocessedTemplate,
-            [NotNull] IConfiguration configuration,
-            [NotNull] XmlDeclarationInfo xmlDeclarationInfo)
-        {
-            if (unprocessedTemplate == null) throw new ArgumentNullException(nameof(unprocessedTemplate));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (xmlDeclarationInfo == null) throw new ArgumentNullException(nameof(xmlDeclarationInfo));
+            XElement unprocessedTemplate = _loadedTemplate.DeepClone();
 
             try
             {
                 var preprocessingResults = _templatePreprocessor.PreProcessTemplate(unprocessedTemplate, configuration);
-                string preprocessedTemplate = unprocessedTemplate.ToXmlString(xmlDeclarationInfo.XmlDeclarationPresent);
+                string preprocessedTemplate = unprocessedTemplate.ToXmlString(_xmlDeclarationInfo.XmlDeclarationPresent);
                 var usedTokens = new HashSet<string>(preprocessingResults.UsedTokens);
                 var unrecognisedTokens = new HashSet<string>(preprocessingResults.UnrecognisedTokens);
 
@@ -150,7 +129,7 @@ namespace ConfigGen.Templating.Xml
                         configuration: configuration,
                         status: TemplateRenderResultStatus.Failure,
                         renderedResult: null,
-                        encoding: xmlDeclarationInfo.StatedEncoding ?? xmlDeclarationInfo.ActualEncoding,
+                        encoding: _xmlDeclarationInfo.StatedEncoding ?? _xmlDeclarationInfo.ActualEncoding,
                         usedTokens: null,
                         unusedTokens: null,
                         unrecognisedTokens: null,
@@ -166,14 +145,14 @@ namespace ConfigGen.Templating.Xml
                 IEnumerable<string> unusedTokens = configuration.SettingsNames.Where(token => !usedTokens.Contains(token));
 
                 return new SingleTemplateRenderResults(
-                            configuration: configuration,
-                            status: TemplateRenderResultStatus.Success,
-                            renderedResult: output,
-                            encoding: xmlDeclarationInfo.StatedEncoding ?? xmlDeclarationInfo.ActualEncoding,
-                            usedTokens: usedTokens,
-                            unusedTokens: unusedTokens,
-                            unrecognisedTokens: unrecognisedTokens,
-                            errors: null);
+                    configuration: configuration,
+                    status: TemplateRenderResultStatus.Success,
+                    renderedResult: output,
+                    encoding: _xmlDeclarationInfo.StatedEncoding ?? _xmlDeclarationInfo.ActualEncoding,
+                    usedTokens: usedTokens,
+                    unusedTokens: unusedTokens,
+                    unrecognisedTokens: unrecognisedTokens,
+                    errors: null);
             }
             catch (Exception ex)
             {
@@ -188,6 +167,10 @@ namespace ConfigGen.Templating.Xml
                     errors: new UnhandledExceptionError(XmlTemplateErrorSource, ex).ToSingleEnumerable());
             }
         }
+
+        public string TemplateType => "xml";
+
+        public string[] SupportedExtensions => new[] { ".xml" };
 
         public void Dispose()
         {

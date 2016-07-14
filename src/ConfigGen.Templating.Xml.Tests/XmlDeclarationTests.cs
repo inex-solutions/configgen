@@ -43,22 +43,20 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
                 TemplateContents = XmlDeclaration + TemplateBody;
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
 
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
-
-            It the_render_should_be_successful = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_resulting_output_should_contain_the_xml_declaration = 
-                () => FirstResult.RenderedResult.ShouldStartWith(XmlDeclaration);
+                () => Result.RenderedResult.ShouldStartWith(XmlDeclaration);
 
             It the_resulting_output_should_be_the_rest_of_the_template_unaltered =
-                () => FirstResult.RenderedResult.ShouldContainXml(TemplateContents);
+                () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
     }
 }

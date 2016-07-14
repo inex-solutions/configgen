@@ -69,6 +69,8 @@ namespace ConfigGen.Settings.Excel
         /// Collection of loaded configuration settings.
         /// </returns>
         /// <exception cref="FileNotFoundException">Thrown if the specified excel spreadsheet is not found.</exception>
+        [NotNull]
+        [ItemNotNull]
         public IEnumerable<IConfiguration> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName = null)
         {
             if (settingsFile == null) throw new ArgumentNullException(nameof(settingsFile));

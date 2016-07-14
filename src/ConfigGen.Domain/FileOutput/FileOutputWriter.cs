@@ -36,6 +36,7 @@ namespace ConfigGen.Domain.FileOutput
         /// <summary>
         /// Writes a single rendering <paramref name="result"/> as a file, as specified by the supplied <paramref name="fileOutputPreferences"/>.
         /// </summary>
+        [NotNull]
         public WriteOutputResult WriteOutput([NotNull] SingleTemplateRenderResults result, [NotNull] FileOutputPreferences fileOutputPreferences)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));

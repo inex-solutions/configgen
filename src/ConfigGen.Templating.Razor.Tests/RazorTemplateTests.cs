@@ -72,13 +72,13 @@ namespace ConfigGen.Templating.Razor.Tests
             {
                 CaughtException = null;
                 TemplateContents = "<root>@Model.TokenOne</root>";
-                SingleConfiguration = new Dictionary<string, object>
+                ConfigurationSettings = new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                 };
             };
 
-            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configurations));
+            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configuration));
 
             It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
         }
@@ -88,7 +88,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                SingleConfiguration = new Dictionary<string, object>
+                ConfigurationSettings = new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -97,19 +97,17 @@ namespace ConfigGen.Templating.Razor.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_status_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_status_should_contain_no_errors = () => FirstResult.Errors.ShouldBeEmpty();
+            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
 
-            It the_resulting_output_should_be_the_unaltered_template = () => FirstResult.RenderedResult.ShouldEqual(TemplateContents);
+            It both_supplied_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 
-            It both_supplied_tokens_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
-
-            It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
         }
 
         public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : RazorTemplateRenderTestBase
@@ -117,7 +115,7 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenOne</root>";
-                SingleConfiguration = new Dictionary<string, object>
+                ConfigurationSettings = new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
@@ -128,19 +126,17 @@ namespace ConfigGen.Templating.Razor.Tests
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_status_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_status_should_contain_no_errors = () => FirstResult.Errors.ShouldBeEmpty();
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
 
-            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => FirstResult.RenderedResult.ShouldEqual(ExpectedOutput);
+            It the_used_supplied_token_should_be_listed_as_used = () => Result.UsedTokens.ShouldContainOnly("TokenOne");
 
-            It the_used_supplied_token_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldContainOnly("TokenOne");
-
-            It the_unused_supplied_token_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldContainOnly("TokenTwo");
+            It the_unused_supplied_token_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenTwo");
         }
 
         public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : RazorTemplateRenderTestBase
@@ -148,28 +144,26 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenThree</root>";
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
 
                 Subject.Load(TemplateContents.ToStream());
 
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_status_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_status_should_contain_no_errors = () => FirstResult.Errors.ShouldBeEmpty();
+            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_resulting_output_should_be_the_template_with_the_token_removed = () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+            It the_unrecognised_token_should_be_listed_as_unrecognised = () => Result.UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
-            It the_unrecognised_token_should_be_listed_as_unrecognised = () => FirstResult.UnrecognisedTokens.ShouldContainOnly("TokenThree");
+            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
 
-            It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
-
-            It no_tokens_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
         }
 
         public class when_rendering_a_template_which_has_a_utf8_encoding : RazorTemplateRenderTestBase
@@ -177,28 +171,26 @@ namespace ConfigGen.Templating.Razor.Tests
             Establish context = () =>
             {
                 TemplateContents = "<root>@Model.TokenThree</root>";
-                SingleConfiguration = new Dictionary<string, object>();
+                ConfigurationSettings = new Dictionary<string, object>();
 
                 Subject.Load(TemplateContents.ToStream());
 
                 ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
             };
 
-            Because of = () => Results = Subject.Render(Configurations);
+            Because of = () => Result = Subject.Render(Configuration);
 
-            It there_should_be_a_single_render_result = () => Results.Count.ShouldEqual(1);
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-            It the_resulting_status_should_indicate_success = () => FirstResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
-            It the_resulting_status_should_contain_no_errors = () => FirstResult.Errors.ShouldBeEmpty();
+            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_resulting_output_should_be_the_template_with_the_token_removed = () => FirstResult.RenderedResult.ShouldContainXml(ExpectedOutput);
+            It the_unrecognised_token_should_be_listed_as_unrecognised = () => Result.UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
-            It the_unrecognised_token_should_be_listed_as_unrecognised = () => FirstResult.UnrecognisedTokens.ShouldContainOnly("TokenThree");
+            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
 
-            It no_tokens_should_be_listed_as_used = () => FirstResult.UsedTokens.ShouldBeEmpty();
-
-            It no_tokens_should_be_listed_as_unused = () => FirstResult.UnusedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
         }
     }
 }

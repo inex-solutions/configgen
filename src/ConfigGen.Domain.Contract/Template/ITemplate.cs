@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
@@ -40,12 +39,11 @@ namespace ConfigGen.Domain.Contract.Template
         LoadResult Load([NotNull] Stream templateStream);
 
         /// <summary>
-        /// Renders output for each of the the configurations in the supplied configuration collection, returning results on the rendering
-        /// process.
+        /// Renders output for the supplied configuration collection, returning the result.
         /// </summary>
         [Pure]
         [NotNull]
-        RenderResults Render([NotNull] IEnumerable<IConfiguration> configurationsToRender);
+        SingleTemplateRenderResults Render([NotNull] IConfiguration configurationToRender);
 
         /// <summary>
         /// Gets a string indicating the type of template the class represents, e.g. xml, razor.

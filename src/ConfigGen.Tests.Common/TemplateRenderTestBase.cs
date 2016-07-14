@@ -20,7 +20,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 using Autofac;
 using Autofac.Core;
 using ConfigGen.Domain.Contract.Settings;
@@ -36,17 +35,17 @@ namespace ConfigGen.Tests.Common
         protected static TTemplate Subject;
         protected static string TemplateContents;
         [NotNull]
-        protected static Dictionary<string, object> SingleConfiguration;
-        protected static RenderResults Results;
+        protected static Dictionary<string, object> ConfigurationSettings;
+        protected static SingleTemplateRenderResults Result;
         protected static string ExpectedOutput;
         private static IEnumerable<Configuration> configurations;
 
         Establish context = () =>
         {
-            SingleConfiguration = new Dictionary<string, object>();
+            ConfigurationSettings = new Dictionary<string, object>();
             TemplateContents = null;
             configurations = null;
-            Results = null;
+            Result = null;
             ExpectedOutput = null;
 
             var containerBuilder = new ContainerBuilder();
@@ -56,13 +55,6 @@ namespace ConfigGen.Tests.Common
         };
 
         [NotNull]
-        protected static IEnumerable<Configuration> Configurations
-        {
-            get { return configurations ?? new[] { new Configuration("Test-IConfiguration", SingleConfiguration) }; }
-            set { configurations = value; }
-        }
-
-        [NotNull]
-        protected static SingleTemplateRenderResults FirstResult => Results?.Results.First();
+        protected static Configuration Configuration => new Configuration("Test-IConfiguration", ConfigurationSettings);
     }
 }

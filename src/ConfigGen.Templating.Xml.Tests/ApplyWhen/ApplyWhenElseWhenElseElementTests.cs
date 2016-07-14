@@ -38,7 +38,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -61,7 +61,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -87,7 +87,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -111,7 +111,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -137,7 +137,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -161,7 +161,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -186,7 +186,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -210,7 +210,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -235,7 +235,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -260,7 +260,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -293,7 +293,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<Root><contents of=""when""/></Root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -326,7 +326,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<Root><contents of=""elseWhen""/></Root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -359,7 +359,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<Root><contents of=""else""/></Root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -392,7 +392,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<Root><contents of=""when""/></Root>";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -425,7 +425,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 ExpectedOutput = @"<Root><contents of=""when"" /><!--<contents of=""elseWhen"" />--><!--<contents of=""else"" />--></Root > ";
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -463,7 +463,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 

@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Text;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
@@ -37,10 +38,14 @@ namespace ConfigGen.Domain.FileOutput
         /// Writes a single rendering <paramref name="result"/> as a file, as specified by the supplied <paramref name="fileOutputPreferences"/>.
         /// </summary>
         [NotNull]
-        public WriteOutputResult WriteOutput([NotNull] SingleTemplateRenderResults result, [NotNull] FileOutputPreferences fileOutputPreferences)
+        public WriteOutputResult WriteOutput(
+            [NotNull] SingleTemplateRenderResults result, 
+            [NotNull] FileOutputPreferences fileOutputPreferences, 
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (fileOutputPreferences == null) throw new ArgumentNullException(nameof(fileOutputPreferences));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             string outputFilename = fileOutputPreferences.ForceFilename;
             object val;

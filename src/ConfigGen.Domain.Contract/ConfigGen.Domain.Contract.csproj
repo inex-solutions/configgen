@@ -48,6 +48,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ITokenUsageTracker.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="GenerationResults.cs" />

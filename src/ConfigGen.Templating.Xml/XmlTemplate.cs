@@ -105,9 +105,10 @@ namespace ConfigGen.Templating.Xml
 
         [Pure]
         [NotNull]
-        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration)
+        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration, [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             if (_loadedTemplate == null)
             {

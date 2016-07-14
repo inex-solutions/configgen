@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using JetBrains.Annotations;
@@ -47,7 +48,6 @@ namespace ConfigGen.Tests.Common
             configurations = null;
             Result = null;
             ExpectedOutput = null;
-
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<TContainerModule>();
             var container = containerBuilder.Build();

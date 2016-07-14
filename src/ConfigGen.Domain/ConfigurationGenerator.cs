@@ -44,6 +44,9 @@ namespace ConfigGen.Domain
         private readonly TemplateFactory _templateFactory;
 
         [NotNull]
+        private readonly TokenUsageTrackerFactory _tokenUsageTrackerFactory;
+
+        [NotNull]
         private readonly ConfigurationNameSelector _configurationNameSelector;
 
         [NotNull]
@@ -57,6 +60,7 @@ namespace ConfigGen.Domain
         public ConfigurationGenerator(
             [NotNull] IManagePreferences preferencesManager, 
             [NotNull] TemplateFactory templateFactory,
+            [NotNull] TokenUsageTrackerFactory tokenUsageTrackerFactory,
             [NotNull] ConfigurationNameSelector configurationNameSelector,
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory, 
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter, 
@@ -64,13 +68,14 @@ namespace ConfigGen.Domain
         {
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
+            if (tokenUsageTrackerFactory == null) throw new ArgumentNullException(nameof(tokenUsageTrackerFactory));
             if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
-
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
 
             _templateFactory = templateFactory;
+            _tokenUsageTrackerFactory = tokenUsageTrackerFactory;
             _configurationNameSelector = configurationNameSelector;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
@@ -131,18 +136,25 @@ namespace ConfigGen.Domain
                 configGenerationPreferences.SettingsFilePath,
                 configGenerationPreferences.SettingsFileType);
 
+            //NOPUSH - RJL HERE
             IEnumerable<IConfiguration> configurations = settings.Select(s => new Configuration(_configurationNameSelector.GetName(s), s));
 
             var configurationCollectionFilterPreferences = new ConfigurationCollectionFilterPreferences();
             _preferencesManager.ApplyPreferences(preferences, configurationCollectionFilterPreferences);
-            configurations = _configurationCollectionFilter.Filter(configurationCollectionFilterPreferences, configurations);
+
+            var globallyUsedTokens
+                = new HashSet<string>();
+
+            configurations = _configurationCollectionFilter.Filter(
+                configurationCollectionFilterPreferences,
+                configurations,
+                token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
 
             var fileOutputPreferences = new FileOutputPreferences();
             _preferencesManager.ApplyPreferences(preferences, fileOutputPreferences);
 
             //TODO: make this pipeline async and parallelised
             //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
-
             using (var templateStream = File.OpenRead(configGenerationPreferences.TemplateFilePath))
             {
                 var loadResults = template.Load(templateStream);
@@ -156,25 +168,19 @@ namespace ConfigGen.Domain
 
                 foreach (var configuration in configurations)
                 {
-                    SingleTemplateRenderResults renderResult = template.Render(configuration);
+                    var tokenUsageTracker = _tokenUsageTrackerFactory.GetTokenUsageTracker(globallyUsedTokens);
+                    SingleTemplateRenderResults renderResult = template.Render(configuration, tokenUsageTracker); //NOPUSH - duplicate will throw error?);
 
                     var writeResults = _fileOutputWriter.WriteOutput(
                        renderResult,
-                       fileOutputPreferences);
+                       fileOutputPreferences,
+                       tokenUsageTracker);
 
                     singleFileGenerationResults.Add(new SingleFileGenerationResult(renderResult.ConfigurationName, writeResults.FullPath));
                 }
 
                 return GenerationResults.CreateSuccess(unrecognisedPreferences, singleFileGenerationResults);
             }
-        }
-    }
-
-    public class ConfigurationNameSelector
-    {
-        public string GetName(IDictionary<string, object> dictionary)
-        {
-            return dictionary["MachineName"].ToString(); //NOPUSH - VERY naieve implementation
         }
     }
 }

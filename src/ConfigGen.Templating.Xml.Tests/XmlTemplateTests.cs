@@ -76,7 +76,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 };
             };
 
-            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configuration));
+            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configuration, TokenUsageTracker));
 
             It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
         }
@@ -95,7 +95,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -124,7 +124,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -150,7 +150,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 

@@ -43,7 +43,7 @@ namespace ConfigGen.Domain.Contract.Template
         /// </summary>
         [Pure]
         [NotNull]
-        SingleTemplateRenderResults Render([NotNull] IConfiguration configurationToRender);
+        SingleTemplateRenderResults Render([NotNull] IConfiguration configuration, [NotNull] ITokenUsageTracker tokenUsageTracker);
 
         /// <summary>
         /// Gets a string indicating the type of template the class represents, e.g. xml, razor.

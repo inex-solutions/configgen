@@ -48,7 +48,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration);
+            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 

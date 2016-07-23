@@ -20,6 +20,9 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
@@ -28,17 +31,27 @@ namespace ConfigGen.Domain.Contract
     {
         public SingleFileGenerationResult(
             [NotNull] string configurationName, 
-            [NotNull] string fullPath, 
+            [NotNull] string fullPath,
+            [NotNull] IEnumerable<string> unusedTokens,
+            [NotNull] IEnumerable<string> unregocnisedTokens,
+            [NotNull] IEnumerable<Error> errors,
             bool hasChanged,
             bool wasWritten)
         {
             if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
             if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
+            if (unusedTokens == null) throw new ArgumentNullException(nameof(unusedTokens));
+            if (unregocnisedTokens == null) throw new ArgumentNullException(nameof(unregocnisedTokens));
+            if (errors == null) throw new ArgumentNullException(nameof(errors));
 
             ConfigurationName = configurationName;
             FullPath = fullPath;
             HasChanged = hasChanged;
             WasWritten = wasWritten;
+
+            UnusedTokens = unusedTokens.ToReadOnlyCollection();
+            UnrecognisedTokens = unregocnisedTokens.ToReadOnlyCollection();
+            Errors = errors.ToReadOnlyCollection();
         }
 
         [NotNull]
@@ -50,5 +63,15 @@ namespace ConfigGen.Domain.Contract
         public bool HasChanged { get; }
 
         public bool WasWritten { get; }
+
+        [NotNull]
+        public IReadOnlyCollection<string> UnusedTokens { get; }
+
+        [NotNull]
+        public IReadOnlyCollection<string> UnrecognisedTokens { get; }
+
+        [NotNull]
+        public IReadOnlyCollection<Error> Errors { get; }
+
     }
 }

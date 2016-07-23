@@ -22,7 +22,6 @@
 using System;
 using System.IO;
 using System.Text;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.IO;

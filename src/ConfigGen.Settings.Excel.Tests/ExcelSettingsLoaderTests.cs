@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Tests.Common.Extensions;
 using Machine.Specifications;
 

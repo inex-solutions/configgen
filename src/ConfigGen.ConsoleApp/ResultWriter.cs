@@ -54,11 +54,29 @@ namespace ConfigGen.ConsoleApp
 
             foreach (SingleFileGenerationResult result in results.GeneratedFiles)
             {
+                
                 string configurationName = result.ConfigurationName.PadRight(20);
                 string changedMessage = result.HasChanged ? "[FILE CHANGED]  " : "[FILE UNCHANGED]";
-                string warningsMessage = "WITHOUT WARNINGS";
+                string warningsMessage = result.Errors.Any() ? "WITH ERRORS"
+                                        : result.UnusedTokens.Any() ? "WITH WARNINGS"
+                                        : "WITHOUT WARNINGS";
 
                 _logger.Info($"{configurationName} - {changedMessage} - {warningsMessage}");
+
+                foreach (var error in result.Errors)
+                {
+                    _logger.Error($" - {error.ToDisplayText()}");
+                }
+
+                foreach (var unusedToken in result.UnusedTokens)
+                {
+                    _logger.Warn($" - Unused token: {unusedToken}");
+                }
+
+                foreach (var unrecognisedToken in result.UnrecognisedTokens)
+                {
+                    _logger.Warn($" - Unrecognised token: {unrecognisedToken}");
+                }
             }
         }
     }

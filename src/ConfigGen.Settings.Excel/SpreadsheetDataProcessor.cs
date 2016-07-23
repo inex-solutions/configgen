@@ -21,7 +21,6 @@
 
 using System;
 using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Utilities.Extensions;
 
 namespace ConfigGen.Settings.Excel

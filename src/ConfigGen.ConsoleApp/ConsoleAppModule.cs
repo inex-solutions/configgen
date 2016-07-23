@@ -21,7 +21,6 @@
 
 using Autofac;
 using ConfigGen.Domain;
-using ConfigGen.Utilities.IO;
 
 namespace ConfigGen.ConsoleApp
 {

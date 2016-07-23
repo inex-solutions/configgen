@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;

@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using ConfigGen.Domain.Contract;
@@ -113,7 +112,7 @@ namespace ConfigGen.Templating.Razor
                     status: TemplateRenderResultStatus.Success,
                     renderedResult: renderResult,
                     encoding: _encoding,
-                    usedTokens: _tokenUsageTracker.GetUsedTokensForConfiguration(configuration),
+                    usedTokens: _tokenUsageTracker.GetUsedTokensForConfiguration(configuration), //TODO: should this be here, or pushed up to nearer to singlefilegenerationresult?
                     unusedTokens: _tokenUsageTracker.GetUnusedTokensForConfiguration(configuration),
                     unrecognisedTokens: _tokenUsageTracker.GetUnrecognisedTokensForConfiguration(configuration),
                     errors: null);

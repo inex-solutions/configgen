@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -189,6 +188,9 @@ namespace ConfigGen.Domain
                         new SingleFileGenerationResult(
                             renderResult.ConfigurationName,
                             writeResults.FullPath,
+                            renderResult.UnusedTokens,
+                            renderResult.UnrecognisedTokens,
+                            renderResult.Errors,
                             writeResults.FileChanged,
                             writeResults.WasWritten));
                 }

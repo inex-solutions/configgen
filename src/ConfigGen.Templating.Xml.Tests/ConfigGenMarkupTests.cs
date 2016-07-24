@@ -43,7 +43,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -73,7 +73,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -94,7 +94,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -115,7 +115,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_render_should_fail = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
@@ -139,7 +139,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 ConfigurationSettings = new Dictionary<string, object>();
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_render_should_fail = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 

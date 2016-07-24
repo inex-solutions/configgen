@@ -31,7 +31,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    public class TemplatePreprocessor
+    public class TemplatePreprocessor : ITemplatePreprocessor
     {
         [NotNull]
         public PreprocessingResults PreProcessTemplate([NotNull] XElement unprocessedTemplate, [NotNull] IConfiguration configuration)

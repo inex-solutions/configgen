@@ -45,37 +45,40 @@ namespace ConfigGen.Templating.Xml
         private readonly XmlDeclarationParser _xmlDeclarationParser;
 
         [NotNull]
-        private readonly TemplateLoader _templateLoader;
+        private readonly ITemplateLoader _templateLoader;
 
         [NotNull]
-        private readonly TemplatePreprocessor _templatePreprocessor;
+        private readonly ITemplatePreprocessor _templatePreprocessor;
 
         [NotNull]
-        private readonly TokenReplacer _tokenReplacer;
+        private readonly ITokenReplacer _tokenReplacer;
+
+        [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
 
         private XmlDeclarationInfo _xmlDeclarationInfo;
         private XElement _loadedTemplate;
 
-        internal XmlTemplate(
+        public XmlTemplate(
             [NotNull] XmlDeclarationParser xmlDeclarationParser, 
-            [NotNull] TemplateLoader templateLoader, 
-            [NotNull] TemplatePreprocessor templatePreprocessor,
-            [NotNull] TokenReplacer tokenReplacer)
+            [NotNull] ITemplateLoader templateLoader, 
+            [NotNull] ITemplatePreprocessor templatePreprocessor,
+            [NotNull] ITokenReplacer tokenReplacer,
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (xmlDeclarationParser == null) throw new ArgumentNullException(nameof(xmlDeclarationParser));
             if (templateLoader == null) throw new ArgumentNullException(nameof(templateLoader));
             if (templatePreprocessor == null) throw new ArgumentNullException(nameof(templatePreprocessor));
             if (tokenReplacer == null) throw new ArgumentNullException(nameof(tokenReplacer));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _xmlDeclarationParser = xmlDeclarationParser;
             _templateLoader = templateLoader;
             _templatePreprocessor = templatePreprocessor;
             _tokenReplacer = tokenReplacer;
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
-        public XmlTemplate() : this (new XmlDeclarationParser(), new TemplateLoader(), new TemplatePreprocessor(), new TokenReplacer())
-        {
-        }
 
         [NotNull]
         public LoadResult Load([NotNull] Stream templateStream)
@@ -105,10 +108,9 @@ namespace ConfigGen.Templating.Xml
 
         [Pure]
         [NotNull]
-        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration, [NotNull] ITokenUsageTracker tokenUsageTracker)
+        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             if (_loadedTemplate == null)
             {
@@ -121,8 +123,16 @@ namespace ConfigGen.Templating.Xml
             {
                 var preprocessingResults = _templatePreprocessor.PreProcessTemplate(unprocessedTemplate, configuration);
                 string preprocessedTemplate = unprocessedTemplate.ToXmlString(_xmlDeclarationInfo.XmlDeclarationPresent);
-                var usedTokens = new HashSet<string>(preprocessingResults.UsedTokens);
-                var unrecognisedTokens = new HashSet<string>(preprocessingResults.UnrecognisedTokens);
+
+                foreach (var token in preprocessingResults.UsedTokens) //TODO: push token usage tracker into pre-processor?
+                {
+                    _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, token);
+                }
+
+                foreach (var token in preprocessingResults.UnrecognisedTokens)
+                {
+                    _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, token);
+                }
 
                 if (preprocessingResults.Errors.Any())
                 {
@@ -139,20 +149,18 @@ namespace ConfigGen.Templating.Xml
 
                 string output = _tokenReplacer.ReplaceTokens(
                     configuration: configuration,
-                    onTokenUsed: tokenName => usedTokens.AddIfNotPresent(tokenName),
-                    onUnrecognisedToken: tokenName => unrecognisedTokens.AddIfNotPresent(tokenName), 
+                    onTokenUsed: tokenName => _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, tokenName),  //TODO: push token usage tracker into token-replacer?
+                    onUnrecognisedToken: tokenName => _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, tokenName),
                     inputTemplate: preprocessedTemplate);
-
-                IEnumerable<string> unusedTokens = configuration.SettingsNames.Where(token => !usedTokens.Contains(token));
 
                 return new SingleTemplateRenderResults(
                     configuration: configuration,
                     status: TemplateRenderResultStatus.Success,
                     renderedResult: output,
                     encoding: _xmlDeclarationInfo.StatedEncoding ?? _xmlDeclarationInfo.ActualEncoding,
-                    usedTokens: usedTokens,
-                    unusedTokens: unusedTokens,
-                    unrecognisedTokens: unrecognisedTokens,
+                    usedTokens: _tokenUsageTracker.GetUsedTokensForConfiguration(configuration),
+                    unusedTokens: _tokenUsageTracker.GetUnusedTokensForConfiguration(configuration),
+                    unrecognisedTokens: _tokenUsageTracker.GetUnrecognisedTokensForConfiguration(configuration),
                     errors: null);
             }
             catch (Exception ex)

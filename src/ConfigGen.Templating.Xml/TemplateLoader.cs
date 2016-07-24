@@ -26,7 +26,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    internal class TemplateLoader
+    public class TemplateLoader : ITemplateLoader
     {
         [NotNull]
         public static readonly XElement NullXmlTemplate = XElement.Parse($@"<cfg:null-xml-template xmlns:cfg=""{XmlTemplate.ConfigGenXmlNamespace}"">Template Load Failed</cfg:null-xml-template>");

@@ -44,9 +44,6 @@ namespace ConfigGen.Domain
         private readonly TemplateFactory _templateFactory;
 
         [NotNull]
-        private readonly TokenUsageTrackerFactory _tokenUsageTrackerFactory;
-
-        [NotNull]
         private readonly ConfigurationNameSelector _configurationNameSelector;
 
         [NotNull]
@@ -60,7 +57,6 @@ namespace ConfigGen.Domain
         public ConfigurationGenerator(
             [NotNull] IManagePreferences preferencesManager, 
             [NotNull] TemplateFactory templateFactory,
-            [NotNull] TokenUsageTrackerFactory tokenUsageTrackerFactory,
             [NotNull] ConfigurationNameSelector configurationNameSelector,
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory, 
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter, 
@@ -68,14 +64,12 @@ namespace ConfigGen.Domain
         {
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
-            if (tokenUsageTrackerFactory == null) throw new ArgumentNullException(nameof(tokenUsageTrackerFactory));
             if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
 
             _templateFactory = templateFactory;
-            _tokenUsageTrackerFactory = tokenUsageTrackerFactory;
             _configurationNameSelector = configurationNameSelector;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
@@ -168,13 +162,11 @@ namespace ConfigGen.Domain
 
                 foreach (var configuration in configurations)
                 {
-                    var tokenUsageTracker = _tokenUsageTrackerFactory.GetTokenUsageTracker(globallyUsedTokens);
-                    SingleTemplateRenderResults renderResult = template.Render(configuration, tokenUsageTracker); //NOPUSH - duplicate will throw error?);
+                    SingleTemplateRenderResults renderResult = template.Render(configuration); //NOPUSH - duplicate will throw error?);
 
                     var writeResults = _fileOutputWriter.WriteOutput(
                        renderResult,
-                       fileOutputPreferences,
-                       tokenUsageTracker);
+                       fileOutputPreferences);
 
                     singleFileGenerationResults.Add(new SingleFileGenerationResult(renderResult.ConfigurationName, writeResults.FullPath));
                 }

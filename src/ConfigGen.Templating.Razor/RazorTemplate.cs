@@ -43,10 +43,17 @@ namespace ConfigGen.Templating.Razor
         [NotNull]
         private const string RazorTemplateErrorSource = nameof(RazorTemplate);
 
-        public RazorTemplate([NotNull] RazorTemplateRenderer<DictionaryBackedDynamicModel> razorTemplateRenderer)
+        [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
+
+        public RazorTemplate(
+            [NotNull] RazorTemplateRenderer<DictionaryBackedDynamicModel> razorTemplateRenderer,
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (razorTemplateRenderer == null) throw new ArgumentNullException(nameof(razorTemplateRenderer));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
             _razorTemplateRenderer = razorTemplateRenderer;
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
         [NotNull]
@@ -73,10 +80,9 @@ namespace ConfigGen.Templating.Razor
 
         [Pure]
         [NotNull]
-        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration, [NotNull] ITokenUsageTracker tokenUsageTracker)
+        public SingleTemplateRenderResults Render([NotNull] IConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             if (_loadedTemplate == null)
             {
@@ -89,19 +95,17 @@ namespace ConfigGen.Templating.Razor
                 var model = new DictionaryBackedDynamicModel(settings);
                 string renderResult = _razorTemplateRenderer.Render(model);
 
-                var usedTokens = new List<string>();
-                var unusedTokens = new List<string>();
-
                 foreach (var settingName in settings)
                 {
                     if (model.AccessedTokens.Contains(settingName.Key))
                     {
-                        usedTokens.Add(settingName.Key);
+                        _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, settingName.Key);
                     }
-                    else
-                    {
-                        unusedTokens.Add(settingName.Key);
-                    }
+                }
+
+                foreach (var settingName in model.UnrecognisedTokens)
+                {
+                    _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, settingName);
                 }
 
                 return new SingleTemplateRenderResults(
@@ -109,9 +113,9 @@ namespace ConfigGen.Templating.Razor
                     status: TemplateRenderResultStatus.Success,
                     renderedResult: renderResult,
                     encoding: _encoding,
-                    usedTokens: usedTokens,
-                    unusedTokens: unusedTokens,
-                    unrecognisedTokens: model.UnrecognisedTokens,
+                    usedTokens: _tokenUsageTracker.GetUsedTokensForConfiguration(configuration),
+                    unusedTokens: _tokenUsageTracker.GetUnusedTokensForConfiguration(configuration),
+                    unrecognisedTokens: _tokenUsageTracker.GetUnrecognisedTokensForConfiguration(configuration),
                     errors: null);
             }
             catch (Exception ex)

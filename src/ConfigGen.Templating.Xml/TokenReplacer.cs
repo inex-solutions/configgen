@@ -26,7 +26,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    public class TokenReplacer
+    public class TokenReplacer : ITokenReplacer
     {
         [NotNull]
         public static readonly Regex TokenRegexp = new Regex(@"\[%(?<mib>.*)%\]", RegexOptions.Multiline | RegexOptions.Compiled);

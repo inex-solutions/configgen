@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
+using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
@@ -40,6 +41,7 @@ namespace ConfigGen.Tests.Common
         protected static LoadResult Result;
         protected static string ExpectedOutput;
         private static IEnumerable<Configuration> configurations;
+        protected static TokenUsageTracker TokenUsageTracker;
 
         Establish context = () =>
         {
@@ -48,8 +50,10 @@ namespace ConfigGen.Tests.Common
             configurations = null;
             Result = null;
             ExpectedOutput = null;
+            TokenUsageTracker = new TokenUsageTracker();
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<TContainerModule>();
+            containerBuilder.RegisterInstance<ITokenUsageTracker>(TokenUsageTracker);
             var container = containerBuilder.Build();
             Subject = container.Resolve<TTemplate>();
         };

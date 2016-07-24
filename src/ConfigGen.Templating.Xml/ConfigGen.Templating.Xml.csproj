@@ -52,6 +52,9 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ITemplateLoader.cs" />
+    <Compile Include="ITemplatePreprocessor.cs" />
+    <Compile Include="ITokenReplacer.cs" />
     <Compile Include="NodeProcessing\ApplyElement.cs" />
     <Compile Include="NodeProcessing\ApplyElementCreator.cs" />
     <Compile Include="NodeProcessing\ApplyElementProcessor.cs" />

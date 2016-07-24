@@ -21,6 +21,7 @@
 
 using Autofac;
 using ConfigGen.Domain.Contract.Template;
+using ConfigGen.Utilities.Xml;
 
 namespace ConfigGen.Templating.Xml
 {
@@ -29,6 +30,10 @@ namespace ConfigGen.Templating.Xml
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<XmlTemplate>().As<ITemplate>().As<XmlTemplate>();
+            builder.RegisterType<TemplateLoader>().As<ITemplateLoader>();
+            builder.RegisterType<TemplatePreprocessor>().As<ITemplatePreprocessor>();
+            builder.RegisterType<TokenReplacer>().As<ITokenReplacer>();
+            builder.RegisterType<XmlDeclarationParser>();
         }
     }
 }

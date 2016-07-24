@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain
+namespace ConfigGen.Domain.Contract
 {
     public class TokenUsageTracker : ITokenUsageTracker
     {

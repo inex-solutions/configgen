@@ -27,7 +27,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    internal class XmlTemplateLoadResults
+    public class XmlTemplateLoadResults
     {
         public XmlTemplateLoadResults([NotNull] XElement loadedTemplate)
         {

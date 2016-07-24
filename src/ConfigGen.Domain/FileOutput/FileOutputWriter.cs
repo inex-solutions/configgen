@@ -34,18 +34,24 @@ namespace ConfigGen.Domain.FileOutput
     /// </summary>
     public class FileOutputWriter
     {
+        private readonly ITokenUsageTracker _tokenUsageTracker;
+
+        public FileOutputWriter([NotNull] ITokenUsageTracker tokenUsageTracker)
+        {
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+            _tokenUsageTracker = tokenUsageTracker;
+        }
+
         /// <summary>
         /// Writes a single rendering <paramref name="result"/> as a file, as specified by the supplied <paramref name="fileOutputPreferences"/>.
         /// </summary>
         [NotNull]
         public WriteOutputResult WriteOutput(
             [NotNull] SingleTemplateRenderResults result, 
-            [NotNull] FileOutputPreferences fileOutputPreferences, 
-            [NotNull] ITokenUsageTracker tokenUsageTracker)
+            [NotNull] FileOutputPreferences fileOutputPreferences)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (fileOutputPreferences == null) throw new ArgumentNullException(nameof(fileOutputPreferences));
-            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             string outputFilename = fileOutputPreferences.ForceFilename;
             object val;

@@ -76,7 +76,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 };
             };
 
-            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configuration, TokenUsageTracker));
+            Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configuration));
 
             It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
         }
@@ -95,7 +95,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -124,7 +124,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
@@ -138,7 +138,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_unused_supplied_token_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenTwo");
         }
 
-        public class when_rendering_a_template_containing_an_unrecognised_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        public class when_rendering_a_template_containing_an_unrecognised_token : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -150,7 +150,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 Subject.Load(TemplateContents.ToStream());
             };
 
-            Because of = () => Result = Subject.Render(Configuration, TokenUsageTracker);
+            Because of = () => Result = Subject.Render(Configuration);
 
             It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 

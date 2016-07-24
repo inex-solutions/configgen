@@ -24,7 +24,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {
-    internal class XmlTemplateError : Error
+    public class XmlTemplateError : Error
     {
         public const string RazorTemplateErrorSource = "XmlTemplate";
 

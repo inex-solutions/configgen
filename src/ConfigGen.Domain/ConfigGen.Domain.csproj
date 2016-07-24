@@ -75,7 +75,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateFactory.cs" />
     <Compile Include="TokenUsageTracker.cs" />
-    <Compile Include="TokenUsageTrackerFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

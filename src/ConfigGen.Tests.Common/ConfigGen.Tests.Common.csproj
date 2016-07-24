@@ -80,6 +80,10 @@
       <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Domain\ConfigGen.Domain.csproj">
+      <Project>{B1F73633-082F-4CA1-8BD5-575283C19839}</Project>
+      <Name>ConfigGen.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
       <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>
       <Name>ConfigGen.Utilities</Name>

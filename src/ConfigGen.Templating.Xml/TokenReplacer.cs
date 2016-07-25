@@ -21,6 +21,7 @@
 
 using System;
 using System.Text.RegularExpressions;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
 
@@ -29,24 +30,29 @@ namespace ConfigGen.Templating.Xml
     public class TokenReplacer : ITokenReplacer
     {
         [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
+
+        [NotNull]
         public static readonly Regex TokenRegexp = new Regex(@"\[%(?<mib>.*)%\]", RegexOptions.Multiline | RegexOptions.Compiled);
+
+            
+        public TokenReplacer([NotNull] ITokenUsageTracker tokenUsageTracker)
+        {
+            _tokenUsageTracker = tokenUsageTracker;
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+        }
 
         [NotNull]
         public string ReplaceTokens(
             [NotNull] IConfiguration configuration,
-            [NotNull] Action<string> onTokenUsed,
-            [NotNull] Action<string> onUnrecognisedToken,
             [NotNull] string inputTemplate)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (onTokenUsed == null) throw new ArgumentNullException(nameof(onTokenUsed));
-            if (onUnrecognisedToken == null) throw new ArgumentNullException(nameof(onUnrecognisedToken));
             if (inputTemplate == null) throw new ArgumentNullException(nameof(inputTemplate));
 
             var tokenValueMatchEvaluator = new TokenValueMatchEvaluator(
                 configuration: configuration,
-                onTokenUsed: onTokenUsed,
-                onUnrecognisedToken: onUnrecognisedToken);
+                tokenUsageTracker: _tokenUsageTracker);
 
             var matchEvaluator = new MatchEvaluator(tokenValueMatchEvaluator.Target);
 

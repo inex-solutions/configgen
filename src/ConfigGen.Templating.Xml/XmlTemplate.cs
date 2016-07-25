@@ -149,8 +149,6 @@ namespace ConfigGen.Templating.Xml
 
                 string output = _tokenReplacer.ReplaceTokens(
                     configuration: configuration,
-                    onTokenUsed: tokenName => _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, tokenName),  //TODO: push token usage tracker into token-replacer?
-                    onUnrecognisedToken: tokenName => _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, tokenName),
                     inputTemplate: preprocessedTemplate);
 
                 return new SingleTemplateRenderResults(

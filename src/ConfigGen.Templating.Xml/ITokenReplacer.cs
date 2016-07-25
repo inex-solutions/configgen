@@ -8,8 +8,6 @@ namespace ConfigGen.Templating.Xml
     {
         string ReplaceTokens(
             [NotNull] IConfiguration configuration,
-            [NotNull] Action<string> onTokenUsed,
-            [NotNull] Action<string> onUnrecognisedToken,
             [NotNull] string inputTemplate);
     }
 }

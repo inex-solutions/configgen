@@ -21,6 +21,7 @@
 
 using System;
 using System.Text.RegularExpressions;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using JetBrains.Annotations;
 
@@ -32,20 +33,15 @@ namespace ConfigGen.Templating.Xml
         private readonly IConfiguration _configuration;
 
         [NotNull]
-        private readonly Action<string> _onTokenUsed;
+        private readonly ITokenUsageTracker _tokenUsageTracker;
 
-        [NotNull]
-        private readonly Action<string> _onUnrecognisedToken;
-
-        public TokenValueMatchEvaluator([NotNull] IConfiguration configuration, [NotNull] Action<string> onTokenUsed, [NotNull] Action<string> onUnrecognisedToken)
+        public TokenValueMatchEvaluator([NotNull] IConfiguration configuration, [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (onTokenUsed == null) throw new ArgumentNullException(nameof(onTokenUsed));
-            if (onUnrecognisedToken == null) throw new ArgumentNullException(nameof(onUnrecognisedToken));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _configuration = configuration;
-            _onTokenUsed = onTokenUsed;
-            _onUnrecognisedToken = onUnrecognisedToken;
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
         public string Target(Match match)
@@ -56,11 +52,11 @@ namespace ConfigGen.Templating.Xml
             if (_configuration.TryGetValue(tokenName, out value)
                 && value != null)
             {
-                _onTokenUsed(tokenName);
+                _tokenUsageTracker.OnTokenUsed(_configuration.ConfigurationName, tokenName);
                 return value.ToString();
             }
 
-            _onUnrecognisedToken(tokenName);
+            _tokenUsageTracker.OnTokenNotRecognised(_configuration.ConfigurationName, tokenName);
             return null;
         }
     }

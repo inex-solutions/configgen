@@ -41,7 +41,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
             configGenAttribute.Remove();
 
-            return new ProcessNodeResults(
+            return ProcessNodeResults.CreateErrorResult(
                 errorCode: XmlTemplateErrorCodes.BadMarkupError, 
                 errorMessage: $"No node processor exists for the node of type 'attribute' with name '{configGenAttribute.Name.LocalName}'");
         }

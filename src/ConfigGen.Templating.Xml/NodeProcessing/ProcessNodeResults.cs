@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -27,12 +28,14 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 {
     public class ProcessNodeResults
     {
-        public ProcessNodeResults(
-            [CanBeNull] string errorCode = null,
-            [CanBeNull] string errorMessage = null)
+        private ProcessNodeResults(
+            bool success,
+            [CanBeNull] string errorCode,
+            [CanBeNull] string errorMessage)
         {
             ErrorMessage = errorMessage;
             ErrorCode = errorCode;
+            Success = success;
         }
 
         [CanBeNull]
@@ -40,5 +43,22 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
         [CanBeNull]
         public string ErrorMessage { get; }
+
+        public bool Success { get; }
+
+        [NotNull]
+        public static ProcessNodeResults CreateSuccessResult()
+        {
+            return new ProcessNodeResults(true, null, null);
+        }
+
+        [NotNull]
+        public static ProcessNodeResults CreateErrorResult([NotNull] string errorCode, [NotNull] string errorMessage)
+        {
+            if (errorCode == null) throw new ArgumentNullException(nameof(errorCode));
+            if (errorMessage == null) throw new ArgumentNullException(nameof(errorMessage));
+
+            return new ProcessNodeResults(false, errorCode, errorMessage);
+        }
     }
 }

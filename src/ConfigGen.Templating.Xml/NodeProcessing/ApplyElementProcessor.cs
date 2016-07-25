@@ -76,7 +76,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (!result.Success)
             {
                 element.Remove();
-                return new ProcessNodeResults(XmlTemplateErrorCodes.ApplyWhenElseFormatError, result.Error);
+                return ProcessNodeResults.CreateErrorResult(XmlTemplateErrorCodes.ApplyWhenElseFormatError, result.Error);
             }
 
             bool trueConditionAlreadyEvaluated = false;
@@ -91,7 +91,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 if (evaluationResults.ErrorCode != null)
                 {
                     element.Remove();
-                    return new ProcessNodeResults(evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
+                    return ProcessNodeResults.CreateErrorResult(evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
                 }
 
                 ProcessElement(subNode, evaluationResults.Result && !trueConditionAlreadyEvaluated);
@@ -106,7 +106,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
             element.Remove();
 
-            return new ProcessNodeResults(); //TODO - yuk
+            return ProcessNodeResults.CreateSuccessResult();
         }
 
         private void ProcessElement(ApplyElementSubNode applyElementSubNode, bool result)

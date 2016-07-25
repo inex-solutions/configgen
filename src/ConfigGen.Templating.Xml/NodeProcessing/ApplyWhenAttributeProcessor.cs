@@ -70,7 +70,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (expression.IsNullOrEmpty())
             {
                 attribute.Remove();
-                return new ProcessNodeResults(XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
+                return ProcessNodeResults.CreateErrorResult(XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
             }
 
             ExpressionEvaluationResults evaluationResults = _evaluator.Evaluate(configuration.ConfigurationName, expression, element.Name);
@@ -98,10 +98,10 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
             if (evaluationResults.ErrorCode != null)
             {
-                return new ProcessNodeResults(evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
+                return ProcessNodeResults.CreateErrorResult(evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
             }
 
-            return new ProcessNodeResults(); //TODO: yuk - do something with ProcessNodeResults
+            return ProcessNodeResults.CreateSuccessResult();
         }
     }
 }

@@ -38,9 +38,6 @@ namespace ConfigGen.Domain.Contract.Template
             TemplateRenderResultStatus status,
             [CanBeNull] string renderedResult, 
             [CanBeNull] Encoding encoding,
-            [CanBeNull] IEnumerable<string> usedTokens, 
-            [CanBeNull] IEnumerable<string> unusedTokens,
-            [CanBeNull] IEnumerable<string> unrecognisedTokens,
             [CanBeNull] IEnumerable<Error> errors)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
@@ -50,11 +47,6 @@ namespace ConfigGen.Domain.Contract.Template
             Status = status;
             RenderedResult = renderedResult;
             Encoding = encoding;
-
-            //TODO: change these arrays to ReadOnlyCollections?
-            UsedTokens = usedTokens?.ToArray() ?? new string[0];
-            UnusedTokens = unusedTokens?.ToArray() ?? new string[0];
-            UnrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];
             Errors = errors?.ToArray() ?? new Error[0];
         }
 
@@ -74,14 +66,5 @@ namespace ConfigGen.Domain.Contract.Template
 
         [NotNull]
         public Error[] Errors { get; }
-
-        [NotNull]
-        public string[] UsedTokens { get; }
-
-        [NotNull]
-        public string[] UnusedTokens { get; }
-
-        [NotNull]
-        public string[] UnrecognisedTokens { get; }
     }
 }

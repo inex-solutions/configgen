@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
+using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
@@ -53,19 +54,15 @@ namespace ConfigGen.Domain
             GetTokenList(configurationName, _unrecognisedTokens).AddIfNotPresent(tokenName);
         }
 
-        public IEnumerable<string> GetUsedTokensForConfiguration(IConfiguration configuration)
+        [NotNull]
+        public TokenUsageStatistics GetTokenUsageStatistics([NotNull] IConfiguration configuration)
         {
-            return GetTokenList(configuration.ConfigurationName, _usedTokens);
-        }
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-        public IEnumerable<string> GetUnrecognisedTokensForConfiguration(IConfiguration configuration)
-        {
-            return GetTokenList(configuration.ConfigurationName, _unrecognisedTokens);
-        }
-
-        public IEnumerable<string> GetUnusedTokensForConfiguration(IConfiguration configuration)
-        {
-            return configuration.SettingsNames.Except(GetTokenList(configuration.ConfigurationName, _usedTokens));
+            return new TokenUsageStatistics(
+                usedTokens: GetTokenList(configuration.ConfigurationName, _usedTokens).ToReadOnlyCollection(),
+                unrecognisedTokens: GetTokenList(configuration.ConfigurationName, _unrecognisedTokens).ToReadOnlyCollection(),
+                unusedTokens: configuration.SettingsNames.Except(GetTokenList(configuration.ConfigurationName, _usedTokens)).ToReadOnlyCollection());
         }
 
         [NotNull]

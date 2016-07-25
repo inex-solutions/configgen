@@ -47,6 +47,9 @@ namespace ConfigGen.Domain
         private readonly ILoggerControler _loggerController;
 
         [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
+
+        [NotNull]
         private readonly TemplateFactory _templateFactory;
 
         [NotNull]
@@ -69,7 +72,8 @@ namespace ConfigGen.Domain
             [NotNull] FileOutputWriter fileOutputWriter,
             [NotNull] IManagePreferences preferencesManager,
             [NotNull] ILogger logger,
-            [NotNull] ILoggerControler loggerController)
+            [NotNull] ILoggerControler loggerController,
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
             if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
@@ -79,6 +83,7 @@ namespace ConfigGen.Domain
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _templateFactory = templateFactory;
             _configurationNameSelector = configurationNameSelector;
@@ -88,6 +93,7 @@ namespace ConfigGen.Domain
              _preferencesManager = preferencesManager;
             _logger = logger;
             _loggerController = loggerController;
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
         [NotNull]
@@ -184,12 +190,14 @@ namespace ConfigGen.Domain
                        renderResult,
                        fileOutputPreferences);
 
+                    TokenUsageStatistics tokenUsageStatistics = _tokenUsageTracker.GetTokenUsageStatistics(configuration);
+
                     singleFileGenerationResults.Add(
                         new SingleFileGenerationResult(
                             renderResult.ConfigurationName,
                             writeResults.FullPath,
-                            renderResult.UnusedTokens,
-                            renderResult.UnrecognisedTokens,
+                            tokenUsageStatistics.UsedTokens,
+                            tokenUsageStatistics.UnrecognisedTokens,
                             renderResult.Errors,
                             writeResults.FileChanged,
                             writeResults.WasWritten));

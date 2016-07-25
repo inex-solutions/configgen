@@ -112,9 +112,6 @@ namespace ConfigGen.Templating.Razor
                     status: TemplateRenderResultStatus.Success,
                     renderedResult: renderResult,
                     encoding: _encoding,
-                    usedTokens: _tokenUsageTracker.GetUsedTokensForConfiguration(configuration), //TODO: should this be here, or pushed up to nearer to singlefilegenerationresult?
-                    unusedTokens: _tokenUsageTracker.GetUnusedTokensForConfiguration(configuration),
-                    unrecognisedTokens: _tokenUsageTracker.GetUnrecognisedTokensForConfiguration(configuration),
                     errors: null);
             }
             catch (Exception ex)
@@ -124,9 +121,6 @@ namespace ConfigGen.Templating.Razor
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
                     encoding: _encoding,
-                    usedTokens: null,
-                    unusedTokens: null,
-                    unrecognisedTokens: null,
                     errors: new[] { new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, $"{ex.GetType().Name}: {ex.Message}") });
             }
         }

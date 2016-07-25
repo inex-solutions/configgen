@@ -103,9 +103,9 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldContainXml(TemplateContents);
 
-            It both_supplied_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
+            It both_supplied_tokens_should_be_listed_as_unused = () => TokenUsageStatistics.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 
-            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_used = () => TokenUsageStatistics.UsedTokens.ShouldBeEmpty();
         }
 
         public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -133,9 +133,9 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_used_supplied_token_should_be_listed_as_used = () => Result.UsedTokens.ShouldContainOnly("TokenOne");
+            It the_used_supplied_token_should_be_listed_as_used = () => TokenUsageStatistics.UsedTokens.ShouldContainOnly("TokenOne");
 
-            It the_unused_supplied_token_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldContainOnly("TokenTwo");
+            It the_unused_supplied_token_should_be_listed_as_unused = () => TokenUsageStatistics.UnusedTokens.ShouldContainOnly("TokenTwo");
         }
 
         public class when_rendering_a_template_containing_an_unrecognised_token : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -158,11 +158,11 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_unrecognised_token_should_be_listed_as_unrecognised = () => Result.UnrecognisedTokens.ShouldContainOnly("TokenThree");
+            It the_unrecognised_token_should_be_listed_as_unrecognised = () => TokenUsageStatistics.UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
-            It no_tokens_should_be_listed_as_used = () => Result.UsedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_used = () => TokenUsageStatistics.UsedTokens.ShouldBeEmpty();
 
-            It no_tokens_should_be_listed_as_unused = () => Result.UnusedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_unused = () => TokenUsageStatistics.UnusedTokens.ShouldBeEmpty();
         }
     }
 }

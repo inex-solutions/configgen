@@ -34,6 +34,8 @@ namespace ConfigGen.Tests.Common
     public abstract class TemplateRenderTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new()
     {
         [NotNull]
+        protected const string ConfigurationName = "Test-IConfiguration";
+        [NotNull]
         protected static TTemplate Subject;
         protected static string TemplateContents;
         [NotNull]
@@ -59,6 +61,9 @@ namespace ConfigGen.Tests.Common
         };
 
         [NotNull]
-        protected static Configuration Configuration => new Configuration("Test-IConfiguration", ConfigurationSettings);
+        protected static Configuration Configuration => new Configuration(ConfigurationName, ConfigurationSettings);
+
+        [NotNull]
+        protected static TokenUsageStatistics TokenUsageStatistics => TokenUsageTracker.GetTokenUsageStatistics(Configuration);
     }
 }

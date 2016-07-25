@@ -140,9 +140,6 @@ namespace ConfigGen.Templating.Xml
                         status: TemplateRenderResultStatus.Failure,
                         renderedResult: null,
                         encoding: _xmlDeclarationInfo.StatedEncoding ?? _xmlDeclarationInfo.ActualEncoding,
-                        usedTokens: null,
-                        unusedTokens: null,
-                        unrecognisedTokens: null,
                         errors: preprocessingResults.Errors);
                 }
 
@@ -155,9 +152,6 @@ namespace ConfigGen.Templating.Xml
                     status: TemplateRenderResultStatus.Success,
                     renderedResult: output,
                     encoding: _xmlDeclarationInfo.StatedEncoding ?? _xmlDeclarationInfo.ActualEncoding,
-                    usedTokens: _tokenUsageTracker.GetUsedTokensForConfiguration(configuration),
-                    unusedTokens: _tokenUsageTracker.GetUnusedTokensForConfiguration(configuration),
-                    unrecognisedTokens: _tokenUsageTracker.GetUnrecognisedTokensForConfiguration(configuration),
                     errors: null);
             }
             catch (Exception ex)
@@ -167,9 +161,6 @@ namespace ConfigGen.Templating.Xml
                     status: TemplateRenderResultStatus.Failure,
                     renderedResult: null,
                     encoding: null,
-                    usedTokens: null,
-                    unusedTokens: null,
-                    unrecognisedTokens: null,
                     errors: new UnhandledExceptionError(XmlTemplateErrorSource, ex).ToSingleEnumerable());
             }
         }

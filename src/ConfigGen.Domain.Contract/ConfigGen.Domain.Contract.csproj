@@ -73,6 +73,7 @@
     <Compile Include="Template\SingleTemplateRenderResults.cs" />
     <Compile Include="Template\LoadResult.cs" />
     <Compile Include="Template\TemplateRenderResultStatus.cs" />
+    <Compile Include="TokenUsageStatistics.cs" />
     <Compile Include="UnhandledExceptionError.cs" />
   </ItemGroup>
   <ItemGroup>

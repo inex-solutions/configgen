@@ -89,7 +89,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_contain_the_child_element_but_without_the_applyWhen_attribute =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => Result.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => TokenUsageStatistics.UsedTokens.ShouldContainOnly("val");
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
@@ -114,7 +114,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_contain_not_the_child_element =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => Result.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => TokenUsageStatistics.UsedTokens.ShouldContainOnly("val");
         }
 
         //TODO: remove these commented out tests

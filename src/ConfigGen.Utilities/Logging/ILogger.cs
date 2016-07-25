@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,23 +18,17 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System;
-using JetBrains.Annotations;
-
-namespace ConfigGen.ConsoleApp
+namespace ConfigGen.Utilities.Logging
 {
-    public class ConsoleWriter : IConsoleWriter
+    public interface ILogger
     {
-        public void WriteInfo(string message = null)
-        {
-            Console.WriteLine(message);
-        }
-
-        public void WriteInfo([NotNull] string formatMessage, params object[] args)
-        {
-            if (formatMessage == null) throw new ArgumentNullException(nameof(formatMessage));
-            Console.WriteLine(formatMessage, args);
-        }
+        void Error(string message = null);
+        void Error(string formatString, params object[] args);
+        void Warn(string message = null);
+        void Warn(string formatString, params object[] args);
+        void Info(string message = null);
+        void Info(string formatString, params object[] args);
+        void Debug(string message = null);
+        void Debug(string formatString, params object[] args);
     }
 }

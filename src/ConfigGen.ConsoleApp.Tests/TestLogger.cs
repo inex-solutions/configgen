@@ -21,28 +21,58 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Utilities.Logging;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 
 namespace ConfigGen.ConsoleApp.Tests
 {
-    public class TestConsoleWriter : IConsoleWriter
+    public class TestLogger : ILogger
     {
         [NotNull]
         private readonly List<string> _loggedLines = new List<string>();
 
-        public void WriteInfo(string message = null)
+        public void Error(string message = null)
         {
             _loggedLines.Add(message);
         }
 
-        [NotNull]
-        public void WriteInfo([NotNull] string formatMessage, [NotNull]params object[] args)
+        public void Error(string formatString, params object[] args)
         {
-            _loggedLines.Add(string.Format(formatMessage, args));
+            _loggedLines.Add(string.Format(formatString, args));
         }
 
-        public TestConsoleWriter ShouldContainMessage(string message)
+        public void Warn(string message = null)
+        {
+            _loggedLines.Add(message);
+        }
+
+        public void Warn(string formatString, params object[] args)
+        {
+            _loggedLines.Add(string.Format(formatString, args));
+        }
+
+        public void Info(string message = null)
+        {
+            _loggedLines.Add(message);
+        }
+
+        public void Info(string formatString, params object[] args)
+        {
+            _loggedLines.Add(string.Format(formatString, args));
+        }
+
+        public void Debug(string message = null)
+        {
+            _loggedLines.Add(message);
+        }
+
+        public void Debug(string formatString, params object[] args)
+        {
+            _loggedLines.Add(string.Format(formatString, args));
+        }
+
+        public TestLogger ShouldContainMessage(string message)
         {
             if (!_loggedLines.Any(l => l != null && l.Contains(message)))
             {

@@ -31,6 +31,7 @@ using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
+using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -39,6 +40,12 @@ namespace ConfigGen.Domain
     {
         [NotNull]
         private readonly IManagePreferences _preferencesManager;
+
+        [NotNull]
+        private readonly ILogger _logger;
+
+        [NotNull]
+        private readonly ILoggerControler _loggerController;
 
         [NotNull]
         private readonly TemplateFactory _templateFactory;
@@ -54,27 +61,34 @@ namespace ConfigGen.Domain
 
         [NotNull]
         private readonly FileOutputWriter _fileOutputWriter;
+
         public ConfigurationGenerator(
-            [NotNull] IManagePreferences preferencesManager, 
             [NotNull] TemplateFactory templateFactory,
             [NotNull] ConfigurationNameSelector configurationNameSelector,
-            [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory, 
-            [NotNull] ConfigurationCollectionFilter configurationCollectionFilter, 
-            [NotNull] FileOutputWriter fileOutputWriter)
+            [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
+            [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
+            [NotNull] FileOutputWriter fileOutputWriter,
+            [NotNull] IManagePreferences preferencesManager,
+            [NotNull] ILogger logger,
+            [NotNull] ILoggerControler loggerController)
         {
-            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
             if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
 
             _templateFactory = templateFactory;
             _configurationNameSelector = configurationNameSelector;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
             _fileOutputWriter = fileOutputWriter;
-            _preferencesManager = preferencesManager;
+             _preferencesManager = preferencesManager;
+            _logger = logger;
+            _loggerController = loggerController;
         }
 
         [NotNull]
@@ -91,6 +105,9 @@ namespace ConfigGen.Domain
 
             var configGenerationPreferences = new ConfigurationGeneratorPreferences();
             _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
+
+            _loggerController.SetLoggingVerbosity(configGenerationPreferences.Verbosity);
+            _logger.Debug("Verbose logging enabled");
 
             ITemplate template;
             var templateFileExtension = new FileInfo(configGenerationPreferences.TemplateFilePath).Extension;
@@ -168,7 +185,12 @@ namespace ConfigGen.Domain
                        renderResult,
                        fileOutputPreferences);
 
-                    singleFileGenerationResults.Add(new SingleFileGenerationResult(renderResult.ConfigurationName, writeResults.FullPath));
+                    singleFileGenerationResults.Add(
+                        new SingleFileGenerationResult(
+                            renderResult.ConfigurationName,
+                            writeResults.FullPath,
+                            writeResults.FileChanged,
+                            writeResults.WasWritten));
                 }
 
                 return GenerationResults.CreateSuccess(unrecognisedPreferences, singleFileGenerationResults);

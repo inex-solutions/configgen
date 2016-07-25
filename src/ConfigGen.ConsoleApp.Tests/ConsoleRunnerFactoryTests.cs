@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,20 +19,19 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
-using ConfigGen.Domain;
-using ConfigGen.Utilities.IO;
+using Machine.Specifications;
 
-namespace ConfigGen.ConsoleApp
+namespace ConfigGen.ConsoleApp.Tests
 {
-    public class ConsoleAppModule : Module
+    namespace ConsoleRunnerFactoryTests
     {
-        protected override void Load(ContainerBuilder builder)
+        public class when_creating_a_console_runner
         {
-            builder.RegisterType<HelpWriter>().As<IHelpWriter>();
-            builder.RegisterType<ResultWriter>().As<IResultWriter>();
-            builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<ConsoleRunner>();
+            private static ConsoleRunner ConsoleRunner;
+
+            Because of = () => ConsoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
+
+            It then_a_console_runner_is_returned = () => ConsoleRunner.ShouldBeAssignableTo<ConsoleRunner>();
         }
     }
 }

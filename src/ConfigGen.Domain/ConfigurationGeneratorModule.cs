@@ -27,6 +27,8 @@ using ConfigGen.Domain.Filtering;
 using ConfigGen.Settings.Excel;
 using ConfigGen.Templating.Razor;
 using ConfigGen.Templating.Xml;
+using ConfigGen.Utilities.IO;
+using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.Domain
 {
@@ -34,6 +36,7 @@ namespace ConfigGen.Domain
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule<Log4NetLoggerModule>();
             builder.RegisterModule<ExcelSettingsLoaderModule>();
             builder.RegisterModule<FileOutputModule>();
             builder.RegisterModule<ConfigurationFilteringModule>();
@@ -47,10 +50,10 @@ namespace ConfigGen.Domain
             builder.RegisterType<ConfigurationNameSelector>();
             builder.RegisterType<ConfigurationCollectionLoaderFactory>();
             builder.RegisterType<ConfigurationCollectionFilter>();
+            builder.RegisterType<StreamComparer>().As<IStreamComparer>();
             builder.RegisterType<FileOutputWriter>();
             builder.RegisterType<ConfigurationGeneratorPreferenceGroup>().As<IPreferenceGroup>();
             builder.RegisterType<PreferencesManager>().As<IManagePreferences>();
-
         }
     }
 }

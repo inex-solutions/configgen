@@ -21,7 +21,6 @@
 
 using System;
 using System.Diagnostics;
-using Autofac;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
@@ -32,11 +31,7 @@ namespace ConfigGen.ConsoleApp
         {
             try
             {
-                var containerBuilder = new ContainerBuilder();
-                containerBuilder.RegisterModule<ConsoleAppModule>();
-                var container = containerBuilder.Build();
-
-                var consoleRunner = container.Resolve<ConsoleRunner>();    
+                var consoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
                 consoleRunner.Run(args);
             }
             catch (Exception ex)

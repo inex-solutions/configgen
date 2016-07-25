@@ -19,20 +19,13 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
-using ConfigGen.Domain;
-using ConfigGen.Utilities.IO;
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract.Preferences;
 
 namespace ConfigGen.ConsoleApp
 {
-    public class ConsoleAppModule : Module
+    public interface IHelpWriter
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<HelpWriter>().As<IHelpWriter>();
-            builder.RegisterType<ResultWriter>().As<IResultWriter>();
-            builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<ConsoleRunner>();
-        }
+        void WriteHelp(IEnumerable<IPreferenceGroup> preferenceGroups);
     }
 }

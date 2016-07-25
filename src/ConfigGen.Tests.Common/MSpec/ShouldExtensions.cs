@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 using Machine.Specifications;
@@ -78,6 +79,23 @@ namespace ConfigGen.Tests.Common.MSpec
             }
 
             throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", results.Errors.Select(e => e.ToString()))}");
+        }
+
+        /// <summary>
+        /// Asserts the supplied result indicates success.
+        /// </summary>
+        [NotNull]
+        public static LoadResult ShouldIndicateSuccess([NotNull] this LoadResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+
+            if (result.Success
+                && !result.TemplateLoadErrors.Any())
+            {
+                return result;
+            }
+
+            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", result.TemplateLoadErrors.Select(e => e.ToString()))}");
         }
 
         /// <summary>

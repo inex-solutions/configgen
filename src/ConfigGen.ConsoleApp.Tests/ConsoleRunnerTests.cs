@@ -31,7 +31,7 @@ namespace ConfigGen.ConsoleApp.Tests
         {
             protected const string HelpText = "ConfigGen help";
 
-            protected static TestConsoleWriter ConsoleWriter;
+            protected static TestLogger Logger;
             protected static ConfigurationGeneratorMock ConfigurationGeneratorMock;
             protected static IPreferenceDefinition StringParameterPreference;
             protected static IPreferenceDefinition BooleanSwitchPreference;
@@ -46,9 +46,10 @@ namespace ConfigGen.ConsoleApp.Tests
                 BooleanSwitchPreference = consoleRunnerTestPreferencesGroup.BooleanSwitchPreference;
                 IntParameterPreference = alternativeConsoleRunnerTestPreferencesGroup.IntParameterPreference;
                 AnotherBooleanSwitch = alternativeConsoleRunnerTestPreferencesGroup.AnotherBooleanSwitch;
+
                 ConfigurationGeneratorMock = new ConfigurationGeneratorMock(new IPreferenceGroup[] { consoleRunnerTestPreferencesGroup, alternativeConsoleRunnerTestPreferencesGroup });
-                ConsoleWriter = new TestConsoleWriter();
-                Subject = new ConsoleRunner(ConfigurationGeneratorMock, ConsoleWriter);
+                Logger = new TestLogger();
+                Subject = new ConsoleRunner(ConfigurationGeneratorMock, Logger, new HelpWriter(Logger), new ResultWriter(Logger));
                 Result = null;
             };
         }
@@ -57,7 +58,7 @@ namespace ConfigGen.ConsoleApp.Tests
         {
             Because of = () => Result = Subject.Run("--help".ToConsoleArgs());
 
-            It help_is_displayed = () => ConsoleWriter.ShouldContainMessage(HelpText);
+            It help_is_displayed = () => Logger.ShouldContainMessage(HelpText);
 
             It the_exit_code_indicates_help_was_displayed = () => Result = (int)ExitCodes.HelpShown;
 
@@ -155,52 +156,52 @@ namespace ConfigGen.ConsoleApp.Tests
         {
             Because of = () => Result = Subject.Run("--string-parameter".ToConsoleArgs());
 
-            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ParseError;
+            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ConsoleInputParseError;
 
             It the_generator_is_not_invoked =
                 () => ConfigurationGeneratorMock.GeneratorShouldNotHaveBeenInvoked();
 
             It the_correct_error_should_be_logged_to_the_console =
-                () => ConsoleWriter.ShouldContainMessage(PreferenceExtensions.GetArgMissingErrorText(StringParameterPreference.Name));
+                () => Logger.ShouldContainMessage(PreferenceExtensions.GetArgMissingErrorText(StringParameterPreference.Name));
         }
 
         public class when_run_with_an_unrecognised_preference : ConsoleRunnerTestBase
         {
             Because of = () => Result = Subject.Run("--unknown-parameter".ToConsoleArgs());
 
-            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ParseError;
+            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ConsoleInputParseError;
 
             It the_generator_is_not_invoked =
                 () => ConfigurationGeneratorMock.GeneratorShouldNotHaveBeenInvoked();
 
             It the_correct_error_should_be_logged_to_the_console =
-                () => ConsoleWriter.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnrecognisedParameterErrorText("--unknown-parameter"));
+                () => Logger.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnrecognisedParameterErrorText("--unknown-parameter"));
         }
 
         public class when_run_with_an_unexpected_input_on_the_console : ConsoleRunnerTestBase
         {
             Because of = () => Result = Subject.Run("unexpectedInput".ToConsoleArgs());
 
-            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ParseError;
+            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ConsoleInputParseError;
 
             It the_generator_is_not_invoked =
                 () => ConfigurationGeneratorMock.GeneratorShouldNotHaveBeenInvoked();
 
             It the_correct_error_should_be_logged_to_the_console =
-                () => ConsoleWriter.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnexpectedInputErrorText("unexpectedInput"));
+                () => Logger.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnexpectedInputErrorText("unexpectedInput"));
         }
 
         public class when_run_with_a_single_switch_that_explicitly_specifies_an_invalid_value: ConsoleRunnerTestBase
         {
             Because of = () => Result = Subject.Run("--boolean-switch 35".ToConsoleArgs());
 
-            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ParseError;
+            It the_exit_code_indicates_a_parse_error = () => Result = (int)ExitCodes.ConsoleInputParseError;
 
             It the_generator_is_not_invoked =
                 () => ConfigurationGeneratorMock.GeneratorShouldNotHaveBeenInvoked();
 
             It the_correct_error_should_be_logged_to_the_console =
-                () => ConsoleWriter.ShouldContainMessage(PreferenceExtensions.GetParseFailErrorText(BooleanSwitchPreference.Name, "35"));
+                () => Logger.ShouldContainMessage(PreferenceExtensions.GetParseFailErrorText(BooleanSwitchPreference.Name, "35"));
         }
 
         public class when_run_with_multiple_parameters_from_the_same_preferences_group : ConsoleRunnerTestBase

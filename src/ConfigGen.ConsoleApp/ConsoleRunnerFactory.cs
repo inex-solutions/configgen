@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,19 +20,20 @@
 #endregion
 
 using Autofac;
-using ConfigGen.Domain;
-using ConfigGen.Utilities.IO;
+using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {
-    public class ConsoleAppModule : Module
+    public class ConsoleRunnerFactory
     {
-        protected override void Load(ContainerBuilder builder)
+        [NotNull]
+        public static ConsoleRunner GetConsoleRunner()
         {
-            builder.RegisterType<HelpWriter>().As<IHelpWriter>();
-            builder.RegisterType<ResultWriter>().As<IResultWriter>();
-            builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<ConsoleRunner>();
+            var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterModule<ConsoleAppModule>();
+            var container = containerBuilder.Build();
+
+            return container.Resolve<ConsoleRunner>();
         }
     }
 }

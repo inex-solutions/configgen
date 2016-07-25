@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.Domain
 {
@@ -34,7 +35,7 @@ namespace ConfigGen.Domain
             PreferenceDefinitions.SettingsFile,
             PreferenceDefinitions.TemplateFile,
             PreferenceDefinitions.TemplateFileType,
-            PreferenceDefinitions.Verbose
+            PreferenceDefinitions.Verbose,
         };
 
         public override string Name => "General preferences";
@@ -73,10 +74,10 @@ namespace ConfigGen.Domain
                     setAction: (preferences, value) => preferences.TemplateFileType = value);
 
                 Verbose = new SwitchPreferenceDefinition<ConfigurationGeneratorPreferences>(
-                    name: "VerboseOutput",
-                    shortName: "Verbose",
+                    name: "Verbose",
+                    shortName: null,
                     description: "verbose output",
-                    setAction: (preferences, value) => preferences.Verbose = value);
+                    setAction: (preferences, value) => preferences.Verbosity = value ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal);
 
                 // ReSharper restore AssignNullToNotNullAttribute
                 // ReSharper restore PossibleNullReferenceException

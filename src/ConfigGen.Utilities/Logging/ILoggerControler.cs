@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,21 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using Autofac;
-using ConfigGen.Domain;
-using ConfigGen.Utilities.IO;
-
-namespace ConfigGen.ConsoleApp
+namespace ConfigGen.Utilities.Logging
 {
-    public class ConsoleAppModule : Module
+    public interface ILoggerControler
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<HelpWriter>().As<IHelpWriter>();
-            builder.RegisterType<ResultWriter>().As<IResultWriter>();
-            builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<ConsoleRunner>();
-        }
+        void InitialiseLogging();
+
+        void SetLoggingVerbosity(LoggingVerbosity verbosity);
     }
 }

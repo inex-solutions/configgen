@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation;
 using JetBrains.Annotations;
@@ -34,15 +35,13 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     internal abstract class ConditionalElementProcessorBase : IConfigGenNodeProcessor
     {
         [NotNull]
-        protected List<string> UsedTokens { get; }
+        private readonly ITokenUsageTracker _tokenUsageTracker;
 
-        [NotNull]
-        protected List<string> UnrecognisedTokens { get; }
-
-        protected ConditionalElementProcessorBase()
+        protected ConditionalElementProcessorBase([NotNull] ITokenUsageTracker tokenUsageTracker)
         {
-            UsedTokens = new List<string>();
-            UnrecognisedTokens = new List<string>();
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
         /// <summary>
@@ -78,11 +77,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             {
                 if (configuration.Contains(usedToken))
                 {
-                    UsedTokens.Add(usedToken);
+                    _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, usedToken);
                 }
                 else
                 {
-                    UnrecognisedTokens.Add(usedToken);
+                    _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, usedToken);
                 }
             }
 

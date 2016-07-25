@@ -25,6 +25,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation;
 using ConfigGen.Utilities;
@@ -44,9 +45,13 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         [NotNull]
         private readonly ApplyElementCreator _applyElementCreator = new ApplyElementCreator();
 
-        public ApplyElementProcessor([NotNull] IConfigurationExpressionEvaluator configurationExpressionEvaluator)
+        public ApplyElementProcessor(
+            [NotNull] IConfigurationExpressionEvaluator configurationExpressionEvaluator,
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
+            :base (tokenUsageTracker)
         {
             if (configurationExpressionEvaluator == null) throw new ArgumentNullException(nameof(configurationExpressionEvaluator));
+
             _configurationExpressionEvaluator = configurationExpressionEvaluator;
         }
 
@@ -71,7 +76,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (!result.Success)
             {
                 element.Remove();
-                return new ProcessNodeResults(UsedTokens, UnrecognisedTokens, XmlTemplateErrorCodes.ApplyWhenElseFormatError, result.Error);
+                return new ProcessNodeResults(XmlTemplateErrorCodes.ApplyWhenElseFormatError, result.Error);
             }
 
             bool trueConditionAlreadyEvaluated = false;
@@ -86,7 +91,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 if (evaluationResults.ErrorCode != null)
                 {
                     element.Remove();
-                    return new ProcessNodeResults(UsedTokens, UnrecognisedTokens, evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
+                    return new ProcessNodeResults(evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
                 }
 
                 ProcessElement(subNode, evaluationResults.Result && !trueConditionAlreadyEvaluated);
@@ -101,7 +106,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
             element.Remove();
 
-            return new ProcessNodeResults(UsedTokens, UnrecognisedTokens);
+            return new ProcessNodeResults(); //TODO - yuk
         }
 
         private void ProcessElement(ApplyElementSubNode applyElementSubNode, bool result)

@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation;
 using ConfigGen.Utilities.Extensions;
@@ -37,11 +38,17 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
         [NotNull]
         private readonly IConfigurationExpressionEvaluator _evaluator;
 
-        public ApplyWhenAttributeProcessor([NotNull] IConfigurationExpressionEvaluator evaluator)
+        [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
+
+        public ApplyWhenAttributeProcessor(
+            [NotNull] IConfigurationExpressionEvaluator evaluator,
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (evaluator == null) throw new ArgumentNullException(nameof(evaluator));
-
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
             _evaluator = evaluator;
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
         [NotNull]
@@ -63,23 +70,20 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (expression.IsNullOrEmpty())
             {
                 attribute.Remove();
-                return new ProcessNodeResults(null, null, XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
+                return new ProcessNodeResults(XmlTemplateErrorCodes.ConditionProcessingError, "Condition error: and empty condition was encountered");
             }
 
             ExpressionEvaluationResults evaluationResults = _evaluator.Evaluate(configuration.ConfigurationName, expression, element.Name);
-
-            var usedTokens = new List<string>();
-            var unrecognisedTokens = new List<string>();
 
             foreach (var usedToken in evaluationResults.UsedTokens)
             {
                 if (configuration.Contains(usedToken))
                 {
-                    usedTokens.Add(usedToken);
+                    _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, usedToken);
                 }
                 else
                 {
-                    unrecognisedTokens.Add(usedToken);
+                    _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, usedToken);
                 }
             }
 
@@ -94,10 +98,10 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
             if (evaluationResults.ErrorCode != null)
             {
-                return new ProcessNodeResults(usedTokens, unrecognisedTokens, evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
+                return new ProcessNodeResults(evaluationResults.ErrorCode, evaluationResults.ErrorMessage);
             }
 
-            return new ProcessNodeResults(usedTokens, unrecognisedTokens);
+            return new ProcessNodeResults(); //TODO: yuk - do something with ProcessNodeResults
         }
     }
 }

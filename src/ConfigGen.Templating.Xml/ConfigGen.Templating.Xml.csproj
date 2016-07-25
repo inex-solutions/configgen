@@ -69,6 +69,7 @@
     <Compile Include="NodeProcessing\ExpressionEvaluation\IConfigurationExpressionEvaluator.cs" />
     <Compile Include="NodeProcessing\ExpressionEvaluation\SearchableXmlConverter.cs" />
     <Compile Include="NodeProcessing\IConfigGenNodeProcessor.cs" />
+    <Compile Include="NodeProcessing\IConfigGenNodeProcessorFactory.cs" />
     <Compile Include="NodeProcessing\OnNotAppliedAction.cs" />
     <Compile Include="NodeProcessing\ProcessNodeResults.cs" />
     <Compile Include="NodeProcessing\UnsupportedAttributeProcessor.cs" />

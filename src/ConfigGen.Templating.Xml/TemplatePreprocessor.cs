@@ -34,6 +34,15 @@ namespace ConfigGen.Templating.Xml
     public class TemplatePreprocessor : ITemplatePreprocessor
     {
         [NotNull]
+        private readonly IConfigGenNodeProcessorFactory _configGenNodeProcessorFactory;
+
+        public TemplatePreprocessor([NotNull] IConfigGenNodeProcessorFactory configGenNodeProcessorFactory)
+        {
+            if (configGenNodeProcessorFactory == null) throw new ArgumentNullException(nameof(configGenNodeProcessorFactory));
+            _configGenNodeProcessorFactory = configGenNodeProcessorFactory;
+        }
+
+        [NotNull]
         public PreprocessingResults PreProcessTemplate([NotNull] XElement unprocessedTemplate, [NotNull] IConfiguration configuration)
         {
             if (unprocessedTemplate == null) throw new ArgumentNullException(nameof(unprocessedTemplate));
@@ -45,19 +54,15 @@ namespace ConfigGen.Templating.Xml
 
             XElement configGenNode;
 
-            var configGenNodeProcessorFactory = new ConfigGenNodeProcessorFactory();
             while ((configGenNode = GetConfigGenNodes(unprocessedTemplate)) != null)
             {
-                var nodeProcessor = configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, configuration);
+                var nodeProcessor = _configGenNodeProcessorFactory.GetProcessorForNode(configGenNode, configuration);
 
                 var result = nodeProcessor.ProcessNode(configGenNode, configuration);
                 if (result.ErrorCode != null)
                 {
                     errors.Add(new XmlTemplateError(result.ErrorCode, result.ErrorMessage));
                 }
-
-                usedTokens.AddWhereNotPresent(result.UsedTokens);
-                unrecognisedTokens.AddWhereNotPresent(result.UnrecognisedTokens);
             }
 
             // remove config gen namespace declaration

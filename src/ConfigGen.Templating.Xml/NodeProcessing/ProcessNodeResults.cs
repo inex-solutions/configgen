@@ -25,31 +25,15 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {
-    internal class ProcessNodeResults
+    public class ProcessNodeResults
     {
-        [NotNull]
-        private readonly string[] _usedTokens;
-
-        [NotNull]
-        private readonly string[] _unrecognisedTokens;
-
         public ProcessNodeResults(
-            [CanBeNull] IEnumerable<string> usedTokens = null,
-            [CanBeNull] IEnumerable<string> unrecognisedTokens = null,
             [CanBeNull] string errorCode = null,
             [CanBeNull] string errorMessage = null)
         {
-            _usedTokens = usedTokens?.ToArray() ?? new string[0];
-            _unrecognisedTokens = unrecognisedTokens?.ToArray() ?? new string[0];
             ErrorMessage = errorMessage;
             ErrorCode = errorCode;
         }
-
-        [NotNull]
-        public string[] UsedTokens => _usedTokens.ToArray();
-
-        [NotNull]
-        public string[] UnrecognisedTokens => _unrecognisedTokens.ToArray();
 
         [CanBeNull]
         public string ErrorCode { get; }

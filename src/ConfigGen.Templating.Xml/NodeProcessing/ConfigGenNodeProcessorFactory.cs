@@ -22,6 +22,7 @@
 using System;
 using System.Linq;
 using System.Xml.Linq;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation;
 using JetBrains.Annotations;
@@ -31,8 +32,17 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     /// <summary>
     /// Factory for returning <see cref="IConfigGenNodeProcessor"/> instances
     /// </summary>
-    internal class ConfigGenNodeProcessorFactory
+    internal class ConfigGenNodeProcessorFactory : IConfigGenNodeProcessorFactory
     {
+        [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
+
+        public ConfigGenNodeProcessorFactory([NotNull] ITokenUsageTracker tokenUsageTracker)
+        {
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+            _tokenUsageTracker = tokenUsageTracker;
+        }
+
         /// <summary>
         /// Gets the processor for node.
         /// </summary>
@@ -56,7 +66,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             {
                 if (element.Name.LocalName == "Apply")
                 {
-                    return new ApplyElementProcessor(configurationExpressionEvaluator);
+                    return new ApplyElementProcessor(configurationExpressionEvaluator, _tokenUsageTracker);
                 }
                 
                 return new UnsupportedElementProcessor();
@@ -71,7 +81,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
 
             if (configGenAttribute.Name.LocalName == "applyWhen")
             {
-                return new ApplyWhenAttributeProcessor(configurationExpressionEvaluator);
+                return new ApplyWhenAttributeProcessor(configurationExpressionEvaluator, _tokenUsageTracker);
             }
 
             return new UnsupportedAttributeProcessor();

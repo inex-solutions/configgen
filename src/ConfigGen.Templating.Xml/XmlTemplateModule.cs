@@ -21,6 +21,7 @@
 
 using Autofac;
 using ConfigGen.Domain.Contract.Template;
+using ConfigGen.Templating.Xml.NodeProcessing;
 using ConfigGen.Utilities.Xml;
 
 namespace ConfigGen.Templating.Xml
@@ -34,6 +35,7 @@ namespace ConfigGen.Templating.Xml
             builder.RegisterType<TemplatePreprocessor>().As<ITemplatePreprocessor>();
             builder.RegisterType<TokenReplacer>().As<ITokenReplacer>();
             builder.RegisterType<XmlDeclarationParser>();
+            builder.RegisterType<ConfigGenNodeProcessorFactory>().As<IConfigGenNodeProcessorFactory>();
         }
     }
 }

@@ -29,7 +29,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
     /// Interface to be implemented by config-gen node processors. 
     /// </summary>
     /// <remarks>Implementations of this instance must be stateless as they are reused.</remarks>
-    internal interface IConfigGenNodeProcessor
+    public interface IConfigGenNodeProcessor
     {
         [NotNull]
         ProcessNodeResults ProcessNode([NotNull] XElement node, [NotNull] IConfiguration configuration);

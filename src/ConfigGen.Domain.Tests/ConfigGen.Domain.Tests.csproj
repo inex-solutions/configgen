@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleTests.cs" />
     <Compile Include="TemplateTypeSelectionTests.cs" />
+    <Compile Include="TokenUsageTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.ConsoleApp\ConfigGen.ConsoleApp.csproj">

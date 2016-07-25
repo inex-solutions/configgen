@@ -29,7 +29,9 @@ namespace ConfigGen.Tests.Common
 {
     public abstract class ContainerAwareMachineSpecificationTestBase<TSubject, TResult>
     {
-        protected static Lazy<TSubject> LazySubject;
+        private static Lazy<TSubject> LazySubject;
+
+        private static Lazy<IContainer> LazyContainer;
 
         protected static TResult Result; 
 
@@ -39,8 +41,6 @@ namespace ConfigGen.Tests.Common
 
         protected static ContainerBuilder ContainerBuilder;
 
-        protected static IContainer Container;
-
         Establish context = () =>
         {
             InitialDirectory = Directory.GetCurrentDirectory();
@@ -49,11 +49,9 @@ namespace ConfigGen.Tests.Common
 
             ContainerBuilder = new ContainerBuilder();
 
-            LazySubject = new Lazy<TSubject>(() =>
-            {
-                Container = ContainerBuilder.Build();
-                return Container.Resolve<TSubject>();
-            });
+            LazyContainer = new Lazy<IContainer>(() => ContainerBuilder.Build());
+
+            LazySubject = new Lazy<TSubject>(() => LazyContainer.Value.Resolve<TSubject>());
         };
 
         Cleanup cleanup = () =>
@@ -63,6 +61,8 @@ namespace ConfigGen.Tests.Common
             TestDirectory.Dispose();
         };
 
-        public static TSubject Subject => LazySubject.Value;
+        protected static TSubject Subject => LazySubject.Value;
+
+        protected static IContainer Container => LazyContainer.Value;
     }
 }

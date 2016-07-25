@@ -43,7 +43,7 @@ namespace ConfigGen.Domain
             builder.RegisterModule<XmlTemplateModule>(); //TODO: NDepend rule -> only this should be referenced from ConfigGen.Templating.Xml.dll
             builder.RegisterModule<RazorTemplateModule>(); //TODO: NDepend rule -> only this should be referenced from ConfigGen.Templating.Razor.dll
 
-            builder.RegisterType<TokenUsageTracker>().As<ITokenUsageTracker>();
+            builder.RegisterType<TokenUsageTracker>().As<ITokenUsageTracker>().SingleInstance();
 
             builder.RegisterType<ConfigurationGenerator>().As<IConfigurationGenerator>();
             builder.RegisterType<TemplateFactory>();

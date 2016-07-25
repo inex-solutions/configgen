@@ -21,6 +21,7 @@
 
 using System;
 using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -28,15 +29,28 @@ namespace ConfigGen.Domain
     public class ConfigurationNameSelector
     {
         [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
+
+        public ConfigurationNameSelector([NotNull] ITokenUsageTracker tokenUsageTracker)
+        {
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+            _tokenUsageTracker = tokenUsageTracker;
+        }
+
+        [NotNull]
         public string GetName([NotNull] IDictionary<string, object> settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
+            const string configurationNameToken = "MachineName";
+
             object value;
-            if (settings.TryGetValue("MachineName", out value)
+            if (settings.TryGetValue(configurationNameToken, out value)
                 && value != null)
             {
-                return value.ToString();
+                string configurationName = value.ToString();
+                _tokenUsageTracker.OnTokenUsed(configurationName, configurationNameToken);
+                return configurationName;
             }
 
             throw new InvalidOperationException("Settings collection did not contain machine name"); //TODO - bad

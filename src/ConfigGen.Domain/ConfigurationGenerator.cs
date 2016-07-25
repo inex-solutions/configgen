@@ -194,9 +194,10 @@ namespace ConfigGen.Domain
 
                     singleFileGenerationResults.Add(
                         new SingleFileGenerationResult(
-                            renderResult.ConfigurationName,
+                            renderResult.Configuration,
                             writeResults.FullPath,
                             tokenUsageStatistics.UsedTokens,
+                            tokenUsageStatistics.UnusedTokens,
                             tokenUsageStatistics.UnrecognisedTokens,
                             renderResult.Errors,
                             writeResults.FileChanged,

@@ -38,6 +38,7 @@ namespace ConfigGen.Domain.Tests
         [NotNull]
         protected static List<Preference> PreferencesToSupplyToGenerator;
 
+
         Establish context = () =>
         {
             ContainerBuilder.RegisterModule<ConfigurationGeneratorModule>();

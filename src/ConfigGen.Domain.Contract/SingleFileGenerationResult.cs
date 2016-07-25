@@ -20,8 +20,8 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
@@ -30,32 +30,38 @@ namespace ConfigGen.Domain.Contract
     public class SingleFileGenerationResult
     {
         public SingleFileGenerationResult(
-            [NotNull] string configurationName, 
+            [NotNull] IConfiguration configuration, 
             [NotNull] string fullPath,
+            [NotNull] IEnumerable<string> usedTokens,
             [NotNull] IEnumerable<string> unusedTokens,
-            [NotNull] IEnumerable<string> unregocnisedTokens,
+            [NotNull] IEnumerable<string> unrecognisedTokens,
             [NotNull] IEnumerable<Error> errors,
             bool hasChanged,
             bool wasWritten)
         {
-            if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
+            if (usedTokens == null) throw new ArgumentNullException(nameof(usedTokens));
             if (unusedTokens == null) throw new ArgumentNullException(nameof(unusedTokens));
-            if (unregocnisedTokens == null) throw new ArgumentNullException(nameof(unregocnisedTokens));
+            if (unrecognisedTokens == null) throw new ArgumentNullException(nameof(unrecognisedTokens));
             if (errors == null) throw new ArgumentNullException(nameof(errors));
 
-            ConfigurationName = configurationName;
+            Configuration = configuration;
             FullPath = fullPath;
             HasChanged = hasChanged;
             WasWritten = wasWritten;
 
+            UsedTokens = usedTokens.ToReadOnlyCollection();
             UnusedTokens = unusedTokens.ToReadOnlyCollection();
-            UnrecognisedTokens = unregocnisedTokens.ToReadOnlyCollection();
+            UnrecognisedTokens = unrecognisedTokens.ToReadOnlyCollection();
             Errors = errors.ToReadOnlyCollection();
         }
 
         [NotNull]
-        public string ConfigurationName { get; }
+        public IConfiguration Configuration{ get; }
+
+        [NotNull]
+        public string ConfigurationName => Configuration.ConfigurationName;
 
         [NotNull]
         public string FullPath { get; }
@@ -63,6 +69,9 @@ namespace ConfigGen.Domain.Contract
         public bool HasChanged { get; }
 
         public bool WasWritten { get; }
+
+        [NotNull]
+        public IReadOnlyCollection<string> UsedTokens { get; }
 
         [NotNull]
         public IReadOnlyCollection<string> UnusedTokens { get; }

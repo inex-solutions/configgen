@@ -57,7 +57,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     instance.Predicate = element.GetConditionAttribute();
                     if (instance.Predicate == null)
                     {
-                        return Result<ApplyElementSubNode>.CreateFailureResult("A 'When' element must contain a 'condition' attribute");
+                        return Result<ApplyElementSubNode, string>.CreateFailureResult("A 'When' element must contain a 'condition' attribute");
                     }
                     break;
                 case "ElseWhen":
@@ -65,7 +65,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     instance.Predicate = element.GetConditionAttribute();
                     if (instance.Predicate == null)
                     {
-                        return Result<ApplyElementSubNode>.CreateFailureResult("An 'ElseWhen' element must contain a 'condition' attribute");
+                        return Result<ApplyElementSubNode, string>.CreateFailureResult("An 'ElseWhen' element must contain a 'condition' attribute");
                     }
                     break;
                 case "Else":
@@ -73,7 +73,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                     var predicate = element.GetConditionAttribute();
                     if (predicate != null)
                     {
-                        return Result<ApplyElementSubNode>.CreateFailureResult("An 'Else' element must not contain a 'condition' attribute");
+                        return Result<ApplyElementSubNode, string>.CreateFailureResult("An 'Else' element must not contain a 'condition' attribute");
                     }
                     break;
                 default:
@@ -95,7 +95,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 }
             }
 
-            return Result<ApplyElementSubNode>.CreateSuccessResult(instance);
+            return Result<ApplyElementSubNode, string>.CreateSuccessResult(instance);
         }
     }
 }

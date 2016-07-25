@@ -51,14 +51,14 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             if (primaryPredicate == null
                 || primaryPredicate.Name != xname)
             {
-                return Result<ApplyElement>.CreateFailureResult("The first element in the 'Apply' container must be a 'When' element in the ConfigGen namespace.");
+                return Result<ApplyElement, string>.CreateFailureResult("The first element in the 'Apply' container must be a 'When' element in the ConfigGen namespace.");
             }
 
             var onNotAppliedAttribute = applyElement.GetOnNotAppliedAttribute(OnNotAppliedAction.Remove);
             var result = _applyElementSubNodeCreator.Create(primaryPredicate, onNotAppliedAttribute);
             if (!result.Success)
             {
-                return Result<ApplyElement>.CreateFailureResult(result.Error);
+                return Result<ApplyElement, string>.CreateFailureResult(result.Error);
             }
 
             returnValue.PredicateSubNodes.Enqueue(result.Value);
@@ -69,7 +69,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                 {
                     if (returnValue.FinalElseSubNode != null)
                     {
-                        return Result<ApplyElement>.CreateFailureResult("The 'else' element must be the final element in the 'Apply' container.");
+                        return Result<ApplyElement, string>.CreateFailureResult("The 'else' element must be the final element in the 'Apply' container.");
                     }
 
                     if (currentElement.Name == XName.Get("ElseWhen", XmlTemplate.ConfigGenXmlNamespace))
@@ -77,7 +77,7 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                         result = _applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute);
                         if (!result.Success)
                         {
-                            return Result<ApplyElement>.CreateFailureResult(result.Error);
+                            return Result<ApplyElement, string>.CreateFailureResult(result.Error);
                         }
                         returnValue.PredicateSubNodes.Enqueue(result.Value);
                     }
@@ -86,18 +86,18 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
                         result = _applyElementSubNodeCreator.Create(currentElement, onNotAppliedAttribute);
                         if (!result.Success)
                         {
-                            return Result<ApplyElement>.CreateFailureResult(result.Error);
+                            return Result<ApplyElement, string>.CreateFailureResult(result.Error);
                         }
                         returnValue.FinalElseSubNode = result.Value;
                     }
                     else
                     {
-                        return Result<ApplyElement>.CreateFailureResult("Unexpected node appeared in 'Apply' container: " + currentElement.Name);
+                        return Result<ApplyElement, string>.CreateFailureResult("Unexpected node appeared in 'Apply' container: " + currentElement.Name);
                     }
                 }
             }
 
-            return Result<ApplyElement>.CreateSuccessResult(returnValue);
+            return Result<ApplyElement, string>.CreateSuccessResult(returnValue);
         }
     }
 }

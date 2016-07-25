@@ -55,10 +55,10 @@ namespace ConfigGen.ConsoleApp
             if (_result.Success)
             {
                 RawValue = _result.Value;
-                return Result<object>.CreateSuccessResult(_result.Value);
+                return Result<object, string>.CreateSuccessResult(_result.Value);
             }
 
-            return Result<object>.CreateFailureResult(_result.Error);
+            return Result<object, string>.CreateFailureResult(_result.Error);
         }
 
         public string ToDisplayText()

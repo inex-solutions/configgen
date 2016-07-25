@@ -111,12 +111,12 @@ namespace ConfigGen.Domain.Contract.Preferences
                 {
                     if (!Boolean.TryParse(argsQueue.Dequeue(), out returnValue))
                     {
-                        return Result<bool>.CreateFailureResult(GetParseFailErrorText(parameterName, arg));
+                        return Result<bool, string>.CreateFailureResult(GetParseFailErrorText(parameterName, arg));
                     }
                 }
             }
 
-            return Result<bool>.CreateSuccessResult(returnValue);
+            return Result<bool, string>.CreateSuccessResult(returnValue);
         }
 
         [NotNull]

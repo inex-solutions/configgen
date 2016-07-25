@@ -43,11 +43,11 @@ namespace ConfigGen.Domain.Contract.Preferences
                 if (arg != null
                     && !arg.StartsWith("-"))
                 {
-                    return Result<string>.CreateSuccessResult(argsQueue.Dequeue());
+                    return Result<string, string>.CreateSuccessResult(argsQueue.Dequeue());
                 }
             }
             
-            return Result<string>.CreateFailureResult(GetArgMissingErrorText(parameterName));
+            return Result<string, string>.CreateFailureResult(GetArgMissingErrorText(parameterName));
         }
 
         [NotNull]
@@ -74,12 +74,12 @@ namespace ConfigGen.Domain.Contract.Preferences
                 {
                     if (!Int32.TryParse(argsQueue.Dequeue(), out returnValue))
                     {
-                        return Result<int>.CreateFailureResult(GetParseFailErrorText(parameterName, arg));
+                        return Result<int, string>.CreateFailureResult(GetParseFailErrorText(parameterName, arg));
                     }
                 }
             }
 
-            return Result<int>.CreateSuccessResult(returnValue);
+            return Result<int, string>.CreateSuccessResult(returnValue);
         }
 
         public static IResult<bool,string> ParseSwitchParameterFromArgumentQueue(
@@ -99,12 +99,12 @@ namespace ConfigGen.Domain.Contract.Preferences
                 {
                     if (!Boolean.TryParse(argsQueue.Dequeue(), out returnValue))
                     {
-                        return Result<bool>.CreateFailureResult(GetParseFailErrorText(parameterName, arg));
+                        return Result<bool, string>.CreateFailureResult(GetParseFailErrorText(parameterName, arg));
                     }
                 }
             }
 
-            return Result<bool>.CreateSuccessResult(returnValue);
+            return Result<bool, string>.CreateSuccessResult(returnValue);
         }
 
         [NotNull]

@@ -90,31 +90,4 @@ namespace ConfigGen.Utilities
             return $"error: {Error}";
         }
     }
-
-    /// <summary>
-    /// Represents the result of an operation which either returns a value, or an error.
-    /// </summary>
-    public class Result<T> : Result<T, string>
-    {
-        //private Result(bool success, [CanBeNull] T value, [CanBeNull] string error)
-        //{
-        //    Value = value;
-        //    Error = error;
-        //    Success = success;
-        //}
-
-        private Result(bool success, [CanBeNull] T value, [CanBeNull] string error) : base(success, value, error)
-        {
-        }
-
-        public override string ToString()
-        {
-            if (Success)
-            {
-                return $"Result<{typeof(T).Namespace}>.Value: {Value.ToDisplayText()}";
-            }
-
-            return $"Result<{typeof(T).Namespace}>.ErrorMessage: {Error}";
-        }
-    }
 }

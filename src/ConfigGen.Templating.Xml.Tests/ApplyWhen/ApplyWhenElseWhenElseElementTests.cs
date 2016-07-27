@@ -301,14 +301,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             {
                 Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
-                    {"val", "1"}
+                    {"val1", "1"},
+                    {"val2", "2"}
                 });
 
                 TemplateContents = $@"
 <Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
     <cg:Apply>
-        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
-        <cg:ElseWhen condition=""$val = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:When condition=""$val1 = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val2 = 2""><contents of=""elseWhen""/></cg:ElseWhen>
         <cg:Else><contents of=""else""/></cg:Else>
 </cg:Apply>
 </Root>";
@@ -323,6 +324,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
 
+            It the_token_from_the_When_element_should_be_listed_as_used =
+                () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1");
+
+            It the_token_from_the_ElseWhen_element_should_be_listed_as_unused =
+                () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("val2");
+
+            It no_tokens_should_be_listed_as_unrecognised =
+                () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
+
             It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_when_element =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
@@ -334,14 +344,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             {
                 Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
-                    {"val", "2"}
+                    {"val1", "1"},
+                    {"val2", "2"}
                 });
 
                 TemplateContents = $@"
 <Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
     <cg:Apply>
-        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
-        <cg:ElseWhen condition=""$val = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:When condition=""$val1 = 0""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val2 = 2""><contents of=""elseWhen""/></cg:ElseWhen>
         <cg:Else><contents of=""else""/></cg:Else>
 </cg:Apply>
 </Root>";
@@ -357,6 +368,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
 
             It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
 
+            It the_tokens_from_both_the_When_and_ElseWhen_elements_should_be_listed_as_used =
+                () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1", "val2");
+
+            It no_tokens_should_be_listed_as_unused =
+                () => TokenStatsFor(Configuration).UnusedTokens.ShouldBeEmpty();
+
+            It no_tokens_should_be_listed_as_unrecognised =
+                () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
+
             It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_elseWhen_element =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
@@ -368,14 +388,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             {
                 Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
-                    {"val", "3"}
+                    {"val1", "1"},
+                    {"val2", "2"}
                 });
 
                 TemplateContents = $@"
 <Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
     <cg:Apply>
-        <cg:When condition=""$val = 1""><contents of=""when""/></cg:When>
-        <cg:ElseWhen condition=""$val = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:When condition=""$val1 = 0""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val2 = 0""><contents of=""elseWhen""/></cg:ElseWhen>
         <cg:Else><contents of=""else""/></cg:Else>
 </cg:Apply>
 </Root>";
@@ -390,6 +411,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
             It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_tokens_from_both_the_When_and_ElseWhen_elements_should_be_listed_as_used =
+                () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1", "val2");
+
+            It no_tokens_should_be_listed_as_unused =
+                () => TokenStatsFor(Configuration).UnusedTokens.ShouldBeEmpty();
+
+            It no_tokens_should_be_listed_as_unrecognised =
+                () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
 
             It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_else_element =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
@@ -426,6 +456,91 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
 
             It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_when_element =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+
+        [Subject(typeof(XmlTemplate))]
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_but_When_contains_an_unrecognised_token_and_ElseWhen_is_true : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        {
+            Establish context = () =>
+            {
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
+                {
+                    {"val1", "1"},
+                    {"val2", "2"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""$valX = 1""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$val2 = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+</cg:Apply>
+</Root>";
+                Subject.Load(TemplateContents.ToStream());
+
+                ExpectedOutput = @"<Root><contents of=""elseWhen""/></Root>";
+            };
+
+            Because of = () => Result = Subject.Render(Configuration);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_token_from_the_ElseWhen_element_should_be_listed_as_used =
+                () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val2");
+
+            It the_unused_token_should_be_listed_as_unused =
+                () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("val1");
+
+            It the_token_from_the_When_element_should_be_listed_as_unrecognised =
+                () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("valX");
+
+            It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_elseWhen_element =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        }
+
+        [Subject(typeof(XmlTemplate))]
+        public class when_ApplyWhenElseWhenElse_elements_are_rendered_but_ElseWhen_contains_an_unrecognised_token_and_When_is_false : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        {
+            Establish context = () =>
+            {
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
+                {
+                    {"val1", "1"},
+                    {"val2", "2"}
+                });
+
+                TemplateContents = $@"
+<Root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""> 
+    <cg:Apply>
+        <cg:When condition=""$val1 = 0""><contents of=""when""/></cg:When>
+        <cg:ElseWhen condition=""$valX = 2""><contents of=""elseWhen""/></cg:ElseWhen>
+        <cg:Else><contents of=""else""/></cg:Else>
+</cg:Apply>
+</Root>";
+                Subject.Load(TemplateContents.ToStream());
+
+                ExpectedOutput = @"<Root><contents of=""else""/></Root>";
+            };
+
+            Because of = () => Result = Subject.Render(Configuration);
+
+            It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+
+            It the_token_from_the_When_element_should_be_listed_as_used =
+                () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1");
+
+            It the_unused_token_should_be_listed_as_unused =
+                () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("val2");
+
+            It the_token_from_the_ElseWhen_element_should_be_listed_as_unrecognised =
+                () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("valX");
+
+            It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_else_element =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 

@@ -86,7 +86,11 @@ namespace ConfigGen.Templating.Xml.NodeProcessing
             while (applyElement.PredicateSubNodes.Count > 0)
             {
                 var subNode = applyElement.PredicateSubNodes.Dequeue();
-                var evaluationResults = EvaluateCondition(subNode.Element, configuration, _configurationExpressionEvaluator);
+
+                // if we've already evalutated a true, don't bother evaluating sub node conditions, just return a fail result
+                ExpressionEvaluationResults evaluationResults = trueConditionAlreadyEvaluated
+                    ? new ExpressionEvaluationResults(false, null, null, null)
+                    : EvaluateCondition(subNode.Element, configuration, _configurationExpressionEvaluator);
 
                 if (evaluationResults.ErrorCode != null)
                 {

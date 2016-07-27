@@ -47,8 +47,6 @@ namespace ConfigGen.Templating.Xml
             if (unprocessedTemplate == null) throw new ArgumentNullException(nameof(unprocessedTemplate));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            var usedTokens = new HashSet<string>();
-            var unrecognisedTokens = new HashSet<string>();
             var errors = new List<Error>();
 
             XElement configGenNode;
@@ -73,7 +71,7 @@ namespace ConfigGen.Templating.Xml
                 }
             }
 
-            return new PreprocessingResults(usedTokens, unrecognisedTokens, errors);
+            return new PreprocessingResults(errors);
         }
 
         [CanBeNull]
@@ -89,28 +87,15 @@ namespace ConfigGen.Templating.Xml
 
         public class PreprocessingResults
         {
-            public PreprocessingResults(
-                [NotNull] HashSet<string> usedTokens,
-                [NotNull] HashSet<string> unrecognisedTokens,
-                [NotNull] List<Error> errors)
+            public PreprocessingResults([NotNull] List<Error> errors)
             {
-                if (usedTokens == null) throw new ArgumentNullException(nameof(usedTokens));
-                if (unrecognisedTokens == null) throw new ArgumentNullException(nameof(unrecognisedTokens));
                 if (errors == null) throw new ArgumentNullException(nameof(errors));
 
-                UsedTokens = usedTokens;
-                UnrecognisedTokens = unrecognisedTokens;
                 Errors = errors;
             }
 
             [NotNull]
             public List<Error> Errors { get; }
-
-            [NotNull]
-            public HashSet<string> UnrecognisedTokens { get; }
-
-            [NotNull]
-            public HashSet<string> UsedTokens { get; }
         }
     }
 }

@@ -123,16 +123,6 @@ namespace ConfigGen.Templating.Xml
                 var preprocessingResults = _templatePreprocessor.PreProcessTemplate(unprocessedTemplate, configuration);
                 string preprocessedTemplate = unprocessedTemplate.ToXmlString(_xmlDeclarationInfo.XmlDeclarationPresent);
 
-                foreach (var token in preprocessingResults.UsedTokens) //TODO: push token usage tracker into pre-processor?
-                {
-                    _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, token);
-                }
-
-                foreach (var token in preprocessingResults.UnrecognisedTokens)
-                {
-                    _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, token);
-                }
-
                 if (preprocessingResults.Errors.Any())
                 {
                     return new SingleTemplateRenderResults(

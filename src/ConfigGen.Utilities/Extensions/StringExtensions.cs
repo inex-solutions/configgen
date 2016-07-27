@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Extensions
@@ -42,6 +43,9 @@ namespace ConfigGen.Utilities.Extensions
         [NotNull]
         public static string With([NotNull] this string formatString, [NotNull] params object[] args)
         {
+            if (formatString == null) throw new ArgumentNullException(nameof(formatString));
+            if (args == null) throw new ArgumentNullException(nameof(args));
+
             return String.Format(formatString, args);
         }
 
@@ -65,8 +69,24 @@ namespace ConfigGen.Utilities.Extensions
         [NotNull]
         public static Stream ToStream([NotNull] this string s)
         {
+            if (s == null) throw new ArgumentNullException(nameof(s));
+
             var ms = new MemoryStream();
             var writer = new StreamWriter(ms);
+            writer.Write(s);
+            writer.Flush();
+            ms.Position = 0;
+            return ms;
+        }
+
+        [NotNull]
+        public static Stream ToStream([NotNull] this string s, [NotNull] Encoding encoding)
+        {
+            if (s == null) throw new ArgumentNullException(nameof(s));
+            if (encoding == null) throw new ArgumentNullException(nameof(encoding));
+
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms, encoding);
             writer.Write(s);
             writer.Flush();
             ms.Position = 0;

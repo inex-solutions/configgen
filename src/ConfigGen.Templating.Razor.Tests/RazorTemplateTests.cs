@@ -21,7 +21,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Text;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
@@ -198,34 +200,6 @@ namespace ConfigGen.Templating.Razor.Tests
         }
 
         [Subject(typeof(RazorTemplate))]
-        public class when_rendering_a_template_which_has_a_utf8_encoding : RazorTemplateRenderTestBase
-        {
-            Establish context = () =>
-            {
-                TemplateContents = "<root>@Model.TokenThree</root>";
-                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
-
-                Subject.Load(TemplateContents.ToStream());
-
-                ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
-            };
-
-            Because of = () => Result = Subject.Render(Configuration);
-
-            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
-
-            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
-
-            It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
-
-            It the_unrecognised_token_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("TokenThree");
-
-            It no_tokens_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldBeEmpty();
-
-            It no_tokens_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldBeEmpty();
-        }
-
-        [Subject(typeof(RazorTemplate))]
         public class when_rendering_a_template_which_contains_code_that_will_throw_an_exception_on_evaluation : RazorTemplateRenderTestBase
         {
             Establish context = () =>
@@ -291,6 +265,69 @@ namespace ConfigGen.Templating.Razor.Tests
             It the_unused_supplied_token_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("TokenTwo");
 
             It no_tokens_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
+        }
+
+        public class when_rendering_a_template_which_has_a_ascii_encoding : RazorTemplateRenderTestBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>hello</root>";
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
+
+                Subject.Load(TemplateContents.ToStream(Encoding.ASCII));
+            };
+
+            Because of = () => Result = Subject.Render(Configuration);
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+
+            It the_resulting_should_indicate_an_ascii_encoding = () => Result.Encoding.ShouldBeOfExactType<ASCIIEncoding>();
+        }
+
+        public class when_rendering_a_template_which_has_a_utf16_encoding : RazorTemplateRenderTestBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>hello</root>";
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
+
+                Subject.Load(TemplateContents.ToStream(Encoding.Unicode));
+            };
+
+            Because of = () => Result = Subject.Render(Configuration);
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+
+            It the_resulting_should_indicate_a_unicode_encoding = () => Result.Encoding.ShouldBeOfExactType<UnicodeEncoding>();
+        }
+
+        public class when_rendering_a_template_which_has_a_utf8_encoding : RazorTemplateRenderTestBase
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>hello</root>";
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
+
+                Subject.Load(TemplateContents.ToStream(Encoding.UTF8));
+            };
+
+            Because of = () => Result = Subject.Render(Configuration);
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+
+            It the_resulting_should_indicate_a_unicode_encoding = () => Result.Encoding.ShouldBeOfExactType<UTF8Encoding>();
         }
     }
 }

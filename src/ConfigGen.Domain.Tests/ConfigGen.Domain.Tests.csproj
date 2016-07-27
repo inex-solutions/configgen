@@ -60,6 +60,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ConfigurationNameSettingTests.cs" />
     <Compile Include="ConfigurationGeneratorTestBase.cs" />
     <Compile Include="FakeLocalEnvironment.cs" />
     <Compile Include="FileOutputTests.cs" />

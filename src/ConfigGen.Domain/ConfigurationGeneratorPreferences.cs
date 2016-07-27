@@ -29,6 +29,7 @@ namespace ConfigGen.Domain
         {
             SettingsFilePath = "App.Config.Settings.xls";
             TemplateFilePath = "App.Config.Template.xml";
+            ConfigurationNameSetting = "MachineName";
         }
 
         public string SettingsFilePath { get; set; }
@@ -40,5 +41,7 @@ namespace ConfigGen.Domain
         public string TemplateFileType { get; set; }
 
         public LoggingVerbosity Verbosity { get; set; }
+
+        public string ConfigurationNameSetting { get; set; }
     }
 }

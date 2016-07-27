@@ -36,5 +36,8 @@ namespace ConfigGen.Domain
 
         [NotNull]
         public static readonly string UnknownSettingsLoaderType = "UnknownSettingsLoaderType";
+
+        [NotNull]
+        public static readonly string UnknownConfigurationNameSetting = "UnknownConfigurationNameSetting";
     }
 }

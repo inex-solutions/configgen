@@ -22,7 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
@@ -59,6 +58,8 @@ namespace ConfigGen.Domain
         [NotNull]
         private readonly ConfigurationCollectionLoaderFactory _configurationCollectionLoaderFactory;
 
+        [NotNull] private readonly IConfigurationFactory _configurationFactory;
+
         [NotNull]
         private readonly ConfigurationCollectionFilter _configurationCollectionFilter;
 
@@ -69,6 +70,7 @@ namespace ConfigGen.Domain
             [NotNull] TemplateFactory templateFactory,
             [NotNull] ConfigurationNameSelector configurationNameSelector,
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
+            [NotNull] IConfigurationFactory configurationFactory,
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
             [NotNull] FileOutputWriter fileOutputWriter,
             [NotNull] IManagePreferences preferencesManager,
@@ -79,6 +81,7 @@ namespace ConfigGen.Domain
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
             if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
+            if (configurationFactory == null) throw new ArgumentNullException(nameof(configurationFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
@@ -89,6 +92,7 @@ namespace ConfigGen.Domain
             _templateFactory = templateFactory;
             _configurationNameSelector = configurationNameSelector;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
+            _configurationFactory = configurationFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
             _fileOutputWriter = fileOutputWriter;
              _preferencesManager = preferencesManager;
@@ -132,7 +136,6 @@ namespace ConfigGen.Domain
                          $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
             }
 
-
             ISettingsLoader settingsLoader;
             var settingsFileExtension = new FileInfo(configGenerationPreferences.SettingsFilePath).Extension;
             TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(settingsFileExtension, configGenerationPreferences.SettingsFileType, out settingsLoader);
@@ -150,18 +153,22 @@ namespace ConfigGen.Domain
                          $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
             }
 
-            IEnumerable<IDictionary<string, object>> settings = settingsLoader.LoadSettings(
+            IEnumerable<IDictionary<string, object>> loadedSettings = settingsLoader.LoadSettings(
                 configGenerationPreferences.SettingsFilePath,
                 configGenerationPreferences.SettingsFileType);
 
-            //NOPUSH - RJL HERE
-            IEnumerable<IConfiguration> configurations = settings.Select(s => new Configuration(_configurationNameSelector.GetName(s), s));
+            var configurationCreationResult = _configurationFactory.CreateConfigurations(configGenerationPreferences, loadedSettings);
+            if (!configurationCreationResult.Success)
+            {
+                return GenerationResults.CreateFail(configurationCreationResult.Error);
+            }
+
+            IEnumerable<IConfiguration> configurations = configurationCreationResult.Value;
 
             var configurationCollectionFilterPreferences = new ConfigurationCollectionFilterPreferences();
             _preferencesManager.ApplyPreferences(preferences, configurationCollectionFilterPreferences);
 
-            var globallyUsedTokens
-                = new HashSet<string>();
+            var globallyUsedTokens = new HashSet<string>();
 
             configurations = _configurationCollectionFilter.Filter(
                 configurationCollectionFilterPreferences,
@@ -206,7 +213,7 @@ namespace ConfigGen.Domain
                             writeResults.WasWritten));
                 }
 
-                return GenerationResults.CreateSuccess(unrecognisedPreferences, singleFileGenerationResults);
+                return GenerationResults.CreateSuccess(singleFileGenerationResults);
             }
         }
     }

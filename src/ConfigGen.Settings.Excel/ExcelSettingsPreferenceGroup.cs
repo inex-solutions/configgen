@@ -29,7 +29,7 @@ namespace ConfigGen.Settings.Excel
     {
         private static string PreferenceGroupName = "ExcelSettingsPreferenceGroup";
 
-        protected override IEnumerable<IPreferenceDefinition> Preferences => new[] { PreferenceDefinitions.ConfigurationNameColumn, PreferenceDefinitions.WorksheetName };
+        protected override IEnumerable<IPreferenceDefinition> Preferences => new[] { PreferenceDefinitions.WorksheetName };
 
         public override string Name => "Excel Settings";
 
@@ -41,13 +41,6 @@ namespace ConfigGen.Settings.Excel
             {
                 // ReSharper disable AssignNullToNotNullAttribute
                 // ReSharper disable PossibleNullReferenceException
-                ConfigurationNameColumn = new PreferenceDefinition<ExcelSettingsPreferences, string>(name: "ConfigurationNameColumn",
-                    shortName: null,
-                    description: "specifies the name of the column in the spreadsheet to use as the configuration name",
-                    parameters: new [] { new PreferenceParameterDefinition("column name", "name of the column") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameColumn"),
-                    setAction: (preferences, value) => preferences.ConfigurationNameColumn = value);
-
                 WorksheetName = new PreferenceDefinition<ExcelSettingsPreferences, string>(name: "WorksheetName",
                     shortName: null,
                     description: "specifies the name of the worksheet containing configuration settings",
@@ -59,8 +52,6 @@ namespace ConfigGen.Settings.Excel
             }
 
             public static PreferenceDefinition<ExcelSettingsPreferences, string> WorksheetName { get; }
-
-            public static PreferenceDefinition<ExcelSettingsPreferences, string> ConfigurationNameColumn { get; }
         }
     }
 }

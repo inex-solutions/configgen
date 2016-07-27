@@ -36,6 +36,7 @@ namespace ConfigGen.Domain
             PreferenceDefinitions.TemplateFile,
             PreferenceDefinitions.TemplateFileType,
             PreferenceDefinitions.Verbose,
+            PreferenceDefinitions.ConfigurationNameSetting
         };
 
         public override string Name => "General preferences";
@@ -79,6 +80,15 @@ namespace ConfigGen.Domain
                     description: "verbose output",
                     setAction: (preferences, value) => preferences.Verbosity = value ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal);
 
+                ConfigurationNameSetting =
+                    new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
+                        name: "ConfigurationNameSetting",
+                        shortName: null,
+                        description: "specifies the setting name to use as the configuration name",
+                        parameters: new[] {new PreferenceParameterDefinition("setting name", "name of the setting")},
+                        parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameSetting"),
+                        setAction: (preferences, value) => preferences.ConfigurationNameSetting = value);
+
                 // ReSharper restore AssignNullToNotNullAttribute
                 // ReSharper restore PossibleNullReferenceException
             }
@@ -90,6 +100,8 @@ namespace ConfigGen.Domain
             public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> TemplateFileType { get; }
 
             public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> SettingsFile { get; }
+
+            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> ConfigurationNameSetting { get; }
         }
     }
 }

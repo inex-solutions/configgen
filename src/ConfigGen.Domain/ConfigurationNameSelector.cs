@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -38,11 +39,14 @@ namespace ConfigGen.Domain
         }
 
         [NotNull]
-        public string GetName([NotNull] IDictionary<string, object> settings)
+        public Result<string, string> GetName(
+            [NotNull] IDictionary<string, object> settings, 
+            [NotNull] ConfigurationGeneratorPreferences configGenerationPreferences)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
+            if (configGenerationPreferences == null) throw new ArgumentNullException(nameof(configGenerationPreferences));
 
-            const string configurationNameToken = "MachineName";
+            var configurationNameToken = configGenerationPreferences.ConfigurationNameSetting;
 
             object value;
             if (settings.TryGetValue(configurationNameToken, out value)
@@ -50,10 +54,10 @@ namespace ConfigGen.Domain
             {
                 string configurationName = value.ToString();
                 _tokenUsageTracker.OnTokenUsed(configurationName, configurationNameToken);
-                return configurationName;
+                return Result<string, string>.CreateSuccessResult(configurationName);
             }
 
-            throw new InvalidOperationException("Settings collection did not contain machine name"); //TODO - bad
+            return Result<string, string>.CreateFailureResult($"Failed to get configuration name, as specified setting was not found: {configurationNameToken}");
         }
     }
 }

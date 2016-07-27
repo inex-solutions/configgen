@@ -57,7 +57,6 @@ namespace ConfigGen.Domain.Contract
 
         [NotNull]
         public static GenerationResults CreateSuccess(
-            [NotNull] IEnumerable<string> unrecognisedPreferences,
             [NotNull] IEnumerable<SingleFileGenerationResult> singleFileGenerationResults)
         {
             return new GenerationResults(singleFileGenerationResults, new Error[0]);

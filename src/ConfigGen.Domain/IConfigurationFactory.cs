@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,10 +18,20 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Settings.Excel
+
+using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Settings;
+using ConfigGen.Utilities;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Domain
 {
-    public class ExcelSettingsPreferences
+    public interface IConfigurationFactory
     {
-        public string WorksheetName { get; set; }
+        [NotNull]
+        IResult<IReadOnlyCollection<IConfiguration>, Error> CreateConfigurations(
+            [NotNull] ConfigurationGeneratorPreferences configGenerationPreferences, 
+            [NotNull] IEnumerable<IDictionary<string, object>> loadedSettings);
     }
 }

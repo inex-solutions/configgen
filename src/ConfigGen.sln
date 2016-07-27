@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.ConsoleApp", "Con
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain.Contract", "ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj", "{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Infrastructure.RazorTemplateRendering", "ConfigGen.Infrastructure.RazorTemplateRendering\ConfigGen.Infrastructure.RazorTemplateRendering.csproj", "{295F8721-ADF4-4276-9CE4-3A5FC17AF4A9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Infrastructure.RazorTemplateRendering.Tests", "ConfigGen.Infrastructure.RazorTemplateRendering.Tests\ConfigGen.Infrastructure.RazorTemplateRendering.Tests.csproj", "{AC9E6A47-A0F6-4C52-B0E0-1E8CE736FF37}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Templating.Razor", "ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj", "{C96CB4FE-EFD6-4673-B587-71E1053B970E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Templating.Xml", "ConfigGen.Templating.Xml\ConfigGen.Templating.Xml.csproj", "{A2A596E2-B503-4311-9AD4-7EDAE03D7B1F}"
@@ -54,14 +50,6 @@ Global
 		{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{295F8721-ADF4-4276-9CE4-3A5FC17AF4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295F8721-ADF4-4276-9CE4-3A5FC17AF4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{295F8721-ADF4-4276-9CE4-3A5FC17AF4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295F8721-ADF4-4276-9CE4-3A5FC17AF4A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC9E6A47-A0F6-4C52-B0E0-1E8CE736FF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC9E6A47-A0F6-4C52-B0E0-1E8CE736FF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC9E6A47-A0F6-4C52-B0E0-1E8CE736FF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC9E6A47-A0F6-4C52-B0E0-1E8CE736FF37}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C96CB4FE-EFD6-4673-B587-71E1053B970E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C96CB4FE-EFD6-4673-B587-71E1053B970E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C96CB4FE-EFD6-4673-B587-71E1053B970E}.Release|Any CPU.ActiveCfg = Release|Any CPU

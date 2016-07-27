@@ -19,22 +19,37 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+using System.Text;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("ConfigGen.Templating.Razor")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("ConfigGen.Templating.Razor")]
-[assembly: AssemblyCulture("")]
+namespace ConfigGen.Templating.Razor.Renderer
+{
+    public abstract class TemplateBase<TModel>
+    {
+        private readonly StringBuilder _buffer = new StringBuilder();
+        private TModel _model;
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
+        public abstract void Execute();
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("97505123-f09a-4588-8ecc-0270c3abeb43")]
+        public void SetModel(TModel model)
+        {
+            _model = model;
+        }
+
+        public dynamic Model => _model;
+
+        public virtual void Write(object value)
+        {
+            WriteLiteral(value);
+        }
+
+        public virtual void WriteLiteral(object value)
+        {
+            _buffer.Append(value);
+        }
+
+        public override string ToString()
+        {
+            return _buffer.ToString();
+        }
+    }
+}

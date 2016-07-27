@@ -19,33 +19,24 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Web.Razor;
+using System;
+using System.Dynamic;
 
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Templating.Razor.Renderer
 {
-    internal sealed class RazorTemplateEngineFactory
+    public abstract class DynamicModel : DynamicObject
     {
-        public RazorTemplateEngine CreateEngine<TModel>(string[] additionalNamesapces = null)
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
-            {
-                DefaultBaseClass = typeof(TModel).FullName,
-                DefaultNamespace = GetType().Namespace,
-                DefaultClassName = "RazorTemplate"
-            };
-
-            host.NamespaceImports.Add("System");
-            host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
-
-            if (additionalNamesapces != null)
-            {
-                foreach (var ns in additionalNamesapces)
-                {
-                    host.NamespaceImports.Add(ns);
-                }
-            }
-
-            return new RazorTemplateEngine(host);
+            TryGetValue(binder.Name, out result);
+            return true;
         }
+
+        public override bool TrySetMember(SetMemberBinder binder, object value)
+        {
+            throw new NotSupportedException("DynamicDictionary does not support setting of members");
+        }
+
+        protected abstract bool TryGetValue(string name, out object result);
     }
 }

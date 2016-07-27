@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,26 +18,24 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+
+using System.CodeDom;
+
+namespace ConfigGen.Templating.Razor.Renderer
 {
-    public sealed class RazorTemplateLoadResult
+    internal sealed class CodeGenerationResults
     {
-        public RazorTemplateLoadResult(LoadResultStatus status, string[] errors = null)
+        public CodeGenerationResults(bool success, CodeCompileUnit result = null, string[] errors = null)
         {
-            Status = status;
+            Success = success;
+            Result = result;
             Errors = errors ?? new string[0];
         }
 
-        public LoadResultStatus Status { get; }
+        public bool Success { get; }
+
+        public CodeCompileUnit Result { get; }
 
         public string[] Errors { get; }
-
-        public enum LoadResultStatus
-        {
-            Unknown,
-            Success,
-            CodeGenerationFailed,
-            CodeCompilationFailed
-        }
     }
 }

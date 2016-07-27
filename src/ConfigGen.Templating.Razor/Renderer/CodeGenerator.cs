@@ -19,23 +19,29 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
+using System.IO;
+using System.Linq;
+using System.Web.Razor;
 
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Templating.Razor.Renderer
 {
-    internal sealed class TemplateCompilationResults
+    internal sealed class CodeGenerator
     {
-        public TemplateCompilationResults(bool success, Type compiledType = null, string[] errors = null)
+        public CodeGenerationResults Generate(RazorTemplateEngine engine, string template)
         {
-            Success = success;
-            CompiledType = compiledType;
-            Errors = errors ?? new string[0];
+            GeneratorResults generatorResults;
+
+            using (TextReader rdr = new StringReader(template))
+            {
+                generatorResults = engine.GenerateCode(rdr);
+            }
+
+            if (generatorResults.Success)
+            {
+                return new CodeGenerationResults(success: true, result: generatorResults.GeneratedCode);
+            }
+
+            return new CodeGenerationResults(success: false, errors: generatorResults.ParserErrors.Select(e => "Code Generation Error: " + e.ToString()).ToArray());
         }
-
-        public bool Success { get; }
-
-        public Type CompiledType { get; }
-
-        public string[] Errors { get; }
     }
 }

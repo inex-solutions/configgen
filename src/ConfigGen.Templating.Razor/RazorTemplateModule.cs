@@ -21,7 +21,7 @@
 
 using Autofac;
 using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Infrastructure.RazorTemplateRendering;
+using ConfigGen.Templating.Razor.Renderer;
 
 namespace ConfigGen.Templating.Razor
 {

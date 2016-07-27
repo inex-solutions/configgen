@@ -24,7 +24,7 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Templating.Razor.Renderer
 {
     public sealed class RazorTemplateRenderer<TModel>
     {

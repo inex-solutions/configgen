@@ -25,7 +25,7 @@ using System.Text;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Infrastructure.RazorTemplateRendering;
+using ConfigGen.Templating.Razor.Renderer;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 

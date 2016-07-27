@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,25 +18,26 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System;
-using System.Dynamic;
-
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Templating.Razor.Renderer
 {
-    public abstract class DynamicModel : DynamicObject
+    public sealed class RazorTemplateLoadResult
     {
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        public RazorTemplateLoadResult(LoadResultStatus status, string[] errors = null)
         {
-            TryGetValue(binder.Name, out result);
-            return true;
+            Status = status;
+            Errors = errors ?? new string[0];
         }
 
-        public override bool TrySetMember(SetMemberBinder binder, object value)
-        {
-            throw new NotSupportedException("DynamicDictionary does not support setting of members");
-        }
+        public LoadResultStatus Status { get; }
 
-        protected abstract bool TryGetValue(string name, out object result);
+        public string[] Errors { get; }
+
+        public enum LoadResultStatus
+        {
+            Unknown,
+            Success,
+            CodeGenerationFailed,
+            CodeCompilationFailed
+        }
     }
 }

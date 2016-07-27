@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Templating.Razor.Renderer
 {
     public class DictionaryBackedDynamicModel : DynamicModel
     {

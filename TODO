@@ -1,1 +1,2 @@
-Merge Razor template/infrastructure projects (no reason to keep them seperate)
+Compare Xml/Razor template tests to ensure they are consistent.
+Add option to supply preferences in settings spreadsheet / templates, and then review deferred setter stuff.

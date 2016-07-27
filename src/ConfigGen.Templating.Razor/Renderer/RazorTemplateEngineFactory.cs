@@ -19,37 +19,33 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Text;
+using System.Web.Razor;
 
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Templating.Razor.Renderer
 {
-    public abstract class TemplateBase<TModel>
+    internal sealed class RazorTemplateEngineFactory
     {
-        private readonly StringBuilder _buffer = new StringBuilder();
-        private TModel _model;
-
-        public abstract void Execute();
-
-        public void SetModel(TModel model)
+        public RazorTemplateEngine CreateEngine<TModel>(string[] additionalNamesapces = null)
         {
-            _model = model;
-        }
+            var host = new RazorEngineHost(new CSharpRazorCodeLanguage())
+            {
+                DefaultBaseClass = typeof(TModel).FullName,
+                DefaultNamespace = GetType().Namespace,
+                DefaultClassName = "RazorTemplate"
+            };
 
-        public dynamic Model => _model;
+            host.NamespaceImports.Add("System");
+            host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
 
-        public virtual void Write(object value)
-        {
-            WriteLiteral(value);
-        }
+            if (additionalNamesapces != null)
+            {
+                foreach (var ns in additionalNamesapces)
+                {
+                    host.NamespaceImports.Add(ns);
+                }
+            }
 
-        public virtual void WriteLiteral(object value)
-        {
-            _buffer.Append(value);
-        }
-
-        public override string ToString()
-        {
-            return _buffer.ToString();
+            return new RazorTemplateEngine(host);
         }
     }
 }

@@ -24,7 +24,7 @@ using System.CodeDom.Compiler;
 using System.Linq;
 using Microsoft.CSharp;
 
-namespace ConfigGen.Infrastructure.RazorTemplateRendering
+namespace ConfigGen.Templating.Razor.Renderer
 {
     internal sealed class TemplateCompiler
     {

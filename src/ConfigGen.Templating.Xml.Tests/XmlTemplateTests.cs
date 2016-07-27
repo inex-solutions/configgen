@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
@@ -32,6 +33,7 @@ namespace ConfigGen.Templating.Xml.Tests
 {
     namespace XmlTemplateTests
     {
+        [Subject(typeof(XmlTemplate))]
         public class when_loading_a_template_which_is_not_well_formed : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
@@ -44,11 +46,12 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_load_fails = () => Result.Success.ShouldBeFalse();
 
-            It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count().ShouldEqual(1);
+            It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count.ShouldEqual(1);
 
             It the_error_indicates_an_xml_load_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(XmlTemplateErrorCodes.TemplateLoadError);
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_loading_a_template_which_is_well_formed : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
@@ -62,6 +65,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_load_passes = () => Result.ShouldIndicateSuccess();
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_rendering_a_template_without_calling_load_first : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             private static Exception CaughtException;
@@ -70,10 +74,10 @@ namespace ConfigGen.Templating.Xml.Tests
             {
                 CaughtException = null;
                 TemplateContents = "<root>[%TokenOne%]</root>";
-                ConfigurationSettings = new Dictionary<string, object>
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
-                };
+                });
             };
 
             Because of = () => CaughtException = Catch.Exception(() => Subject.Render(Configuration));
@@ -81,16 +85,18 @@ namespace ConfigGen.Templating.Xml.Tests
             It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_rendering_a_template_which_contains_no_tokens : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
                 TemplateContents = "<root>hello</root>";
-                ConfigurationSettings =  new Dictionary<string, object>
+
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
-                };
+                });
 
                 Subject.Load(TemplateContents.ToStream());
             };
@@ -103,21 +109,22 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldContainXml(TemplateContents);
 
-            It both_supplied_tokens_should_be_listed_as_unused = () => TokenUsageStatistics.UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
+            It both_supplied_tokens_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 
-            It no_tokens_should_be_listed_as_used = () => TokenUsageStatistics.UsedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldBeEmpty();
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenOne%]</root>";
-                ConfigurationSettings =  new Dictionary<string, object>
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
                     ["TokenOne"] = "One",
                     ["TokenTwo"] = "Two",
-                };
+                });
 
                 ExpectedOutput = TemplateContents.Replace("[%TokenOne%]", "One");
 
@@ -133,17 +140,18 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_used_supplied_token_should_be_listed_as_used = () => TokenUsageStatistics.UsedTokens.ShouldContainOnly("TokenOne");
+            It the_used_supplied_token_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne");
 
-            It the_unused_supplied_token_should_be_listed_as_unused = () => TokenUsageStatistics.UnusedTokens.ShouldContainOnly("TokenTwo");
+            It the_unused_supplied_token_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("TokenTwo");
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_rendering_a_template_containing_an_unrecognised_token : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
                 TemplateContents = "<root>[%TokenThree%]</root>";
-                ConfigurationSettings = new Dictionary<string, object>();
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
 
                 ExpectedOutput = TemplateContents.Replace("[%TokenThree%]", "");
 
@@ -158,11 +166,11 @@ namespace ConfigGen.Templating.Xml.Tests
 
             It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_unrecognised_token_should_be_listed_as_unrecognised = () => TokenUsageStatistics.UnrecognisedTokens.ShouldContainOnly("TokenThree");
+            It the_unrecognised_token_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
-            It no_tokens_should_be_listed_as_used = () => TokenUsageStatistics.UsedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldBeEmpty();
 
-            It no_tokens_should_be_listed_as_unused = () => TokenUsageStatistics.UnusedTokens.ShouldBeEmpty();
+            It no_tokens_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldBeEmpty();
         }
     }
 }

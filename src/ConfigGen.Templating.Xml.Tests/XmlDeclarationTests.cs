@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
@@ -31,6 +32,7 @@ namespace ConfigGen.Templating.Xml.Tests
     namespace XmlDeclarationTests
     {
         //TODO: add missing tests
+        [Subject(typeof(XmlTemplate))]
         public class when_the_template_contains_an_xml_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             private static string XmlDeclaration;
@@ -43,7 +45,7 @@ namespace ConfigGen.Templating.Xml.Tests
   <child key=""value"" />
 </root>";
                 TemplateContents = XmlDeclaration + TemplateBody;
-                ConfigurationSettings = new Dictionary<string, object>();
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
 
                 Subject.Load(TemplateContents.ToStream());
             };

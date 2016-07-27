@@ -37,8 +37,7 @@ namespace ConfigGen.Tests.Common.MSpec
         /// <summary>
         /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.
         /// </summary>
-        public static IEnumerable<Error> ShouldContainSingleErrorWithCode(this IEnumerable<Error> actual,
-            string expectedErrorCode)
+        public static IEnumerable<Error> ShouldContainSingleErrorWithCode(this IEnumerable<Error> actual, string expectedErrorCode)
         {
             if (actual == null)
             {
@@ -62,6 +61,36 @@ namespace ConfigGen.Tests.Common.MSpec
             }
 
             return actual;
+        }
+
+        /// <summary>
+        /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry detail contains
+        /// the specified text.
+        /// </summary>
+        public static Error ShouldContainSingleErrorWithText(this IEnumerable<Error> actual, string partialErrorMessage)
+        {
+            if (actual == null)
+            {
+                throw new SpecificationException("Expected error collection to contain a single item, but was null");
+            }
+
+            var actualArray = actual.ToArray();
+
+            var count = actualArray.Length;
+
+            if (count != 1)
+            {
+                throw new SpecificationException($"Expected error collection to contain a single item, but there were {count} items");
+            }
+
+            var error = actualArray[0];
+
+            if (!error.Detail.Contains(partialErrorMessage))
+            {
+                throw new SpecificationException($"Error detail should have contained string {partialErrorMessage}, but was {error.Detail}");
+            }
+
+            return error;
         }
 
         /// <summary>

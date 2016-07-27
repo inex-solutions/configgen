@@ -65,6 +65,11 @@ namespace ConfigGen.Templating.Razor
                 throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
             }
 
+            if (_loadedTemplate != null)
+            {
+                throw new InvalidOperationException("Cannot call Load more than once");
+            }
+
             _encoding = TextEncodingDetector.GetEncoding(templateStream);
 
             using (var reader = new StreamReader(templateStream))

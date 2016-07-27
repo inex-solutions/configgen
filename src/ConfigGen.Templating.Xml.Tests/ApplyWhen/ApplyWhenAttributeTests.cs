@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
@@ -34,6 +35,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen="""" /></root>";
                 Subject.Load(TemplateContents.ToStream());
             };
@@ -52,6 +54,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 cg:applyWhen=""$val /+-= 1"" /></root>";
                 Subject.Load(TemplateContents.ToStream());
             };
@@ -70,10 +73,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
         {
             Establish context = () =>
             {
-                ConfigurationSettings = new Dictionary<string, object>
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
                     {"val", "2"}
-                };
+                });
+
                 TemplateContents =
                     $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=2"" /></root>";
 
@@ -89,17 +93,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_contain_the_child_element_but_without_the_applyWhen_attribute =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => TokenUsageStatistics.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val");
         }
 
         public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
-                ConfigurationSettings = new Dictionary<string, object>
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
                 {
                     {"val", "2"}
-                };
+                });
+
                 TemplateContents = $@"<root xmlns:cg=""{XmlTemplate.ConfigGenXmlNamespace}""><child1 /><child2 cg:applyWhen=""$val=3"" /></root>";
 
                 ExpectedOutput = @"<root><child1 /></root>";
@@ -114,7 +119,7 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhen
             It the_result_should_contain_not_the_child_element =
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
 
-            It the_result_should_indicate_the_token_had_been_used = () => TokenUsageStatistics.UsedTokens.ShouldContainOnly("val");
+            It the_result_should_indicate_the_token_had_been_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val");
         }
 
         //TODO: remove these commented out tests

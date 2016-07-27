@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpec;
@@ -30,6 +31,7 @@ namespace ConfigGen.Templating.Xml.Tests
 {
     namespace ConfigGenMarkupTests
     {
+        [Subject(typeof(XmlTemplate))]
         public class when_the_template_does_not_contain_an_xml_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
@@ -38,7 +40,7 @@ namespace ConfigGen.Templating.Xml.Tests
 @"<root>
   <child key=""value"" />
 </root>";
-                ConfigurationSettings = new Dictionary<string, object>();
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
 
                 Subject.Load(TemplateContents.ToStream());
             };
@@ -57,6 +59,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_the_template_contains_the_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
@@ -70,7 +73,7 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                ConfigurationSettings = new Dictionary<string, object>();
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
             };
 
             Because of = () => Result = Subject.Render(Configuration);
@@ -81,6 +84,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_the_template_contains_a_non_configgen_xmlns_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
@@ -91,7 +95,7 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                ConfigurationSettings = new Dictionary<string, object>();
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
             };
 
             Because of = () => Result = Subject.Render(Configuration);
@@ -102,6 +106,7 @@ namespace ConfigGen.Templating.Xml.Tests
                 () => Result.RenderedResult.ShouldContainXml(TemplateContents);
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_the_template_contains_unrecognised_configgen_attribute : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
@@ -112,7 +117,7 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                ConfigurationSettings = new Dictionary<string, object>();
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
             };
 
             Because of = () => Result = Subject.Render(Configuration);
@@ -125,6 +130,7 @@ namespace ConfigGen.Templating.Xml.Tests
             It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
         }
 
+        [Subject(typeof(XmlTemplate))]
         public class when_the_template_contains_unrecognised_configgen_element : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
@@ -136,7 +142,7 @@ namespace ConfigGen.Templating.Xml.Tests
 
                 Subject.Load(TemplateContents.ToStream());
 
-                ConfigurationSettings = new Dictionary<string, object>();
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
             };
 
             Because of = () => Result = Subject.Render(Configuration);

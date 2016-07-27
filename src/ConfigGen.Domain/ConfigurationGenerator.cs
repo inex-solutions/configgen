@@ -35,6 +35,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
 {
+    //TODO: Documentation
     public class ConfigurationGenerator : IConfigurationGenerator
     {
         [NotNull]
@@ -130,6 +131,7 @@ namespace ConfigGen.Domain
                          ConfigurationGeneratorErrorCodes.UnknownTemplateType,
                          $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
             }
+
 
             ISettingsLoader settingsLoader;
             var settingsFileExtension = new FileInfo(configGenerationPreferences.SettingsFilePath).Extension;

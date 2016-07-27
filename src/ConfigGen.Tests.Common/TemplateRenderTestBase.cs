@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
@@ -34,20 +35,17 @@ namespace ConfigGen.Tests.Common
     public abstract class TemplateRenderTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new()
     {
         [NotNull]
-        protected const string ConfigurationName = "Test-IConfiguration";
-        [NotNull]
         protected static TTemplate Subject;
         protected static string TemplateContents;
-        [NotNull]
-        protected static Dictionary<string, object> ConfigurationSettings;
         protected static TokenUsageTracker TokenUsageTracker;
         protected static SingleTemplateRenderResults Result;
+        protected static Configuration Configuration;
         protected static string ExpectedOutput;
         private static IEnumerable<Configuration> configurations;
 
         Establish context = () =>
         {
-            ConfigurationSettings = new Dictionary<string, object>();
+            Configuration = null;
             TemplateContents = null;
             configurations = null;
             Result = null;
@@ -61,9 +59,10 @@ namespace ConfigGen.Tests.Common
         };
 
         [NotNull]
-        protected static Configuration Configuration => new Configuration(ConfigurationName, ConfigurationSettings);
-
-        [NotNull]
-        protected static TokenUsageStatistics TokenUsageStatistics => TokenUsageTracker.GetTokenUsageStatistics(Configuration);
+        protected static TokenUsageStatistics TokenStatsFor([NotNull] Configuration configuration)
+        {
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+            return TokenUsageTracker.GetTokenUsageStatistics(configuration);
+        }
     }
 }

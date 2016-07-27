@@ -25,6 +25,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities
 {
+    //TODO: awful name, no documentation
     public class ItemFactoryByTypeOrExtensionBase<TItem>
     {
         [NotNull]

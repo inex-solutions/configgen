@@ -39,7 +39,6 @@ namespace ConfigGen.Tests.Common
         [NotNull]
         protected static Dictionary<string, object> SingleConfiguration;
         protected static LoadResult Result;
-        protected static string ExpectedOutput;
         private static IEnumerable<Configuration> configurations;
         protected static TokenUsageTracker TokenUsageTracker;
 
@@ -49,7 +48,6 @@ namespace ConfigGen.Tests.Common
             TemplateContents = null;
             configurations = null;
             Result = null;
-            ExpectedOutput = null;
             TokenUsageTracker = new TokenUsageTracker();
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<TContainerModule>();

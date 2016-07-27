@@ -59,10 +59,19 @@ namespace ConfigGen.Domain
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
+            return GetTokenUsageStatistics(configuration.ConfigurationName, configuration.SettingsNames);
+        }
+
+        [NotNull]
+        public TokenUsageStatistics GetTokenUsageStatistics([NotNull] string configurationName, [NotNull] IEnumerable<string> settingNamesForConfiguration)
+        {
+            if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
+            if (settingNamesForConfiguration == null) throw new ArgumentNullException(nameof(settingNamesForConfiguration));
+
             return new TokenUsageStatistics(
-                usedTokens: GetTokenList(configuration.ConfigurationName, _usedTokens).ToReadOnlyCollection(),
-                unrecognisedTokens: GetTokenList(configuration.ConfigurationName, _unrecognisedTokens).ToReadOnlyCollection(),
-                unusedTokens: configuration.SettingsNames.Except(GetTokenList(configuration.ConfigurationName, _usedTokens)).ToReadOnlyCollection());
+                usedTokens: GetTokenList(configurationName, _usedTokens).ToReadOnlyCollection(),
+                unrecognisedTokens: GetTokenList(configurationName, _unrecognisedTokens).ToReadOnlyCollection(),
+                unusedTokens: settingNamesForConfiguration.Except(GetTokenList(configurationName, _usedTokens)).ToReadOnlyCollection());
         }
 
         [NotNull]

@@ -66,6 +66,23 @@ namespace ConfigGen.Templating.Xml.Tests
         }
 
         [Subject(typeof(XmlTemplate))]
+        public class when_loading_a_template_a_second_time : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
+        {
+            private static Exception CaughtException;
+
+            Establish context = () =>
+            {
+                CaughtException = null;
+                TemplateContents = "<root>hello</root>";
+                Subject.Load(TemplateContents.ToStream());
+            };
+
+            Because of = () => CaughtException = Catch.Exception(() => Result = Subject.Load(TemplateContents.ToStream()));
+
+            It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
+        }
+
+        [Subject(typeof(XmlTemplate))]
         public class when_rendering_a_template_without_calling_load_first : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             private static Exception CaughtException;
@@ -115,7 +132,7 @@ namespace ConfigGen.Templating.Xml.Tests
         }
 
         [Subject(typeof(XmlTemplate))]
-        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        public class when_rendering_a_template_containing_a_single_token_which_was_supplied : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
         {
             Establish context = () =>
             {
@@ -171,6 +188,79 @@ namespace ConfigGen.Templating.Xml.Tests
             It no_tokens_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldBeEmpty();
 
             It no_tokens_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldBeEmpty();
+        }
+
+        [Subject(typeof(XmlTemplate))]
+        public class when_rendering_the_same_template_a_second_time : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>[%TokenOne%]</root>";
+
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
+                {
+                    ["TokenOne"] = "One",
+                    ["TokenTwo"] = "Two",
+                });
+
+                Subject.Load(TemplateContents.ToStream());
+                Subject.Render(Configuration);
+
+                Configuration = new Configuration("Configuration2", new Dictionary<string, object>
+                {
+                    ["TokenOne"] = "OneAgain",
+                    ["TokenTwo"] = "TwoAgain",
+                });
+
+                ExpectedOutput = TemplateContents.Replace("[%TokenOne%]", "OneAgain");
+            };
+
+            Because of = () => Result = Subject.Render(Configuration);
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+
+            It the_used_supplied_token_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne");
+
+            It the_unused_supplied_token_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("TokenTwo");
+
+            It no_tokens_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
+        }
+
+        [Subject(typeof(XmlTemplate))]
+        public class when_rendering_a_template_which_has_two_tokens_immediately_next_to_eachother : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        {
+            Establish context = () =>
+            {
+                TemplateContents = "<root>[%TokenOne%][%TokenTwo%]</root>";
+                Configuration = new Configuration("Configuration1", new Dictionary<string, object>
+                {
+                    ["TokenOne"] = "One",
+                    ["TokenTwo"] = "Two",
+                });
+
+                ExpectedOutput = TemplateContents.Replace("[%TokenOne%][%TokenTwo%]", "OneTwo");
+
+                Subject.Load(TemplateContents.ToStream());
+            };
+
+            Because of = () => Result = Subject.Render(Configuration);
+
+            It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+            It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+            It the_resulting_output_contains_the_template_with_both_tokens_substituted_for_their_values =
+                () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+
+            It both_used_supplied_tokens_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
+
+            It no_tokens_should_be_listed_as_unsed = () => TokenStatsFor(Configuration).UnusedTokens.ShouldBeEmpty();
+
+            It no_tokens_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
         }
     }
 }

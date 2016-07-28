@@ -35,18 +35,26 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
 
-        public TokenValueMatchEvaluator([NotNull] IConfiguration configuration, [NotNull] ITokenUsageTracker tokenUsageTracker)
+        [NotNull]
+        private readonly string _tokenMatchGroupName;
+
+        public TokenValueMatchEvaluator(
+            [NotNull] IConfiguration configuration, 
+            [NotNull] ITokenUsageTracker tokenUsageTracker,
+            [NotNull] string tokenMatchGroupName)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+            if (tokenMatchGroupName == null) throw new ArgumentNullException(nameof(tokenMatchGroupName));
 
             _configuration = configuration;
             _tokenUsageTracker = tokenUsageTracker;
+            _tokenMatchGroupName = tokenMatchGroupName;
         }
 
         public string Target(Match match)
         {
-            var tokenName = match.Groups["mib"].Value;
+            var tokenName = match.Groups[_tokenMatchGroupName].Value;
             object value;
 
             if (_configuration.TryGetValue(tokenName, out value)

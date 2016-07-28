@@ -83,7 +83,7 @@ namespace ConfigGen.Templating.Xml
         public LoadResult Load([NotNull] Stream templateStream)
         {
             if (templateStream == null) throw new ArgumentNullException(nameof(templateStream));
-
+            if (_loadedTemplate != null) throw new InvalidOperationException("Load can only be called once");
 
             if (!templateStream.CanRead || !templateStream.CanSeek)
             {

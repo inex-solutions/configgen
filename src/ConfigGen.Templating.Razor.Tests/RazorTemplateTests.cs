@@ -138,7 +138,7 @@ namespace ConfigGen.Templating.Razor.Tests
         }
 
         [Subject(typeof(RazorTemplate))]
-        public class when_rendering_a_template_containing_a_single_token_which_was_supplied_to_the_renderer : RazorTemplateRenderTestBase
+        public class when_rendering_a_template_containing_a_single_token_which_was_supplied : RazorTemplateRenderTestBase
         {
             Establish context = () =>
             {
@@ -329,5 +329,7 @@ namespace ConfigGen.Templating.Razor.Tests
 
             It the_resulting_should_indicate_a_unicode_encoding = () => Result.Encoding.ShouldBeOfExactType<UTF8Encoding>();
         }
+
+        //when_rendering_a_template_which_has_two_tokens_immediately_next_to_eachother
     }
 }

@@ -33,8 +33,7 @@ namespace ConfigGen.Templating.Xml
         private readonly ITokenUsageTracker _tokenUsageTracker;
 
         [NotNull]
-        public static readonly Regex TokenRegexp = new Regex(@"\[%(?<mib>.*)%\]", RegexOptions.Multiline | RegexOptions.Compiled);
-
+        public static readonly Regex TokenRegexp = new Regex(@"\[%(?<token>.+?)%\]", RegexOptions.Multiline | RegexOptions.Compiled);
             
         public TokenReplacer([NotNull] ITokenUsageTracker tokenUsageTracker)
         {
@@ -52,7 +51,8 @@ namespace ConfigGen.Templating.Xml
 
             var tokenValueMatchEvaluator = new TokenValueMatchEvaluator(
                 configuration: configuration,
-                tokenUsageTracker: _tokenUsageTracker);
+                tokenUsageTracker: _tokenUsageTracker, 
+                tokenMatchGroupName: "token");
 
             var matchEvaluator = new MatchEvaluator(tokenValueMatchEvaluator.Target);
 

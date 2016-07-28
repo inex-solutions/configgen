@@ -21,17 +21,15 @@
 
 using Machine.Specifications;
 
-namespace ConfigGen.ConsoleApp.Tests
+namespace ConfigGen.ConsoleApp.Tests.ConsoleRunnerFactoryTests
 {
-    namespace ConsoleRunnerFactoryTests
+    [Subject(typeof(ConsoleRunnerFactory))]
+    public class when_creating_a_console_runner
     {
-        public class when_creating_a_console_runner
-        {
-            private static ConsoleRunner ConsoleRunner;
+        private static ConsoleRunner ConsoleRunner;
 
-            Because of = () => ConsoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
+        Because of = () => ConsoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
 
-            It then_a_console_runner_is_returned = () => ConsoleRunner.ShouldBeAssignableTo<ConsoleRunner>();
-        }
+        It then_a_console_runner_is_returned = () => ConsoleRunner.ShouldBeAssignableTo<ConsoleRunner>();
     }
 }

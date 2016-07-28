@@ -26,37 +26,34 @@ using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
-namespace ConfigGen.Domain.Tests
+namespace ConfigGen.Domain.Tests.SimpleTests
 {
-    namespace ConfigurationGeneratorTests
+    internal class when_invoked_with_no_preferences : ConfigurationGeneratorTestBase
     {
-        internal class when_invoked_with_no_preferences : ConfigurationGeneratorTestBase
+        Establish context = () =>
         {
-            Establish context = () =>
-            {
-                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
-                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
-            };
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+        };
 
-            Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
+        Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+        It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-            It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
+        It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
 
-            It the_file_for_the_first_row_contains_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+        It the_file_for_the_first_row_contains_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <xmlRoot>
   <Value1>Config1-Value1</Value1>
   <Value2>Config1-Value2</Value2>
 </xmlRoot>");
 
-            It the_file_for_the_second_row_contains_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
-@"<?xml version=""1.0"" encoding=""utf-8""?>
+        It the_file_for_the_second_row_contains_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <xmlRoot>
   <Value1>Config2-Value1</Value1>
   <Value2>Config2-Value2</Value2>
 </xmlRoot>");
-        }
     }
 }

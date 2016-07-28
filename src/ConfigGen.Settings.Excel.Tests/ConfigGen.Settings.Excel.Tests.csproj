@@ -61,7 +61,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ExcelSettingsLoaderTestBase.cs" />
-    <Compile Include="ExcelSettingsLoaderTests.cs" />
+    <Compile Include="ExcelSettingsLoaderTests\ExcelSettingsLoaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

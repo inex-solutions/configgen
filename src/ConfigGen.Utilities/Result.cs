@@ -22,7 +22,6 @@
 using System;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
-using log4net.Core;
 
 namespace ConfigGen.Utilities
 {

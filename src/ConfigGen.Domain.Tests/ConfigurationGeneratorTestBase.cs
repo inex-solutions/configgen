@@ -31,6 +31,7 @@ using Machine.Specifications.Annotations;
 
 namespace ConfigGen.Domain.Tests
 {
+    [Subject(typeof(ConfigurationGenerator))]
     internal abstract class ConfigurationGeneratorTestBase : ContainerAwareMachineSpecificationTestBase<IConfigurationGenerator, GenerationResults>
     {
         private static Lazy<IEnumerable<IPreferenceGroup>> lazyPreferenceGroups;

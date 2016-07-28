@@ -1,2 +1,2 @@
-Compare Xml/Razor template tests to ensure they are consistent.
 Add option to supply preferences in settings spreadsheet / templates, and then review deferred setter stuff.
+Warnings as Errors

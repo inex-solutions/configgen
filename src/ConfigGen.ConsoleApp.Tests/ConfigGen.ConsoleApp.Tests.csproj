@@ -61,10 +61,10 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AlternativeConsoleRunnerTestPreferencesGroup.cs" />
-    <Compile Include="ConsoleRunnerFactoryTests.cs" />
+    <Compile Include="ConsoleRunnerFactoryTests\ConsoleRunnerFactoryTests.cs" />
     <Compile Include="ConsoleRunnerTestPreferences.cs" />
     <Compile Include="ConsoleRunnerTestPreferencesGroup.cs" />
-    <Compile Include="ConsoleRunnerTests.cs" />
+    <Compile Include="ConsoleRunnerTests\ConsoleRunnerTests.cs" />
     <Compile Include="ConsoleTestExtensions.cs" />
     <Compile Include="IndexedProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -82,6 +82,7 @@
     <Compile Include="ReadOnlyCollection.cs" />
     <Compile Include="Logging\Log4NetLoggerControler.cs" />
     <Compile Include="Logging\LoggingVerbosity.cs" />
+    <Compile Include="Preferences\PreferenceGroup.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="TextEncodingDetector.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />

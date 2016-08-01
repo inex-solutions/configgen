@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Preferences
 {
@@ -76,13 +78,49 @@ namespace ConfigGen.Utilities.Preferences
         Switch
     }
 
-    public class PreferencesManager
+    public interface IPreferencesManager
     {
-        private readonly IEnumerable<IPreferenceGroup> _preferences;
+        [NotNull]
+        IEnumerable<IPreferenceGroup> KnownPreferenceGroups { get; }
 
-        public PreferencesManager(IEnumerable<IPreferenceGroup> preferences)
+        [NotNull]
+        [ItemNotNull]
+        IEnumerable<string> GetUnrecognisedPreferences([NotNull][ItemNotNull] IEnumerable<string> preferences);
+
+        void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance);
+    }
+
+    public class PreferencesManager : IPreferencesManager
+    {
+        [NotNull]
+        [ItemNotNull]
+        private readonly IPreferenceGroup[] _preferences;
+
+        public PreferencesManager([NotNull] [ItemNotNull] params IPreferenceGroup[] preferences)
         {
+            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+            if (preferences.Any(p => p == null)) throw new ArgumentException("Collection cannot contain null items", nameof(preferences));
+
             _preferences = preferences;
         }
+
+        [NotNull]
+        public IEnumerable<IPreferenceGroup> KnownPreferenceGroups => _preferences.ToArray();
+
+        [NotNull]
+        public IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences)
+        {
+            return Enumerable.Empty<string>();
+        }
+
+        public void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance)
+        {
+            
+        }
+    }
+
+    public class PreferenceManagerInitializationException : Exception
+    {
+        
     }
 }

@@ -20,30 +20,27 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Preferences
 {
-    public class PreferenceGroup<TPreferences> : IPreferenceGroup
+    public interface IPreference
     {
         [NotNull]
-        private readonly IEnumerable<IPreference<TPreferences>> _preferences;
-
-        public PreferenceGroup([NotNull] string name, [NotNull] IEnumerable<IPreference<TPreferences>> preferences)
-        {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            _preferences = preferences;
-            Name = name;
-        }
+        string Name { get; }
 
         [NotNull]
-        public string Name { get; }
+        string ShortName { get; }
 
         [NotNull]
-        public IEnumerable<IPreference> Preferences => _preferences.ToArray();
+        Type PreferenceInstanceType { get; }
+
+        [NotNull]
+        Type TargetPropertyType { get; }
+    }
+
+    public interface IPreference<in TPreferences> : IPreference
+    {
+        void Set([NotNull] TPreferences target, [CanBeNull] string value);
     }
 }

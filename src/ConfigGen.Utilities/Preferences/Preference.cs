@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,30 +20,45 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Preferences
 {
-    public class PreferenceGroup<TPreferences> : IPreferenceGroup
+    public class Preference<TPreference, TTarget> : IPreference<TPreference>
     {
         [NotNull]
-        private readonly IEnumerable<IPreference<TPreferences>> _preferences;
+        private readonly Action<TPreference, string> _setter;
 
-        public PreferenceGroup([NotNull] string name, [NotNull] IEnumerable<IPreference<TPreferences>> preferences)
+        public Preference(
+            [NotNull] string name,
+            [NotNull] string shortName,
+            [NotNull] Action<TPreference, string> setter)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+            if (shortName == null) throw new ArgumentNullException(nameof(shortName));
+            if (setter == null) throw new ArgumentNullException(nameof(setter));
 
-            _preferences = preferences;
+            _setter = setter;
             Name = name;
+            ShortName = shortName;
         }
 
         [NotNull]
         public string Name { get; }
 
         [NotNull]
-        public IEnumerable<IPreference> Preferences => _preferences.ToArray();
+        public string ShortName { get; }
+
+        [NotNull]
+        public Type PreferenceInstanceType => typeof(TPreference);
+
+        [NotNull]
+        public Type TargetPropertyType => typeof(TTarget);
+
+        public void Set([NotNull] TPreference target, [CanBeNull] string value)
+        {
+            if (target == null) throw new ArgumentNullException(nameof(target));
+            _setter(target, value);
+        }
     }
 }

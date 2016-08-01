@@ -1,9 +1,27 @@
-﻿using System;
+﻿#region Copyright and License Notice
+// Copyright (C)2010-2016 - INEX Solutions Ltd
+// https://github.com/inex-solutions/configgen
+// 
+// This file is part of ConfigGen.
+// 
+// ConfigGen is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// ConfigGen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License and 
+// the GNU Lesser General Public License along with ConfigGen.  
+// If not, see <http://www.gnu.org/licenses/>
+#endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConfigGen.Tests.Common;
 using ConfigGen.Utilities.Preferences;
 using Machine.Specifications;
 
@@ -20,51 +38,34 @@ namespace ConfigGen.Utilities.Tests.Preferences
 
         protected static PreferenceGroup<PersonPreferences> PersonPreferenceGroup;
 
-        public static PreferenceGroup<PersonPreferences> CollidesWithPersonPreferenceGroup;
-
         Establish context = () =>
         {
             PersonPreferenceGroup = new PreferenceGroup<PersonPreferences>(
                 name: "Person Preferences",
-                preferences: new []
+                preferences: new IPreference<PersonPreferences>[]
                 {
-                    new Preference<PersonPreferences>(
+                    new Preference<PersonPreferences, StringSplitOptions>(
                         name: "PersonName",
-                        shortName: "Name",
-                        preferenceType: PreferenceType.SingleArgument, 
+                        shortName: "Name", 
                         setter: (preferences, value) => preferences.PersonName = value),
-                    new Preference<PersonPreferences>(
+                    new Preference<PersonPreferences, int>(
                         name: "PersonAge",
                         shortName: "Age",
-                        preferenceType: PreferenceType.SingleArgument,
                         setter: (preferences, value) => preferences.PersonAge = int.Parse(value)),
                 });
-
+            
             HousePreferenceGroup = new PreferenceGroup<HousePreferences>(
                 name: "House Preferences",
-                preferences: new[]
+                preferences: new IPreference<HousePreferences>[]
                 {
-                    new Preference<HousePreferences>(
+                    new Preference<HousePreferences, string>(
                         name: "HouseAddress",
                         shortName: "Address",
-                        preferenceType: PreferenceType.SingleArgument,
                         setter: (preferences, value) => preferences.Address = value),
-                    new Preference<HousePreferences>(
+                    new Preference<HousePreferences, bool>(
                         name: "IsFlat",
                         shortName: "Flat",
-                        preferenceType: PreferenceType.Switch,
                         setter: (preferences, value) => preferences.IsFlat = bool.Parse(value)),
-                });
-
-            CollidesWithPersonPreferenceGroup = new PreferenceGroup<PersonPreferences>(
-                name: "Collides With Person Preferences",
-                preferences: new[]
-                {
-                    new Preference<PersonPreferences>(
-                        name: "PersonName",
-                        shortName: "Name",
-                        preferenceType: PreferenceType.SingleArgument,
-                        setter: (preferences, value) => preferences.PersonName = value),
                 });
 
             Subject = null;
@@ -89,9 +90,33 @@ namespace ConfigGen.Utilities.Tests.Preferences
 
     public class when_loaded_with_two_preference_groups_which_have_a_collision_on_a_preference_name : PreferencesManagerTestBase
     {
+        private static PreferenceGroup<OtherPersonPreferences> CollidesWithPersonPreferenceGroup;
+
+        private class OtherPersonPreferences
+        {
+            public string PersonName { get; set; }
+        }
+
+        Establish context = () =>
+        {
+            CollidesWithPersonPreferenceGroup = new PreferenceGroup<OtherPersonPreferences>(
+                name: "Collides With Person Preferences",
+                preferences: new IPreference<OtherPersonPreferences>[]
+                {
+                    new Preference<OtherPersonPreferences, StringComparer>(
+                        name: "PersonName",
+                        shortName: "OtherName",
+                        setter: (preferences, value) => preferences.PersonName = value),
+                });
+        };
+
         Because of = () => CaughtException = Catch.Exception(() => Subject = new PreferencesManager(PersonPreferenceGroup, CollidesWithPersonPreferenceGroup));
 
-        It there_are_exactly_two_known_preference_groups = () => CaughtException.ShouldBeOfExactType<PreferenceManagerInitializationException>();
+        It an_PreferencesManagerInitialisationException_is_be_thrown = 
+            () => CaughtException.ShouldBeOfExactType<PreferencesManagerInitialisationException>();
+
+        It the_exception_message_includes_the_duplicated_preference_name =
+            () => CaughtException.Message.ShouldContain("PersonName");
     }
 
     public class when_GetUnrecognisedPreferences_is_called_for_a_list_of_preferences : PreferencesManagerTestBase
@@ -231,6 +256,37 @@ namespace ConfigGen.Utilities.Tests.Preferences
         It the_string_preference_is_not_overwritten = () => PersonPreferences.PersonName.ShouldEqual("Robert");
 
         It the_integer_preference_is_not_overwritten = () => PersonPreferences.PersonAge.ShouldEqual(42);
+    }
+
+    public class when_ApplyPreferences_is_called_for_a_preference_instance_that_has_no_registered_preferences : PreferencesManagerTestBase
+    {
+        private static SomeOtherPreferences Preferences;
+        private static IEnumerable<KeyValuePair<string, string>> SuppliedPreferences;
+
+        private class SomeOtherPreferences
+        {
+            public string Name { get; set; }    
+        }
+
+        Establish context = () =>
+        {
+            Subject = new PreferencesManager(PersonPreferenceGroup, HousePreferenceGroup);
+
+            SuppliedPreferences = new Dictionary<string, string>
+            {
+                {"HouseAddress", "Ladysmith Road"},
+                {"IsFlat", null}
+            };
+
+            Preferences = new SomeOtherPreferences
+            {
+                Name = "Rob"
+            };
+        };
+
+        Because of = () => Subject.ApplyPreferences(SuppliedPreferences, Preferences);
+
+        It the_preferences_on_the_instance_are_not_overwritten = () => Preferences.Name.ShouldEqual("Rob");
     }
 
     public class PersonPreferences

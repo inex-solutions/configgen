@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,30 +20,14 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Preferences
 {
-    public class PreferenceGroup<TPreferences> : IPreferenceGroup
+    public class PreferencesManagerInitialisationException : Exception
     {
-        [NotNull]
-        private readonly IEnumerable<IPreference<TPreferences>> _preferences;
-
-        public PreferenceGroup([NotNull] string name, [NotNull] IEnumerable<IPreference<TPreferences>> preferences)
+        public PreferencesManagerInitialisationException(string message) : base (message)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            _preferences = preferences;
-            Name = name;
+            
         }
-
-        [NotNull]
-        public string Name { get; }
-
-        [NotNull]
-        public IEnumerable<IPreference> Preferences => _preferences.ToArray();
     }
 }

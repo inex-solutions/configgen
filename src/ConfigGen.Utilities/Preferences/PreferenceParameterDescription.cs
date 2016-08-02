@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,19 +20,25 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
-using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.ConsoleApp
+namespace ConfigGen.Utilities.Preferences
 {
-    public class ConsoleInputDeferedSetterFactory : IDeferredSetterFactory
+    public class PreferenceParameterDescription
     {
-        [NotNull]
-        public IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set)
+        public PreferenceParameterDescription([NotNull] string name, [NotNull] string helpText)
         {
-            return new ConsoleInputDeferedSetter<TPreferenceGroupType, TPreferenceType>(parse, set);
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (helpText == null) throw new ArgumentNullException(nameof(helpText));
+
+            Name = name;
+            HelpText = helpText;
         }
+
+        [NotNull]
+        public string Name { get; }
+
+        [NotNull]
+        public string HelpText { get; }
     }
 }

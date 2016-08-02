@@ -73,7 +73,6 @@
     <Compile Include="Filtering\ConfigurationFilteringModule.cs" />
     <Compile Include="Filtering\LocalOnlyConfigurationFilter.cs" />
     <Compile Include="IConfigurationFactory.cs" />
-    <Compile Include="PreferencesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateFactory.cs" />
     <Compile Include="TokenUsageTracker.cs" />

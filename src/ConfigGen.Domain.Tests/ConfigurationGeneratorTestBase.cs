@@ -22,10 +22,9 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
-using ConfigGen.ConsoleApp;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common;
+using ConfigGen.Utilities.Preferences;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 
@@ -37,7 +36,7 @@ namespace ConfigGen.Domain.Tests
         private static Lazy<IEnumerable<IPreferenceGroup>> lazyPreferenceGroups;
 
         [NotNull]
-        protected static List<Preference> PreferencesToSupplyToGenerator;
+        protected static IDictionary<string, string> PreferencesToSupplyToGenerator;
 
 
         Establish context = () =>
@@ -45,7 +44,7 @@ namespace ConfigGen.Domain.Tests
             ContainerBuilder.RegisterModule<ConfigurationGeneratorModule>();
             
             lazyPreferenceGroups = new Lazy<IEnumerable<IPreferenceGroup>>(() =>  Subject.GetPreferenceGroups());
-            PreferencesToSupplyToGenerator = new List<Preference>();
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>();
             Result = null;
         };
 
@@ -56,22 +55,5 @@ namespace ConfigGen.Domain.Tests
 
         [NotNull]
         protected static IEnumerable<IPreferenceGroup> PreferenceGroups => lazyPreferenceGroups.Value;
-
-        protected static Preference CreatePreference(IPreferenceDefinition definition, string value)
-        {
-            var factory = new ConsoleInputDeferedSetterFactory();
-            var setter = definition.CreateDeferredSetter(factory);
-
-            var args = new Queue<string>();
-
-            if (value != null)
-            {
-                args = new Queue<string>(value.Split(' '));
-            }
-
-            setter.Parse(args);
-
-            return  new Preference(definition.Name, setter);
-        }
     }
 }

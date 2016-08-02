@@ -29,8 +29,11 @@ namespace ConfigGen.Utilities.Preferences
         [NotNull]
         string Name { get; }
 
-        [NotNull]
+        [CanBeNull]
         string ShortName { get; }
+
+        [NotNull]
+        string Description { get; }
 
         [NotNull]
         Type PreferenceInstanceType { get; }

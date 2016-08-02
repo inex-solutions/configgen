@@ -19,40 +19,40 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.ConsoleApp.Tests
 {
-    public class ConsoleRunnerTestPreferencesGroup : PreferenceGroupBase
+    public class ConsoleRunnerTestPreferencesGroup : PreferenceGroup<ConsoleRunnerTestPreferences>
     {
-        public ConsoleRunnerTestPreferencesGroup()
+        static ConsoleRunnerTestPreferencesGroup()
         {
-
-            StringParameterPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, string>(name: "StringParameter",
+            StringParameterPreference = new Preference<ConsoleRunnerTestPreferences, string>(
+                name: "StringParameter",
                 shortName: "String",
                 description: "specifies the string parameter",
-                parameters: new[] { new PreferenceParameterDefinition("<parameter value>", "the value of the parameter") },
-                parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("StringParameter"),
-                setAction: (preferences, value) => preferences.StringParameter = value);
+                parameterDescription: new PreferenceParameterDescription("<parameter value>", "the value of the parameter"),
+                parseAction: stringValue => stringValue,
+                setAction: (value, preferences) => preferences.StringParameter = value);
 
-            BooleanSwitchPreference = new PreferenceDefinition<ConsoleRunnerTestPreferences, bool>(name: "BooleanSwitch",
+            BooleanSwitchPreference = new Preference<ConsoleRunnerTestPreferences, bool>(
+                name: "BooleanSwitch",
                 shortName: "Boolean",
                 description: "a switch",
-                parameters: new[] { new PreferenceParameterDefinition("[true|false]", "[optional] the value for the switch, default true.") },
-                parseAction: argsQueue => argsQueue.ParseSwitchParameterFromArgumentQueue("BooleanSwitch"),
-                setAction: (preferences, value) => preferences.BooleanSwitch = value);
+                parameterDescription: new PreferenceParameterDescription("[true|false]", "[optional] the value for the switch, default true."),
+                parseAction: bool.Parse,
+                setAction: (value, preferences) => preferences.BooleanSwitch = value);
         }
 
-        public PreferenceDefinition<ConsoleRunnerTestPreferences, bool> BooleanSwitchPreference { get; }
+        public ConsoleRunnerTestPreferencesGroup() : base(
+            name: "ConsoleRunnerTestPreferencesGroup",
+            preferences: new [] { StringParameterPreference, BooleanSwitchPreference })
+        {
+        }
 
-        public PreferenceDefinition<ConsoleRunnerTestPreferences, string> StringParameterPreference { get; }
+        public static IPreference<ConsoleRunnerTestPreferences> BooleanSwitchPreference { get; set; }
 
-        public override string Name => "ConsoleRunnerTestPreferencesGroup";
+        public static IPreference<ConsoleRunnerTestPreferences> StringParameterPreference { get; set; }
 
-        public override Type PreferenceInstanceType => typeof(ConsoleRunnerTestPreferences);
-
-        protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[] {StringParameterPreference, BooleanSwitchPreference};
     }
 }

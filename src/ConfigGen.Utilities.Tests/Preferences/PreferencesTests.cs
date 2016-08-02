@@ -47,11 +47,15 @@ namespace ConfigGen.Utilities.Tests.Preferences
                     new Preference<PersonPreferences, string>(
                         name: "PersonName",
                         shortName: "Name",
+                        description: "Sets the name of a person",
+                        parameterDescription: new PreferenceParameterDescription("name", "name of the person to set"), 
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.PersonName = actualValue),
                     new Preference<PersonPreferences, int>(
                         name: "PersonAge",
                         shortName: "Age",
+                        description: "Sets the age of a person",
+                        parameterDescription: new PreferenceParameterDescription("age", "age of the person to set"),
                         parseAction: stringValue => int.Parse(stringValue),
                         setAction: (actualValue, target) => target.PersonAge = actualValue)
                 });
@@ -63,11 +67,15 @@ namespace ConfigGen.Utilities.Tests.Preferences
                     new Preference<HousePreferences, string>(
                         name: "HouseAddress",
                         shortName: "Address",
+                        description: "Sets the address of the house",
+                        parameterDescription: new PreferenceParameterDescription("address", "address of the house to set"),
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.Address = actualValue),
                     new Preference<HousePreferences, bool>(
                         name: "IsFlat",
                         shortName: "Flat",
+                        description: "Indicates if the house is a flat",
+                        parameterDescription: new PreferenceParameterDescription("isFlat", "true if flat, otherwise false. Defaults to true if omitted"),
                         parseAction: stringValue => bool.Parse(stringValue),
                         setAction: (actualValue, target) => target.IsFlat = actualValue)
                 });
@@ -75,7 +83,6 @@ namespace ConfigGen.Utilities.Tests.Preferences
             Subject = null;
             CaughtException = null;
         };
-
     }
 
     public class when_loaded_with_preference_groups_for_person_and_house : PreferencesManagerTestBase
@@ -94,7 +101,7 @@ namespace ConfigGen.Utilities.Tests.Preferences
 
     public class when_loaded_with_two_preference_groups_which_have_a_collision_on_a_preference_name : PreferencesManagerTestBase
     {
-        private static PreferenceGroup<OtherPersonPreferences> CollidesWithPersonPreferenceGroup;
+        private static PreferenceGroup<OtherPersonPreferences> CollidesWithPersonPreferenceGroupOnName;
 
         private class OtherPersonPreferences
         {
@@ -103,19 +110,21 @@ namespace ConfigGen.Utilities.Tests.Preferences
 
         Establish context = () =>
         {
-            CollidesWithPersonPreferenceGroup = new PreferenceGroup<OtherPersonPreferences>(
-                name: "Collides With Person Preferences",
+            CollidesWithPersonPreferenceGroupOnName = new PreferenceGroup<OtherPersonPreferences>(
+                name: "Collides With Person Preferences on name",
                 preferences: new IPreference<OtherPersonPreferences>[]
                 {
                     new Preference<OtherPersonPreferences, string>(
                         name: "PersonName",
                         shortName: "OtherName",
+                        description: "Other name",
+                        parameterDescription: new PreferenceParameterDescription("name", "other name"),
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.PersonName = actualValue),
                 });
         };
 
-        Because of = () => CaughtException = Catch.Exception(() => Subject = new PreferencesManager(PersonPreferenceGroup, CollidesWithPersonPreferenceGroup));
+        Because of = () => CaughtException = Catch.Exception(() => Subject = new PreferencesManager(PersonPreferenceGroup, CollidesWithPersonPreferenceGroupOnName));
 
         It an_PreferencesManagerInitialisationException_is_be_thrown = 
             () => CaughtException.ShouldBeOfExactType<PreferencesManagerInitialisationException>();
@@ -124,7 +133,75 @@ namespace ConfigGen.Utilities.Tests.Preferences
             () => CaughtException.Message.ShouldContain("PersonName");
     }
 
-    public class when_GetUnrecognisedPreferences_is_called_for_a_list_of_preferences : PreferencesManagerTestBase
+    public class when_loaded_with_two_preference_groups_which_have_a_collision_on_a_preference_short_name : PreferencesManagerTestBase
+    {
+        private static PreferenceGroup<OtherPersonPreferences> CollidesWithPersonPreferenceGroupOnShortName;
+
+        private class OtherPersonPreferences
+        {
+            public string PersonName { get; set; }
+        }
+
+        Establish context = () =>
+        {
+            CollidesWithPersonPreferenceGroupOnShortName = new PreferenceGroup<OtherPersonPreferences>(
+                name: "Collides With Person Preferences on short name",
+                preferences: new IPreference<OtherPersonPreferences>[]
+                {
+                    new Preference<OtherPersonPreferences, string>(
+                        name: "OtherPersonName",
+                        shortName: "Name",
+                        description: "Other name",
+                        parameterDescription: new PreferenceParameterDescription("name", "other name"),
+                        parseAction: stringValue => stringValue,
+                        setAction: (actualValue, target) => target.PersonName = actualValue),
+                });
+        };
+
+        Because of = () => CaughtException = Catch.Exception(() => Subject = new PreferencesManager(PersonPreferenceGroup, CollidesWithPersonPreferenceGroupOnShortName));
+
+        It an_PreferencesManagerInitialisationException_is_be_thrown =
+            () => CaughtException.ShouldBeOfExactType<PreferencesManagerInitialisationException>();
+
+        It the_exception_message_includes_the_duplicated_preference_short_name =
+            () => CaughtException.Message.ShouldContain("Name");
+    }
+
+    public class when_loaded_with_two_preference_groups_which_have_a_collision_between_a_preference_name_and_short_name : PreferencesManagerTestBase
+    {
+        private static PreferenceGroup<OtherPersonPreferences> CollidesWithPersonPreferenceGroupOnShortName;
+
+        private class OtherPersonPreferences
+        {
+            public string PersonName { get; set; }
+        }
+
+        Establish context = () =>
+        {
+            CollidesWithPersonPreferenceGroupOnShortName = new PreferenceGroup<OtherPersonPreferences>(
+                name: "Collides With Person Preferences between name and short name",
+                preferences: new IPreference<OtherPersonPreferences>[]
+                {
+                    new Preference<OtherPersonPreferences, string>(
+                        name: "Name",
+                        shortName: "OtherName",
+                        description: "Other name",
+                        parameterDescription: new PreferenceParameterDescription("name", "other name"),
+                        parseAction: stringValue => stringValue,
+                        setAction: (actualValue, target) => target.PersonName = actualValue),
+                });
+        };
+
+        Because of = () => CaughtException = Catch.Exception(() => Subject = new PreferencesManager(PersonPreferenceGroup, CollidesWithPersonPreferenceGroupOnShortName));
+
+        It an_PreferencesManagerInitialisationException_is_be_thrown =
+            () => CaughtException.ShouldBeOfExactType<PreferencesManagerInitialisationException>();
+
+        It the_exception_message_includes_the_colliding_name =
+            () => CaughtException.Message.ShouldContain("Name");
+    }
+
+    public class when_GetUnrecognisedPreferences_is_called_for_a_list_of_preferences_of_which_one_name_is_unknown : PreferencesManagerTestBase
     {
         private static IEnumerable<string> Result;
 
@@ -133,13 +210,18 @@ namespace ConfigGen.Utilities.Tests.Preferences
             Subject = new PreferencesManager(PersonPreferenceGroup, HousePreferenceGroup);
         };
 
-        Because of = () => Result = Subject.GetUnrecognisedPreferences(new [] {"PersonAge", "HouseAddress", "SomeUnknownPreference"});
+        Because of = () => Result = Subject.GetUnrecognisedPreferences(new []
+        {
+            "PersonAge", // this is the name of the person age preference
+            "Address", // this is the *short* name of the house address preference
+            "SomeUnknownPreference" // this is unknown
+        });
 
         It only_the_unknown_preference_is_returned_from_the_call =
             () => Result.ShouldContainOnly("SomeUnknownPreference");
     }
 
-    public class when_ApplyPreferences_is_called_for_a_string_preference_and_an_integer_preference: PreferencesManagerTestBase
+    public class when_ApplyPreferences_is_called_for_two_preference_specified_by_name_and_short_name: PreferencesManagerTestBase
     {
         private static PersonPreferences PersonPreferences;
         private static IEnumerable<KeyValuePair<string, string>> SuppliedPreferences;
@@ -156,16 +238,16 @@ namespace ConfigGen.Utilities.Tests.Preferences
 
             SuppliedPreferences = new Dictionary<string, string>
             {
-                {"PersonName", "Rob"},
-                {"PersonAge", "44"}
+                {"PersonName", "Rob"}, // preference name
+                {"Age", "44"} // short name
             };
         };
 
         Because of = () => Subject.ApplyPreferences(SuppliedPreferences, PersonPreferences);
 
-        It the_string_preference_is_correctly_set_on_the_instance = () => PersonPreferences.PersonName.ShouldEqual("Rob");
+        It the_preference_specified_by_name_is_set_correctly_on_the_instance = () => PersonPreferences.PersonName.ShouldEqual("Rob");
 
-        It the_integer_preference_is_correctly_set_on_the_instance = () => PersonPreferences.PersonAge.ShouldEqual(44);
+        It the_preference_specified_by_short_name_is_set_correctly_on_the_instance = () => PersonPreferences.PersonAge.ShouldEqual(44);
     }
 
     public class when_ApplyPreferences_is_called_for_a_switch_preference_but_no_value_is_specified : PreferencesManagerTestBase
@@ -307,5 +389,4 @@ namespace ConfigGen.Utilities.Tests.Preferences
 
         public bool IsFlat { get; set; }
     }
-    // public class test1 : PreferencesManagerTestBase
 }

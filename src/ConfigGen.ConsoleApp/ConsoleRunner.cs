@@ -90,7 +90,7 @@ namespace ConfigGen.ConsoleApp
                 return Environment.ExitCode;
             }
 
-            GenerationResults results = _configurationGenerator.GenerateConfigurations(preferences.ParsedPreferences);
+            var results = _configurationGenerator.GenerateConfigurations(preferences.ParsedPreferences.ToDictionary(kvp => kvp.Key.Name, kvp => kvp.Value)); //TODO: cleanup
             _resultWriter.Report(results);
 
             Environment.ExitCode = (int)ExitCodes.Success;

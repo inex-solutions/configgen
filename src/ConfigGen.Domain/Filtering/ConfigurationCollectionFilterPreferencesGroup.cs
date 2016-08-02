@@ -19,64 +19,56 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Domain.Filtering
 {
-    public class ConfigurationCollectionFilterPreferencesGroup : PreferenceGroupBase
+    public class ConfigurationCollectionFilterPreferencesGroup : PreferenceGroup<ConfigurationCollectionFilterPreferences>
     {
         public static string PreferenceGroupName = "ConfigurationCollectionFilterPreferencesGroup";
 
-        protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[]
+        static ConfigurationCollectionFilterPreferencesGroup ()
         {
-            PreferenceDefinitions.FilterMachinesRegexp,
-            PreferenceDefinitions.GenerateSpecifiedOnly,
-            PreferenceDefinitions.LocalOnly,
-        };
+            GenerateSpecifiedOnly = new Preference<ConfigurationCollectionFilterPreferences, string>(
+                name: "GenerateSpecifiedOnly",
+                shortName: "Generate",
+                description: "specifies a list of configurations, comma seperated without spaces, for which to generate configuration files.",
+                parameterDescription: new PreferenceParameterDescription("config name list", "comma separated (no spaces) list of configurations names to generate"),
+                parseAction: stringValue => stringValue,
+                setAction: (stringValue, preferences) => preferences.GenerateSpecifiedOnly = stringValue);
 
-        public override string Name => "Filter preferences";
+            FilterMachinesRegexp = new Preference<ConfigurationCollectionFilterPreferences, string>(
+                name: "FilterMachinesRegexp",
+                shortName: null,
+                description: "specifies a regular expression to identify configurations, for which to generate configuration files",
+                parameterDescription: new PreferenceParameterDescription("regexp", "regular expression with which to filter configuration names"),
+                parseAction: stringValue => stringValue,
+                setAction: (stringValue, preferences) => preferences.FilterMachinesRegexp = stringValue);
 
-        public override Type PreferenceInstanceType => typeof(ConfigurationCollectionFilterPreferences);
-
-        public static class PreferenceDefinitions
-        {
-            static PreferenceDefinitions()
-            {
-                // ReSharper disable AssignNullToNotNullAttribute
-                // ReSharper disable PossibleNullReferenceException
-                GenerateSpecifiedOnly = new PreferenceDefinition<ConfigurationCollectionFilterPreferences, string>(
-                    name: "GenerateSpecifiedOnly",
-                    shortName: "Generate",
-                    description: "specifies a list of configurations, comma seperated without spaces, for which to generate configuration files.",
-                    parameters: new[] { new PreferenceParameterDefinition("config name list", "comma separated (no spaces) list of configurations names to generate") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
-                    setAction: (preferences, value) => preferences.GenerateSpecifiedOnly = value);
-
-                FilterMachinesRegexp = new PreferenceDefinition<ConfigurationCollectionFilterPreferences, string>(
-                    name: "FilterMachinesRegexp",
-                    shortName: null,
-                    description: "specifies a regular expression to identify configurations, for which to generate configuration files",
-                    parameters: new[] { new PreferenceParameterDefinition("regexp", "regular expression with which to filter configuration names") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
-                    setAction: (preferences, value) => preferences.FilterMachinesRegexp = value);
-
-                LocalOnly = new SwitchPreferenceDefinition<ConfigurationCollectionFilterPreferences>(
-                    name: "LocalOnly",
-                    shortName: "Local",
-                    description: "generate configuration for the local machine only or, if a matching entry for the local machine is not present, generate a configuration named 'default'.",
-                    setAction: (preferences, value) => preferences.LocalOnly = value);
-
-                // ReSharper restore AssignNullToNotNullAttribute
-                // ReSharper restore PossibleNullReferenceException
-            }
-
-            public static PreferenceDefinition<ConfigurationCollectionFilterPreferences, bool> LocalOnly { get; }
-
-            public static PreferenceDefinition<ConfigurationCollectionFilterPreferences, string> GenerateSpecifiedOnly { get; }
-
-            public static PreferenceDefinition<ConfigurationCollectionFilterPreferences, string> FilterMachinesRegexp { get; }
+            LocalOnly = new Preference<ConfigurationCollectionFilterPreferences, bool>(
+                name: "LocalOnly",
+                shortName: "Local",
+                description: "generate configuration for the local machine only.",
+                parameterDescription: new PreferenceParameterDescription("localOnly", "generate configuration for the local machine only or, if a matching entry for the local machine is not present, generate a configuration named 'default'."),
+                parseAction: bool.Parse,
+                setAction: (value, preferences) => preferences.LocalOnly = value);
         }
+
+        public ConfigurationCollectionFilterPreferencesGroup() : base(
+            name: "ConfigurationCollectionFilterPreferencesGroup",
+            preferences: new IPreference<ConfigurationCollectionFilterPreferences>[]
+            {
+                GenerateSpecifiedOnly,
+                FilterMachinesRegexp,
+                LocalOnly
+            })
+        {
+        }
+
+        public static IPreference<ConfigurationCollectionFilterPreferences> GenerateSpecifiedOnly { get; }
+
+        public static IPreference<ConfigurationCollectionFilterPreferences> FilterMachinesRegexp { get; }
+
+        public static IPreference<ConfigurationCollectionFilterPreferences> LocalOnly { get; }
     }
 }

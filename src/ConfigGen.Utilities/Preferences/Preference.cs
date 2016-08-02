@@ -34,26 +34,36 @@ namespace ConfigGen.Utilities.Preferences
 
         public Preference(
             [NotNull] string name,
-            [NotNull] string shortName,
+            [CanBeNull] string shortName,
+            [NotNull] string description,
+            [CanBeNull] PreferenceParameterDescription parameterDescription,
             [NotNull] Func<string, TTarget> parseAction,
             [NotNull] Action<TTarget, TPreference> setAction)
         {
             _parseAction = parseAction;
             _setAction = setAction;
             if (name == null) throw new ArgumentNullException(nameof(name));
-            if (shortName == null) throw new ArgumentNullException(nameof(shortName));
+            if (description == null) throw new ArgumentNullException(nameof(description));
             if (parseAction == null) throw new ArgumentNullException(nameof(parseAction));
             if (setAction == null) throw new ArgumentNullException(nameof(setAction));
 
             Name = name;
             ShortName = shortName;
+            Description = description;
+            ParameterDescription = parameterDescription;
         }
 
         [NotNull]
         public string Name { get; }
 
-        [NotNull]
+        [CanBeNull]
         public string ShortName { get; }
+
+        [NotNull]
+        public string Description { get; }
+
+        [CanBeNull]
+        public PreferenceParameterDescription ParameterDescription { get; }
 
         [NotNull]
         public Type PreferenceInstanceType => typeof(TPreference);

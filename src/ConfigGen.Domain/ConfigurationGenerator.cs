@@ -23,13 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Logging;
+using ConfigGen.Utilities.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -38,7 +38,7 @@ namespace ConfigGen.Domain
     public class ConfigurationGenerator : IConfigurationGenerator
     {
         [NotNull]
-        private readonly IManagePreferences _preferencesManager;
+        private readonly IPreferencesManager _preferencesManager;
 
         [NotNull]
         private readonly ILogger _logger;
@@ -67,13 +67,13 @@ namespace ConfigGen.Domain
         private readonly FileOutputWriter _fileOutputWriter;
 
         public ConfigurationGenerator(
+            [NotNull] IPreferencesManager preferencesManager, 
             [NotNull] TemplateFactory templateFactory,
             [NotNull] ConfigurationNameSelector configurationNameSelector,
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
             [NotNull] IConfigurationFactory configurationFactory,
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
             [NotNull] FileOutputWriter fileOutputWriter,
-            [NotNull] IManagePreferences preferencesManager,
             [NotNull] ILogger logger,
             [NotNull] ILoggerControler loggerController,
             [NotNull] ITokenUsageTracker tokenUsageTracker)
@@ -104,14 +104,14 @@ namespace ConfigGen.Domain
         [NotNull]
         public IEnumerable<IPreferenceGroup> GetPreferenceGroups()
         {
-            return _preferencesManager.RegisteredPreferences;
+            return _preferencesManager.KnownPreferenceGroups;
         }
 
-        public GenerationResults GenerateConfigurations([NotNull] IReadOnlyCollection<Preference> preferences)
+        public GenerationResults GenerateConfigurations(IDictionary<string, string> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
-            var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences);
+            var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences.Keys);
 
             var configGenerationPreferences = new ConfigurationGeneratorPreferences();
             _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
@@ -215,6 +215,11 @@ namespace ConfigGen.Domain
 
                 return GenerationResults.CreateSuccess(singleFileGenerationResults);
             }
+        }
+
+        IEnumerable<IPreferenceGroup> IConfigurationGenerator.GetPreferenceGroups()
+        {
+            return GetPreferenceGroups();
         }
     }
 }

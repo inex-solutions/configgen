@@ -19,63 +19,41 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Domain.FileOutput
 {
-    public class FileOutputPreferenceGroup : PreferenceGroupBase
+    public class FileOutputPreferenceGroup : PreferenceGroup<FileOutputPreferences>
     {
         public static string PreferenceGroupName = "FileOutputPreferenceGroup";
 
-        protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[]
+        static FileOutputPreferenceGroup()
         {
-            PreferenceDefinitions.FilenameSetting,
-            PreferenceDefinitions.ForceFilename,
-        };
-
-        public override string Name => "File output preferences";
-
-        public override Type PreferenceInstanceType => typeof(FileOutputPreferences);
-
-        public static class PreferenceDefinitions
-        {
-            static PreferenceDefinitions()
-            {
-                // ReSharper disable AssignNullToNotNullAttribute
-                // ReSharper disable PossibleNullReferenceException
-                FilenameSetting = new PreferenceDefinition<FileOutputPreferences, string>(
+            FilenameSetting = new Preference<FileOutputPreferences, string>(
                     name: "FilenameSetting",
                     shortName: "Filename",
                     description: "specifies the setting to use for the filename of the generated configuration file",
-                    parameters: new[] { new PreferenceParameterDefinition("filename setting", "name of the setting to use for the filename") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("FilenameSetting"),
-                    setAction: (preferences, value) => preferences.FilenameSetting = value);
+                    parameterDescription: new PreferenceParameterDescription("filename setting", "name of the setting to use for the filename"),
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.FilenameSetting = stringValue);
 
-                ForceFilename = new PreferenceDefinition<FileOutputPreferences, string>(
+            ForceFilename = new Preference<FileOutputPreferences, string>(
                     name: "ForceFilename",
                     shortName: null,
                     description: "forces all generated files to have the specified filename",
-                    parameters: new[] { new PreferenceParameterDefinition("filename", "filename for generated files") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("ForceFilename"),
-                    setAction: (preferences, value) => preferences.ForceFilename = value);
-                // ReSharper restore AssignNullToNotNullAttribute
-                // ReSharper restore PossibleNullReferenceException
-            }
-
-            /// <summary>
-            /// Specifies the setting to use for the filename of the generated configuration file.
-            /// </summary>
-            [NotNull]
-            public static PreferenceDefinition<FileOutputPreferences, string> FilenameSetting { get; }
-
-            /// <summary>
-            /// Forces all generated files to have the specified filename.
-            /// </summary>
-            [NotNull]
-            public static PreferenceDefinition<FileOutputPreferences, string> ForceFilename { get; }
+                    parameterDescription: new PreferenceParameterDescription("filename", "filename for generated files"),
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.ForceFilename = stringValue);
         }
+
+        public FileOutputPreferenceGroup() : base(
+            name: "FileOutputPreferenceGroup", 
+            preferences: new [] { FilenameSetting, ForceFilename })
+        {
+        }
+
+        public static IPreference<FileOutputPreferences> ForceFilename { get; set; }
+
+        public static IPreference<FileOutputPreferences> FilenameSetting { get; set; }
     }
 }

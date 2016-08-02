@@ -21,7 +21,6 @@
 
 using Autofac;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Settings.Excel;
@@ -29,6 +28,7 @@ using ConfigGen.Templating.Razor;
 using ConfigGen.Templating.Xml;
 using ConfigGen.Utilities.IO;
 using ConfigGen.Utilities.Logging;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Domain
 {
@@ -54,7 +54,7 @@ namespace ConfigGen.Domain
             builder.RegisterType<StreamComparer>().As<IStreamComparer>();
             builder.RegisterType<FileOutputWriter>();
             builder.RegisterType<ConfigurationGeneratorPreferenceGroup>().As<IPreferenceGroup>();
-            builder.RegisterType<PreferencesManager>().As<IManagePreferences>();
+            builder.RegisterType<PreferencesManager>().As<IPreferencesManager>();
         }
     }
 }

@@ -48,7 +48,8 @@ namespace ConfigGen.Utilities.Preferences
 
             var shortNames = preferenceGroups
                 .SelectMany(p => p.Preferences)
-                .Select(p => p.ShortName);
+                .Select(p => p.ShortName)
+                .Where(n => n != null);
 
             var allNames = names.Concat(shortNames);
 
@@ -64,11 +65,14 @@ namespace ConfigGen.Utilities.Preferences
                 throw new PreferencesManagerInitialisationException(
                     $"The following preference names/short names are duplicated across preference groups: {string.Join(",", tooMany)}" );
             }
-           
+
             _preferencesByType = preferenceGroups
                 .SelectMany(pg => pg.Preferences)
                 .GroupBy(p => p.PreferenceInstanceType, preference => preference)
-                .ToDictionary(g => g.Key, g => g.Select(p => p).ToDictionary(p => p.Name));
+                .ToDictionary(g => g.Key,  // "outer" dictionary key is the preference instance type
+                    g => g.Select(p => p).ToDictionary(p => p.Name) // "inner" dictionary, has two entries per preference, one for short name, one for name
+                        .Concat(g.Select(p => p).Where(p => p.ShortName != null).ToDictionary(p => p.ShortName))
+                        .ToDictionary(x => x.Key, x => x.Value));
         }
 
         [NotNull]
@@ -78,7 +82,15 @@ namespace ConfigGen.Utilities.Preferences
         public IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-            return preferences.Except(_preferenceGroups.SelectMany(p => p.Preferences).Select(p => p.Name));
+
+            var namesAndShortNames = _preferenceGroups
+                .SelectMany(p => p.Preferences)
+                .Select(p => p.Name)
+                .Concat(_preferenceGroups
+                    .SelectMany(p => p.Preferences)
+                    .Select(p => p.ShortName));
+
+            return preferences.Except(namesAndShortNames);
         }
 
         public void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance)

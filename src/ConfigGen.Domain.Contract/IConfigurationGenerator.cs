@@ -20,7 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
@@ -32,6 +32,6 @@ namespace ConfigGen.Domain.Contract
         IEnumerable<IPreferenceGroup> GetPreferenceGroups();
 
         [NotNull]
-        GenerationResults GenerateConfigurations([NotNull] IReadOnlyCollection<Preference> preferences);
+        GenerationResults GenerateConfigurations([NotNull] IDictionary<string, string> preferences);
     }
 }

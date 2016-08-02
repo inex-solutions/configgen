@@ -92,5 +92,11 @@ namespace ConfigGen.Utilities.Extensions
             ms.Position = 0;
             return ms;
         }
+
+        [CanBeNull]
+        public static string ToLowerCaseString([CanBeNull] this object s)
+        {
+            return s?.ToString().ToLower();
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace ConfigGen.Utilities.Preferences
         [NotNull]
         private readonly IEnumerable<IPreference<TPreferences>> _preferences;
 
-        public PreferenceGroup([NotNull] string name, [NotNull] IEnumerable<IPreference<TPreferences>> preferences)
+        public PreferenceGroup([NotNull] string name, [NotNull] IPreference<TPreferences>[] preferences)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));

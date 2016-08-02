@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities;
@@ -40,9 +39,9 @@ namespace ConfigGen.Domain.Tests.FilteringTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
+                {ConfigurationCollectionFilterPreferencesGroup.LocalOnly.Name, null}
             };
 
             ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "Configuration3")).As<ILocalEnvironment>();
@@ -62,13 +61,12 @@ namespace ConfigGen.Domain.Tests.FilteringTests
     {
         Establish context = () =>
         {
-            Assembly.GetExecutingAssembly()
-                .CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls", "App.Config.Settings.xls");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
+                {ConfigurationCollectionFilterPreferencesGroup.LocalOnly.Name, null}
             };
 
             ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "SomeMachineNameOrOther")).As<ILocalEnvironment>();
@@ -98,9 +96,9 @@ namespace ConfigGen.Domain.Tests.FilteringTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.LocalOnly, null)
+                {ConfigurationCollectionFilterPreferencesGroup.LocalOnly.Name, null}
             };
 
             ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "SomeMachineNameOrOther")).As<ILocalEnvironment>();
@@ -120,9 +118,9 @@ namespace ConfigGen.Domain.Tests.FilteringTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.GenerateSpecifiedOnly, "MatchesNothing")
+                {ConfigurationCollectionFilterPreferencesGroup.GenerateSpecifiedOnly.Name, "MatchesNothing"}
             };
         };
 
@@ -140,10 +138,9 @@ namespace ConfigGen.Domain.Tests.FilteringTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(
-                    ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.GenerateSpecifiedOnly, "Configuration2,Configuration3")
+                {ConfigurationCollectionFilterPreferencesGroup.GenerateSpecifiedOnly.Name, "Configuration2,Configuration3"}
             };
         };
 
@@ -164,10 +161,9 @@ namespace ConfigGen.Domain.Tests.FilteringTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(
-                    ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.FilterMachinesRegexp, "Configuration[6-7]")
+                {ConfigurationCollectionFilterPreferencesGroup.FilterMachinesRegexp.Name, "Configuration[6-7]"}
             };
         };
 
@@ -185,10 +181,9 @@ namespace ConfigGen.Domain.Tests.FilteringTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(
-                    ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.FilterMachinesRegexp, "Configuration[2-3]")
+                {ConfigurationCollectionFilterPreferencesGroup.FilterMachinesRegexp.Name, "Configuration[2-3]"}
             };
         };
 
@@ -209,11 +204,10 @@ namespace ConfigGen.Domain.Tests.FilteringTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.FiveConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.FilterMachinesRegexp, "Configuration[2-3]"),
-                CreatePreference(ConfigurationCollectionFilterPreferencesGroup.PreferenceDefinitions.GenerateSpecifiedOnly, "Configuration3")
-
+                {ConfigurationCollectionFilterPreferencesGroup.FilterMachinesRegexp.Name, "Configuration[2-3]"},
+                {ConfigurationCollectionFilterPreferencesGroup.GenerateSpecifiedOnly.Name, "Configuration3"}
             };
         };
 

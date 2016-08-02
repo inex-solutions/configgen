@@ -27,18 +27,24 @@ namespace ConfigGen.Utilities.Preferences
     public class Preference<TPreference, TTarget> : IPreference<TPreference>
     {
         [NotNull]
-        private readonly Action<TPreference, string> _setter;
+        private readonly Func<string, TTarget> _parseAction;
+
+        [NotNull]
+        private readonly Action<TTarget, TPreference> _setAction;
 
         public Preference(
             [NotNull] string name,
             [NotNull] string shortName,
-            [NotNull] Action<TPreference, string> setter)
+            [NotNull] Func<string, TTarget> parseAction,
+            [NotNull] Action<TTarget, TPreference> setAction)
         {
+            _parseAction = parseAction;
+            _setAction = setAction;
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (shortName == null) throw new ArgumentNullException(nameof(shortName));
-            if (setter == null) throw new ArgumentNullException(nameof(setter));
+            if (parseAction == null) throw new ArgumentNullException(nameof(parseAction));
+            if (setAction == null) throw new ArgumentNullException(nameof(setAction));
 
-            _setter = setter;
             Name = name;
             ShortName = shortName;
         }
@@ -58,7 +64,9 @@ namespace ConfigGen.Utilities.Preferences
         public void Set([NotNull] TPreference target, [CanBeNull] string value)
         {
             if (target == null) throw new ArgumentNullException(nameof(target));
-            _setter(target, value);
+
+            TTarget actualValue = _parseAction(value);
+            _setAction(actualValue, target);
         }
     }
 }

@@ -44,14 +44,16 @@ namespace ConfigGen.Utilities.Tests.Preferences
                 name: "Person Preferences",
                 preferences: new IPreference<PersonPreferences>[]
                 {
-                    new Preference<PersonPreferences, StringSplitOptions>(
+                    new Preference<PersonPreferences, string>(
                         name: "PersonName",
-                        shortName: "Name", 
-                        setter: (preferences, value) => preferences.PersonName = value),
+                        shortName: "Name",
+                        parseAction: stringValue => stringValue,
+                        setAction: (actualValue, target) => target.PersonName = actualValue),
                     new Preference<PersonPreferences, int>(
                         name: "PersonAge",
                         shortName: "Age",
-                        setter: (preferences, value) => preferences.PersonAge = int.Parse(value)),
+                        parseAction: stringValue => int.Parse(stringValue),
+                        setAction: (actualValue, target) => target.PersonAge = actualValue)
                 });
             
             HousePreferenceGroup = new PreferenceGroup<HousePreferences>(
@@ -61,11 +63,13 @@ namespace ConfigGen.Utilities.Tests.Preferences
                     new Preference<HousePreferences, string>(
                         name: "HouseAddress",
                         shortName: "Address",
-                        setter: (preferences, value) => preferences.Address = value),
+                        parseAction: stringValue => stringValue,
+                        setAction: (actualValue, target) => target.Address = actualValue),
                     new Preference<HousePreferences, bool>(
                         name: "IsFlat",
                         shortName: "Flat",
-                        setter: (preferences, value) => preferences.IsFlat = bool.Parse(value)),
+                        parseAction: stringValue => bool.Parse(stringValue),
+                        setAction: (actualValue, target) => target.IsFlat = actualValue)
                 });
 
             Subject = null;
@@ -103,10 +107,11 @@ namespace ConfigGen.Utilities.Tests.Preferences
                 name: "Collides With Person Preferences",
                 preferences: new IPreference<OtherPersonPreferences>[]
                 {
-                    new Preference<OtherPersonPreferences, StringComparer>(
+                    new Preference<OtherPersonPreferences, string>(
                         name: "PersonName",
                         shortName: "OtherName",
-                        setter: (preferences, value) => preferences.PersonName = value),
+                        parseAction: stringValue => stringValue,
+                        setAction: (actualValue, target) => target.PersonName = actualValue),
                 });
         };
 

@@ -63,6 +63,8 @@
     <Compile Include="ExcelColumnInfo.cs" />
     <Compile Include="ExcelFileLoader.cs" />
     <Compile Include="ExcelSettingsLoaderModule.cs" />
+    <Compile Include="ExcelSettingsLoadError.cs" />
+    <Compile Include="ExcelSettingsLoadErrorCodes.cs" />
     <Compile Include="ExcelSettingsPreferenceGroup.cs" />
     <Compile Include="ExcelSettingsLoader.cs" />
     <Compile Include="ExcelSettingsPreferences.cs" />

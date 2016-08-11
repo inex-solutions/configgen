@@ -38,31 +38,33 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
 
         Because of = () => Result = Subject.LoadSettings(SettingsFileFullPath);
 
-        It then_the_result_is_not_null = () => Result.ShouldNotBeNull();
+        It the_result_is_not_null = () => Result.Value.ShouldNotBeNull();
 
-        It then_the_result_should_contain_two_configurations = () => Result.Count().ShouldEqual(2);
+        It the_result_indicates_success = () => Result.Error.ShouldBeNull();
 
-        It then_result_should_contain_a_configuration_named_Configuration1 =
-            () => Result.Get("Configuration1").ShouldNotBeNull();
+        It the_result_should_contain_two_configurations = () => Result.Value.Count().ShouldEqual(2);
 
-        It then_Configuration1_should_contain_four_settings =
-            () => Result.Get("Configuration1").Count().ShouldEqual(4);
+        It the_result_should_contain_a_configuration_named_Configuration1 =
+            () => Result.Value.Get("Configuration1").ShouldNotBeNull();
 
-        It then_Configuration1_should_contain_the_correct_settings_and_values =
-            () => Result.Get("Configuration1").ShouldContainOnly(
+        It Configuration1_should_contain_four_settings =
+            () => Result.Value.Get("Configuration1").Count().ShouldEqual(4);
+
+        It Configuration1_should_contain_the_correct_settings_and_values =
+            () => Result.Value.Get("Configuration1").ShouldContainOnly(
                 new KeyValuePair<string, object>("MachineName", "Configuration1"),
                 new KeyValuePair<string, object>("ConfigFilePath", "Configuration1\\App.Config"),
                 new KeyValuePair<string, object>("Setting1", "Configuration1_Setting1"),
                 new KeyValuePair<string, object>("Setting2", "Configuration1_Setting2"));
 
-        It then_result_should_contain_a_configuration_named_Configuration2 =
-            () => Result.Get("Configuration2").ShouldNotBeNull();
+        It the_result_should_contain_a_configuration_named_Configuration2 =
+            () => Result.Value.Get("Configuration2").ShouldNotBeNull();
 
-        It then_Configuration2_should_contain_four_settings =
-            () => Result.Get("Configuration2").Count().ShouldEqual(4);
+        It Configuration2_should_contain_four_settings =
+            () => Result.Value.Get("Configuration2").Count().ShouldEqual(4);
 
-        It then_Configuration2_should_contain_the_correct_settings_and_values =
-            () => Result.Get("Configuration2").ShouldContainOnly(
+        It Configuration2_should_contain_the_correct_settings_and_values =
+            () => Result.Value.Get("Configuration2").ShouldContainOnly(
                 new KeyValuePair<string, object>("MachineName", "Configuration2"),
                 new KeyValuePair<string, object>("ConfigFilePath", "Configuration2\\App.Config"),
                 new KeyValuePair<string, object>("Setting1", "Configuration2_Setting1"),
@@ -80,31 +82,33 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
 
         Because of = () => Result = Subject.LoadSettings(SettingsFileFullPath);
 
-        It then_the_result_is_not_null = () => Result.ShouldNotBeNull();
+        It the_result_is_not_null = () => Result.Value.ShouldNotBeNull();
 
-        It then_the_result_should_contain_two_configurations = () => Result.Count().ShouldEqual(2);
+        It the_result_indicates_success = () => Result.Error.ShouldBeNull();
 
-        It then_result_should_contain_a_configuration_named_Configuration1 =
-            () => Result.Get("Configuration1").ShouldNotBeNull();
+        It the_result_should_contain_two_configurations = () => Result.Value.Count().ShouldEqual(2);
 
-        It then_Configuration1_should_contain_four_settings =
-            () => Result.Get("Configuration1").Count().ShouldEqual(4);
+        It the_result_should_contain_a_configuration_named_Configuration1 =
+            () => Result.Value.Get("Configuration1").ShouldNotBeNull();
 
-        It then_Configuration1_should_contain_the_correct_settings_and_values =
-            () => Result.Get("Configuration1").ShouldContainOnly(
+        It Configuration1_should_contain_four_settings =
+            () => Result.Value.Get("Configuration1").Count().ShouldEqual(4);
+
+        It Configuration1_should_contain_the_correct_settings_and_values =
+            () => Result.Value.Get("Configuration1").ShouldContainOnly(
                 new KeyValuePair<string, object>("MachineName", "Configuration1"),
                 new KeyValuePair<string, object>("ConfigFilePath", "Configuration1\\App.Config"),
                 new KeyValuePair<string, object>("Setting1", "Configuration1_Setting1"),
                 new KeyValuePair<string, object>("Setting2", "Configuration1_Setting2"));
 
-        It then_result_should_contain_a_configuration_named_Configuration2 =
-            () => Result.Get("Configuration2").ShouldNotBeNull();
+        It the_result_should_contain_a_configuration_named_Configuration2 =
+            () => Result.Value.Get("Configuration2").ShouldNotBeNull();
 
-        It then_Configuration2_should_contain_four_settings =
-            () => Result.Get("Configuration2").Count().ShouldEqual(4);
+        It Configuration2_should_contain_four_settings =
+            () => Result.Value.Get("Configuration2").Count().ShouldEqual(4);
 
-        It then_Configuration2_should_contain_the_correct_settings_and_values =
-            () => Result.Get("Configuration2").ShouldContainOnly(
+        It Configuration2_should_contain_the_correct_settings_and_values =
+            () => Result.Value.Get("Configuration2").ShouldContainOnly(
                 new KeyValuePair<string, object>("MachineName", "Configuration2"),
                 new KeyValuePair<string, object>("ConfigFilePath", "Configuration2\\App.Config"),
                 new KeyValuePair<string, object>("Setting1", "Configuration2_Setting1"),
@@ -130,9 +134,11 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
             }
         };
 
-        It then_the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();
+        It the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();
 
-        It then_the_result_should_contain_two_configurations = () => Result.Count().ShouldEqual(2);
+        It the_result_indicates_success = () => Result.Error.ShouldBeNull();
+
+        It the_result_should_contain_two_configurations = () => Result.Value.Count().ShouldEqual(2);
     }
 
     [Subject(typeof(ExcelSettingsLoader))]
@@ -154,8 +160,46 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
             CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(SettingsFileFullPath));
         };
 
-        It then_the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();
+        It the_settings_file_can_still_be_loaded_without_an_exception = () => CaughtException.ShouldBeNull();
 
-        It then_the_result_should_contain_two_configurations = () => Result.Count().ShouldEqual(2);
+        It the_result_indicates_success = () => Result.Error.ShouldBeNull();
+
+        It the_result_should_contain_two_configurations = () => Result.Value.Count().ShouldEqual(2);
+    }
+
+    [Subject(typeof(ExcelSettingsLoader))]
+    public class when_loading_a_spreadsheet_which_does_not_exist_at_the_specified_path : ExcelSettingsLoaderTestBase
+    {
+        private static Exception CaughtException;
+
+        Establish context = () =>
+        {
+            SourceTestFileName = "FileDoesNotExist.xls";
+            TargetTestFileName = "App.Config.Settings.xls";
+        };
+
+        Because of = () => CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(SourceTestFileName));
+
+        It no_exception_is_thrown = () => CaughtException.ShouldBeNull();
+
+        It the_result_indicates_a_file_not_found_error = () => Result.Error.Code.ShouldEqual(ExcelSettingsLoadErrorCodes.FileNotFound);
+    }
+
+    [Subject(typeof(ExcelSettingsLoader))]
+    public class when_loading_a_spreadsheet_which_does_not_contain_the_specified_worksheet : ExcelSettingsLoaderTestBase
+    {
+        private static Exception CaughtException;
+
+        Establish context = () =>
+        {
+            SourceTestFileName = "App.Config.Settings.xls";
+            TargetTestFileName = "App.Config.Settings.xls";
+        };
+
+        Because of = () => CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(SettingsFileFullPath, "non-existent-worksheet"));
+
+        It no_exception_is_thrown = () => CaughtException.ShouldBeNull();
+
+        It the_result_indicates_a_file_not_found_error = () => Result.Error.Code.ShouldEqual(ExcelSettingsLoadErrorCodes.WorksheetNotFound);
     }
 }

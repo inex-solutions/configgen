@@ -18,26 +18,13 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.Collections.Generic;
-using ConfigGen.Utilities;
-using JetBrains.Annotations;
-
-namespace ConfigGen.Domain.Contract.Settings
+namespace ConfigGen.Settings.Excel
 {
-    /// <summary>
-    /// Interface to be implemented by classes responsible for loading settings collections for config generation (e.g. excel settings spreadsheets)
-    /// </summary>
-    public interface ISettingsLoader
+    public class ExcelSettingsLoadErrorCodes
     {
-        /// <summary>
-        /// Loads and returns the configuration settings
-        /// </summary>
-        [NotNull]
-        IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
+        public static readonly string FileNotFound = "FileNotFound";
 
-        string LoaderType { get; }
+        public static readonly string WorksheetNotFound = "WorksheetNotFound";
 
-        string[] SupportedExtensions { get; }
     }
 }

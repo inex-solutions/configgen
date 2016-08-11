@@ -137,7 +137,9 @@ namespace ConfigGen.Domain
             }
 
             ISettingsLoader settingsLoader;
-            var settingsFileExtension = new FileInfo(configGenerationPreferences.SettingsFilePath).Extension;
+            var settingsFile = new FileInfo(configGenerationPreferences.SettingsFilePath);
+            string settingsFileExtension = settingsFile.Extension;
+            
             TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(settingsFileExtension, configGenerationPreferences.SettingsFileType, out settingsLoader);
 
             switch (settingsLoaderCreationResult)
@@ -153,9 +155,16 @@ namespace ConfigGen.Domain
                          $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
             }
 
-            IEnumerable<IDictionary<string, object>> loadedSettings = settingsLoader.LoadSettings(
+            var result = settingsLoader.LoadSettings(
                 configGenerationPreferences.SettingsFilePath,
                 configGenerationPreferences.SettingsFileType);
+
+            if (!result.Success)
+            {
+                return GenerationResults.CreateFail(result.Error);
+            }
+
+            IEnumerable<IDictionary<string, object>> loadedSettings = result.Value;
 
             var configurationCreationResult = _configurationFactory.CreateConfigurations(configGenerationPreferences, loadedSettings);
             if (!configurationCreationResult.Success)

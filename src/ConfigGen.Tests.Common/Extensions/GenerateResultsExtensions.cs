@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ConfigGen.Api;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities;
@@ -32,10 +33,10 @@ using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common.Extensions
 {
-    public static class GenerationResultsExtensions
+    public static class GenerateResultsExtensions
     {
         [NotNull]
-        public static SingleFileGenerationResult Configuration([NotNull] this GenerationResults generationResults, [NotNull] string configurationName)
+        public static GeneratedFile Configuration([NotNull] this GenerateResult generationResults, [NotNull] string configurationName)
         {
             if (generationResults == null) throw new ArgumentNullException(nameof(generationResults));
             if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
@@ -50,22 +51,21 @@ namespace ConfigGen.Tests.Common.Extensions
             return match;
         }
 
-
         [NotNull]
-        public static IEnumerable<SingleFileGenerationResult> EachConfiguration([NotNull] this GenerationResults generationResults)
+        public static IEnumerable<GeneratedFile> EachConfiguration([NotNull] this GenerateResult generationResults)
         {
             if (generationResults == null) throw new ArgumentNullException(nameof(generationResults));
             return generationResults.GeneratedFiles;
         }
 
         [NotNull]
-        public static IEnumerable<SingleFileGenerationResult> ShouldHaveFilename([NotNull] this SingleFileGenerationResult result, [NotNull] Func<string, string> fileName)
+        public static IEnumerable<GeneratedFile> ShouldHaveFilename([NotNull] this GeneratedFile result, [NotNull] Func<string, string> fileName)
         {
-            return ShouldHaveFilename(new[] {result}, fileName);
+            return ShouldHaveFilename(new[] { result }, fileName);
         }
 
         [NotNull]
-        public static IEnumerable<SingleFileGenerationResult> ShouldHaveFilename([NotNull] this IEnumerable<SingleFileGenerationResult> results, [NotNull] Func<string, string> fileName)
+        public static IEnumerable<GeneratedFile> ShouldHaveFilename([NotNull] this IEnumerable<GeneratedFile> results, [NotNull] Func<string, string> fileName)
         {
             if (results == null) throw new ArgumentNullException(nameof(results));
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
@@ -90,7 +90,7 @@ namespace ConfigGen.Tests.Common.Extensions
         }
 
         [NotNull]
-        public static SingleFileGenerationResult ShouldHaveEncoding([NotNull] this SingleFileGenerationResult result, [NotNull] Encoding expectedEncoding)
+        public static GeneratedFile ShouldHaveEncoding([NotNull] this GeneratedFile result, [NotNull] Encoding expectedEncoding)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (expectedEncoding == null) throw new ArgumentNullException(nameof(expectedEncoding));
@@ -106,13 +106,13 @@ namespace ConfigGen.Tests.Common.Extensions
         }
 
         [NotNull]
-        public static SingleFileGenerationResult ShouldHaveExtension([NotNull] this SingleFileGenerationResult result, [NotNull] string expectedExtension)
+        public static GeneratedFile ShouldHaveExtension([NotNull] this GeneratedFile result, [NotNull] string expectedExtension)
         {
             return ShouldHaveExtension(new[] { result }, expectedExtension).FirstOrDefault();
         }
 
         [NotNull]
-        public static IEnumerable<SingleFileGenerationResult> ShouldHaveExtension([NotNull] this IEnumerable<SingleFileGenerationResult> results, [NotNull] string expectedExtension)
+        public static IEnumerable<GeneratedFile> ShouldHaveExtension([NotNull] this IEnumerable<GeneratedFile> results, [NotNull] string expectedExtension)
         {
             if (results == null) throw new ArgumentNullException(nameof(results));
             if (expectedExtension == null) throw new ArgumentNullException(nameof(expectedExtension));
@@ -135,8 +135,7 @@ namespace ConfigGen.Tests.Common.Extensions
             return results;
         }
 
-        [NotNull]
-        public static IEnumerable<SingleFileGenerationResult> ShouldBeInDirectory([NotNull] this IEnumerable<SingleFileGenerationResult> results, [NotNull] Func<string, string, string> directoryName)
+        public static IEnumerable<GeneratedFile> ShouldBeInDirectory([NotNull] this IEnumerable<GeneratedFile> results, [NotNull] Func<string, string, string> directoryName)
         {
             if (results == null) throw new ArgumentNullException(nameof(results));
             if (directoryName == null) throw new ArgumentNullException(nameof(directoryName));
@@ -163,7 +162,7 @@ namespace ConfigGen.Tests.Common.Extensions
             return results;
         }
 
-        public static SingleFileGenerationResult ShouldContainXml([NotNull] this SingleFileGenerationResult result, string expectedXml)
+        public static GeneratedFile ShouldContainXml([NotNull] this GeneratedFile result, string expectedXml)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (expectedXml == null) throw new ArgumentNullException(nameof(expectedXml));
@@ -178,7 +177,7 @@ namespace ConfigGen.Tests.Common.Extensions
             return result;
         }
 
-        public static SingleFileGenerationResult ShouldContainText([NotNull] this SingleFileGenerationResult result, string expectedText)
+        public static GeneratedFile ShouldContainText([NotNull] this GeneratedFile result, string expectedText)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (expectedText == null) throw new ArgumentNullException(nameof(expectedText));
@@ -191,6 +190,6 @@ namespace ConfigGen.Tests.Common.Extensions
             File.ReadAllText(result.FullPath).ShouldEqual(expectedText);
 
             return result;
-        } 
+        }
     }
 }

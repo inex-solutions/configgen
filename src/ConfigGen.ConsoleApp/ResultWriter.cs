@@ -21,7 +21,7 @@
 
 using System;
 using System.Linq;
-using ConfigGen.Domain.Contract;
+using ConfigGen.Api;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
@@ -39,12 +39,12 @@ namespace ConfigGen.ConsoleApp
             _logger = logger;
         }
 
-        public void Report(GenerationResults results)
+        public void Report(GenerateResult results)
         {
             if (results.Errors.Any())
             {
                 _logger.Error("Generation process failed: ");
-                foreach (Error error in results.Errors)
+                foreach (GenerationError error in results.Errors)
                 {
                     _logger.Error(error.ToDisplayText());
                 }
@@ -52,7 +52,7 @@ namespace ConfigGen.ConsoleApp
                 return;
             }
 
-            foreach (SingleFileGenerationResult result in results.GeneratedFiles)
+            foreach (GeneratedFile result in results.GeneratedFiles)
             {
                 
                 string configurationName = result.ConfigurationName.PadRight(20);

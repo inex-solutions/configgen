@@ -19,30 +19,32 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Api;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 
 namespace ConfigGen.ConsoleApp.Tests
 {
-    public class ConfigurationGeneratorMock : IConfigurationGenerator
+    public class GenerationServiceMock : IGenerationService
     {
-        private readonly IEnumerable<IPreferenceGroup> _preferenceGroups;
+        [NotNull]
+        private readonly IEnumerable<PreferenceGroupInfo> _preferenceGroups;
 
-        public ConfigurationGeneratorMock(IEnumerable<IPreferenceGroup> preferenceGroups)
+        public GenerationServiceMock([NotNull] IEnumerable<PreferenceGroupInfo> preferenceGroups)
         {
+            if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
             _preferenceGroups = preferenceGroups;
         }
 
-        public IEnumerable<IPreferenceGroup> GetPreferenceGroups()
+        public IEnumerable<PreferenceGroupInfo> GetPreferences()
         {
             return _preferenceGroups;
         }
 
-        public GenerationResults GenerateConfigurations(IDictionary<string, string> preferences)
+        public GenerateResult Generate(IDictionary<string, string> preferences)
         {
             var matchesOnName = _preferenceGroups.SelectMany(pg => pg.Preferences).Where(p => preferences.ContainsKey(p.Name));
             var matchesOnShortName = _preferenceGroups.SelectMany(pg => pg.Preferences).Where(p => preferences.ContainsKey(p.ShortName));
@@ -52,18 +54,18 @@ namespace ConfigGen.ConsoleApp.Tests
 
             GenerateConfigurationsWasCalled = true;
 
-            return GenerationResults.CreateFail(Enumerable.Empty<Error>());
+            return new GenerateResult(Enumerable.Empty<GeneratedFile>(), Enumerable.Empty<GenerationError>());
         }
 
         public IDictionary<string, string> PreferenceValues { get; set; }
 
         public bool GenerateConfigurationsWasCalled { get; private set; }
 
-        [NotNull]
-        public IEnumerable<IPreference> PreferencesPassedToGenerateCall { get; private set; }
+  
+        public IEnumerable<PreferenceInfo> PreferencesPassedToGenerateCall { get; private set; }
 
         [NotNull]
-        public ConfigurationGeneratorMock GeneratorShouldHaveBeenInvoked()
+        public GenerationServiceMock GeneratorShouldHaveBeenInvoked()
         {
             if (!GenerateConfigurationsWasCalled)
             {
@@ -73,7 +75,7 @@ namespace ConfigGen.ConsoleApp.Tests
             return this;
         }
 
-        public ConfigurationGeneratorMock GeneratorShouldNotHaveBeenInvoked()
+        public GenerationServiceMock GeneratorShouldNotHaveBeenInvoked()
         {
             if (GenerateConfigurationsWasCalled)
             {
@@ -83,14 +85,14 @@ namespace ConfigGen.ConsoleApp.Tests
         }
 
         [NotNull]
-        public ConfigurationGeneratorMock WithNoPreferences()
+        public GenerationServiceMock WithNoPreferences()
         {
             PreferencesPassedToGenerateCall.ShouldBeEmpty();
             return this;
         }
 
         [NotNull]
-        public ConfigurationGeneratorMock WithPreferences(params IPreference[] preferences)
+        public GenerationServiceMock WithPreferences(params PreferenceInfo[] preferences)
         {
             PreferencesPassedToGenerateCall.Select(p => p.Name).ShouldContainOnly(preferences.Select(p => p.Name));
             return this;

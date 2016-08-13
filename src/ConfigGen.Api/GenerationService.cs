@@ -22,28 +22,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Preferences
+namespace ConfigGen.Api
 {
-    public class PreferenceGroup<TPreferences> : IPreferenceGroup
+    public class GenerationService : IGenerationService
     {
         [NotNull]
-        private readonly IEnumerable<IPreference<TPreferences>> _preferences;
+        private readonly IConfigurationGenerator _generator;
 
-        public PreferenceGroup([NotNull] string name, [NotNull] IPreference<TPreferences>[] preferences)
+        public GenerationService([NotNull] IConfigurationGenerator generator)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            _preferences = preferences;
-            Name = name;
+            if (generator == null) throw new ArgumentNullException(nameof(generator));
+            _generator = generator;
         }
 
         [NotNull]
-        public string Name { get; }
+        [ItemNotNull]
+        public IEnumerable<PreferenceGroupInfo> GetPreferences()
+        {
+            return _generator.GetPreferenceGroups().Select(pg => pg.ToPreferenceGroupInfo());
+        }
 
-        [NotNull]
-        public IEnumerable<IPreference> Preferences => _preferences.ToArray();
+        public GenerateResult Generate([NotNull] IDictionary<string, string> preferences)
+        {
+            var result = _generator.GenerateConfigurations(preferences);
+
+            return new GenerateResult(
+                generatedFiles: result.GeneratedFiles.Select(gf => gf.ToGeneratedFile()),
+                errors: result.Errors.Select(e => e.ToGenerationError()));
+        } 
     }
 }

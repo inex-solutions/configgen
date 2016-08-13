@@ -71,10 +71,24 @@
     <Compile Include="TokenUsageTests\TokenUsageTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConfigGen.ConsoleApp\ConfigGen.ConsoleApp.csproj">
-      <Project>{B8732EE6-8AEF-4DD8-9C71-14FACE388CF0}</Project>
-      <Name>ConfigGen.ConsoleApp</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.FiveConfigurations.TwoValues.xls">
+      <Link>TestResources\SimpleSettings.FiveConfigurations.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls">
+      <Link>TestResources\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls">
+      <Link>TestResources\SimpleSettings.OneConfiguration.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls">
+      <Link>TestResources\SimpleSettings.TwoConfigurations.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleTemplate.TwoTokens.razor">
+      <Link>TestResources\SimpleTemplate.TwoTokens.razor</Link>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
       <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
@@ -93,20 +107,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <EmbeddedResource Include="TestResources\SimpleSettings.TwoConfigurations.TwoValues.xls" />
-    <EmbeddedResource Include="TestResources\SimpleSettings.OneConfiguration.TwoValues.xls" />
-    <EmbeddedResource Include="TestResources\SimpleSettings.FiveConfigurations.TwoValues.xls" />
-    <EmbeddedResource Include="TestResources\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestResources\SimpleTemplate.TwoTokens.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="TestResources\SimpleTemplate.TwoTokens.razor">
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="..\SampleFiles\SimpleTemplate.TwoTokens.xml">
+      <Link>TestResources\SimpleTemplate.TwoTokens.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

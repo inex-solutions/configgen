@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using ConfigGen.Api;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Extensions;
@@ -34,6 +35,35 @@ namespace ConfigGen.Tests.Common.MSpec
 {
     public static class ShouldExtensions
     {
+        /// <summary>
+        /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.
+        /// </summary>
+        public static IEnumerable<GenerationError> ShouldContainSingleErrorWithCode(this IEnumerable<GenerationError> actual, string expectedErrorCode)
+        {
+            if (actual == null)
+            {
+                throw new SpecificationException("Expected error collection to contain a single item, but was null");
+            }
+
+            var actualArray = actual.ToArray();
+
+            var count = actualArray.Length;
+
+            if (count != 1)
+            {
+                throw new SpecificationException($"Expected error collection to contain a single item, but there were {count} items");
+            }
+
+            var error = actualArray[0];
+
+            if (error.Code != expectedErrorCode)
+            {
+                throw new SpecificationException($"Incorrect error code. Expected {expectedErrorCode}, but was {error.Code} (\"{error.Detail}\")");
+            }
+
+            return actual;
+        }
+
         /// <summary>
         /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.
         /// </summary>
@@ -97,12 +127,11 @@ namespace ConfigGen.Tests.Common.MSpec
         /// Asserts the supplied result indicates success.
         /// </summary>
         [NotNull]
-        public static GenerationResults ShouldIndicateSuccess([NotNull] this GenerationResults results)
+        public static GenerateResult ShouldIndicateSuccess([NotNull] this GenerateResult results)
         {
             if (results == null) throw new ArgumentNullException(nameof(results));
 
-            if (results.Success
-                && !results.Errors.Any())
+            if (!results.Errors.Any())
             {
                 return results;
             }
@@ -157,41 +186,6 @@ namespace ConfigGen.Tests.Common.MSpec
             }
 
             return actualXml;
-        }
-        
-        [NotNull]
-        public static ShouldContainOnlyResult ShouldContainOnlyTheParameter([CanBeNull] this IEnumerable<KeyValuePair<string, string>> result, [NotNull] string itemName)
-        {
-            if (result == null) result = Enumerable.Empty<KeyValuePair<string, string>>();
-            if (itemName == null) throw new ArgumentNullException(nameof(itemName));
-
-            var items = result.ToList();
-
-            if (items.Count != 1
-                || items.All(r => r.Key != itemName))
-            {
-                throw new SpecificationException($"Expected a single parameter named '{itemName}', but got [{string.Join(",", items.Select(r => r.Key))}]");
-            }
-
-            return new ShouldContainOnlyResult(items, itemName);
-        }
-
-        public class ShouldContainOnlyResult
-        {
-            [NotNull]
-            private readonly IEnumerable<KeyValuePair<string, string>> _originalResult;
-
-            [NotNull]
-            private readonly string _itemName;
-
-            public ShouldContainOnlyResult([NotNull]IEnumerable<KeyValuePair<string, string>> originalResult, [NotNull] string itemName)
-            {
-                if (originalResult == null) throw new ArgumentNullException(nameof(originalResult));
-                if (itemName == null) throw new ArgumentNullException(nameof(itemName));
-
-                _originalResult = originalResult;
-                _itemName = itemName;
-            }
         }
     }
 }

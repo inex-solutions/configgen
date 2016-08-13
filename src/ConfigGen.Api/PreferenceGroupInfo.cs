@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,14 +20,27 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Preferences
+namespace ConfigGen.Api
 {
-    public class PreferencesManagerInitialisationException : Exception
+    public class PreferenceGroupInfo
     {
-        public PreferencesManagerInitialisationException(string message) : base (message)
+        public PreferenceGroupInfo([NotNull] string name, [NotNull][ItemNotNull]IEnumerable<PreferenceInfo> preferences)
         {
-            
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+
+            Name = name;
+            Preferences = preferences;
         }
+
+        [NotNull]
+        public string Name { get; }
+
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<PreferenceInfo> Preferences { get; }
     }
 }

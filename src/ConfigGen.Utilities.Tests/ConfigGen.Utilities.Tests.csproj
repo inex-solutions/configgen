@@ -64,7 +64,6 @@
     <Compile Include="Extensions\EnumerableExtensionsTests\EnumerableExtensionsTests.cs" />
     <Compile Include="FileFinderTests\FileFinderTests.cs" />
     <Compile Include="IO\StreamComparerTests\StreamComparerTests.cs" />
-    <Compile Include="Preferences\PreferencesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml\XmlDeclarationParserTests\XmlDeclarationParserTests.cs" />
   </ItemGroup>

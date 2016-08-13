@@ -20,7 +20,7 @@
 #endregion
 
 using Autofac;
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Domain.Contract.Preferences;
 
 namespace ConfigGen.Domain.FileOutput
 {

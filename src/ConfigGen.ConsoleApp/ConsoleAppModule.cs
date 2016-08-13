@@ -20,7 +20,7 @@
 #endregion
 
 using Autofac;
-using ConfigGen.Domain;
+using ConfigGen.Api;
 
 namespace ConfigGen.ConsoleApp
 {
@@ -30,7 +30,7 @@ namespace ConfigGen.ConsoleApp
         {
             builder.RegisterType<HelpWriter>().As<IHelpWriter>();
             builder.RegisterType<ResultWriter>().As<IResultWriter>();
-            builder.RegisterModule<ConfigurationGeneratorModule>();
+            builder.RegisterModule<GenerationServiceModule>();
             builder.RegisterType<ConsoleRunner>();
         }
     }

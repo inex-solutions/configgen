@@ -21,8 +21,8 @@
 
 using System;
 using System.Collections.Generic;
+using ConfigGen.Api;
 using ConfigGen.Utilities.Logging;
-using ConfigGen.Utilities.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
@@ -42,24 +42,24 @@ namespace ConfigGen.ConsoleApp
             _consoleInputToPreferenceConverter = new ConsoleInputToPreferenceConverter();
         }
 
-        public void WriteHelp([NotNull][ItemNotNull] IEnumerable<IPreferenceGroup> preferencesCollections)
+        public void WriteHelp([NotNull] [ItemNotNull] IEnumerable<PreferenceGroupInfo> preferenceGroups)
         {
-            if (preferencesCollections == null) throw new ArgumentNullException(nameof(preferencesCollections));
+            if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
 
             _logger.Info();
             _logger.Info("ConfigGen help: ");
             _logger.Info();
 
-            foreach (var preferencesCollection in preferencesCollections)
+            foreach (PreferenceGroupInfo preferenceGroup in preferenceGroups)
             {
-                _logger.Info($"******** {preferencesCollection.Name} ********");
+                _logger.Info($"******** {preferenceGroup.Name} ********");
                 _logger.Info();
-                ShowCommands(preferencesCollection.Preferences);
+                ShowCommands(preferenceGroup.Preferences);
                 _logger.Info();
             }
         }
 
-        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<IPreference> preferences)
+        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<PreferenceInfo> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 

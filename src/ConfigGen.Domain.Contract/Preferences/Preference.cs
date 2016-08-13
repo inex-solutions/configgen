@@ -22,7 +22,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Preferences
+namespace ConfigGen.Domain.Contract.Preferences
 {
     public class Preference<TPreference, TTarget> : IPreference<TPreference>
     {

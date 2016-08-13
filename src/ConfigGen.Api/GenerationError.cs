@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -22,23 +22,28 @@
 using System;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Preferences
+namespace ConfigGen.Api
 {
-    public class PreferenceParameterDescription
+    public class GenerationError
     {
-        public PreferenceParameterDescription([NotNull] string name, [NotNull] string helpText)
+        public GenerationError([NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (helpText == null) throw new ArgumentNullException(nameof(helpText));
+            if (code == null) throw new ArgumentNullException(nameof(code));
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (detail == null) throw new ArgumentNullException(nameof(detail));
 
-            Name = name;
-            HelpText = helpText;
+            Code = code;
+            Source = source;
+            Detail = detail;
         }
 
         [NotNull]
-        public string Name { get; }
+        public string Code { get; }
 
         [NotNull]
-        public string HelpText { get; }
+        public string Source { get; }
+
+        [CanBeNull]
+        public string Detail { get; }
     }
 }

@@ -19,8 +19,8 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Logging;
-using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Domain
 {

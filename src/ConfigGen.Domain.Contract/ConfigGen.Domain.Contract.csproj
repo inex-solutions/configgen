@@ -49,6 +49,14 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ITokenUsageTracker.cs" />
+    <Compile Include="Preferences\IPreference.cs" />
+    <Compile Include="Preferences\IPreferenceGroup.cs" />
+    <Compile Include="Preferences\IPreferencesManager.cs" />
+    <Compile Include="Preferences\Preference.cs" />
+    <Compile Include="Preferences\PreferenceGroup.cs" />
+    <Compile Include="Preferences\PreferenceParameterDescription.cs" />
+    <Compile Include="Preferences\PreferencesManager.cs" />
+    <Compile Include="Preferences\PreferencesManagerInitialisationException.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="GenerationResults.cs" />

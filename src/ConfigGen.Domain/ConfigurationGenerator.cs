@@ -23,13 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Logging;
-using ConfigGen.Utilities.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -53,9 +53,6 @@ namespace ConfigGen.Domain
         private readonly TemplateFactory _templateFactory;
 
         [NotNull]
-        private readonly ConfigurationNameSelector _configurationNameSelector;
-
-        [NotNull]
         private readonly ConfigurationCollectionLoaderFactory _configurationCollectionLoaderFactory;
 
         [NotNull] private readonly IConfigurationFactory _configurationFactory;
@@ -69,7 +66,6 @@ namespace ConfigGen.Domain
         public ConfigurationGenerator(
             [NotNull] IPreferencesManager preferencesManager, 
             [NotNull] TemplateFactory templateFactory,
-            [NotNull] ConfigurationNameSelector configurationNameSelector,
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
             [NotNull] IConfigurationFactory configurationFactory,
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
@@ -79,7 +75,6 @@ namespace ConfigGen.Domain
             [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
-            if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationFactory == null) throw new ArgumentNullException(nameof(configurationFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
@@ -90,7 +85,6 @@ namespace ConfigGen.Domain
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _templateFactory = templateFactory;
-            _configurationNameSelector = configurationNameSelector;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationFactory = configurationFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
@@ -107,18 +101,21 @@ namespace ConfigGen.Domain
             return _preferencesManager.KnownPreferenceGroups;
         }
 
-        public GenerationResults GenerateConfigurations(IDictionary<string, string> preferences)
+        public GenerationResults GenerateConfigurations([NotNull] IDictionary<string, string> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
+            //TODO - To API: Preferences stuff
             var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences.Keys);
 
             var configGenerationPreferences = new ConfigurationGeneratorPreferences();
             _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
 
+            //TODO - To API: Logging stuff
             _loggerController.SetLoggingVerbosity(configGenerationPreferences.Verbosity);
             _logger.Debug("Verbose logging enabled");
 
+            //TODO - To API: Template Load stuff
             ITemplate template;
             var templateFileExtension = new FileInfo(configGenerationPreferences.TemplateFilePath).Extension;
             TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(templateFileExtension, configGenerationPreferences.TemplateFileType, out template);
@@ -136,6 +133,7 @@ namespace ConfigGen.Domain
                          $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
             }
 
+            //TODO - To API: Settings Load stuff
             ISettingsLoader settingsLoader;
             var settingsFile = new FileInfo(configGenerationPreferences.SettingsFilePath);
             string settingsFileExtension = settingsFile.Extension;
@@ -185,7 +183,7 @@ namespace ConfigGen.Domain
                 token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
 
             var fileOutputPreferences = new FileOutputPreferences();
-            _preferencesManager.ApplyPreferences(preferences, fileOutputPreferences);
+            _preferencesManager.ApplyPreferences(preferences, fileOutputPreferences); //TODO: Move to a Pure method with a DeepCLone for preferences?
 
             //TODO: make this pipeline async and parallelised
             //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
@@ -214,7 +212,7 @@ namespace ConfigGen.Domain
                         new SingleFileGenerationResult(
                             renderResult.Configuration,
                             writeResults.FullPath,
-                            tokenUsageStatistics.UsedTokens,
+                            tokenUsageStatistics.UsedTokens, //TODO - To API: Token Usage stuff
                             tokenUsageStatistics.UnusedTokens,
                             tokenUsageStatistics.UnrecognisedTokens,
                             renderResult.Errors,
@@ -224,11 +222,6 @@ namespace ConfigGen.Domain
 
                 return GenerationResults.CreateSuccess(singleFileGenerationResults);
             }
-        }
-
-        IEnumerable<IPreferenceGroup> IConfigurationGenerator.GetPreferenceGroups()
-        {
-            return GetPreferenceGroups();
         }
     }
 }

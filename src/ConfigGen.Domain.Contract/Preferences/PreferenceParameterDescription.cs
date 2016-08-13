@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -22,28 +22,23 @@
 using System;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Preferences
+namespace ConfigGen.Domain.Contract.Preferences
 {
-    public interface IPreference
+    public class PreferenceParameterDescription
     {
-        [NotNull]
-        string Name { get; }
+        public PreferenceParameterDescription([NotNull] string name, [NotNull] string helpText)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (helpText == null) throw new ArgumentNullException(nameof(helpText));
 
-        [CanBeNull]
-        string ShortName { get; }
-
-        [NotNull]
-        string Description { get; }
-
-        [NotNull]
-        Type PreferenceInstanceType { get; }
+            Name = name;
+            HelpText = helpText;
+        }
 
         [NotNull]
-        Type TargetPropertyType { get; }
-    }
+        public string Name { get; }
 
-    public interface IPreference<in TPreferences> : IPreference
-    {
-        void Set([NotNull] TPreferences target, [CanBeNull] string value);
+        [NotNull]
+        public string HelpText { get; }
     }
 }

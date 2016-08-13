@@ -20,12 +20,12 @@
 #endregion
 
 using System.Collections.Generic;
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Api;
 
 namespace ConfigGen.ConsoleApp
 {
     public interface IHelpWriter
     {
-        void WriteHelp(IEnumerable<IPreferenceGroup> preferenceGroups);
+        void WriteHelp(IEnumerable<PreferenceGroupInfo> preferenceGroups);
     }
 }

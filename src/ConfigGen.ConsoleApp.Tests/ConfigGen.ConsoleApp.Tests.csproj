@@ -64,25 +64,22 @@
     <Compile Include="ConsoleRunnerFactoryTests\ConsoleRunnerFactoryTests.cs" />
     <Compile Include="ConsoleRunnerTestPreferences.cs" />
     <Compile Include="ConsoleRunnerTestPreferencesGroup.cs" />
-    <Compile Include="ConsoleRunnerTests\ConsoleRunnerTests.cs" />
+    <Compile Include="ConsoleRunner\EndToEndTests\ConsoleRunnerEndToEndTests.cs" />
+    <Compile Include="ConsoleRunner\UnitTests\ConsoleRunnerUnitTests.cs" />
     <Compile Include="ConsoleTestExtensions.cs" />
     <Compile Include="IndexedProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ConfigurationGeneratorMock.cs" />
+    <Compile Include="GenerationServiceMock.cs" />
     <Compile Include="TestLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">
+      <Project>{28ff448c-08ea-4ec4-8005-32f80ec4b6c9}</Project>
+      <Name>ConfigGen.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.ConsoleApp\ConfigGen.ConsoleApp.csproj">
       <Project>{b8732ee6-8aef-4dd8-9c71-14face388cf0}</Project>
       <Name>ConfigGen.ConsoleApp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
-      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
-      <Name>ConfigGen.Domain.Contract</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Domain\ConfigGen.Domain.csproj">
-      <Project>{b1f73633-082f-4ca1-8bd5-575283c19839}</Project>
-      <Name>ConfigGen.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Tests.Common\ConfigGen.Tests.Common.csproj">
       <Project>{3febff76-6425-454a-bef3-5acb437b6a5d}</Project>
@@ -94,7 +91,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls">
+      <Link>TestResources\SimpleSettings.TwoConfigurations.TwoValues.xls</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestResources\SimpleTemplate.TwoTokens.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Preferences
+namespace ConfigGen.Domain.Contract.Preferences
 {
     public class PreferencesManager : IPreferencesManager
     {

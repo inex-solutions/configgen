@@ -19,12 +19,12 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Domain.Contract;
+using ConfigGen.Api;
 
 namespace ConfigGen.ConsoleApp
 {
     public interface IResultWriter
     {
-        void Report(GenerationResults results);
+        void Report(GenerateResult results);
     }
 }

@@ -20,9 +20,9 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Domain;
-using ConfigGen.Domain.Contract;
+using ConfigGen.Api;
 using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
@@ -31,7 +31,7 @@ namespace ConfigGen.ConsoleApp
     public class ConsoleRunner
     {
         [NotNull]
-        private readonly IConfigurationGenerator _configurationGenerator;
+        private readonly IGenerationService _generationService;
 
         [NotNull]
         private readonly ILogger _logger;
@@ -43,42 +43,43 @@ namespace ConfigGen.ConsoleApp
         private readonly IResultWriter _resultWriter;
 
         public ConsoleRunner(
-            [NotNull] IConfigurationGenerator configurationGenerator, 
+            [NotNull] IGenerationService generationService, 
             [NotNull] ILogger logger,
             [NotNull] IHelpWriter helpWriter,
             [NotNull] IResultWriter resultWriter)
         {
-            if (configurationGenerator == null) throw new ArgumentNullException(nameof(configurationGenerator));
+            if (generationService == null) throw new ArgumentNullException(nameof(generationService));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (resultWriter == null) throw new ArgumentNullException(nameof(resultWriter));
             if (helpWriter == null) throw new ArgumentNullException(nameof(helpWriter));
 
-            _configurationGenerator = configurationGenerator;
+            _generationService = generationService;
             _logger = logger;
             _helpWriter = helpWriter;
             _resultWriter = resultWriter;
         }
 
-        public int Run([NotNull] string[] args)
+        public void Run([NotNull] string[] args)
         {
             ShowTitle();
 
-            var preferenceGroups = _configurationGenerator.GetPreferenceGroups();
+            IEnumerable<PreferenceGroupInfo> preferenceGroups = _generationService.GetPreferences();
 
             if (args.Contains("--help", StringComparer.OrdinalIgnoreCase)
-                   || args.Contains("-help", StringComparer.OrdinalIgnoreCase)
-                   || args.Contains("-?", StringComparer.OrdinalIgnoreCase)
-                   || args.Contains("--?", StringComparer.OrdinalIgnoreCase))
+                || args.Contains("-help", StringComparer.OrdinalIgnoreCase)
+                || args.Contains("-?", StringComparer.OrdinalIgnoreCase)
+                || args.Contains("--?", StringComparer.OrdinalIgnoreCase))
             {
                 _helpWriter.WriteHelp(preferenceGroups);
 
-                Environment.ExitCode = (int)ExitCodes.HelpShown;
-                return Environment.ExitCode;
+                Environment.ExitCode = (int) ExitCodes.HelpShown;
+                return;
             }
+
             var consoleInputToPreferenceConverter = new ConsoleInputToPreferenceConverter();
 
             ParsedConsoleInput preferences = consoleInputToPreferenceConverter.ParseConsoleInput(args, preferenceGroups);
-            
+
             if (preferences.ParseErrors.Any())
             {
                 foreach (var parseError in preferences.ParseErrors)
@@ -86,20 +87,19 @@ namespace ConfigGen.ConsoleApp
                     _logger.Info(parseError);
                 }
 
-                Environment.ExitCode = (int)ExitCodes.ConsoleInputParseError;
-                return Environment.ExitCode;
+                Environment.ExitCode = (int) ExitCodes.ConsoleInputParseError;
+                return;
             }
 
-            var results = _configurationGenerator.GenerateConfigurations(preferences.ParsedPreferences.ToDictionary(kvp => kvp.Key.Name, kvp => kvp.Value)); //TODO: cleanup
+            GenerateResult results = _generationService.Generate(preferences.ParsedPreferences.ToDictionary(kvp => kvp.Key.Name, kvp => kvp.Value)); //TODO: cleanup
             _resultWriter.Report(results);
 
-            Environment.ExitCode = (int)ExitCodes.Success;
-            return Environment.ExitCode;
+            Environment.ExitCode = (int) ExitCodes.Success;
         }
 
         private void ShowTitle()
         {
-            var version = typeof(ConfigurationGenerator).Assembly.GetName().Version;
+            var version = typeof(IGenerationService).Assembly.GetName().Version;
             _logger.Info();
             _logger.Info($"ConfigGen v{version} - Configuration file generation tool");
             _logger.Info("(c)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");

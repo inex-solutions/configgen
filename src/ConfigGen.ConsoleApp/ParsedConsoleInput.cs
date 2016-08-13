@@ -21,14 +21,14 @@
 
 using System;
 using System.Collections.Generic;
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Api;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {
     public class ParsedConsoleInput
     {
-        public ParsedConsoleInput([NotNull] Dictionary<IPreference, string> parsedPreferences, [NotNull] List<string> parseErrors)
+        public ParsedConsoleInput([NotNull] Dictionary<PreferenceInfo, string> parsedPreferences, [NotNull] List<string> parseErrors)
         {
             if (parsedPreferences == null) throw new ArgumentNullException(nameof(parsedPreferences));
             if (parseErrors == null) throw new ArgumentNullException(nameof(parseErrors));
@@ -38,7 +38,7 @@ namespace ConfigGen.ConsoleApp
         }
 
         [NotNull]
-        public Dictionary<IPreference, string> ParsedPreferences { get; }
+        public Dictionary<PreferenceInfo, string> ParsedPreferences { get; }
 
         [NotNull]
         public List<string> ParseErrors { get; }

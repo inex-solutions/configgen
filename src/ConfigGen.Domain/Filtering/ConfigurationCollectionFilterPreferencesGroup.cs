@@ -19,7 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Domain.Contract.Preferences;
 
 namespace ConfigGen.Domain.Filtering
 {

@@ -52,9 +52,6 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         private readonly ITokenReplacer _tokenReplacer;
 
-        [NotNull]
-        private readonly ITokenUsageTracker _tokenUsageTracker;
-
         private XmlDeclarationInfo _xmlDeclarationInfo;
         private XElement _loadedTemplate;
 
@@ -62,22 +59,18 @@ namespace ConfigGen.Templating.Xml
             [NotNull] XmlDeclarationParser xmlDeclarationParser, 
             [NotNull] ITemplateLoader templateLoader, 
             [NotNull] ITemplatePreprocessor templatePreprocessor,
-            [NotNull] ITokenReplacer tokenReplacer,
-            [NotNull] ITokenUsageTracker tokenUsageTracker)
+            [NotNull] ITokenReplacer tokenReplacer)
         {
             if (xmlDeclarationParser == null) throw new ArgumentNullException(nameof(xmlDeclarationParser));
             if (templateLoader == null) throw new ArgumentNullException(nameof(templateLoader));
             if (templatePreprocessor == null) throw new ArgumentNullException(nameof(templatePreprocessor));
             if (tokenReplacer == null) throw new ArgumentNullException(nameof(tokenReplacer));
-            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _xmlDeclarationParser = xmlDeclarationParser;
             _templateLoader = templateLoader;
             _templatePreprocessor = templatePreprocessor;
             _tokenReplacer = tokenReplacer;
-            _tokenUsageTracker = tokenUsageTracker;
         }
-
 
         [NotNull]
         public LoadResult Load([NotNull] Stream templateStream)

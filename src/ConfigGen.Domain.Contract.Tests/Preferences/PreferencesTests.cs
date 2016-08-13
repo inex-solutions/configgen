@@ -22,10 +22,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Domain.Contract.Preferences;
 using Machine.Specifications;
 
-namespace ConfigGen.Utilities.Tests.Preferences
+namespace ConfigGen.Domain.Contract.Tests.Preferences
 {
     [Subject(typeof(PreferencesManager))]
     public abstract class PreferencesManagerTestBase

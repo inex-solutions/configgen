@@ -31,7 +31,7 @@ namespace ConfigGen.ConsoleApp
         {
             try
             {
-                var consoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
+                ConsoleRunner consoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
                 consoleRunner.Run(args);
             }
             catch (Exception ex)

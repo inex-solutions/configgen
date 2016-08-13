@@ -22,14 +22,17 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Utilities.Preferences
+namespace ConfigGen.Domain.Contract.Preferences
 {
-    public interface IPreferenceGroup
+    public interface IPreferencesManager
     {
         [NotNull]
-        string Name { get; }
+        IEnumerable<IPreferenceGroup> KnownPreferenceGroups { get; }
 
         [NotNull]
-        IEnumerable<IPreference> Preferences { get; }
+        [ItemNotNull]
+        IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences);
+
+        void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance);
     }
 }

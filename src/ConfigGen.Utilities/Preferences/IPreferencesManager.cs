@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,23 +20,19 @@
 #endregion
 
 using System.Collections.Generic;
-using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract.Preferences
+namespace ConfigGen.Utilities.Preferences
 {
-    public interface IDeferedSetter<in TPreferenceGroupType> : IDeferedSetter
-    {
-        void SetOnTarget(TPreferenceGroupType target);
-    }
-
-    public interface IDeferedSetter
+    public interface IPreferencesManager
     {
         [NotNull]
-        IResult<object, string> Parse(Queue<string> argsQueue);
+        IEnumerable<IPreferenceGroup> KnownPreferenceGroups { get; }
 
-        string ToDisplayText();
+        [NotNull]
+        [ItemNotNull]
+        IEnumerable<string> GetUnrecognisedPreferences([NotNull][ItemNotNull] IEnumerable<string> preferences);
 
-        object RawValue { get; }
+        void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance);
     }
 }

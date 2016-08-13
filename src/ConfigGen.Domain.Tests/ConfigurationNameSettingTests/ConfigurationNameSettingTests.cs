@@ -22,7 +22,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;
@@ -36,8 +35,6 @@ namespace ConfigGen.Domain.Tests.ConfigurationNameSettingTests
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
-
-            PreferencesToSupplyToGenerator = new List<Preference> {};
         };
 
         Because of = () => Result = Subject.GenerateConfigurations(PreferencesToSupplyToGenerator);
@@ -59,9 +56,9 @@ namespace ConfigGen.Domain.Tests.ConfigurationNameSettingTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.ConfigurationNameSetting, "Value1")
+                {ConfigurationGeneratorPreferenceGroup.ConfigurationNameSetting.Name, "Value1"}
             };
         };
 
@@ -84,9 +81,9 @@ namespace ConfigGen.Domain.Tests.ConfigurationNameSettingTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.ConfigurationNameSetting, "ValueXXX")
+                {ConfigurationGeneratorPreferenceGroup.ConfigurationNameSetting.Name, "ValueXXX"}
             };
         };
 

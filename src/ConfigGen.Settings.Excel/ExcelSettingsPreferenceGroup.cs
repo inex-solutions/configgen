@@ -19,39 +19,33 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Settings.Excel
 {
-    public class ExcelSettingsPreferenceGroup : PreferenceGroupBase
+    public class ExcelSettingsPreferenceGroup : PreferenceGroup<ExcelSettingsPreferences>
     {
-        private static string PreferenceGroupName = "ExcelSettingsPreferenceGroup";
-
-        protected override IEnumerable<IPreferenceDefinition> Preferences => new[] { PreferenceDefinitions.WorksheetName };
-
-        public override string Name => "Excel Settings";
-
-        public override Type PreferenceInstanceType => typeof(ExcelSettingsPreferences);
-
-        private static class PreferenceDefinitions
-        {
-            static PreferenceDefinitions()
+        public ExcelSettingsPreferenceGroup() : base(
+            name: "ExcelSettingsPreferenceGroup",
+            preferences: new []
             {
-                // ReSharper disable AssignNullToNotNullAttribute
-                // ReSharper disable PossibleNullReferenceException
-                WorksheetName = new PreferenceDefinition<ExcelSettingsPreferences, string>(name: "WorksheetName",
+                new Preference<ExcelSettingsPreferences,string>(
+                    name: "ConfigurationNameColumn",
+                    shortName: null,
+                    description: "specifies the name of the column in the spreadsheet to use as the configuration name",
+                    parameterDescription: new PreferenceParameterDescription("column name", "name of the column"), 
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.ConfigurationNameColumn = stringValue), 
+
+                new Preference<ExcelSettingsPreferences, string>(
+                    name: "WorksheetName",
                     shortName: null,
                     description: "specifies the name of the worksheet containing configuration settings",
-                    parameters: new[] { new PreferenceParameterDefinition("worksheet name", "name of the worksheet") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("WorksheetName"),
-                    setAction: (preferences, value) => preferences.WorksheetName = value);
-                // ReSharper restore AssignNullToNotNullAttribute
-                // ReSharper restore PossibleNullReferenceException
-            }
-
-            public static PreferenceDefinition<ExcelSettingsPreferences, string> WorksheetName { get; }
+                    parameterDescription: new PreferenceParameterDescription("worksheet name", "name of the worksheet"),
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.WorksheetName = stringValue)
+            })
+        {
         }
     }
 }

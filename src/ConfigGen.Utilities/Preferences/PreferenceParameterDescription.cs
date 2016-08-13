@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,15 +20,25 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract.Preferences
+namespace ConfigGen.Utilities.Preferences
 {
-    public interface IDeferredSetterFactory
+    public class PreferenceParameterDescription
     {
+        public PreferenceParameterDescription([NotNull] string name, [NotNull] string helpText)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (helpText == null) throw new ArgumentNullException(nameof(helpText));
+
+            Name = name;
+            HelpText = helpText;
+        }
+
         [NotNull]
-        IDeferedSetter Create<TPreferenceGroupType, TPreferenceType>([NotNull] Func<Queue<string>, IResult<TPreferenceType, string>> parse, [NotNull] Action<TPreferenceGroupType, TPreferenceType> set);
+        public string Name { get; }
+
+        [NotNull]
+        public string HelpText { get; }
     }
 }

@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,19 +19,17 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
+using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract.Preferences
+namespace ConfigGen.Settings.Excel
 {
-    public interface IManagePreferences
+    public class ExcelSettingsLoadError : Error
     {
-        [NotNull]
-        IEnumerable<IPreferenceGroup> RegisteredPreferences { get; }
+        public static readonly string ExcelSettingsLoadErrorSource = "ExcelSettingsLoader";
 
-        [NotNull]
-        IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<Preference> preferences);
-
-        void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<Preference> preferences, [NotNull] TPreferenceType preferenceInstance);
+        public ExcelSettingsLoadError([NotNull] string code, [CanBeNull] string detail) : base(ExcelSettingsLoadErrorSource, code, detail)
+        {
+        }
     }
 }

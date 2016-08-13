@@ -20,7 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.ConsoleApp
 {

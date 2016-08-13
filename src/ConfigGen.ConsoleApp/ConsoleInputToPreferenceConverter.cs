@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
@@ -36,12 +36,9 @@ namespace ConfigGen.ConsoleApp
         [NotNull]
         private static readonly Regex MatchLowers = new Regex("[a-z]*");
 
-        [NotNull]
-        private readonly ConsoleInputDeferedSetterFactory _deferredSetterFactory = new ConsoleInputDeferedSetterFactory();
-
         [Pure]
         [NotNull]
-        public string GetShortConsoleCommand([NotNull] IPreferenceDefinition preferenceDefinition)
+        public string GetShortConsoleCommand([NotNull] IPreference preferenceDefinition)
         {
             if (preferenceDefinition == null) throw new ArgumentNullException(nameof(preferenceDefinition));
 
@@ -52,14 +49,14 @@ namespace ConfigGen.ConsoleApp
 
         [Pure]
         [NotNull]
-        public string GetShortConsoleCommandWithArgumentText([NotNull] IPreferenceDefinition preferenceDefinition)
+        public string GetShortConsoleCommandWithArgumentText([NotNull] IPreference preferenceDefinition)
         {
             return $"{GetShortConsoleCommand(preferenceDefinition)}";
         }
 
         [Pure]
         [NotNull]
-        public string GetLongConsoleCommand([NotNull] IPreferenceDefinition preferenceDefinition)
+        public string GetLongConsoleCommand([NotNull] IPreference preferenceDefinition)
         {
             if (preferenceDefinition == null) throw new ArgumentNullException(nameof(preferenceDefinition));
             var result = MatchCaptials.Replace(preferenceDefinition.Name, match => "-" + match.Value.ToLower());
@@ -68,7 +65,7 @@ namespace ConfigGen.ConsoleApp
 
         [Pure]
         [NotNull]
-        public string GetLongConsoleCommandWithArgumentText([NotNull] IPreferenceDefinition preferenceDefinition)
+        public string GetLongConsoleCommandWithArgumentText([NotNull] IPreference preferenceDefinition)
         {
             return $"{GetLongConsoleCommand(preferenceDefinition)}";
         }
@@ -80,9 +77,9 @@ namespace ConfigGen.ConsoleApp
             if (args == null) throw new ArgumentNullException(nameof(args));
             if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
 
-            IList<IPreferenceDefinition> preferenceInfos = preferenceGroups.SelectMany(pg => pg).ToList();
+            IList<IPreference> preferenceInfos = preferenceGroups.SelectMany(pg => pg.Preferences).ToList();
 
-            var parsedPreferences = new List<Preference>();
+            var parsedPreferences = new Dictionary<IPreference, string>();
             var parseErrors = new List<string>();
 
             var argsQueue = new Queue<string>(args);
@@ -90,9 +87,9 @@ namespace ConfigGen.ConsoleApp
             while (argsQueue.Any())
             {
                 string arg = argsQueue.Dequeue();
-                var preferenceInfo = GetPreferenceDefinition(preferenceInfos, arg);
+                var preference = GetPreference(preferenceInfos, arg);
 
-                if (preferenceInfo == null)
+                if (preference == null)
                 {
                     parseErrors.Add(
                         arg.StartsWith("-")
@@ -101,19 +98,15 @@ namespace ConfigGen.ConsoleApp
                 }
                 else
                 {
-
-                    var deferredSetter = preferenceInfo.CreateDeferredSetter(_deferredSetterFactory);
-                    var parseResult = deferredSetter.Parse(argsQueue);
-
-                    if (parseResult.Success)
+                    string value = null;
+                    string peek = argsQueue.Any() ? argsQueue.Peek() : null;
+                    if (peek != null 
+                        && !peek.StartsWith("-"))
                     {
-                        parsedPreferences.Add(new Preference(preferenceInfo.Name, deferredSetter));
+                        value = argsQueue.Dequeue();
+                    }
 
-                    }
-                    else
-                    {
-                        parseErrors.Add(parseResult.Error);
-                    }
+                    parsedPreferences.Add(preference, value);
                 }
             }
 
@@ -121,7 +114,7 @@ namespace ConfigGen.ConsoleApp
         }
 
         [CanBeNull]
-        private IPreferenceDefinition GetPreferenceDefinition([NotNull] IEnumerable<IPreferenceDefinition> preferenceInfos, [CanBeNull] string input)
+        private IPreference GetPreference([NotNull] IEnumerable<IPreference> preferenceInfos, [CanBeNull] string input)
         {
             if (preferenceInfos == null) throw new ArgumentNullException(nameof(preferenceInfos));
 

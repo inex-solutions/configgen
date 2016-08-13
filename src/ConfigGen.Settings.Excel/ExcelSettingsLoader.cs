@@ -24,7 +24,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Settings.Excel
@@ -66,15 +68,19 @@ namespace ConfigGen.Settings.Excel
         /// <param name="settingsFile">Spreadsheet path</param>
         /// <param name="worksheetName">worksheet name (defaults to "Settings")</param>
         /// <returns>
-        /// Collection of loaded configuration settings.
+        /// A result containing a collection of loaded configuration settings, or an error.
         /// </returns>
-        /// <exception cref="FileNotFoundException">Thrown if the specified excel spreadsheet is not found.</exception>
         [NotNull]
-        [ItemNotNull]
-        public IEnumerable<IDictionary<string, object>> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName = null)
+        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName = null)
         {
             if (settingsFile == null) throw new ArgumentNullException(nameof(settingsFile));
             worksheetName = worksheetName ?? "Settings";
+
+            if (!File.Exists(settingsFile))
+            {
+                return Result<IEnumerable<IDictionary<string, object>>, Error>
+                    .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.FileNotFound, $"Specified excel spreadsheet not found: {settingsFile}"));
+            }
 
             DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile);
 
@@ -84,7 +90,8 @@ namespace ConfigGen.Settings.Excel
 
             if (worksheet == null)
             {
-                throw new ArgumentException("Specified worksheet not found in settings file: " + worksheetName);
+                return Result<IEnumerable<IDictionary<string, object>>, Error>
+                    .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.WorksheetNotFound, $"Specified worksheet not found in settings file: {worksheetName}"));
             }
 
             var rows = (from DataRow row in worksheet.Rows select row.ItemArray);
@@ -94,7 +101,7 @@ namespace ConfigGen.Settings.Excel
 
             var machineSettings = _dataProcessor.ProcessDataRows(rowsQueue, columnList, spreadsheetPreferences);
 
-            return machineSettings;
+            return Result<IEnumerable<IDictionary<string, object>>, Error>.CreateSuccessResult(machineSettings);
         }
 
         public string LoaderType => "Excel";

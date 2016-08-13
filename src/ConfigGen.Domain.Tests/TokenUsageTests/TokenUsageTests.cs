@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;
@@ -43,9 +42,9 @@ namespace ConfigGen.Domain.Tests.TokenUsageTests
                 string template = @"Razor Template Token1: @Model.Value1, Unrecognised Token: @Model.UnknownToken";
                 File.WriteAllText("App.Config.Template.razor", template);
 
-                PreferencesToSupplyToGenerator = new List<Preference>
+                PreferencesToSupplyToGenerator = new Dictionary<string, string>
                 {
-                    CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                    {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
                 };
             };
 
@@ -82,9 +81,9 @@ namespace ConfigGen.Domain.Tests.TokenUsageTests
                 string template = @"<root><first>[%Value1%]</first><second>[%UnknownToken%]</second></root>";
                 File.WriteAllText("App.Config.Template.xml", template);
 
-                PreferencesToSupplyToGenerator = new List<Preference>
+                PreferencesToSupplyToGenerator = new Dictionary<string, string>
                 {
-                    CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.xml")
+                    { ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.xml" }
                 };
             };
 

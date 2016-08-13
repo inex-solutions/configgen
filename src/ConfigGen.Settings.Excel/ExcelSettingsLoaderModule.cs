@@ -20,8 +20,8 @@
 #endregion
 
 using Autofac;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Settings.Excel
 {

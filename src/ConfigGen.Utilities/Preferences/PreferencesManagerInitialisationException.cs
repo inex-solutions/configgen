@@ -19,25 +19,15 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using JetBrains.Annotations;
+using System;
 
-namespace ConfigGen.Domain.Contract.Preferences
+namespace ConfigGen.Utilities.Preferences
 {
-    public interface IPreferenceDefinition
+    public class PreferencesManagerInitialisationException : Exception
     {
-        [NotNull]
-        string Name { get; }
-
-        [CanBeNull]
-        string ShortName { get; }
-
-        [NotNull]
-        string Description { get; }
-
-        [CanBeNull]
-        PreferenceParameterDefinition[] Parameters { get; }
-
-        [NotNull]
-        IDeferedSetter CreateDeferredSetter([NotNull] IDeferredSetterFactory deferredSetterFactory);
+        public PreferencesManagerInitialisationException(string message) : base (message)
+        {
+            
+        }
     }
 }

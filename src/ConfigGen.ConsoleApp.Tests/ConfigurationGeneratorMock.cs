@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Preferences;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 
@@ -42,25 +42,25 @@ namespace ConfigGen.ConsoleApp.Tests
             return _preferenceGroups;
         }
 
-        public GenerationResults GenerateConfigurations(IReadOnlyCollection<Preference> preferences)
+        public GenerationResults GenerateConfigurations(IDictionary<string, string> preferences)
         {
-            PreferencesPassedToGenerateCall = preferences;
-            PreferenceValues = new IndexedProperty<IPreferenceDefinition, Preference, object>(
-                selectionPredicate: indexer => PreferencesPassedToGenerateCall.FirstOrDefault(p => indexer != null && p.PreferenceName == indexer.Name),
-                projection: item => item.DeferredSetter.RawValue);
+            var matchesOnName = _preferenceGroups.SelectMany(pg => pg.Preferences).Where(p => preferences.ContainsKey(p.Name));
+            var matchesOnShortName = _preferenceGroups.SelectMany(pg => pg.Preferences).Where(p => preferences.ContainsKey(p.ShortName));
+
+            PreferencesPassedToGenerateCall = matchesOnShortName.Concat(matchesOnName);
+            PreferenceValues = preferences;
 
             GenerateConfigurationsWasCalled = true;
 
             return GenerationResults.CreateFail(Enumerable.Empty<Error>());
         }
 
-        public IndexedProperty<IPreferenceDefinition, Preference, object> PreferenceValues { get; set; }
+        public IDictionary<string, string> PreferenceValues { get; set; }
 
         public bool GenerateConfigurationsWasCalled { get; private set; }
 
         [NotNull]
-        public IEnumerable<Preference> PreferencesPassedToGenerateCall { get; private set; }
-
+        public IEnumerable<IPreference> PreferencesPassedToGenerateCall { get; private set; }
 
         [NotNull]
         public ConfigurationGeneratorMock GeneratorShouldHaveBeenInvoked()
@@ -90,9 +90,9 @@ namespace ConfigGen.ConsoleApp.Tests
         }
 
         [NotNull]
-        public ConfigurationGeneratorMock WithPreferences(params IPreferenceDefinition[] preferences)
+        public ConfigurationGeneratorMock WithPreferences(params IPreference[] preferences)
         {
-            PreferencesPassedToGenerateCall.Select(p => p.PreferenceName).ShouldContainOnly(preferences.Select(p => p.Name));
+            PreferencesPassedToGenerateCall.Select(p => p.Name).ShouldContainOnly(preferences.Select(p => p.Name));
             return this;
         }
     }

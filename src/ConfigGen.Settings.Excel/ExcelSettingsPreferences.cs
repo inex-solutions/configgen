@@ -23,5 +23,7 @@ namespace ConfigGen.Settings.Excel
     public class ExcelSettingsPreferences
     {
         public string WorksheetName { get; set; }
+
+        public string ConfigurationNameColumn { get; set; }
     }
 }

@@ -21,8 +21,8 @@
 
 using System;
 using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Logging;
+using ConfigGen.Utilities.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
@@ -54,15 +54,14 @@ namespace ConfigGen.ConsoleApp
             {
                 _logger.Info($"******** {preferencesCollection.Name} ********");
                 _logger.Info();
-                ShowCommands(preferencesCollection);
+                ShowCommands(preferencesCollection.Preferences);
                 _logger.Info();
             }
         }
 
-        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<IPreferenceDefinition> preferences)
+        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<IPreference> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
 
             foreach (var preference in preferences)
             {

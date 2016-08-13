@@ -22,7 +22,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities.Extensions;
@@ -61,9 +60,9 @@ namespace ConfigGen.Domain.Tests.TemplateTypeSelectionTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.razor", "App.Config.Template.razor");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
             };
         };
 
@@ -90,9 +89,9 @@ namespace ConfigGen.Domain.Tests.TemplateTypeSelectionTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.unknown");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.unknown")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.unknown"}
             };
         };
 
@@ -111,9 +110,9 @@ namespace ConfigGen.Domain.Tests.TemplateTypeSelectionTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFileType, "notxml")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFileType.Name, "notxml"}
             };
         };
 
@@ -132,10 +131,10 @@ namespace ConfigGen.Domain.Tests.TemplateTypeSelectionTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.unknown");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.unknown"),
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFileType, "xml")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.unknown"},
+                {ConfigurationGeneratorPreferenceGroup.TemplateFileType.Name, "xml"}
             };
         };
 
@@ -160,10 +159,10 @@ namespace ConfigGen.Domain.Tests.TemplateTypeSelectionTests
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.razor", "App.Config.Template.unknown");
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.unknown"),
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFileType, "razor")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.unknown"},
+                {ConfigurationGeneratorPreferenceGroup.TemplateFileType.Name, "razor"}
             };
         };
 

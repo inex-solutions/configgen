@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;
@@ -60,9 +59,10 @@ namespace ConfigGen.Domain.Tests.FileOutputTests
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
-            PreferencesToSupplyToGenerator = new List<Preference>
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(FileOutputPreferenceGroup.PreferenceDefinitions.FilenameSetting, "Value1")
+                {FileOutputPreferenceGroup.FilenameSetting.Name, "Value1"}
             };
         };
 
@@ -85,9 +85,10 @@ namespace ConfigGen.Domain.Tests.FileOutputTests
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
-            PreferencesToSupplyToGenerator = new List<Preference>
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(FileOutputPreferenceGroup.PreferenceDefinitions.ForceFilename, "ForcedFilename.xml")
+                {FileOutputPreferenceGroup.ForceFilename.Name, "ForcedFilename.xml"}
             };
         };
 
@@ -184,9 +185,9 @@ namespace ConfigGen.Domain.Tests.FileOutputTests
 
             File.WriteAllText("App.Config.Template.razor", contents, Encoding.UTF8);
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
             };
         };
 
@@ -208,9 +209,9 @@ namespace ConfigGen.Domain.Tests.FileOutputTests
 
             File.WriteAllText("App.Config.Template.razor", contents, Encoding.Unicode);
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
             };
         };
 
@@ -232,9 +233,9 @@ namespace ConfigGen.Domain.Tests.FileOutputTests
 
             File.WriteAllText("App.Config.Template.razor", contents, Encoding.ASCII);
 
-            PreferencesToSupplyToGenerator = new List<Preference>
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                CreatePreference(ConfigurationGeneratorPreferenceGroup.PreferenceDefinitions.TemplateFile, "App.Config.Template.razor")
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
             };
         };
 

@@ -19,89 +19,77 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Collections.Generic;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Logging;
+using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Domain
 {
-    public class ConfigurationGeneratorPreferenceGroup : PreferenceGroupBase
+    public class ConfigurationGeneratorPreferenceGroup : PreferenceGroup<ConfigurationGeneratorPreferences>
     {
-        public static string PreferenceGroupName = "ConfigurationGeneratorPreferenceGroup";
-
-        protected override IEnumerable<IPreferenceDefinition> Preferences => new IPreferenceDefinition[]
+        static ConfigurationGeneratorPreferenceGroup()
         {
-            PreferenceDefinitions.SettingsFile,
-            PreferenceDefinitions.TemplateFile,
-            PreferenceDefinitions.TemplateFileType,
-            PreferenceDefinitions.Verbose,
-            PreferenceDefinitions.ConfigurationNameSetting
-        };
+            SettingsFilePath = new Preference<ConfigurationGeneratorPreferences, string>(
+                name: "SettingsFile",
+                shortName: "Settings",
+                description: "specifies the settings file containing config gen settings",
+                parameterDescription: new PreferenceParameterDescription("settings file path", "path to the settings file"),
+                parseAction: stringValue => stringValue,
+                setAction: (stringValue, preferences) => preferences.SettingsFilePath = stringValue);
 
-        public override string Name => "General preferences";
+            TemplateFilePath = new Preference<ConfigurationGeneratorPreferences, string>(
+                name: "TemplateFile",
+                shortName: "Template",
+                description: "specifies the template file",
+                parameterDescription: new PreferenceParameterDescription("template file path", "path to the template file"),
+                parseAction: stringValue => stringValue,
+                setAction: (stringValue, preferences) => preferences.TemplateFilePath = stringValue);
 
-        public override Type PreferenceInstanceType => typeof(ConfigurationGeneratorPreferences);
+            TemplateFileType = new Preference<ConfigurationGeneratorPreferences, string>(
+                name: "TemplateFileType",
+                shortName: "TemplateType",
+                description: "specifies the template file type (e.g. xml, razor)",
+                parameterDescription: new PreferenceParameterDescription("template file type", "type of template: xml, razor"),
+                parseAction: stringValue => stringValue,
+                setAction: (stringValue, preferences) => preferences.TemplateFileType = stringValue);
 
-        public static class PreferenceDefinitions
-        {
-            static PreferenceDefinitions()
-            {
-                // ReSharper disable AssignNullToNotNullAttribute
-                // ReSharper disable PossibleNullReferenceException
-                SettingsFile = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
-                    name: "SettingsFile",
-                    shortName: "Settings",
-                    description: "specifies the settings file containing config gen settings",
-                    parameters: new[] { new PreferenceParameterDefinition("settings file path", "path to the settings file") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("SettingsFile"),
-                    setAction: (preferences, value) => preferences.SettingsFilePath = value);
+            Verbose = new Preference<ConfigurationGeneratorPreferences, bool>(
+                name: "VerboseOutput",
+                shortName: "Verbose",
+                description: "verbose output",
+                parameterDescription: new PreferenceParameterDescription("verbose", "verbose output"),
+                parseAction: bool.Parse,
+                setAction: (verbosity, preferences) => preferences.Verbosity = verbosity ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal);
 
-                TemplateFile = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
-                    name: "TemplateFile",
-                    shortName: "Template",
-                    description: "specifies the template file",
-                    parameters: new[] { new PreferenceParameterDefinition("template file path", "path to the template file") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFile"),
-                    setAction: (preferences, value) => preferences.TemplateFilePath = value);
-
-
-                TemplateFileType = new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
-                    name: "TemplateFileType",
-                    shortName: "TemplateType",
-                    description: "specifies the template file type (e.g. xml, razor)",
-                    parameters: new[] { new PreferenceParameterDefinition("template file type", "type of template: xml, razor") },
-                    parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("TemplateFileType"),
-                    setAction: (preferences, value) => preferences.TemplateFileType = value);
-
-                Verbose = new SwitchPreferenceDefinition<ConfigurationGeneratorPreferences>(
-                    name: "Verbose",
-                    shortName: null,
-                    description: "verbose output",
-                    setAction: (preferences, value) => preferences.Verbosity = value ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal);
-
-                ConfigurationNameSetting =
-                    new PreferenceDefinition<ConfigurationGeneratorPreferences, string>(
-                        name: "ConfigurationNameSetting",
-                        shortName: null,
-                        description: "specifies the setting name to use as the configuration name",
-                        parameters: new[] {new PreferenceParameterDefinition("setting name", "name of the setting")},
-                        parseAction: argsQueue => argsQueue.ParseSingleStringParameterFromArgumentQueue("ConfigurationNameSetting"),
-                        setAction: (preferences, value) => preferences.ConfigurationNameSetting = value);
-
-                // ReSharper restore AssignNullToNotNullAttribute
-                // ReSharper restore PossibleNullReferenceException
-            }
-
-            public static PreferenceDefinition<ConfigurationGeneratorPreferences, bool> Verbose { get; }
-
-            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> TemplateFile { get; }
-
-            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> TemplateFileType { get; }
-
-            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> SettingsFile { get; }
-
-            public static PreferenceDefinition<ConfigurationGeneratorPreferences, string> ConfigurationNameSetting { get; }
+            ConfigurationNameSetting = new Preference<ConfigurationGeneratorPreferences, string>(
+                name: "ConfigurationNameSetting",
+                shortName: null,
+                description: "Token to use as configuration name",
+                parameterDescription: new PreferenceParameterDescription("token name", "token to use as configuration name"),
+                parseAction: stringValue => stringValue,
+                setAction: (stringValue, preferences) => preferences.ConfigurationNameSetting = stringValue);
         }
+
+        public ConfigurationGeneratorPreferenceGroup() : base(
+            name: "ConfigurationGeneratorPreferenceGroup",
+            preferences: new IPreference<ConfigurationGeneratorPreferences>[]
+            {
+                SettingsFilePath,
+                TemplateFilePath,
+                TemplateFileType,
+                Verbose,
+                ConfigurationNameSetting
+            })
+        {
+        }
+
+        public static Preference<ConfigurationGeneratorPreferences, bool> Verbose { get; }
+
+        public static Preference<ConfigurationGeneratorPreferences, string> TemplateFileType { get; }
+
+        public static Preference<ConfigurationGeneratorPreferences, string> TemplateFilePath { get; }
+
+        public static Preference<ConfigurationGeneratorPreferences, string> SettingsFilePath { get; }
+
+        public static Preference<ConfigurationGeneratorPreferences, string> ConfigurationNameSetting { get; }
     }
 }

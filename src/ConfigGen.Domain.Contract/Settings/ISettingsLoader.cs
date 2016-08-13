@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract.Settings
@@ -33,8 +34,7 @@ namespace ConfigGen.Domain.Contract.Settings
         /// Loads and returns the configuration settings
         /// </summary>
         [NotNull]
-        [ItemNotNull]
-        IEnumerable<IDictionary<string, object>> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
+        IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
 
         string LoaderType { get; }
 

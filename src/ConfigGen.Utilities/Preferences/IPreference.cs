@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -22,23 +22,28 @@
 using System;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain.Contract.Preferences
+namespace ConfigGen.Utilities.Preferences
 {
-    public struct Preference
+    public interface IPreference
     {
-        public Preference([NotNull] string preferenceName, [NotNull] IDeferedSetter deferredSetter)
-        {
-            if (preferenceName == null) throw new ArgumentNullException(nameof(preferenceName));
-            if (deferredSetter == null) throw new ArgumentNullException(nameof(deferredSetter));
+        [NotNull]
+        string Name { get; }
 
-            PreferenceName = preferenceName;
-            DeferredSetter = deferredSetter;
-        }
+        [CanBeNull]
+        string ShortName { get; }
 
         [NotNull]
-        public string PreferenceName { get; }
+        string Description { get; }
 
         [NotNull]
-        public IDeferedSetter DeferredSetter { get; }
+        Type PreferenceInstanceType { get; }
+
+        [NotNull]
+        Type TargetPropertyType { get; }
+    }
+
+    public interface IPreference<in TPreferences> : IPreference
+    {
+        void Set([NotNull] TPreferences target, [CanBeNull] string value);
     }
 }

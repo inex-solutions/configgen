@@ -73,7 +73,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateLoadTestBase.cs" />
     <Compile Include="TemplateRenderTestBase.cs" />
-    <Compile Include="TestSetupException.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

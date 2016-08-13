@@ -43,7 +43,7 @@ namespace ConfigGen.Settings.Excel
         /// <exception cref="ArgumentException">Thown if the supplied settings file path string is zero length.</exception>
         public virtual DataSet GetSettingsDataSet(string settingsFilePath)
         {
-            if (settingsFilePath == null) throw new ArgumentNullException("settingsFilePath");
+            if (settingsFilePath == null) throw new ArgumentNullException(nameof(settingsFilePath));
             if (settingsFilePath.Length == 0) throw new ArgumentException("The supplied settings file path string cannot be zero length");
 
             var settingsFile = new FileInfo(settingsFilePath);

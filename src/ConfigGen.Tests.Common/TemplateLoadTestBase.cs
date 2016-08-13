@@ -55,12 +55,5 @@ namespace ConfigGen.Tests.Common
             var container = containerBuilder.Build();
             Subject = container.Resolve<TTemplate>();
         };
-
-        [NotNull]
-        protected static IEnumerable<Configuration> Configurations
-        {
-            get { return configurations ?? new[] { new Configuration("Test-IConfiguration", SingleConfiguration) }; }
-            set { configurations = value; }
-        }
     }
 }

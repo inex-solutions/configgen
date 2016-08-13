@@ -44,7 +44,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 
         It the_load_fails = () => Result.Success.ShouldBeFalse();
 
-        It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count().ShouldEqual(1);
+        It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count.ShouldEqual(1);
 
         It the_single_error_should_be_a_code_compilation_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeGenerationError);
     }
@@ -61,7 +61,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 
         It the_load_fails = () => Result.Success.ShouldBeFalse();
 
-        It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count().ShouldEqual(1);
+        It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count.ShouldEqual(1);
 
         It the_single_error_should_be_a_code_compilation_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeCompilationError);
     }

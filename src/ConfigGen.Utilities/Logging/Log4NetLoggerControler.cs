@@ -43,11 +43,6 @@ namespace ConfigGen.Utilities.Logging
             repository.RaiseConfigurationChanged(EventArgs.Empty);
         }
 
-        public void SetLoggingVerbosity()
-        {
-
-        }
-
         public void InitialiseLogging()
         {
 

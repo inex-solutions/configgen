@@ -35,22 +35,6 @@ namespace ConfigGen.Tests.Common.Extensions
     public static class GenerationResultsExtensions
     {
         [NotNull]
-        public static string ContentsOf([NotNull] this GenerationResults generationResults, [NotNull] string configurationName)
-        {
-            if (generationResults == null) throw new ArgumentNullException(nameof(generationResults));
-            if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
-
-            var match = generationResults.GeneratedFiles.FirstOrDefault(file => file.ConfigurationName == configurationName);
-
-            if (match == null)
-            {
-                throw new ConfigurationNotFoundException(configurationName);
-            }
-
-            return File.ReadAllText(match.FullPath);
-        }
-
-        [NotNull]
         public static SingleFileGenerationResult Configuration([NotNull] this GenerationResults generationResults, [NotNull] string configurationName)
         {
             if (generationResults == null) throw new ArgumentNullException(nameof(generationResults));
@@ -149,12 +133,6 @@ namespace ConfigGen.Tests.Common.Extensions
             }
 
             return results;
-        }
-
-        [NotNull]
-        public static IEnumerable<SingleFileGenerationResult> ShouldBeInDirectory([NotNull] this SingleFileGenerationResult result, [NotNull] Func<string, string, string> directoryName)
-        {
-            return ShouldBeInDirectory(new[] { result }, directoryName);
         }
 
         [NotNull]

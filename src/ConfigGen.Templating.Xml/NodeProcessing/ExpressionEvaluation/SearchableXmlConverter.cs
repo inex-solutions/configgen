@@ -36,26 +36,6 @@ namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
         /// <summary>
         /// Serialises the instance to "searchable" xml, writing this to the supplied writer.
         /// </summary>
-        /// <param name="configurations">Instance to serialise to "searchable" xml.</param>
-        /// <param name="xmlWriter">Writer onto which to serialise the supplied instance.</param>
-        public void ToSearchableXml([NotNull] IEnumerable<IConfiguration> configurations, [NotNull]XmlWriter xmlWriter)
-        {
-            xmlWriter.WriteStartElement("ConfigurationsRoot");
-            xmlWriter.WriteStartElement("Configurations");
-            foreach (var configuration in configurations)
-            {
-                if (configuration != null)
-                {
-                    ToSearchableXml(configuration, xmlWriter);
-                }
-            }
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndElement();
-        }
-
-        /// <summary>
-        /// Serialises the instance to "searchable" xml, writing this to the supplied writer.
-        /// </summary>
         /// <param name="configuration">Instance to serialise to "searchable" xml.</param>
         /// <param name="xmlWriter">Writer onto which to serialise the supplied instance.</param>
         public void ToSearchableXml([NotNull] IConfiguration configuration, [NotNull]XmlWriter xmlWriter)

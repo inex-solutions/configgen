@@ -192,19 +192,6 @@ namespace ConfigGen.Tests.Common.MSpec
                 _originalResult = originalResult;
                 _itemName = itemName;
             }
-
-            [NotNull]
-            public IEnumerable<KeyValuePair<string, string>> WithTheValue(string expectedValue)
-            {
-                var parameterValue = _originalResult.First(r => r.Key == _itemName).Value;
-
-                if (parameterValue != expectedValue)
-                {
-                    throw new SpecificationException($"Expected a value '{expectedValue}', but got '{parameterValue}'");
-                }
-
-                return _originalResult;
-            }
         }
     }
 }

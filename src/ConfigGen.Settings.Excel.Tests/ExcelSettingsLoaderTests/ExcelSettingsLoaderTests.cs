@@ -48,7 +48,7 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
             () => Result.Value.Get("Configuration1").ShouldNotBeNull();
 
         It Configuration1_should_contain_four_settings =
-            () => Result.Value.Get("Configuration1").Count().ShouldEqual(4);
+            () => Result.Value.Get("Configuration1").Count.ShouldEqual(4);
 
         It Configuration1_should_contain_the_correct_settings_and_values =
             () => Result.Value.Get("Configuration1").ShouldContainOnly(
@@ -61,7 +61,7 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
             () => Result.Value.Get("Configuration2").ShouldNotBeNull();
 
         It Configuration2_should_contain_four_settings =
-            () => Result.Value.Get("Configuration2").Count().ShouldEqual(4);
+            () => Result.Value.Get("Configuration2").Count.ShouldEqual(4);
 
         It Configuration2_should_contain_the_correct_settings_and_values =
             () => Result.Value.Get("Configuration2").ShouldContainOnly(
@@ -92,7 +92,7 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
             () => Result.Value.Get("Configuration1").ShouldNotBeNull();
 
         It Configuration1_should_contain_four_settings =
-            () => Result.Value.Get("Configuration1").Count().ShouldEqual(4);
+            () => Result.Value.Get("Configuration1").Count.ShouldEqual(4);
 
         It Configuration1_should_contain_the_correct_settings_and_values =
             () => Result.Value.Get("Configuration1").ShouldContainOnly(
@@ -105,7 +105,7 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
             () => Result.Value.Get("Configuration2").ShouldNotBeNull();
 
         It Configuration2_should_contain_four_settings =
-            () => Result.Value.Get("Configuration2").Count().ShouldEqual(4);
+            () => Result.Value.Get("Configuration2").Count.ShouldEqual(4);
 
         It Configuration2_should_contain_the_correct_settings_and_values =
             () => Result.Value.Get("Configuration2").ShouldContainOnly(

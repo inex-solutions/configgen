@@ -36,19 +36,6 @@ namespace ConfigGen.Utilities.Extensions
             return String.IsNullOrEmpty(s);
         }
 
-        /// <summary>
-        /// Returns the result of a <see cref="string.Format(string,object[])"/> operation on the supplied <paramref name="formatString"/>,
-        /// using the supplied <paramref name="args"/>.
-        /// </summary>
-        [NotNull]
-        public static string With([NotNull] this string formatString, [NotNull] params object[] args)
-        {
-            if (formatString == null) throw new ArgumentNullException(nameof(formatString));
-            if (args == null) throw new ArgumentNullException(nameof(args));
-
-            return String.Format(formatString, args);
-        }
-
         [NotNull]
         public static string ToDisplayText([CanBeNull] this object obj)
         {

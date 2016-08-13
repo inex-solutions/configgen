@@ -26,6 +26,7 @@ using Machine.Specifications;
 
 namespace ConfigGen.ConsoleApp.Tests.ConsoleRunnerTests
 {
+    [Subject(typeof(ConsoleRunner))]
     public abstract class ConsoleRunnerTestBase : MachineSpecificationTestBase<ConsoleRunner, int?>
     {
         protected const string HelpText = "ConfigGen help";

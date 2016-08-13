@@ -40,7 +40,7 @@ namespace ConfigGen.Settings.Excel
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="cellDataParser"/> is null.</exception>
         public SpreadsheetDataProcessor(ICellDataParser cellDataParser)
         {
-            if (cellDataParser == null) throw new ArgumentNullException("cellDataParser");
+            if (cellDataParser == null) throw new ArgumentNullException(nameof(cellDataParser));
             _cellDataParser = cellDataParser;
         }
 
@@ -59,8 +59,8 @@ namespace ConfigGen.Settings.Excel
             IList<ExcelColumnInfo> columnList,
             SpreadsheetPreferences spreadsheetPreferences)
         {
-            if (dataRows == null) throw new ArgumentNullException("dataRows");
-            if (columnList == null) throw new ArgumentNullException("columnList");
+            if (dataRows == null) throw new ArgumentNullException(nameof(dataRows));
+            if (columnList == null) throw new ArgumentNullException(nameof(columnList));
             _cellDataParser.SetParsingPreferences(spreadsheetPreferences.EmptyStringPlaceholder, spreadsheetPreferences.NullPlaceholder);
 
             int dataRowCount = 0;
@@ -106,15 +106,6 @@ namespace ConfigGen.Settings.Excel
             }
 
             return settings;
-        }
-
-        private static string ConvertToStringOrNull(object o)
-        {
-            if (o==null) return null;
-            if (o is DBNull) return null;
-            var s = o.ToString();
-            if (s.Trim().IsNullOrEmpty()) return null;
-            return s.Trim();
         }
     }
 }

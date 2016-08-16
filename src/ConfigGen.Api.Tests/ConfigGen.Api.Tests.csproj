@@ -63,10 +63,11 @@
     <Compile Include="FakeLocalEnvironment.cs" />
     <Compile Include="FileOutputTests\FileOutputTests.cs" />
     <Compile Include="FilteringTests\FilteringTests.cs" />
+    <Compile Include="PreferenceHandlingTests\PreferenceHandlingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleTests\SimpleTests.cs" />
     <Compile Include="TemplateTypeSelectionTests\TemplateTypeSelectionTests.cs" />
     <Compile Include="TokenUsageTests\TokenUsageTests.cs" />
+    <Compile Include="WarningAndErrorTests\WarningAndErrorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\samplefiles\SimpleSettings.FiveConfigurations.TwoValues.xls">

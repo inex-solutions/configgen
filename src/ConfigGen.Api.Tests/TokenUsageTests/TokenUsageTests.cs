@@ -33,6 +33,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
 {
     namespace RazorTemplate
     {
+        //TODO: Move to domain tests?
         //HACK: Not at all happy that this references ConfigGen.Templating.Razor
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {
@@ -72,6 +73,8 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
 
     namespace XmlTemplate
     {
+        //TODO: Move to domain tests?
+
         //HACK: Not at all happy that this references ConfigGen.Templating.Xml
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {

@@ -143,6 +143,22 @@ namespace ConfigGen.Tests.Common.MSpec
         /// Asserts the supplied result indicates success.
         /// </summary>
         [NotNull]
+        public static GenerateResult ShouldIndicateFailure([NotNull] this GenerateResult results)
+        {
+            if (results == null) throw new ArgumentNullException(nameof(results));
+
+            if (results.Errors.Any())
+            {
+                return results;
+            }
+
+            throw new SpecificationException($"Should indicate failure, but indicates success");
+        }
+
+        /// <summary>
+        /// Asserts the supplied result indicates success.
+        /// </summary>
+        [NotNull]
         public static LoadResult ShouldIndicateSuccess([NotNull] this LoadResult result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));

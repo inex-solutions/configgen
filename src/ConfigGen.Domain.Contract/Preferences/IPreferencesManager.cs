@@ -31,7 +31,7 @@ namespace ConfigGen.Domain.Contract.Preferences
 
         [NotNull]
         [ItemNotNull]
-        IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences);
+        IReadOnlyCollection<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences);
 
         void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance);
     }

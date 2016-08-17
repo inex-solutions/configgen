@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using ConfigGen.Tests.Common.Extensions;
@@ -63,7 +64,7 @@ namespace ConfigGen.Api.Tests.PreferenceHandlingTests
         {
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {"UnknownPreference", ""},
+                {"SomeUnknownPreference", ""},
                 {"AnotherUnknownPreference", ""}
             };
         };
@@ -74,25 +75,61 @@ namespace ConfigGen.Api.Tests.PreferenceHandlingTests
 
         It the_result_should_contain_two_errors = () => Result.Errors.Count().ShouldEqual(2);
 
-        It one_error_should_indicate_an_unrecognised_preference_for_one_supplied_preference = () => { };
+        It one_error_should_indicate_an_unrecognised_preference_for_one_supplied_preference =
+            () => Result.Errors.ShouldContainAnErrorWithCode("UnrecognisedPreference").AndDetailContaining("SomeUnknownPreference");
 
-        It one_error_should_indicate_an_unrecognised_preference_for_the_other_supplied_preference = () => { };
+        It one_error_should_indicate_an_unrecognised_preference_for_the_other_supplied_preference =
+            () => Result.Errors.ShouldContainAnErrorWithCode("UnrecognisedPreference").AndDetailContaining("AnotherUnknownPreference");
 
         It no_files_should_have_been_generated = () => Result.GeneratedFiles.ShouldBeEmpty();
     }
 
     [Subject(typeof(GenerationService))]
-    internal class when_invoked_with_a_preference_that_is_missing_its_value
+    internal class when_invoked_with_a_preference_that_is_missing_its_value : PreferenceHandlingTestBase
     {
+        Establish context = () =>
+        {
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
+            {
+                {"TemplateFile", ""},
+            };
+        };
 
+        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+        It the_result_indicates_failure = () => Result.ShouldIndicateFailure();
+
+        It the_result_should_contain_one_error = () => Result.Errors.Count().ShouldEqual(1);
+
+        It one_error_should_indicate_an_unrecognised_preference_for_one_supplied_preference =
+            () => Result.Errors.ShouldContainAnErrorWithCode("PreferenceValueMissing").AndDetailContaining("TemplateFile");
+
+        It no_files_should_have_been_generated = () => Result.GeneratedFiles.ShouldBeEmpty();
     }
 
     [Subject(typeof(GenerationService))]
-    internal class when_invoked_with_a_preference_and_a_correct_value
+    internal class when_invoked_with_a_preference_and_a_correct_value : PreferenceHandlingTestBase
     {
-        
+        Establish context = () =>
+        {
+            string templateFileName = "moved.App.Config.Template.xml";
+            File.Move("App.Config.Template.xml", templateFileName);
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
+            {
+                {"TemplateFile", templateFileName},
+            };
+        };
+
+        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+        It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+        It the_result_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+
+        It one_configuration_should_have_been_generated_as_per_the_supplied_settings_file = () => Result.GeneratedFiles.Count().ShouldEqual(1);
     }
 
+    //TODO: write these tests when we have a useful switch wired in!
     [Subject(typeof(GenerationService))]
     internal class when_invoked_with_a_switch_preference_and_no_value_specified
     {

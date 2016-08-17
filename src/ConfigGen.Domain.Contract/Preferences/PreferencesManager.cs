@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract.Preferences
@@ -79,7 +80,7 @@ namespace ConfigGen.Domain.Contract.Preferences
         public IEnumerable<IPreferenceGroup> KnownPreferenceGroups => _preferenceGroups.ToArray();
 
         [NotNull]
-        public IEnumerable<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences)
+        public IReadOnlyCollection<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
@@ -90,7 +91,7 @@ namespace ConfigGen.Domain.Contract.Preferences
                     .SelectMany(p => p.Preferences)
                     .Select(p => p.ShortName));
 
-            return preferences.Except(namesAndShortNames);
+            return preferences.Except(namesAndShortNames).ToReadOnlyCollection();
         }
 
         public void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance)

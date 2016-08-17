@@ -26,6 +26,7 @@ using System.Xml.Linq;
 using ConfigGen.Api;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Template;
+using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 using Machine.Specifications;
@@ -202,6 +203,60 @@ namespace ConfigGen.Tests.Common.MSpec
             }
 
             return actualXml;
+        }
+
+        public static ErrorAssertions ShouldContainAnErrorWithCode([NotNull] this IEnumerable<GenerationError> actual, string code)
+        {
+            if (actual == null) throw new ArgumentNullException(nameof(actual));
+
+            var actualList = actual.ToReadOnlyCollection();
+            var matches = actualList.Where(e => e.Code == code).ToReadOnlyCollection();
+
+            if (!matches.Any())
+            {
+                var allItemsMessage = actualList.Any() ? string.Join(",", actualList.Select(e => e.ToDisplayText())) : "(empty list)";
+                throw new SpecificationException($"Expected an error with code {code}, but had: {allItemsMessage}");
+            }
+
+            return new ErrorAssertions(matches, actualList, $"code='{code}'");
+        }
+
+        public class ErrorAssertions
+        {
+            [NotNull]
+            private readonly IReadOnlyCollection<GenerationError> _matchingItems;
+
+            [NotNull]
+            private readonly IReadOnlyCollection<GenerationError> _allItems;
+
+            [NotNull]
+            private readonly string _partialMatchDescription;
+
+            public ErrorAssertions(
+                [NotNull] IReadOnlyCollection<GenerationError> matchingItems, 
+                [NotNull] IReadOnlyCollection<GenerationError> allItems,
+                [NotNull] string partialMatchDescription)
+            {
+                if (matchingItems == null) throw new ArgumentNullException(nameof(matchingItems));
+                if (allItems == null) throw new ArgumentNullException(nameof(allItems));
+                if (partialMatchDescription == null) throw new ArgumentNullException(nameof(partialMatchDescription));
+
+                _matchingItems = matchingItems;
+                _allItems = allItems;
+                _partialMatchDescription = partialMatchDescription;
+            }
+
+            public void AndDetailContaining(string partialDescription)
+            {
+                var matches = _matchingItems.Where(e => e.Detail.Contains(partialDescription));
+
+                if (!matches.Any())
+                {
+                    var allItemsMessage = _allItems.Any() ? string.Join(",", _allItems.Select(e => e.ToDisplayText())) : "(empty list)";
+                    throw new SpecificationException(
+                        $"Expected an error with {_partialMatchDescription}, Description containing '{partialDescription}', but got: {allItemsMessage}");
+                }
+            }
         }
     }
 }

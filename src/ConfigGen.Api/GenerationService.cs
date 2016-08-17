@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Api
@@ -32,10 +33,17 @@ namespace ConfigGen.Api
         [NotNull]
         private readonly IConfigurationGenerator _generator;
 
-        public GenerationService([NotNull] IConfigurationGenerator generator)
+        private readonly IPreferencesManager _preferencesManager;
+
+        public GenerationService(
+            [NotNull] IConfigurationGenerator generator,
+            [NotNull] IPreferencesManager preferencesManager)
         {
             if (generator == null) throw new ArgumentNullException(nameof(generator));
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+
             _generator = generator;
+            _preferencesManager = preferencesManager;
         }
 
         [NotNull]
@@ -47,6 +55,15 @@ namespace ConfigGen.Api
 
         public GenerateResult Generate([NotNull] IDictionary<string, string> preferences)
         {
+            var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences.Keys);
+
+            if (unrecognisedPreferences.Any())
+            {
+                return new GenerateResult(
+                generatedFiles: Enumerable.Empty<GeneratedFile>(),
+                errors: unrecognisedPreferences.Select(p => new GenerationError("UnrecognisedPreference", "GenerationService", $"The following preference was unrecognised: {p}")));
+            }
+
             var result = _generator.GenerateConfigurations(preferences);
 
             return new GenerateResult(

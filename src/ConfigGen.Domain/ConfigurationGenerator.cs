@@ -105,9 +105,6 @@ namespace ConfigGen.Domain
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
-            //TODO - To API: Preferences stuff
-            var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences.Keys);
-
             var configGenerationPreferences = new ConfigurationGeneratorPreferences();
             _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
 

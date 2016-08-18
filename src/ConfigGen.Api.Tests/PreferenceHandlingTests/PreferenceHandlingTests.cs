@@ -25,6 +25,7 @@ using System.Linq;
 using System.Reflection;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Tests.Common.MSpec.GenerationError;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
@@ -85,29 +86,6 @@ namespace ConfigGen.Api.Tests.PreferenceHandlingTests
     }
 
     [Subject(typeof(GenerationService))]
-    internal class when_invoked_with_a_preference_that_is_missing_its_value : PreferenceHandlingTestBase
-    {
-        Establish context = () =>
-        {
-            PreferencesToSupplyToGenerator = new Dictionary<string, string>
-            {
-                {"TemplateFile", ""},
-            };
-        };
-
-        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
-
-        It the_result_indicates_failure = () => Result.ShouldIndicateFailure();
-
-        It the_result_should_contain_one_error = () => Result.Errors.Count().ShouldEqual(1);
-
-        It one_error_should_indicate_an_unrecognised_preference_for_one_supplied_preference =
-            () => Result.Errors.ShouldContainAnErrorWithCode("PreferenceValueMissing").AndDetailContaining("TemplateFile");
-
-        It no_files_should_have_been_generated = () => Result.GeneratedFiles.ShouldBeEmpty();
-    }
-
-    [Subject(typeof(GenerationService))]
     internal class when_invoked_with_a_preference_and_a_correct_value : PreferenceHandlingTestBase
     {
         Establish context = () =>
@@ -127,24 +105,5 @@ namespace ConfigGen.Api.Tests.PreferenceHandlingTests
         It the_result_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
 
         It one_configuration_should_have_been_generated_as_per_the_supplied_settings_file = () => Result.GeneratedFiles.Count().ShouldEqual(1);
-    }
-
-    //TODO: write these tests when we have a useful switch wired in!
-    [Subject(typeof(GenerationService))]
-    internal class when_invoked_with_a_switch_preference_and_no_value_specified
-    {
-        
-    }
-
-    [Subject(typeof(GenerationService))]
-    internal class when_invoked_with_a_switch_preference_and_an_explicit_true_value
-    {
-
-    }
-
-    [Subject(typeof(GenerationService))]
-    internal class when_invoked_with_a_switch_preference_and_an_explicit_false_value
-    {
-
     }
 }

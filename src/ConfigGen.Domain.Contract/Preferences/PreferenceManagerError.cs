@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,34 +19,22 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract.Preferences
 {
-    public interface IPreference
+    public class PreferenceManagerError : Error
     {
-        [NotNull]
-        string Name { get; }
+        public static readonly string PreferenceManagerErrorSource = "PreferenceManager";
 
-        [CanBeNull]
-        string ShortName { get; }
+        public PreferenceManagerError([NotNull] string code, [CanBeNull] string detail) : base(PreferenceManagerErrorSource, code, detail)
+        {
+        }
 
-        [NotNull]
-        string Description { get; }
-
-        [NotNull]
-        Type PreferenceInstanceType { get; }
-
-        [NotNull]
-        Type TargetPropertyType { get; }
-
-        IResult<object, string> TestValue(string value);
-    }
-
-    public interface IPreference<in TPreferences> : IPreference
-    {
-        void Set([NotNull] TPreferences target, [CanBeNull] string value);
+        public class Codes
+        {
+            public static readonly string UnrecognisedPreference = "UnrecognisedPreference";
+            public static readonly string InvalidPreferenceValue = "InvalidPreferenceValue";
+        }
     }
 }

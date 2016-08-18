@@ -54,7 +54,8 @@ namespace ConfigGen.Domain
             builder.RegisterType<StreamComparer>().As<IStreamComparer>();
             builder.RegisterType<FileOutputWriter>();
             builder.RegisterType<ConfigurationGeneratorPreferenceGroup>().As<IPreferenceGroup>();
-            builder.RegisterType<PreferencesManager>().As<IPreferencesManager>();
+
+            builder.RegisterType<PreferencesManager>().As<IPreferencesManager>().SingleInstance();
         }
     }
 }

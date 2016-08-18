@@ -20,13 +20,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using ConfigGen.Api;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 using Machine.Specifications;
@@ -36,94 +33,6 @@ namespace ConfigGen.Tests.Common.MSpec
 {
     public static class ShouldExtensions
     {
-        /// <summary>
-        /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.
-        /// </summary>
-        public static IEnumerable<GenerationError> ShouldContainSingleErrorWithCode(this IEnumerable<GenerationError> actual, string expectedErrorCode)
-        {
-            if (actual == null)
-            {
-                throw new SpecificationException("Expected error collection to contain a single item, but was null");
-            }
-
-            var actualArray = actual.ToArray();
-
-            var count = actualArray.Length;
-
-            if (count != 1)
-            {
-                throw new SpecificationException($"Expected error collection to contain a single item, but there were {count} items");
-            }
-
-            var error = actualArray[0];
-
-            if (error.Code != expectedErrorCode)
-            {
-                throw new SpecificationException($"Incorrect error code. Expected {expectedErrorCode}, but was {error.Code} (\"{error.Detail}\")");
-            }
-
-            return actual;
-        }
-
-        /// <summary>
-        /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.
-        /// </summary>
-        public static IEnumerable<Error> ShouldContainSingleErrorWithCode(this IEnumerable<Error> actual, string expectedErrorCode)
-        {
-            if (actual == null)
-            {
-                throw new SpecificationException("Expected error collection to contain a single item, but was null");
-            }
-
-            var actualArray = actual.ToArray();
-
-            var count = actualArray.Length;
-
-            if (count != 1)
-            {
-                throw new SpecificationException($"Expected error collection to contain a single item, but there were {count} items");
-            }
-
-            var error = actualArray[0];
-
-            if (error.Code != expectedErrorCode)
-            {
-                throw new SpecificationException($"Incorrect error code. Expected {expectedErrorCode}, but was {error.Code} (\"{error.Detail}\")");
-            }
-
-            return actual;
-        }
-
-        /// <summary>
-        /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry detail contains
-        /// the specified text.
-        /// </summary>
-        public static Error ShouldContainSingleErrorWithText(this IEnumerable<Error> actual, string partialErrorMessage)
-        {
-            if (actual == null)
-            {
-                throw new SpecificationException("Expected error collection to contain a single item, but was null");
-            }
-
-            var actualArray = actual.ToArray();
-
-            var count = actualArray.Length;
-
-            if (count != 1)
-            {
-                throw new SpecificationException($"Expected error collection to contain a single item, but there were {count} items");
-            }
-
-            var error = actualArray[0];
-
-            if (!error.Detail.Contains(partialErrorMessage))
-            {
-                throw new SpecificationException($"Error detail should have contained string {partialErrorMessage}, but was {error.Detail}");
-            }
-
-            return error;
-        }
-
         /// <summary>
         /// Asserts the supplied result indicates success.
         /// </summary>
@@ -203,60 +112,6 @@ namespace ConfigGen.Tests.Common.MSpec
             }
 
             return actualXml;
-        }
-
-        public static ErrorAssertions ShouldContainAnErrorWithCode([NotNull] this IEnumerable<GenerationError> actual, string code)
-        {
-            if (actual == null) throw new ArgumentNullException(nameof(actual));
-
-            var actualList = actual.ToReadOnlyCollection();
-            var matches = actualList.Where(e => e.Code == code).ToReadOnlyCollection();
-
-            if (!matches.Any())
-            {
-                var allItemsMessage = actualList.Any() ? string.Join(",", actualList.Select(e => e.ToDisplayText())) : "(empty list)";
-                throw new SpecificationException($"Expected an error with code {code}, but had: {allItemsMessage}");
-            }
-
-            return new ErrorAssertions(matches, actualList, $"code='{code}'");
-        }
-
-        public class ErrorAssertions
-        {
-            [NotNull]
-            private readonly IReadOnlyCollection<GenerationError> _matchingItems;
-
-            [NotNull]
-            private readonly IReadOnlyCollection<GenerationError> _allItems;
-
-            [NotNull]
-            private readonly string _partialMatchDescription;
-
-            public ErrorAssertions(
-                [NotNull] IReadOnlyCollection<GenerationError> matchingItems, 
-                [NotNull] IReadOnlyCollection<GenerationError> allItems,
-                [NotNull] string partialMatchDescription)
-            {
-                if (matchingItems == null) throw new ArgumentNullException(nameof(matchingItems));
-                if (allItems == null) throw new ArgumentNullException(nameof(allItems));
-                if (partialMatchDescription == null) throw new ArgumentNullException(nameof(partialMatchDescription));
-
-                _matchingItems = matchingItems;
-                _allItems = allItems;
-                _partialMatchDescription = partialMatchDescription;
-            }
-
-            public void AndDetailContaining(string partialDescription)
-            {
-                var matches = _matchingItems.Where(e => e.Detail.Contains(partialDescription));
-
-                if (!matches.Any())
-                {
-                    var allItemsMessage = _allItems.Any() ? string.Join(",", _allItems.Select(e => e.ToDisplayText())) : "(empty list)";
-                    throw new SpecificationException(
-                        $"Expected an error with {_partialMatchDescription}, Description containing '{partialDescription}', but got: {allItemsMessage}");
-                }
-            }
         }
     }
 }

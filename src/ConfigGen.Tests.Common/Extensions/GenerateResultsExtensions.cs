@@ -25,7 +25,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ConfigGen.Api;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Tests.Common.MSpec;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;

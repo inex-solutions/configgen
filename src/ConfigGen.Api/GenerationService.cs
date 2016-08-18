@@ -22,8 +22,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Api
@@ -36,40 +38,55 @@ namespace ConfigGen.Api
         private readonly IPreferencesManager _preferencesManager;
         [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
+        [NotNull]
+        private readonly ILogger _logger;
+        [NotNull]
+        private readonly ILoggerControler _loggerController;
 
         public GenerationService(
             [NotNull] IConfigurationGenerator generator,
             [NotNull] IPreferencesManager preferencesManager,
-            [NotNull] ITokenUsageTracker tokenUsageTracker)
+            [NotNull] ITokenUsageTracker tokenUsageTracker,
+            [NotNull] ILogger logger,
+            [NotNull] ILoggerControler loggerController)
         {
             if (generator == null) throw new ArgumentNullException(nameof(generator));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
 
             _generator = generator;
             _preferencesManager = preferencesManager;
             _tokenUsageTracker = tokenUsageTracker;
+            _logger = logger;
+            _loggerController = loggerController;
         }
 
         [NotNull]
         [ItemNotNull]
         public IEnumerable<PreferenceGroupInfo> GetPreferences()
         {
-            return _generator.GetPreferenceGroups().Select(pg => pg.ToPreferenceGroupInfo());
+            return _preferencesManager.KnownPreferenceGroups.Select(pg => pg.ToPreferenceGroupInfo());
         }
 
         public GenerateResult Generate([NotNull] IDictionary<string, string> preferences)
         {
-            var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences.Keys);
+            var applyErrors = _preferencesManager.ApplyPreferences(preferences);
 
-            if (unrecognisedPreferences.Any())
+            if (applyErrors.Any())
             {
                 return new GenerateResult(
                 generatedFiles: Enumerable.Empty<GeneratedFile>(),
-                errors: unrecognisedPreferences.Select(p => new GenerationError("UnrecognisedPreference", "GenerationService", $"The following preference was unrecognised: {p}")));
+                errors: applyErrors.Select(p => new GenerationError(p.Code, "GenerationService", p.Detail)));
             }
 
-            var result = _generator.GenerateConfigurations(preferences);
+            //TODO: doesn't belong here
+            var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
+            _loggerController.SetLoggingVerbosity(configGenerationPreferences.Verbosity);
+            _logger.Debug("Verbose logging enabled");
+
+            var result = _generator.GenerateConfigurations();
 
             var generatedFiles = new List<GeneratedFile>();
 

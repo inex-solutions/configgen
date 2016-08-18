@@ -30,9 +30,12 @@ namespace ConfigGen.Domain.Contract.Preferences
         IEnumerable<IPreferenceGroup> KnownPreferenceGroups { get; }
 
         [NotNull]
-        [ItemNotNull]
-        IReadOnlyCollection<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences);
+        IEnumerable<Error> ApplyPreferences([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences);
 
-        void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance);
+        [NotNull]
+        IEnumerable<Error> ApplyDefaultPreferences([NotNull] IEnumerable<KeyValuePair<string, string>> defaultPreferences);
+
+        [CanBeNull]
+        TPreferenceType GetPreferenceInstance<TPreferenceType>() where TPreferenceType : new();
     }
 }

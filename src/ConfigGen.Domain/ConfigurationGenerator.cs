@@ -29,7 +29,6 @@ using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
-using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -39,12 +38,6 @@ namespace ConfigGen.Domain
     {
         [NotNull]
         private readonly IPreferencesManager _preferencesManager;
-
-        [NotNull]
-        private readonly ILogger _logger;
-
-        [NotNull]
-        private readonly ILoggerControler _loggerController;
 
         [NotNull]
         private readonly TemplateFactory _templateFactory;
@@ -66,9 +59,7 @@ namespace ConfigGen.Domain
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
             [NotNull] IConfigurationFactory configurationFactory,
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
-            [NotNull] FileOutputWriter fileOutputWriter,
-            [NotNull] ILogger logger,
-            [NotNull] ILoggerControler loggerController)
+            [NotNull] FileOutputWriter fileOutputWriter)
         {
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
@@ -76,8 +67,6 @@ namespace ConfigGen.Domain
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
 
             _templateFactory = templateFactory;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
@@ -85,28 +74,20 @@ namespace ConfigGen.Domain
             _configurationCollectionFilter = configurationCollectionFilter;
             _fileOutputWriter = fileOutputWriter;
              _preferencesManager = preferencesManager;
-            _logger = logger;
-            _loggerController = loggerController;
         }
 
-        [NotNull]
-        public IEnumerable<IPreferenceGroup> GetPreferenceGroups()
+        public GenerationResults GenerateConfigurations()
         {
-            return _preferencesManager.KnownPreferenceGroups;
-        }
-
-        public GenerationResults GenerateConfigurations([NotNull] IDictionary<string, string> preferences)
-        {
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            var configGenerationPreferences = new ConfigurationGeneratorPreferences();
-            _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
-
-            //TODO - To API: Logging stuff
-            _loggerController.SetLoggingVerbosity(configGenerationPreferences.Verbosity);
-            _logger.Debug("Verbose logging enabled");
+            var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
 
             //TODO - To API: Template Load stuff
+            if (!File.Exists(configGenerationPreferences.TemplateFilePath))
+            {
+                return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                         ConfigurationGeneratorErrorCodes.TemplateFileNotFound,
+                         $"The specified template file was not found: {configGenerationPreferences.TemplateFileType}"));
+            }
+
             ITemplate template;
             var templateFileExtension = new FileInfo(configGenerationPreferences.TemplateFilePath).Extension;
             TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(templateFileExtension, configGenerationPreferences.TemplateFileType, out template);
@@ -126,6 +107,13 @@ namespace ConfigGen.Domain
 
             //TODO - To API: Settings Load stuff
             ISettingsLoader settingsLoader;
+            if (!File.Exists(configGenerationPreferences.SettingsFilePath))
+            {
+                return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                    ConfigurationGeneratorErrorCodes.SettingsFileNotFound,
+                    $"The specified settings file was not found: {configGenerationPreferences.TemplateFileType}"));
+            }
+
             var settingsFile = new FileInfo(configGenerationPreferences.SettingsFilePath);
             string settingsFileExtension = settingsFile.Extension;
             
@@ -163,8 +151,7 @@ namespace ConfigGen.Domain
 
             IEnumerable<IConfiguration> configurations = configurationCreationResult.Value;
 
-            var configurationCollectionFilterPreferences = new ConfigurationCollectionFilterPreferences();
-            _preferencesManager.ApplyPreferences(preferences, configurationCollectionFilterPreferences);
+            var configurationCollectionFilterPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationCollectionFilterPreferences>();
 
             var globallyUsedTokens = new HashSet<string>();
 
@@ -173,8 +160,7 @@ namespace ConfigGen.Domain
                 configurations,
                 token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
 
-            var fileOutputPreferences = new FileOutputPreferences();
-            _preferencesManager.ApplyPreferences(preferences, fileOutputPreferences); //TODO: Move to a Pure method with a DeepCLone for preferences?
+            var fileOutputPreferences = _preferencesManager.GetPreferenceInstance<FileOutputPreferences>();
 
             //TODO: make this pipeline async and parallelised
             //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)

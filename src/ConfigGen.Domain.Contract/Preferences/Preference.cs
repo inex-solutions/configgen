@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract.Preferences
@@ -77,6 +78,19 @@ namespace ConfigGen.Domain.Contract.Preferences
 
             TTarget actualValue = _parseAction(value);
             _setAction(actualValue, target);
+        }
+
+        public IResult<object, string> TestValue(string value)
+        {
+            try
+            {
+                TTarget actualValue = _parseAction(value);
+                return Result<object, string>.CreateSuccessResult(actualValue);
+            }
+            catch (Exception ex)
+            {
+                return Result<object, string>.CreateFailureResult($"{ex.Message}");
+            }
         }
     }
 }

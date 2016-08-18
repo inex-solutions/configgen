@@ -56,13 +56,17 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Preferences\PreferencesTests.cs" />
+    <Compile Include="PreferenceManagerTests\PreferenceManagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
       <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Tests.Common\ConfigGen.Tests.Common.csproj">
+      <Project>{3FEBFF76-6425-454A-BEF3-5ACB437B6A5D}</Project>
+      <Name>ConfigGen.Tests.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

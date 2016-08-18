@@ -22,7 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Utilities;
+using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract.Preferences
@@ -34,7 +34,13 @@ namespace ConfigGen.Domain.Contract.Preferences
         private readonly IPreferenceGroup[] _preferenceGroups;
 
         [NotNull]
-        private readonly Dictionary<Type, Dictionary<string, IPreference>> _preferencesByType;
+        private readonly Dictionary<IPreference, string> _appliedPreferences = new Dictionary<IPreference, string>();
+
+        [NotNull]
+        private readonly Dictionary<IPreference, string> _defaultPreferences = new Dictionary<IPreference, string>();
+
+        [NotNull]
+        private readonly Dictionary<string, IPreference> _preferencesByName;
 
         public PreferencesManager([NotNull] [ItemNotNull] params IPreferenceGroup[] preferenceGroups)
         {
@@ -43,6 +49,8 @@ namespace ConfigGen.Domain.Contract.Preferences
 
             _preferenceGroups = preferenceGroups;
 
+
+            //TODO: cleanup - too much repetition...
             var names = preferenceGroups
                 .SelectMany(p => p.Preferences)
                 .Select(p => p.Name);
@@ -56,7 +64,7 @@ namespace ConfigGen.Domain.Contract.Preferences
 
             IEnumerable<string> tooMany = allNames
                 .GroupBy(p => p, p => p)
-                .Select(p => new {Key = p.Key, Count = p.Count()})
+                .Select(p => new { Key = p.Key, Count = p.Count() })
                 .Where(p => p.Count > 1)
                 .Select(p => p.Key)
                 .ToList();
@@ -64,65 +72,120 @@ namespace ConfigGen.Domain.Contract.Preferences
             if (tooMany.Any())
             {
                 throw new PreferencesManagerInitialisationException(
-                    $"The following preference names/short names are duplicated across preference groups: {string.Join(",", tooMany)}" );
+                    $"The following preference names/short names are duplicated across preference groups: {string.Join(",", tooMany)}");
             }
 
-            _preferencesByType = preferenceGroups
-                .SelectMany(pg => pg.Preferences)
-                .GroupBy(p => p.PreferenceInstanceType, preference => preference)
-                .ToDictionary(g => g.Key,  // "outer" dictionary key is the preference instance type
-                    g => g.Select(p => p).ToDictionary(p => p.Name) // "inner" dictionary, has two entries per preference, one for short name, one for name
-                        .Concat(g.Select(p => p).Where(p => p.ShortName != null).ToDictionary(p => p.ShortName))
-                        .ToDictionary(x => x.Key, x => x.Value));
+            _preferencesByName = new Dictionary<string, IPreference>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var preference in preferenceGroups.SelectMany(p => p.Preferences))
+            {
+                _preferencesByName.Add(preference.Name, preference);
+
+                if (!preference.ShortName.IsNullOrEmpty())
+                {
+                    _preferencesByName.Add(preference.ShortName, preference);
+                }
+            }
         }
 
         [NotNull]
         public IEnumerable<IPreferenceGroup> KnownPreferenceGroups => _preferenceGroups.ToArray();
 
         [NotNull]
-        public IReadOnlyCollection<string> GetUnrecognisedPreferences([NotNull] IEnumerable<string> preferences)
-        {
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            var namesAndShortNames = _preferenceGroups
-                .SelectMany(p => p.Preferences)
-                .Select(p => p.Name)
-                .Concat(_preferenceGroups
-                    .SelectMany(p => p.Preferences)
-                    .Select(p => p.ShortName));
-
-            return preferences.Except(namesAndShortNames).ToReadOnlyCollection();
-        }
-
-        public void ApplyPreferences<TPreferenceType>([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences, [NotNull] TPreferenceType preferenceInstance)
+        public IEnumerable<Error> ApplyPreferences([NotNull] IEnumerable<KeyValuePair<string, string>> suppliedPreferences)
         {
             if (suppliedPreferences == null) throw new ArgumentNullException(nameof(suppliedPreferences));
-            if (preferenceInstance == null) throw new ArgumentNullException(nameof(preferenceInstance));
 
-            Dictionary<string, IPreference> preferencesForPreferenceType;
-
-            if (!_preferencesByType.TryGetValue(typeof(TPreferenceType), out preferencesForPreferenceType))
-            {
-                return;
-            }
+            var errors = new List<Error>();
 
             foreach (var suppliedPreference in suppliedPreferences)
             {
-                IPreference preference;
-
-                if (preferencesForPreferenceType.TryGetValue(suppliedPreference.Key, out preference))
+                IPreference matchingPreference;
+                if (!_preferencesByName.TryGetValue(suppliedPreference.Key, out matchingPreference))
                 {
-                    if (preference.TargetPropertyType == typeof(bool))
+                    errors.Add(new PreferenceManagerError(PreferenceManagerError.Codes.UnrecognisedPreference, $"Preference '{suppliedPreference.Key}' was not recognised"));
+                }
+                else
+                {
+                    var value = suppliedPreference.Value;
+                    if (value.IsNullOrEmpty()
+                        && matchingPreference.TargetPropertyType == typeof(bool))
                     {
-                        // Special case foor boolean - treat as a switch; ie specifying the preference with no value sets to true
-                        ((IPreference<TPreferenceType>)preference).Set(preferenceInstance, suppliedPreference.Value ?? true.ToString());
+                        value = true.ToString();
+                    }
+
+                    var testResult = matchingPreference.TestValue(value);
+                    if (testResult.Success)
+                    {
+                        _appliedPreferences[matchingPreference] = value;
                     }
                     else
                     {
-                        ((IPreference<TPreferenceType>)preference).Set(preferenceInstance, suppliedPreference.Value);
+                        errors.Add(new PreferenceManagerError(
+                            PreferenceManagerError.Codes.InvalidPreferenceValue, 
+                            $"'{suppliedPreference.Value}' is an invalid value for preference '{matchingPreference.Name}': {testResult.Error}"));
                     }
                 }
             }
+
+            return errors;
+        }
+
+        [NotNull]
+        public IEnumerable<Error> ApplyDefaultPreferences([NotNull]IEnumerable<KeyValuePair<string, string>> defaultPreferences)
+        {
+            if (defaultPreferences == null) throw new ArgumentNullException(nameof(defaultPreferences));
+
+            var errors = new List<Error>();
+
+            foreach (var defaultPreference in defaultPreferences)
+            {
+                IPreference matchingPreference;
+                if (!_preferencesByName.TryGetValue(defaultPreference.Key, out matchingPreference))
+                {
+                    errors.Add(new PreferenceManagerError(PreferenceManagerError.Codes.UnrecognisedPreference, $"Preference '{defaultPreference.Key}' was not recognised"));
+                }
+                else
+                {
+                    var value = defaultPreference.Value;
+                    if (value.IsNullOrEmpty()
+                        && matchingPreference.TargetPropertyType == typeof(bool))
+                    {
+                        value = true.ToString();
+                    }
+
+                    var testResult = matchingPreference.TestValue(value);
+                    if (testResult.Success)
+                    {
+                        _defaultPreferences[matchingPreference] = value;
+                    }
+                    else
+                    {
+                        errors.Add(new PreferenceManagerError(
+                            PreferenceManagerError.Codes.InvalidPreferenceValue,
+                            $"'{defaultPreference.Value}' is an invalid value for preference '{matchingPreference.Name}': {testResult.Error}"));
+                    }
+                }
+            }
+
+            return errors;
+        }
+
+        [NotNull]
+        public TPreferenceType GetPreferenceInstance<TPreferenceType>() where TPreferenceType : new()
+        {
+            var instance = new TPreferenceType();
+
+            var defaultPreferences = _defaultPreferences.Where(p => p.Key.PreferenceInstanceType == typeof(TPreferenceType));
+            var appliedPreferences = _appliedPreferences.Where(p => p.Key.PreferenceInstanceType == typeof(TPreferenceType) && !_defaultPreferences.ContainsKey(p.Key));
+
+            foreach (var preferenceToApply in defaultPreferences.Union(appliedPreferences))
+            {
+                var preference = (IPreference<TPreferenceType>) preferenceToApply.Key;
+                preference.Set(instance, preferenceToApply.Value);
+            }
+
+            return instance;
         }
     }
 }

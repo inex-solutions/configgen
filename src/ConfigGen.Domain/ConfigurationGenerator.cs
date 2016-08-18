@@ -47,9 +47,6 @@ namespace ConfigGen.Domain
         private readonly ILoggerControler _loggerController;
 
         [NotNull]
-        private readonly ITokenUsageTracker _tokenUsageTracker;
-
-        [NotNull]
         private readonly TemplateFactory _templateFactory;
 
         [NotNull]
@@ -71,8 +68,7 @@ namespace ConfigGen.Domain
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
             [NotNull] FileOutputWriter fileOutputWriter,
             [NotNull] ILogger logger,
-            [NotNull] ILoggerControler loggerController,
-            [NotNull] ITokenUsageTracker tokenUsageTracker)
+            [NotNull] ILoggerControler loggerController)
         {
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
@@ -82,7 +78,6 @@ namespace ConfigGen.Domain
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (logger == null) throw new ArgumentNullException(nameof(logger));
             if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
-            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _templateFactory = templateFactory;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
@@ -92,7 +87,6 @@ namespace ConfigGen.Domain
              _preferencesManager = preferencesManager;
             _logger = logger;
             _loggerController = loggerController;
-            _tokenUsageTracker = tokenUsageTracker;
         }
 
         [NotNull]
@@ -203,15 +197,10 @@ namespace ConfigGen.Domain
                        renderResult,
                        fileOutputPreferences);
 
-                    TokenUsageStatistics tokenUsageStatistics = _tokenUsageTracker.GetTokenUsageStatistics(configuration);
-
                     singleFileGenerationResults.Add(
                         new SingleFileGenerationResult(
                             renderResult.Configuration,
                             writeResults.FullPath,
-                            tokenUsageStatistics.UsedTokens, //TODO - To API: Token Usage stuff
-                            tokenUsageStatistics.UnusedTokens,
-                            tokenUsageStatistics.UnrecognisedTokens,
                             renderResult.Errors,
                             writeResults.FileChanged,
                             writeResults.WasWritten));

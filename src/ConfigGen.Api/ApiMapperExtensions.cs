@@ -31,15 +31,17 @@ namespace ConfigGen.Api
     public static class ApiMapperExtensions
     {
         [NotNull]
-        public static GeneratedFile ToGeneratedFile([NotNull] this SingleFileGenerationResult result)
+        public static GeneratedFile ToGeneratedFile([NotNull] this SingleFileGenerationResult result, [NotNull] TokenUsageStatistics tokenUsageStatistics)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
+            if (tokenUsageStatistics == null) throw new ArgumentNullException(nameof(tokenUsageStatistics));
+
             return new GeneratedFile(
                 result.ConfigurationName, 
                 result.FullPath,
-                result.UsedTokens,
-                result.UnusedTokens,
-                result.UnrecognisedTokens, 
+                tokenUsageStatistics.UsedTokens,
+                tokenUsageStatistics.UnusedTokens,
+                tokenUsageStatistics.UnrecognisedTokens, 
                 new List<GenerationError>(), //TODO: fill this in
                 result.HasChanged);
         }

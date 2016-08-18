@@ -32,18 +32,23 @@ namespace ConfigGen.Api
     {
         [NotNull]
         private readonly IConfigurationGenerator _generator;
-
+        [NotNull]
         private readonly IPreferencesManager _preferencesManager;
+        [NotNull]
+        private readonly ITokenUsageTracker _tokenUsageTracker;
 
         public GenerationService(
             [NotNull] IConfigurationGenerator generator,
-            [NotNull] IPreferencesManager preferencesManager)
+            [NotNull] IPreferencesManager preferencesManager,
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (generator == null) throw new ArgumentNullException(nameof(generator));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _generator = generator;
             _preferencesManager = preferencesManager;
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
         [NotNull]
@@ -66,8 +71,16 @@ namespace ConfigGen.Api
 
             var result = _generator.GenerateConfigurations(preferences);
 
+            var generatedFiles = new List<GeneratedFile>();
+
+            foreach (var generatedFile in result.GeneratedFiles)
+            {
+                TokenUsageStatistics tokenUsageStatistics = _tokenUsageTracker.GetTokenUsageStatistics(generatedFile.Configuration);
+                generatedFiles.Add(generatedFile.ToGeneratedFile(tokenUsageStatistics));
+            }
+
             return new GenerateResult(
-                generatedFiles: result.GeneratedFiles.Select(gf => gf.ToGeneratedFile()),
+                generatedFiles: generatedFiles,
                 errors: result.Errors.Select(e => e.ToGenerationError()));
         } 
     }

@@ -22,7 +22,6 @@
 using System;
 using System.Linq;
 using ConfigGen.Api;
-using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 

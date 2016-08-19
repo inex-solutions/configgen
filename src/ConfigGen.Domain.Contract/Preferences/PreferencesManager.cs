@@ -176,8 +176,8 @@ namespace ConfigGen.Domain.Contract.Preferences
         {
             var instance = new TPreferenceType();
 
-            var defaultPreferences = _defaultPreferences.Where(p => p.Key.PreferenceInstanceType == typeof(TPreferenceType));
-            var appliedPreferences = _appliedPreferences.Where(p => p.Key.PreferenceInstanceType == typeof(TPreferenceType) && !_defaultPreferences.ContainsKey(p.Key));
+            var appliedPreferences = _appliedPreferences.Where(p => p.Key.PreferenceInstanceType == typeof(TPreferenceType));
+            var defaultPreferences = _defaultPreferences.Where(p => p.Key.PreferenceInstanceType == typeof(TPreferenceType) && !_appliedPreferences.ContainsKey(p.Key));
 
             foreach (var preferenceToApply in defaultPreferences.Union(appliedPreferences))
             {

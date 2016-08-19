@@ -20,7 +20,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
@@ -30,22 +29,6 @@ namespace ConfigGen.Api
 {
     public static class ApiMapperExtensions
     {
-        [NotNull]
-        public static GeneratedFile ToGeneratedFile([NotNull] this SingleFileGenerationResult result, [NotNull] TokenUsageStatistics tokenUsageStatistics)
-        {
-            if (result == null) throw new ArgumentNullException(nameof(result));
-            if (tokenUsageStatistics == null) throw new ArgumentNullException(nameof(tokenUsageStatistics));
-
-            return new GeneratedFile(
-                result.ConfigurationName, 
-                result.FullPath,
-                tokenUsageStatistics.UsedTokens,
-                tokenUsageStatistics.UnusedTokens,
-                tokenUsageStatistics.UnrecognisedTokens, 
-                new List<GenerationError>(), //TODO: fill this in
-                result.HasChanged);
-        }
-
         [NotNull]
         public static GenerationError ToGenerationError([NotNull] this Error error)
         {

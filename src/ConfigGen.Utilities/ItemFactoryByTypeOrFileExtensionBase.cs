@@ -21,12 +21,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities
 {
     //TODO: awful name, no documentation
-    public class ItemFactoryByTypeOrExtensionBase<TItem>
+    public class ItemFactoryByTypeOrFileExtensionBase<TItem>
     {
         [NotNull]
         private readonly Dictionary<string, Func<TItem>> _itemFactoriesByType = new Dictionary<string, Func<TItem>>();
@@ -34,7 +35,7 @@ namespace ConfigGen.Utilities
         [NotNull]
         private readonly Dictionary<string, Func<TItem>> _itemFactoriesByExtension = new Dictionary<string, Func<TItem>>();
 
-        public ItemFactoryByTypeOrExtensionBase(
+        public ItemFactoryByTypeOrFileExtensionBase(
             [NotNull]Func<TItem>[] itemFactories,
             [NotNull]Func<TItem, string> getType,
             [NotNull]Func<TItem, string[]> getExtensions)
@@ -63,11 +64,19 @@ namespace ConfigGen.Utilities
             }
         }
 
-        public TryCreateResult TryCreateItem([NotNull] string extension, [CanBeNull] string type, out TItem item)
+        public TryCreateResult TryCreateItem([NotNull] string path, [CanBeNull] string type, out TItem item)
         {
-            if (extension == null) throw new ArgumentNullException(nameof(extension));
+            if (path == null) throw new ArgumentNullException(nameof(path));
 
             item = default(TItem);
+
+            if (!File.Exists(path))
+            {
+                return TryCreateResult.FileNotFound;
+            }
+
+            string extension = new FileInfo(path).Extension;
+
             Func<TItem> itemFactory;
             if (type == null)
             {
@@ -96,5 +105,6 @@ namespace ConfigGen.Utilities
         Success,
         FailedByType,
         FailedByExtension,
+        FileNotFound
     }
 }

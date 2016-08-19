@@ -33,6 +33,7 @@ namespace ConfigGen.Api
             [NotNull] IEnumerable<string> usedTokens,
             [NotNull] IEnumerable<string> unusedTokens,
             [NotNull] IEnumerable<string> unrecognisedTokens,
+            [NotNull] IEnumerable<GenerationWarning> warnings,
             [NotNull] IEnumerable<GenerationError> errors, 
             bool hasChanged)
         {
@@ -41,6 +42,7 @@ namespace ConfigGen.Api
             if (usedTokens == null) throw new ArgumentNullException(nameof(usedTokens));
             if (unusedTokens == null) throw new ArgumentNullException(nameof(unusedTokens));
             if (unrecognisedTokens == null) throw new ArgumentNullException(nameof(unrecognisedTokens));
+            if (warnings == null) throw new ArgumentNullException(nameof(warnings));
             if (errors == null) throw new ArgumentNullException(nameof(errors));
 
             ConfigurationName = configurationName;
@@ -49,6 +51,7 @@ namespace ConfigGen.Api
             UnusedTokens = unusedTokens;
             UnrecognisedTokens = unrecognisedTokens;
             Errors = errors;
+            Warnings = warnings;
             HasChanged = hasChanged;
         }
 
@@ -63,6 +66,10 @@ namespace ConfigGen.Api
         [NotNull]
         [ItemNotNull]
         public IEnumerable<GenerationError> Errors { get; }
+
+        [NotNull]
+        [ItemNotNull]
+        public IEnumerable<GenerationWarning> Warnings { get; }
 
         [NotNull]
         [ItemNotNull]

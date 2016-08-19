@@ -20,18 +20,41 @@
 #endregion
 
 using System;
-using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Domain
+namespace ConfigGen.Api
 {
-    public class TemplateFactory : ItemFactoryByTypeOrFileExtensionBase<ITemplate>
+    public class GenerationWarning : IDisplayText
     {
-        public TemplateFactory(
-            [NotNull] Func<ITemplate>[] itemFactories) 
-            : base(itemFactories, template => template.TemplateType , template => template.SupportedExtensions)
+        public GenerationWarning([NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
         {
+            if (code == null) throw new ArgumentNullException(nameof(code));
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (detail == null) throw new ArgumentNullException(nameof(detail));
+
+            Code = code;
+            Source = source;
+            Detail = detail;
+        }
+
+        [NotNull]
+        public string Code { get; }
+
+        [NotNull]
+        public string Source { get; }
+
+        [CanBeNull]
+        public string Detail { get; }
+
+        public override string ToString()
+        {
+            return $"WARNING: {ToDisplayText()}";
+        }
+
+        public string ToDisplayText()
+        {
+            return Detail ?? "'{Code}' in '{Source}";
         }
     }
 }

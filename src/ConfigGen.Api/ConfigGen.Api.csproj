@@ -57,7 +57,9 @@
     <Compile Include="GenerateResult.cs" />
     <Compile Include="GenerationError.cs" />
     <Compile Include="GenerationService.cs" />
+    <Compile Include="GenerationServiceErrorCodes.cs" />
     <Compile Include="GenerationServiceModule.cs" />
+    <Compile Include="GenerationWarning.cs" />
     <Compile Include="IGenerationService.cs" />
     <Compile Include="PreferenceGroupInfo.cs" />
     <Compile Include="PreferenceInfo.cs" />

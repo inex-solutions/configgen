@@ -433,7 +433,7 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
 
         Because of = () =>
         {
-            Subject.ApplyPreferences(new Dictionary<string, string> { { "Name", "Rob1" } });
+            Subject.ApplyDefaultPreferences(new Dictionary<string, string> { { "Name", "Rob1" } });
             ApplyDefaultErrors = Subject.ApplyDefaultPreferences(new Dictionary<string, string> { { "Name", "Rob2" } });
             Result = Subject.GetPreferenceInstance<PersonPreferences>();
         };
@@ -503,7 +503,7 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
 
         It the_error_collection_returned_from_apply_default_should_be_empty = () => ApplyDefaultErrors.ShouldBeEmpty();
 
-        It the_corresponding_property_on_the_preference_instance_should_contain_default_value = () => Result.PersonName.ShouldEqual("Rob-Default");
+        It the_corresponding_property_on_the_preference_instance_should_contain_overridden_non_default_value = () => Result.PersonName.ShouldEqual("Rob");
     }
 
     public class when_a_default_preference_is_applied_and_a_value_for_same_preference_is_applied : PreferenceManagerApplyTestBase
@@ -521,7 +521,7 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
 
         It the_error_collection_returned_from_apply_default_should_be_empty = () => ApplyDefaultErrors.ShouldBeEmpty();
 
-        It the_corresponding_property_on_the_preference_instance_should_contain_default_value = () => Result.PersonName.ShouldEqual("Rob-Default");
+        It the_corresponding_property_on_the_preference_instance_should_contain_overridden_non_default_value = () => Result.PersonName.ShouldEqual("Rob");
     }
 
     public class when_an_invalid_value_for_a_preference_is_applied_as_a_default : PreferenceManagerApplyTestBase

@@ -18,23 +18,14 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using ConfigGen.Utilities.Logging;
-
-namespace ConfigGen.Domain
+namespace ConfigGen.Api
 {
-    public class ConfigurationGeneratorPreferences
+    public class GenerationServiceErrorCodes
     {
-        public string SettingsFilePath { get; set; }
+        public static readonly string GenerationServiceErrorSource = "GenerationService";
 
-        public string SettingsFileType { get; set; }
+        public static readonly string UnusedTokenErrorCode = "UnusedToken";
 
-        public string TemplateFilePath { get; set; }
-
-        public string TemplateFileType { get; set; }
-
-        public LoggingVerbosity Verbosity { get; set; }
-
-        public string ConfigurationNameSetting { get; set; }
+        public static readonly string UnrecognisedToken = "UnrecognisedToken";
     }
 }

@@ -20,11 +20,12 @@
 #endregion
 
 using System;
+using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Api
 {
-    public class GenerationError
+    public class GenerationError : IDisplayText
     {
         public GenerationError([NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
         {
@@ -45,5 +46,15 @@ namespace ConfigGen.Api
 
         [CanBeNull]
         public string Detail { get; }
+
+        public override string ToString()
+        {
+            return $"ERROR: {ToDisplayText()}";
+        }
+
+        public string ToDisplayText()
+        {
+            return $"{Detail} ('{Code}' in '{Source}')";
+        }
     }
 }

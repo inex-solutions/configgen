@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,22 +19,33 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Utilities.Logging;
+using System.IO;
+using ConfigGen.Utilities.Extensions;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Domain
+namespace ConfigGen.Utilities.IO
 {
-    public class ConfigurationGeneratorPreferences
+    public static class FileExtensions
     {
-        public string SettingsFilePath { get; set; }
+        /// <summary>
+        /// Returns the extension of the supplied path if any, otherwise null. This is an alternative to <see cref="FileInfo.Extension"/> which blows up if the path looks invalid.
+        /// </summary>
+        [CanBeNull]
+        public static string GetFileExtension(this string path)
+        {
+            if (path.IsNullOrEmpty())
+            {
+                return null;
+            }
 
-        public string SettingsFileType { get; set; }
+            var index = path.LastIndexOf(".");
 
-        public string TemplateFilePath { get; set; }
+            if (index < 0)
+            {
+                return null;
+            }
 
-        public string TemplateFileType { get; set; }
-
-        public LoggingVerbosity Verbosity { get; set; }
-
-        public string ConfigurationNameSetting { get; set; }
+            return path.Substring(index, path.Length - index);
+        }
     }
 }

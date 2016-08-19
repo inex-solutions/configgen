@@ -29,6 +29,7 @@ using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
+using ConfigGen.Utilities.IO;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -78,26 +79,32 @@ namespace ConfigGen.Domain
 
         public GenerationResults GenerateConfigurations()
         {
+            //TODO: setting the defaults doesn't belong here.
+            _preferencesManager.ApplyDefaultPreferences(
+                new[]
+                {
+                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.xml"),
+                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.SettingsFilePath.Name, "App.Config.Settings.xls"),
+                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.ConfigurationNameSetting.Name, "MachineName"),
+                });
+
             var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
 
             //TODO - To API: Template Load stuff
-            if (!File.Exists(configGenerationPreferences.TemplateFilePath))
-            {
-                return GenerationResults.CreateFail(new ConfigurationGeneratorError(
-                         ConfigurationGeneratorErrorCodes.TemplateFileNotFound,
-                         $"The specified template file was not found: {configGenerationPreferences.TemplateFileType}"));
-            }
-
             ITemplate template;
-            var templateFileExtension = new FileInfo(configGenerationPreferences.TemplateFilePath).Extension;
-            TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(templateFileExtension, configGenerationPreferences.TemplateFileType, out template);
+            TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType, out template);
             
             switch (templateCreationResult)
             {
+                case TryCreateResult.FileNotFound:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                        ConfigurationGeneratorErrorCodes.TemplateFileNotFound,
+                        $"Specified template file not found: {configGenerationPreferences.TemplateFilePath}"));
+
                 case TryCreateResult.FailedByExtension:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure,
-                            $"Failed to resolve template type from file extension: {templateFileExtension}"));
+                            $"Failed to resolve template type from file extension: {configGenerationPreferences.TemplateFilePath.GetFileExtension()}"));
 
                 case TryCreateResult.FailedByType:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(
@@ -107,24 +114,19 @@ namespace ConfigGen.Domain
 
             //TODO - To API: Settings Load stuff
             ISettingsLoader settingsLoader;
-            if (!File.Exists(configGenerationPreferences.SettingsFilePath))
-            {
-                return GenerationResults.CreateFail(new ConfigurationGeneratorError(
-                    ConfigurationGeneratorErrorCodes.SettingsFileNotFound,
-                    $"The specified settings file was not found: {configGenerationPreferences.TemplateFileType}"));
-            }
-
-            var settingsFile = new FileInfo(configGenerationPreferences.SettingsFilePath);
-            string settingsFileExtension = settingsFile.Extension;
-            
-            TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(settingsFileExtension, configGenerationPreferences.SettingsFileType, out settingsLoader);
+            TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(configGenerationPreferences.SettingsFilePath, configGenerationPreferences.SettingsFileType, out settingsLoader);
 
             switch (settingsLoaderCreationResult)
             {
+                case TryCreateResult.FileNotFound:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                        ConfigurationGeneratorErrorCodes.SettingsFileNotFound,
+                        $"Specified settings file not found: {configGenerationPreferences.SettingsFilePath}"));
+
                 case TryCreateResult.FailedByExtension:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.SettingsLoaderTypeResolutionFailure,
-                            $"Failed to resolve settings loader type from file extension: {settingsFileExtension}"));
+                            $"Failed to resolve settings loader type from file extension: {configGenerationPreferences.SettingsFilePath.GetFileExtension()}"));
 
                 case TryCreateResult.FailedByType:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(

@@ -93,12 +93,41 @@ namespace ConfigGen.Api
             foreach (var generatedFile in result.GeneratedFiles)
             {
                 TokenUsageStatistics tokenUsageStatistics = _tokenUsageTracker.GetTokenUsageStatistics(generatedFile.Configuration);
-                generatedFiles.Add(generatedFile.ToGeneratedFile(tokenUsageStatistics));
+                generatedFiles.Add(MapFileGenerationResults(generatedFile, tokenUsageStatistics));
             }
 
             return new GenerateResult(
                 generatedFiles: generatedFiles,
                 errors: result.Errors.Select(e => e.ToGenerationError()));
-        } 
+        }
+
+        [NotNull]
+        public static GeneratedFile MapFileGenerationResults([NotNull] SingleFileGenerationResult result, [NotNull] TokenUsageStatistics tokenUsageStatistics)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+            if (tokenUsageStatistics == null) throw new ArgumentNullException(nameof(tokenUsageStatistics));
+
+            var errors = result.Errors.Select(e => e.ToGenerationError());
+
+            IEnumerable<GenerationWarning> warnings = Enumerable.Empty<GenerationWarning>();
+
+            if (!errors.Any())
+            {
+                warnings = tokenUsageStatistics.UnusedTokens.Select(t =>
+                    new GenerationWarning(GenerationServiceErrorCodes.UnusedTokenErrorCode, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unused token: {t}"))
+                    .Concat(tokenUsageStatistics.UnrecognisedTokens.Select(t =>
+                        new GenerationWarning(GenerationServiceErrorCodes.UnrecognisedToken, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unrecognised token: {t}")));
+            }
+            
+            return new GeneratedFile(
+                result.ConfigurationName,
+                result.FullPath,
+                tokenUsageStatistics.UsedTokens,
+                tokenUsageStatistics.UnusedTokens,
+                tokenUsageStatistics.UnrecognisedTokens,
+                warnings,
+                errors,
+                result.HasChanged);
+        }
     }
 }

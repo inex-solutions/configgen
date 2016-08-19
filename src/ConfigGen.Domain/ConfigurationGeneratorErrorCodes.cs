@@ -41,9 +41,9 @@ namespace ConfigGen.Domain
         public static readonly string UnknownConfigurationNameSetting = "UnknownConfigurationNameSetting";
 
         [NotNull]
-        public static readonly string SettingsFileNotFound = "SettingsFileNotFound";
+        public static readonly string TemplateFileNotFound = "TemplateFileNotFound";
 
         [NotNull]
-        public static readonly string TemplateFileNotFound = "TemplateFileNotFound";
+        public static readonly string SettingsFileNotFound = "SettingsFileNotFound";
     }
 }

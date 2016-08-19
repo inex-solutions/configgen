@@ -23,8 +23,8 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common;
-using ConfigGen.Utilities.Preferences;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 

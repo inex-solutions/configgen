@@ -70,20 +70,14 @@
     <Compile Include="FileFinder.cs" />
     <Compile Include="IDisplayText.cs" />
     <Compile Include="ILocalEnvironment.cs" />
+    <Compile Include="IO\FileExtensions.cs" />
     <Compile Include="IO\IStreamComparer.cs" />
+    <Compile Include="IO\PausableWriteableStream.cs" />
     <Compile Include="IO\StreamComparer.cs" />
     <Compile Include="IResult.cs" />
-    <Compile Include="ItemFactoryByTypeOrExtensionBase.cs" />
+    <Compile Include="ItemFactoryByTypeOrFileExtensionBase.cs" />
     <Compile Include="LocalEnvironment.cs" />
     <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Preferences\IPreference.cs" />
-    <Compile Include="Preferences\IPreferenceGroup.cs" />
-    <Compile Include="Preferences\IPreferencesManager.cs" />
-    <Compile Include="Preferences\Preference.cs" />
-    <Compile Include="Preferences\PreferenceGroup.cs" />
-    <Compile Include="Preferences\PreferenceParameterDescription.cs" />
-    <Compile Include="Preferences\PreferencesManager.cs" />
-    <Compile Include="Preferences\PreferencesManagerInitialisationException.cs" />
     <Compile Include="Logging\ILoggerControler.cs" />
     <Compile Include="Logging\Log4NetLoggerModule.cs" />
     <Compile Include="Logging\Log4NetLogger.cs" />
@@ -92,9 +86,14 @@
     <Compile Include="Logging\LoggingVerbosity.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="TextEncodingDetector.cs" />
+    <Compile Include="Xml\IXmlStreamFormatter.cs" />
+    <Compile Include="Xml\XmlDeclarationBehaviour.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />
     <Compile Include="Xml\XmlDeclarationParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xml\XmlReaderToWriterCopier.cs" />
+    <Compile Include="Xml\XmlStreamFormatter.cs" />
+    <Compile Include="Xml\XmlStreamFormatterOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

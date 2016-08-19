@@ -26,7 +26,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
 {
-    public class TemplateFactory : ItemFactoryByTypeOrExtensionBase<ITemplate>
+    public class TemplateFactory : ItemFactoryByTypeOrFileExtensionBase<ITemplate>
     {
         public TemplateFactory(
             [NotNull] Func<ITemplate>[] itemFactories) 

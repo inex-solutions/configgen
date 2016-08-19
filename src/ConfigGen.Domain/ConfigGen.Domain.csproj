@@ -36,8 +36,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,6 +53,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ConfigurationFactory.cs" />
+    <Compile Include="ConfigurationGenerator.cs" />
     <Compile Include="ConfigurationGeneratorModule.cs" />
     <Compile Include="ConfigurationNameSelector.cs" />
     <Compile Include="FileOutput\FileOutputModule.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="Filtering\ConfigurationCollectionFilterPreferences.cs" />
     <Compile Include="Filtering\ConfigurationCollectionFilterPreferencesGroup.cs" />
     <Compile Include="ConfigurationCollectionLoaderFactory.cs" />
-    <Compile Include="ConfigurationGenerator.cs" />
     <Compile Include="ConfigurationGeneratorError.cs" />
     <Compile Include="ConfigurationGeneratorErrorCodes.cs" />
     <Compile Include="ConfigurationGeneratorPreferenceGroup.cs" />

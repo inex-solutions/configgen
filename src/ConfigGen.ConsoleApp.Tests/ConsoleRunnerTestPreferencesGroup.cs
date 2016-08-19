@@ -19,29 +19,23 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Api.Contract;
 
 namespace ConfigGen.ConsoleApp.Tests
 {
-    public class ConsoleRunnerTestPreferencesGroup : PreferenceGroup<ConsoleRunnerTestPreferences>
+    public class ConsoleRunnerTestPreferencesGroup : PreferenceGroupInfo
     {
         static ConsoleRunnerTestPreferencesGroup()
         {
-            StringParameterPreference = new Preference<ConsoleRunnerTestPreferences, string>(
+            StringParameterPreference = new PreferenceInfo(
                 name: "StringParameter",
                 shortName: "String",
-                description: "specifies the string parameter",
-                parameterDescription: new PreferenceParameterDescription("<parameter value>", "the value of the parameter"),
-                parseAction: stringValue => stringValue,
-                setAction: (value, preferences) => preferences.StringParameter = value);
+                description: "specifies the string parameter");
 
-            BooleanSwitchPreference = new Preference<ConsoleRunnerTestPreferences, bool>(
+            BooleanSwitchPreference = new PreferenceInfo(
                 name: "BooleanSwitch",
                 shortName: "Boolean",
-                description: "a switch",
-                parameterDescription: new PreferenceParameterDescription("[true|false]", "[optional] the value for the switch, default true."),
-                parseAction: bool.Parse,
-                setAction: (value, preferences) => preferences.BooleanSwitch = value);
+                description: "a switch");
         }
 
         public ConsoleRunnerTestPreferencesGroup() : base(
@@ -50,9 +44,9 @@ namespace ConfigGen.ConsoleApp.Tests
         {
         }
 
-        public static IPreference<ConsoleRunnerTestPreferences> BooleanSwitchPreference { get; set; }
+        public static PreferenceInfo BooleanSwitchPreference { get; }
 
-        public static IPreference<ConsoleRunnerTestPreferences> StringParameterPreference { get; set; }
+        public static PreferenceInfo StringParameterPreference { get; }
 
     }
 }

@@ -65,6 +65,10 @@
     <Compile Include="RazorTemplateRenderTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">
+      <Project>{28ff448c-08ea-4ec4-8005-32f80ec4b6c9}</Project>
+      <Name>ConfigGen.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
       <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
       <Name>ConfigGen.Domain.Contract</Name>

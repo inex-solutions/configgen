@@ -65,24 +65,26 @@ namespace ConfigGen.Settings.Excel
         /// <summary>
         /// Loads and returns the configuration settings
         /// </summary>
-        /// <param name="settingsFile">Spreadsheet path</param>
+        /// <param name="settingsFilePath">Spreadsheet path</param>
         /// <param name="worksheetName">worksheet name (defaults to "Settings")</param>
         /// <returns>
         /// A result containing a collection of loaded configuration settings, or an error.
         /// </returns>
         [NotNull]
-        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName = null)
+        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFilePath, [CanBeNull] string worksheetName = null)
         {
-            if (settingsFile == null) throw new ArgumentNullException(nameof(settingsFile));
+            if (settingsFilePath == null) throw new ArgumentNullException(nameof(settingsFilePath));
             worksheetName = worksheetName ?? "Settings";
 
-            if (!File.Exists(settingsFile))
+            var settingsFile = new FileInfo(settingsFilePath);
+
+            if (!settingsFile.Exists)
             {
                 return Result<IEnumerable<IDictionary<string, object>>, Error>
-                    .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.FileNotFound, $"Specified excel spreadsheet not found: {settingsFile}"));
+                    .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.FileNotFound, $"Specified excel spreadsheet not found: {settingsFile.FullName}"));
             }
 
-            DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile);
+            DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile.FullName);
 
             var spreadsheetPreferences = new SpreadsheetPreferences();
 

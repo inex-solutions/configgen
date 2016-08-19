@@ -25,11 +25,9 @@ using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
 {
-    public abstract class MachineSpecificationTestBase<TSubject, TResult>
+    public abstract class MachineSpecificationTestBase<TSubject>
     {
         protected static TSubject Subject;
-
-        protected static TResult Result;
 
         protected static DisposableDirectory TestDirectory;
 
@@ -45,8 +43,12 @@ namespace ConfigGen.Tests.Common
         Cleanup cleanup = () =>
         {
             Directory.SetCurrentDirectory(InitialDirectory);
-           TestDirectory.Dispose();
+            TestDirectory.Dispose();
         };
+    }
 
+    public abstract class MachineSpecificationTestBase<TSubject, TResult> : MachineSpecificationTestBase<TSubject>
+    {
+        protected static TResult Result;
     }
 }

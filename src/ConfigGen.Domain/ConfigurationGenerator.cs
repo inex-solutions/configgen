@@ -23,13 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
-using ConfigGen.Utilities.Logging;
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Utilities.IO;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
@@ -41,19 +41,7 @@ namespace ConfigGen.Domain
         private readonly IPreferencesManager _preferencesManager;
 
         [NotNull]
-        private readonly ILogger _logger;
-
-        [NotNull]
-        private readonly ILoggerControler _loggerController;
-
-        [NotNull]
-        private readonly ITokenUsageTracker _tokenUsageTracker;
-
-        [NotNull]
         private readonly TemplateFactory _templateFactory;
-
-        [NotNull]
-        private readonly ConfigurationNameSelector _configurationNameSelector;
 
         [NotNull]
         private readonly ConfigurationCollectionLoaderFactory _configurationCollectionLoaderFactory;
@@ -69,66 +57,54 @@ namespace ConfigGen.Domain
         public ConfigurationGenerator(
             [NotNull] IPreferencesManager preferencesManager, 
             [NotNull] TemplateFactory templateFactory,
-            [NotNull] ConfigurationNameSelector configurationNameSelector,
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
             [NotNull] IConfigurationFactory configurationFactory,
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
-            [NotNull] FileOutputWriter fileOutputWriter,
-            [NotNull] ILogger logger,
-            [NotNull] ILoggerControler loggerController,
-            [NotNull] ITokenUsageTracker tokenUsageTracker)
+            [NotNull] FileOutputWriter fileOutputWriter)
         {
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
-            if (configurationNameSelector == null) throw new ArgumentNullException(nameof(configurationNameSelector));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationFactory == null) throw new ArgumentNullException(nameof(configurationFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
-            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _templateFactory = templateFactory;
-            _configurationNameSelector = configurationNameSelector;
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationFactory = configurationFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
             _fileOutputWriter = fileOutputWriter;
              _preferencesManager = preferencesManager;
-            _logger = logger;
-            _loggerController = loggerController;
-            _tokenUsageTracker = tokenUsageTracker;
         }
 
-        [NotNull]
-        public IEnumerable<IPreferenceGroup> GetPreferenceGroups()
+        public GenerationResults GenerateConfigurations()
         {
-            return _preferencesManager.KnownPreferenceGroups;
-        }
+            //TODO: setting the defaults doesn't belong here.
+            _preferencesManager.ApplyDefaultPreferences(
+                new[]
+                {
+                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.xml"),
+                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.SettingsFilePath.Name, "App.Config.Settings.xls"),
+                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.ConfigurationNameSetting.Name, "MachineName"),
+                });
 
-        public GenerationResults GenerateConfigurations(IDictionary<string, string> preferences)
-        {
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
+            var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
 
-            var unrecognisedPreferences = _preferencesManager.GetUnrecognisedPreferences(preferences.Keys);
-
-            var configGenerationPreferences = new ConfigurationGeneratorPreferences();
-            _preferencesManager.ApplyPreferences(preferences, configGenerationPreferences);
-
-            _loggerController.SetLoggingVerbosity(configGenerationPreferences.Verbosity);
-            _logger.Debug("Verbose logging enabled");
-
+            //TODO - To API: Template Load stuff
             ITemplate template;
-            var templateFileExtension = new FileInfo(configGenerationPreferences.TemplateFilePath).Extension;
-            TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(templateFileExtension, configGenerationPreferences.TemplateFileType, out template);
+            TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType, out template);
             
             switch (templateCreationResult)
             {
+                case TryCreateResult.FileNotFound:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                        ConfigurationGeneratorErrorCodes.TemplateFileNotFound,
+                        $"Specified template file not found: {configGenerationPreferences.TemplateFilePath}"));
+
                 case TryCreateResult.FailedByExtension:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure,
-                            $"Failed to resolve template type from file extension: {templateFileExtension}"));
+                            $"Failed to resolve template type from file extension: {configGenerationPreferences.TemplateFilePath.GetFileExtension()}"));
 
                 case TryCreateResult.FailedByType:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(
@@ -136,18 +112,21 @@ namespace ConfigGen.Domain
                          $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
             }
 
+            //TODO - To API: Settings Load stuff
             ISettingsLoader settingsLoader;
-            var settingsFile = new FileInfo(configGenerationPreferences.SettingsFilePath);
-            string settingsFileExtension = settingsFile.Extension;
-            
-            TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(settingsFileExtension, configGenerationPreferences.SettingsFileType, out settingsLoader);
+            TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(configGenerationPreferences.SettingsFilePath, configGenerationPreferences.SettingsFileType, out settingsLoader);
 
             switch (settingsLoaderCreationResult)
             {
+                case TryCreateResult.FileNotFound:
+                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                        ConfigurationGeneratorErrorCodes.SettingsFileNotFound,
+                        $"Specified settings file not found: {configGenerationPreferences.SettingsFilePath}"));
+
                 case TryCreateResult.FailedByExtension:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.SettingsLoaderTypeResolutionFailure,
-                            $"Failed to resolve settings loader type from file extension: {settingsFileExtension}"));
+                            $"Failed to resolve settings loader type from file extension: {configGenerationPreferences.SettingsFilePath.GetFileExtension()}"));
 
                 case TryCreateResult.FailedByType:
                     return GenerationResults.CreateFail(new ConfigurationGeneratorError(
@@ -174,8 +153,7 @@ namespace ConfigGen.Domain
 
             IEnumerable<IConfiguration> configurations = configurationCreationResult.Value;
 
-            var configurationCollectionFilterPreferences = new ConfigurationCollectionFilterPreferences();
-            _preferencesManager.ApplyPreferences(preferences, configurationCollectionFilterPreferences);
+            var configurationCollectionFilterPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationCollectionFilterPreferences>();
 
             var globallyUsedTokens = new HashSet<string>();
 
@@ -184,8 +162,7 @@ namespace ConfigGen.Domain
                 configurations,
                 token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
 
-            var fileOutputPreferences = new FileOutputPreferences();
-            _preferencesManager.ApplyPreferences(preferences, fileOutputPreferences);
+            var fileOutputPreferences = _preferencesManager.GetPreferenceInstance<FileOutputPreferences>();
 
             //TODO: make this pipeline async and parallelised
             //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
@@ -208,15 +185,10 @@ namespace ConfigGen.Domain
                        renderResult,
                        fileOutputPreferences);
 
-                    TokenUsageStatistics tokenUsageStatistics = _tokenUsageTracker.GetTokenUsageStatistics(configuration);
-
                     singleFileGenerationResults.Add(
                         new SingleFileGenerationResult(
                             renderResult.Configuration,
                             writeResults.FullPath,
-                            tokenUsageStatistics.UsedTokens,
-                            tokenUsageStatistics.UnusedTokens,
-                            tokenUsageStatistics.UnrecognisedTokens,
                             renderResult.Errors,
                             writeResults.FileChanged,
                             writeResults.WasWritten));
@@ -224,11 +196,6 @@ namespace ConfigGen.Domain
 
                 return GenerationResults.CreateSuccess(singleFileGenerationResults);
             }
-        }
-
-        IEnumerable<IPreferenceGroup> IConfigurationGenerator.GetPreferenceGroups()
-        {
-            return GetPreferenceGroups();
         }
     }
 }

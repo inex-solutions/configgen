@@ -25,7 +25,8 @@ using System.Linq;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
-using ConfigGen.Tests.Common.MSpec;
+using ConfigGen.Tests.Common.MSpecShouldExtensions;
+using ConfigGen.Tests.Common.MSpecShouldExtensions.LoadResultExtensions;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 

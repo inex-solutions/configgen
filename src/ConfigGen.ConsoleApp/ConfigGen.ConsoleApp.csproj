@@ -79,13 +79,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
-      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
-      <Name>ConfigGen.Domain.Contract</Name>
+    <ProjectReference Include="..\ConfigGen.Api.Contract\ConfigGen.Api.Contract.csproj">
+      <Project>{428450F8-92D3-4F76-8473-8E1806FBEA66}</Project>
+      <Name>ConfigGen.Api.Contract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Domain\ConfigGen.Domain.csproj">
-      <Project>{B1F73633-082F-4CA1-8BD5-575283C19839}</Project>
-      <Name>ConfigGen.Domain</Name>
+    <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">
+      <Project>{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}</Project>
+      <Name>ConfigGen.Api</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
       <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>

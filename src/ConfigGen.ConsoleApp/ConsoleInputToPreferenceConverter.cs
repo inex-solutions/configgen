@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Api.Contract;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
@@ -38,48 +38,48 @@ namespace ConfigGen.ConsoleApp
 
         [Pure]
         [NotNull]
-        public string GetShortConsoleCommand([NotNull] IPreference preferenceDefinition)
+        public string GetShortConsoleCommand([NotNull] PreferenceInfo preferenceInfo)
         {
-            if (preferenceDefinition == null) throw new ArgumentNullException(nameof(preferenceDefinition));
+            if (preferenceInfo == null) throw new ArgumentNullException(nameof(preferenceInfo));
 
-            string name = string.IsNullOrEmpty(preferenceDefinition.ShortName) ? preferenceDefinition.Name : preferenceDefinition.ShortName;
+            string name = string.IsNullOrEmpty(preferenceInfo.ShortName) ? preferenceInfo.Name : preferenceInfo.ShortName;
             var result = MatchLowers.Replace(name, match => string.Empty);
             return $"-{result.ToLower()}";
         }
 
         [Pure]
         [NotNull]
-        public string GetShortConsoleCommandWithArgumentText([NotNull] IPreference preferenceDefinition)
+        public string GetShortConsoleCommandWithArgumentText([NotNull] PreferenceInfo preferenceInfo)
         {
-            return $"{GetShortConsoleCommand(preferenceDefinition)}";
+            return $"{GetShortConsoleCommand(preferenceInfo)}";
         }
 
         [Pure]
         [NotNull]
-        public string GetLongConsoleCommand([NotNull] IPreference preferenceDefinition)
+        public string GetLongConsoleCommand([NotNull] PreferenceInfo preferenceInfo)
         {
-            if (preferenceDefinition == null) throw new ArgumentNullException(nameof(preferenceDefinition));
-            var result = MatchCaptials.Replace(preferenceDefinition.Name, match => "-" + match.Value.ToLower());
+            if (preferenceInfo == null) throw new ArgumentNullException(nameof(preferenceInfo));
+            var result = MatchCaptials.Replace(preferenceInfo.Name, match => "-" + match.Value.ToLower());
             return $"-{result}";
         }
 
         [Pure]
         [NotNull]
-        public string GetLongConsoleCommandWithArgumentText([NotNull] IPreference preferenceDefinition)
+        public string GetLongConsoleCommandWithArgumentText([NotNull] PreferenceInfo preferenceInfo)
         {
-            return $"{GetLongConsoleCommand(preferenceDefinition)}";
+            return $"{GetLongConsoleCommand(preferenceInfo)}";
         }
 
         [Pure]
         [NotNull]
-        public ParsedConsoleInput ParseConsoleInput([NotNull] string[] args, [NotNull] IEnumerable<IPreferenceGroup> preferenceGroups)
+        public ParsedConsoleInput ParseConsoleInput([NotNull] string[] args, [NotNull] IEnumerable<PreferenceGroupInfo> preferenceGroups)
         {
             if (args == null) throw new ArgumentNullException(nameof(args));
             if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
 
-            IList<IPreference> preferenceInfos = preferenceGroups.SelectMany(pg => pg.Preferences).ToList();
+            IList<PreferenceInfo> preferenceInfos = preferenceGroups.SelectMany(pg => pg.Preferences).ToList();
 
-            var parsedPreferences = new Dictionary<IPreference, string>();
+            var parsedPreferences = new Dictionary<PreferenceInfo, string>();
             var parseErrors = new List<string>();
 
             var argsQueue = new Queue<string>(args);
@@ -114,7 +114,7 @@ namespace ConfigGen.ConsoleApp
         }
 
         [CanBeNull]
-        private IPreference GetPreference([NotNull] IEnumerable<IPreference> preferenceInfos, [CanBeNull] string input)
+        private PreferenceInfo GetPreference([NotNull] IEnumerable<PreferenceInfo> preferenceInfos, [CanBeNull] string input)
         {
             if (preferenceInfos == null) throw new ArgumentNullException(nameof(preferenceInfos));
 

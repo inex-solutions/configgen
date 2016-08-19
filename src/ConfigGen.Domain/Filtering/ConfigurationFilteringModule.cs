@@ -20,8 +20,8 @@
 #endregion
 
 using Autofac;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities;
-using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Domain.Filtering
 {

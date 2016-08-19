@@ -29,12 +29,28 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain", "ConfigG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.ConsoleApp.Tests", "ConfigGen.ConsoleApp.Tests\ConfigGen.ConsoleApp.Tests.csproj", "{A3697716-1378-46F7-8D3C-EAD05C2D08C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain.Tests", "ConfigGen.Domain.Tests\ConfigGen.Domain.Tests.csproj", "{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F7FEE994-4445-4B60-ACB0-FA7C7ABB4CEC}"
 	ProjectSection(SolutionItems) = preProject
 		GlobalAssemblyInfo.cs = GlobalAssemblyInfo.cs
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Api", "ConfigGen.Api\ConfigGen.Api.csproj", "{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain.Contract.Tests", "ConfigGen.Domain.Contract.Tests\ConfigGen.Domain.Contract.Tests.csproj", "{EAEDC4C4-0B15-470B-B285-D817EF9D8D89}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleFiles", "SampleFiles", "{D0A46783-A6F0-4D79-9247-811E35B48CF3}"
+	ProjectSection(SolutionItems) = preProject
+		SampleFiles\SimpleSettings.FiveConfigurations.TwoValues.xls = SampleFiles\SimpleSettings.FiveConfigurations.TwoValues.xls
+		SampleFiles\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls = SampleFiles\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls
+		SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls = SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls
+		SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls = SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls
+		SampleFiles\SimpleTemplate.TwoTokens.razor = SampleFiles\SimpleTemplate.TwoTokens.razor
+		SampleFiles\SimpleTemplate.TwoTokens.xml = SampleFiles\SimpleTemplate.TwoTokens.xml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Api.Tests", "ConfigGen.Api.Tests\ConfigGen.Api.Tests.csproj", "{519D547E-BDD7-4A29-80FA-F31636EB2835}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Api.Contract", "ConfigGen.Api.Contract\ConfigGen.Api.Contract.csproj", "{428450F8-92D3-4F76-8473-8E1806FBEA66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,12 +110,27 @@ Global
 		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3697716-1378-46F7-8D3C-EAD05C2D08C5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{563FF6FA-5DBA-4788-BEBD-C8901F344BB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAEDC4C4-0B15-470B-B285-D817EF9D8D89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAEDC4C4-0B15-470B-B285-D817EF9D8D89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAEDC4C4-0B15-470B-B285-D817EF9D8D89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAEDC4C4-0B15-470B-B285-D817EF9D8D89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519D547E-BDD7-4A29-80FA-F31636EB2835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519D547E-BDD7-4A29-80FA-F31636EB2835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519D547E-BDD7-4A29-80FA-F31636EB2835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519D547E-BDD7-4A29-80FA-F31636EB2835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{428450F8-92D3-4F76-8473-8E1806FBEA66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{428450F8-92D3-4F76-8473-8E1806FBEA66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{428450F8-92D3-4F76-8473-8E1806FBEA66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{428450F8-92D3-4F76-8473-8E1806FBEA66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D0A46783-A6F0-4D79-9247-811E35B48CF3} = {F7FEE994-4445-4B60-ACB0-FA7C7ABB4CEC}
 	EndGlobalSection
 EndGlobal

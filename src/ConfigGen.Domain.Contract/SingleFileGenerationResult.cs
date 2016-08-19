@@ -32,18 +32,12 @@ namespace ConfigGen.Domain.Contract
         public SingleFileGenerationResult(
             [NotNull] IConfiguration configuration, 
             [NotNull] string fullPath,
-            [NotNull] IEnumerable<string> usedTokens,
-            [NotNull] IEnumerable<string> unusedTokens,
-            [NotNull] IEnumerable<string> unrecognisedTokens,
             [NotNull] IEnumerable<Error> errors,
             bool hasChanged,
             bool wasWritten)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
-            if (usedTokens == null) throw new ArgumentNullException(nameof(usedTokens));
-            if (unusedTokens == null) throw new ArgumentNullException(nameof(unusedTokens));
-            if (unrecognisedTokens == null) throw new ArgumentNullException(nameof(unrecognisedTokens));
             if (errors == null) throw new ArgumentNullException(nameof(errors));
 
             Configuration = configuration;
@@ -51,9 +45,6 @@ namespace ConfigGen.Domain.Contract
             HasChanged = hasChanged;
             WasWritten = wasWritten;
 
-            UsedTokens = usedTokens.ToReadOnlyCollection();
-            UnusedTokens = unusedTokens.ToReadOnlyCollection();
-            UnrecognisedTokens = unrecognisedTokens.ToReadOnlyCollection();
             Errors = errors.ToReadOnlyCollection();
         }
 
@@ -69,15 +60,6 @@ namespace ConfigGen.Domain.Contract
         public bool HasChanged { get; }
 
         public bool WasWritten { get; }
-
-        [NotNull]
-        public IReadOnlyCollection<string> UsedTokens { get; }
-
-        [NotNull]
-        public IReadOnlyCollection<string> UnusedTokens { get; }
-
-        [NotNull]
-        public IReadOnlyCollection<string> UnrecognisedTokens { get; }
 
         [NotNull]
         public IReadOnlyCollection<Error> Errors { get; }

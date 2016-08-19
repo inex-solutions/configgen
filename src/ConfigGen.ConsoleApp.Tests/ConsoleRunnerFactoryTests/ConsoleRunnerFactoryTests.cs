@@ -26,10 +26,10 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunnerFactoryTests
     [Subject(typeof(ConsoleRunnerFactory))]
     public class when_creating_a_console_runner
     {
-        private static ConsoleRunner ConsoleRunner;
+        private static ConsoleApp.ConsoleRunner ConsoleRunner;
 
         Because of = () => ConsoleRunner = ConsoleRunnerFactory.GetConsoleRunner();
 
-        It then_a_console_runner_is_returned = () => ConsoleRunner.ShouldBeAssignableTo<ConsoleRunner>();
+        It then_a_console_runner_is_returned = () => ConsoleRunner.ShouldBeAssignableTo<ConsoleApp.ConsoleRunner>();
     }
 }

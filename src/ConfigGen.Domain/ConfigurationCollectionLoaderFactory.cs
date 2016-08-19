@@ -26,7 +26,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
 {
-    public class ConfigurationCollectionLoaderFactory : ItemFactoryByTypeOrExtensionBase<ISettingsLoader>
+    public class ConfigurationCollectionLoaderFactory : ItemFactoryByTypeOrFileExtensionBase<ISettingsLoader>
     {
         public ConfigurationCollectionLoaderFactory(
             [NotNull] Func<ISettingsLoader>[] itemFactories) 

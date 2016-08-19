@@ -19,39 +19,26 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Utilities.Preferences;
+using ConfigGen.Api.Contract;
 
 namespace ConfigGen.ConsoleApp.Tests
 {
-    public class AlternativeConsoleRunnerTestPreferencesGroup : PreferenceGroup<ConsoleRunnerTestPreferences>
+    public class AlternativeConsoleRunnerTestPreferencesGroup : PreferenceGroupInfo
     {
         static AlternativeConsoleRunnerTestPreferencesGroup()
         {
-            IntParameterPreference = new Preference<ConsoleRunnerTestPreferences, int>(
+            IntParameterPreference = new PreferenceInfo(
                 name: "IntParameter",
                 shortName: "Int",
-                description: "specifies the int parameter",
-                parameterDescription: new PreferenceParameterDescription("<parameter value>", "the value of the parameter"),
-                parseAction: int.Parse,
-                setAction: (value, preferences) => preferences.IntParameter = value);
-
-            AnotherBooleanSwitch = new Preference<ConsoleRunnerTestPreferences, bool>(
-                name: "AnotherBooleanSwitch",
-                shortName: "Another",
-                description: "specifies the int parameter",
-                parameterDescription: new PreferenceParameterDescription("another switch", "another switch"),
-                parseAction: bool.Parse,
-                setAction: (value, preferences) => preferences.BooleanSwitch = value);
+                description: "specifies the int parameter");
         }
 
         public AlternativeConsoleRunnerTestPreferencesGroup() : base(
             name: "AlternativeConsoleRunnerTestPreferencesGroup",
-            preferences: new [] { IntParameterPreference, AnotherBooleanSwitch })
+            preferences: new [] { IntParameterPreference })
         {
         }
 
-        public static IPreference<ConsoleRunnerTestPreferences> AnotherBooleanSwitch { get; set; }
-
-        public static IPreference<ConsoleRunnerTestPreferences> IntParameterPreference { get; set; }
+        public static PreferenceInfo IntParameterPreference { get; }
     }
 }

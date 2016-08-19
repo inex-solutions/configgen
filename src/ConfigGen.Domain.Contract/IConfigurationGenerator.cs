@@ -19,8 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
-using ConfigGen.Utilities.Preferences;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
@@ -28,10 +26,6 @@ namespace ConfigGen.Domain.Contract
     public interface IConfigurationGenerator
     {
         [NotNull]
-        [ItemNotNull]
-        IEnumerable<IPreferenceGroup> GetPreferenceGroups();
-
-        [NotNull]
-        GenerationResults GenerateConfigurations([NotNull] IDictionary<string, string> preferences);
+        GenerationResults GenerateConfigurations();
     }
 }

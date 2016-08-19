@@ -19,8 +19,8 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Logging;
-using ConfigGen.Utilities.Preferences;
 
 namespace ConfigGen.Domain
 {
@@ -60,6 +60,14 @@ namespace ConfigGen.Domain
                 parseAction: bool.Parse,
                 setAction: (verbosity, preferences) => preferences.Verbosity = verbosity ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal);
 
+            ErrorOnWarnings = new Preference<ConfigurationGeneratorPreferences, bool>(
+                name: "ErrorOnWarnings",
+                shortName: "Error",
+                description: "report warnings as errors",
+                parameterDescription: new PreferenceParameterDescription("flag", "ErrorOnWarnings"),
+                parseAction: bool.Parse,
+                setAction: (flag, preferences) => preferences.ErrorOnWarnings = flag);
+
             ConfigurationNameSetting = new Preference<ConfigurationGeneratorPreferences, string>(
                 name: "ConfigurationNameSetting",
                 shortName: null,
@@ -77,12 +85,15 @@ namespace ConfigGen.Domain
                 TemplateFilePath,
                 TemplateFileType,
                 Verbose,
+                ErrorOnWarnings,
                 ConfigurationNameSetting
             })
         {
         }
 
         public static Preference<ConfigurationGeneratorPreferences, bool> Verbose { get; }
+
+        public static Preference<ConfigurationGeneratorPreferences, bool> ErrorOnWarnings { get; }
 
         public static Preference<ConfigurationGeneratorPreferences, string> TemplateFileType { get; }
 

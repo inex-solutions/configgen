@@ -52,6 +52,9 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         private readonly ITokenReplacer _tokenReplacer;
 
+        [NotNull]
+        private readonly ITemplatePostprocessor _templatePostProcessor;
+
         private XmlDeclarationInfo _xmlDeclarationInfo;
         private XElement _loadedTemplate;
 
@@ -59,17 +62,20 @@ namespace ConfigGen.Templating.Xml
             [NotNull] XmlDeclarationParser xmlDeclarationParser, 
             [NotNull] ITemplateLoader templateLoader, 
             [NotNull] ITemplatePreprocessor templatePreprocessor,
-            [NotNull] ITokenReplacer tokenReplacer)
+            [NotNull] ITokenReplacer tokenReplacer,
+            [NotNull] ITemplatePostprocessor templatePostProcessor)
         {
             if (xmlDeclarationParser == null) throw new ArgumentNullException(nameof(xmlDeclarationParser));
             if (templateLoader == null) throw new ArgumentNullException(nameof(templateLoader));
             if (templatePreprocessor == null) throw new ArgumentNullException(nameof(templatePreprocessor));
             if (tokenReplacer == null) throw new ArgumentNullException(nameof(tokenReplacer));
+            if (templatePostProcessor == null) throw new ArgumentNullException(nameof(templatePostProcessor));
 
             _xmlDeclarationParser = xmlDeclarationParser;
             _templateLoader = templateLoader;
             _templatePreprocessor = templatePreprocessor;
             _tokenReplacer = tokenReplacer;
+            _templatePostProcessor = templatePostProcessor;
         }
 
         [NotNull]
@@ -129,6 +135,8 @@ namespace ConfigGen.Templating.Xml
                 string output = _tokenReplacer.ReplaceTokens(
                     configuration: configuration,
                     inputTemplate: preprocessedTemplate);
+
+                output = _templatePostProcessor.Process(output);
 
                 return new SingleTemplateRenderResults(
                     configuration: configuration,

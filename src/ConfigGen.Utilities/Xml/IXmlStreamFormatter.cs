@@ -31,23 +31,14 @@ namespace ConfigGen.Utilities.Xml
     {
         /// <summary>
         /// Copies the source xml stream supplied at construction time, to the destination stream, applying the formatting specified in the
-        /// settings supplied at construction time.
-        /// </summary>
-        void Format();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XmlStreamFormatter"/> class.
+        /// supplied options.
         /// </summary>
         /// <param name="readerStream">The reader stream.</param>
         /// <param name="writerStream">The writer stream.</param>
+        /// <param name="options">The formatting options.</param>
         /// <exception cref="ArgumentNullException">Raised if any of the supplied arguments are null.</exception>
         /// <exception cref="InvalidOperationException">Raised if the <paramref name="readerStream"/> is not readable and seekable,
         /// if the <paramref name="writerStream"/> is not writeable, or if this method is called more than once.</exception>
-        void Initialise(Stream readerStream, Stream writerStream);
-
-        /// <summary>
-        /// Gets or sets the formatter options.
-        /// </summary>
-        XmlStreamFormatterOptions FormatterOptions { get; set; }
+        void Format(Stream readerStream, Stream writerStream, XmlStreamFormatterOptions options);
     }
 }

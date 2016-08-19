@@ -58,9 +58,7 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
                 using (var writerStream = new MemoryStream())
                 {
                     var copier = new XmlStreamFormatter();
-                    copier.Initialise(readerStream, writerStream);
-                    copier.FormatterOptions = formatterOptions;
-                    copier.Format();
+                    copier.Format(readerStream, writerStream, formatterOptions);
                     writerStream.Position = 0;
                     var byteArray = writerStream.ToArray();
 

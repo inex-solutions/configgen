@@ -186,7 +186,9 @@ namespace ConfigGen.Tests.Common.Extensions
                 throw new SpecificationException($"Could not check file contents for configuration {result.ConfigurationName} as the expected file did not exist: {result.FullPath}");
             }
 
-            File.ReadAllText(result.FullPath).ShouldEqual(expectedText);
+            var text = File.ReadAllText(result.FullPath);
+            
+            text.ShouldEqual(expectedText);
 
             return result;
         }

@@ -26,6 +26,7 @@ namespace ConfigGen.Templating.Xml
 {
     public interface ITokenReplacer
     {
+        [NotNull]
         string ReplaceTokens(
             [NotNull] IConfiguration configuration,
             [NotNull] string inputTemplate);

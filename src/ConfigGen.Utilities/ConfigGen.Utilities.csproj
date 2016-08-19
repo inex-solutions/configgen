@@ -93,6 +93,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Xml\XmlReaderToWriterCopier.cs" />
     <Compile Include="Xml\XmlStreamFormatter.cs" />
+    <Compile Include="Xml\XmlStreamFormatterContext.cs" />
     <Compile Include="Xml\XmlStreamFormatterOptions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Api
+namespace ConfigGen.Api.Contract
 {
     public class GenerationServiceErrorCodes
     {

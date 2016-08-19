@@ -21,29 +21,26 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Api
+namespace ConfigGen.Api.Contract
 {
-    public class GenerateResult
+    public class PreferenceGroupInfo
     {
-        public GenerateResult([NotNull] IEnumerable<GeneratedFile> generatedFiles, [NotNull] IEnumerable<GenerationIssue> errors)
+        public PreferenceGroupInfo([NotNull] string name, [NotNull][ItemNotNull]IEnumerable<PreferenceInfo> preferences)
         {
-            if (generatedFiles == null) throw new ArgumentNullException(nameof(generatedFiles));
-            if (errors == null) throw new ArgumentNullException(nameof(errors));
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
 
-            GeneratedFiles = generatedFiles;
-            Errors = errors;
-            Success = !Errors.Any();
+            Name = name;
+            Preferences = preferences;
         }
 
-        public bool Success { get; }
+        [NotNull]
+        public string Name { get; }
 
         [NotNull]
-        public IEnumerable<GenerationIssue> Errors { get; }
-
-        [NotNull]
-        public IEnumerable<GeneratedFile> GeneratedFiles { get; }
+        [ItemNotNull]
+        public IEnumerable<PreferenceInfo> Preferences { get; }
     }
 }

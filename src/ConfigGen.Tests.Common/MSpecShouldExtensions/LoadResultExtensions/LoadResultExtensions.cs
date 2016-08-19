@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,18 +19,31 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
+using System;
+using System.Linq;
+using ConfigGen.Domain.Contract.Template;
 using JetBrains.Annotations;
+using Machine.Specifications;
 
-namespace ConfigGen.Api
+namespace ConfigGen.Tests.Common.MSpecShouldExtensions.LoadResultExtensions
 {
-    public interface IGenerationService
+    public static class LoadResultExtensions
     {
+        /// <summary>
+        /// Asserts the supplied result indicates success.
+        /// </summary>
         [NotNull]
-        [ItemNotNull]
-        IEnumerable<PreferenceGroupInfo> GetPreferences();
+        public static LoadResult ShouldIndicateSuccess([NotNull] this LoadResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
-        [NotNull]
-        GenerateResult Generate([NotNull] IDictionary<string, string> preferences);
+            if (result.Success
+                && !result.TemplateLoadErrors.Any())
+            {
+                return result;
+            }
+
+            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", result.TemplateLoadErrors.Select(e => e.ToString()))}");
+        }
     }
 }

@@ -19,28 +19,18 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Api
+namespace ConfigGen.Api.Contract
 {
-    public class PreferenceGroupInfo
+    public interface IGenerationService
     {
-        public PreferenceGroupInfo([NotNull] string name, [NotNull][ItemNotNull]IEnumerable<PreferenceInfo> preferences)
-        {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            Name = name;
-            Preferences = preferences;
-        }
-
-        [NotNull]
-        public string Name { get; }
-
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<PreferenceInfo> Preferences { get; }
+        IEnumerable<PreferenceGroupInfo> GetPreferences();
+
+        [NotNull]
+        GenerateResult Generate([NotNull] IDictionary<string, string> preferences);
     }
 }

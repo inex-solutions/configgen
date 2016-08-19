@@ -103,6 +103,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Api.Contract\ConfigGen.Api.Contract.csproj">
+      <Project>{428450f8-92d3-4f76-8473-8e1806fbea66}</Project>
+      <Name>ConfigGen.Api.Contract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">
       <Project>{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}</Project>
       <Name>ConfigGen.Api</Name>

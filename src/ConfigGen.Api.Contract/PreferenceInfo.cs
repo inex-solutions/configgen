@@ -18,11 +18,32 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Api
+
+using System;
+using JetBrains.Annotations;
+
+namespace ConfigGen.Api.Contract
 {
-    public enum GenerationIssueSeverity
+    public class PreferenceInfo
     {
-        Error = 1,
-        Warning = 2
+        public PreferenceInfo([NotNull] string name, [CanBeNull] string shortName, [NotNull] string description)
+        {
+            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (description == null) throw new ArgumentNullException(nameof(description));
+
+            Name = name;
+            ShortName = shortName;
+            Description = description;
+        }
+
+        [NotNull]
+        public string Name { get; }
+
+        
+        [CanBeNull]
+        public string ShortName { get; }
+
+        [NotNull]
+        public string Description { get; }
     }
 }

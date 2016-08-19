@@ -18,19 +18,11 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using Autofac;
-using ConfigGen.Api.Contract;
-using ConfigGen.Domain;
-
-namespace ConfigGen.Api
+namespace ConfigGen.Api.Contract
 {
-    public class GenerationServiceModule : Module
+    public enum GenerationIssueSeverity
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<GenerationService>().As<IGenerationService>();
-        }
+        Error = 1,
+        Warning = 2
     }
 }

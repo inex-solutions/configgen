@@ -19,7 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Api;
+using ConfigGen.Api.Contract;
 
 namespace ConfigGen.ConsoleApp.Tests
 {

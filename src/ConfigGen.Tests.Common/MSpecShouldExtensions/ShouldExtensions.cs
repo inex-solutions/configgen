@@ -19,69 +19,16 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Linq;
 using System.Xml.Linq;
-using ConfigGen.Api;
-using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Extensions;
 using JetBrains.Annotations;
 using Machine.Specifications;
 using Machine.Specifications.Utility.Internal;
 
-namespace ConfigGen.Tests.Common.MSpec
+namespace ConfigGen.Tests.Common.MSpecShouldExtensions
 {
     public static class ShouldExtensions
     {
-        /// <summary>
-        /// Asserts the supplied result indicates success.
-        /// </summary>
-        [NotNull]
-        public static GenerateResult ShouldIndicateSuccess([NotNull] this GenerateResult results)
-        {
-            if (results == null) throw new ArgumentNullException(nameof(results));
-
-            if (!results.Errors.Any())
-            {
-                return results;
-            }
-
-            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", results.Errors.Select(e => e.ToString()))}");
-        }
-
-        /// <summary>
-        /// Asserts the supplied result indicates success.
-        /// </summary>
-        [NotNull]
-        public static GenerateResult ShouldIndicateFailure([NotNull] this GenerateResult results)
-        {
-            if (results == null) throw new ArgumentNullException(nameof(results));
-
-            if (results.Errors.Any())
-            {
-                return results;
-            }
-
-            throw new SpecificationException($"Should indicate failure, but indicates success");
-        }
-
-        /// <summary>
-        /// Asserts the supplied result indicates success.
-        /// </summary>
-        [NotNull]
-        public static LoadResult ShouldIndicateSuccess([NotNull] this LoadResult result)
-        {
-            if (result == null) throw new ArgumentNullException(nameof(result));
-
-            if (result.Success
-                && !result.TemplateLoadErrors.Any())
-            {
-                return result;
-            }
-
-            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", result.TemplateLoadErrors.Select(e => e.ToString()))}");
-        }
-
         /// <summary>
         /// Asserts that the supplied <paramref name="actualXml"/> xml string contains semantically identical xml to <paramref name="expectedXml"/>.
         /// </summary>

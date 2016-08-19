@@ -21,7 +21,7 @@
 
 using System;
 using System.Collections.Generic;
-using ConfigGen.Api;
+using ConfigGen.Api.Contract;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp

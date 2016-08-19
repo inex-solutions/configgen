@@ -21,6 +21,7 @@
 
 using System;
 using System.Linq;
+using ConfigGen.Api.Contract;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using JetBrains.Annotations;

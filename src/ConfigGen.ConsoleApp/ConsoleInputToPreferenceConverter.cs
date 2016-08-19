@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ConfigGen.Api;
+using ConfigGen.Api.Contract;
 using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp

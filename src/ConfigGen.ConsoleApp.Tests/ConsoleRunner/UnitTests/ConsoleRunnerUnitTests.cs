@@ -20,7 +20,7 @@
 #endregion
 
 using System;
-using ConfigGen.Api;
+using ConfigGen.Api.Contract;
 using ConfigGen.Tests.Common;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;

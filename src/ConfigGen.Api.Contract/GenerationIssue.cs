@@ -20,15 +20,14 @@
 #endregion
 
 using System;
-using ConfigGen.Utilities;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Api
+namespace ConfigGen.Api.Contract
 {
     /// <summary>
     /// Represents an issue (either an error or a warning) during file generation
     /// </summary>
-    public class GenerationIssue : IDisplayText
+    public class GenerationIssue
     {
         public GenerationIssue(GenerationIssueSeverity severity, [NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
         {

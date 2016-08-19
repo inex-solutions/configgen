@@ -69,14 +69,20 @@
     <Compile Include="Extensions\GenerateResultsExtensions.cs" />
     <Compile Include="MachineSpecificationTestBase.cs" />
     <Compile Include="ContainerAwareMachineSpecificationTestBase.cs" />
-    <Compile Include="MSpec\Error\ShouldErrorExtensions.cs" />
-    <Compile Include="MSpec\ShouldExtensions.cs" />
-    <Compile Include="MSpec\GenerationError\ShouldGenerationErrorExtensions.cs" />
+    <Compile Include="MSpecShouldExtensions\Error\ErrorExtensions.cs" />
+    <Compile Include="MSpecShouldExtensions\GenerateResultExtensions\GenerateResultExtensions.cs" />
+    <Compile Include="MSpecShouldExtensions\LoadResultExtensions\LoadResultExtensions.cs" />
+    <Compile Include="MSpecShouldExtensions\ShouldExtensions.cs" />
+    <Compile Include="MSpecShouldExtensions\GenerationError\GenerationErrorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateLoadTestBase.cs" />
     <Compile Include="TemplateRenderTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Api.Contract\ConfigGen.Api.Contract.csproj">
+      <Project>{428450F8-92D3-4F76-8473-8E1806FBEA66}</Project>
+      <Name>ConfigGen.Api.Contract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">
       <Project>{28FF448C-08EA-4EC4-8005-32F80EC4B6C9}</Project>
       <Name>ConfigGen.Api</Name>

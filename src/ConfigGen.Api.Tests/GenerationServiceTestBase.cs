@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using Autofac;
+using ConfigGen.Api.Contract;
 using ConfigGen.Tests.Common;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;

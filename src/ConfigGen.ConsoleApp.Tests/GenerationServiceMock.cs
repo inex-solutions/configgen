@@ -22,7 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Api;
+using ConfigGen.Api.Contract;
 using Machine.Specifications;
 using Machine.Specifications.Annotations;
 

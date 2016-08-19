@@ -23,9 +23,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Machine.Specifications;
 
-namespace ConfigGen.Tests.Common.MSpec.Error
+namespace ConfigGen.Tests.Common.MSpecShouldExtensions.Error
 {
-    public static class ShouldErrorExtensions
+    public static class ErrorExtensions
     {
         /// <summary>
         /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.

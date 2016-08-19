@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Api
+namespace ConfigGen.Api.Contract
 {
     public class GeneratedFile
     {

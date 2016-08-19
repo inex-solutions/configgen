@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Domain.Contract.Preferences;
-using ConfigGen.Tests.Common.MSpec.Error;
+using ConfigGen.Tests.Common.MSpecShouldExtensions.Error;
 using Machine.Specifications;
 
 namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests

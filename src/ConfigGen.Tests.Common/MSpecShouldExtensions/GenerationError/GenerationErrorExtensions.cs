@@ -22,14 +22,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConfigGen.Api;
+using ConfigGen.Api.Contract;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 using Machine.Specifications;
 
-namespace ConfigGen.Tests.Common.MSpec.GenerationError
+namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError
 {
-    public static class ShouldGenerationErrorExtensions
+    public static class GenerationErrorExtensions
     {
         /// <summary>
         /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.

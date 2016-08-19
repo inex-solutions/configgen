@@ -73,6 +73,10 @@
     <Compile Include="TestLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Api.Contract\ConfigGen.Api.Contract.csproj">
+      <Project>{428450F8-92D3-4F76-8473-8E1806FBEA66}</Project>
+      <Name>ConfigGen.Api.Contract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">
       <Project>{28ff448c-08ea-4ec4-8005-32f80ec4b6c9}</Project>
       <Name>ConfigGen.Api</Name>

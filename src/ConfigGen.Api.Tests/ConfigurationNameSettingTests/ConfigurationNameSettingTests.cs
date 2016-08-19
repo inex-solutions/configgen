@@ -24,7 +24,7 @@ using System.Linq;
 using System.Reflection;
 using ConfigGen.Domain;
 using ConfigGen.Tests.Common.Extensions;
-using ConfigGen.Tests.Common.MSpec.GenerationError;
+using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 

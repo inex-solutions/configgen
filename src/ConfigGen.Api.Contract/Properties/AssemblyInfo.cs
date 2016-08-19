@@ -19,18 +19,22 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
-using ConfigGen.Api.Contract;
-using ConfigGen.Domain;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace ConfigGen.Api
-{
-    public class GenerationServiceModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterModule<ConfigurationGeneratorModule>();
-            builder.RegisterType<GenerationService>().As<IGenerationService>();
-        }
-    }
-}
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("ConfigGen.Api.Contract")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyProduct("ConfigGen.Api.Contract")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("428450f8-92d3-4f76-8473-8e1806fbea66")]

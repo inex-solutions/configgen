@@ -20,30 +20,30 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Api
+namespace ConfigGen.Api.Contract
 {
-    public class PreferenceInfo
+    public class GenerateResult
     {
-        public PreferenceInfo([NotNull] string name, [CanBeNull] string shortName, [NotNull] string description)
+        public GenerateResult([NotNull] IEnumerable<GeneratedFile> generatedFiles, [NotNull] IEnumerable<GenerationIssue> errors)
         {
-            if (name == null) throw new ArgumentNullException(nameof(name));
-            if (description == null) throw new ArgumentNullException(nameof(description));
+            if (generatedFiles == null) throw new ArgumentNullException(nameof(generatedFiles));
+            if (errors == null) throw new ArgumentNullException(nameof(errors));
 
-            Name = name;
-            ShortName = shortName;
-            Description = description;
+            GeneratedFiles = generatedFiles;
+            Errors = errors;
+            Success = !Errors.Any();
         }
 
-        [NotNull]
-        public string Name { get; }
-
-        
-        [CanBeNull]
-        public string ShortName { get; }
+        public bool Success { get; }
 
         [NotNull]
-        public string Description { get; }
+        public IEnumerable<GenerationIssue> Errors { get; }
+
+        [NotNull]
+        public IEnumerable<GeneratedFile> GeneratedFiles { get; }
     }
 }

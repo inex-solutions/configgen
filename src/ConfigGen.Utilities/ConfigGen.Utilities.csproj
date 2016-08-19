@@ -72,6 +72,7 @@
     <Compile Include="ILocalEnvironment.cs" />
     <Compile Include="IO\FileExtensions.cs" />
     <Compile Include="IO\IStreamComparer.cs" />
+    <Compile Include="IO\PausableWriteableStream.cs" />
     <Compile Include="IO\StreamComparer.cs" />
     <Compile Include="IResult.cs" />
     <Compile Include="ItemFactoryByTypeOrFileExtensionBase.cs" />
@@ -85,9 +86,14 @@
     <Compile Include="Logging\LoggingVerbosity.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="TextEncodingDetector.cs" />
+    <Compile Include="Xml\IXmlStreamFormatter.cs" />
+    <Compile Include="Xml\XmlDeclarationBehaviour.cs" />
     <Compile Include="Xml\XmlDeclarationInfo.cs" />
     <Compile Include="Xml\XmlDeclarationParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Xml\XmlReaderToWriterCopier.cs" />
+    <Compile Include="Xml\XmlStreamFormatter.cs" />
+    <Compile Include="Xml\XmlStreamFormatterOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

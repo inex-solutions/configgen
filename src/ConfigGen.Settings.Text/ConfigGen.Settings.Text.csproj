@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B1F73633-082F-4CA1-8BD5-575283C19839}</ProjectGuid>
+    <ProjectGuid>{50FFE39A-D5BA-448F-864A-5B858A9412A1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConfigGen.Domain</RootNamespace>
-    <AssemblyName>ConfigGen.Domain</AssemblyName>
+    <RootNamespace>ConfigGen.Settings.Text</RootNamespace>
+    <AssemblyName>ConfigGen.Settings.Text</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -36,8 +36,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,51 +52,22 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ConfigurationFactory.cs" />
-    <Compile Include="ConfigurationGenerator.cs" />
-    <Compile Include="ConfigurationGeneratorModule.cs" />
-    <Compile Include="ConfigurationNameSelector.cs" />
-    <Compile Include="FileOutput\FileOutputModule.cs" />
-    <Compile Include="Filtering\ByConfigurationNameMatchFilter.cs" />
-    <Compile Include="Filtering\ByConfigurationNameRegexFilter.cs" />
-    <Compile Include="Filtering\ConfigurationCollectionFilter.cs" />
-    <Compile Include="Filtering\ConfigurationCollectionFilterPreferences.cs" />
-    <Compile Include="Filtering\ConfigurationCollectionFilterPreferencesGroup.cs" />
-    <Compile Include="ConfigurationCollectionLoaderFactory.cs" />
-    <Compile Include="ConfigurationGeneratorError.cs" />
-    <Compile Include="ConfigurationGeneratorErrorCodes.cs" />
-    <Compile Include="ConfigurationGeneratorPreferenceGroup.cs" />
-    <Compile Include="ConfigurationGeneratorPreferences.cs" />
-    <Compile Include="FileOutput\FileOutputPreferenceGroup.cs" />
-    <Compile Include="FileOutput\FileOutputPreferences.cs" />
-    <Compile Include="FileOutput\FileOutputWriter.cs" />
-    <Compile Include="Filtering\ConfigurationFilteringModule.cs" />
-    <Compile Include="Filtering\LocalOnlyConfigurationFilter.cs" />
-    <Compile Include="IConfigurationFactory.cs" />
+    <Compile Include="Xml\Configuration.cs" />
+    <Compile Include="Xml\Group.cs" />
+    <Compile Include="Xml\IConfigurationContainer.cs" />
+    <Compile Include="Xml\Include.cs" />
+    <Compile Include="Xml\ISettingContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TemplateFactory.cs" />
-    <Compile Include="TokenUsageTracker.cs" />
+    <Compile Include="Xml\Setting.cs" />
+    <Compile Include="Xml\SettingGroup.cs" />
+    <Compile Include="Xml\Settings.cs" />
+    <Compile Include="Xml\XmlSettingsLoader.cs" />
+    <Compile Include="Xml\XmlSettingsLoaderModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
-      <Project>{922a7cac-d79f-47a8-a780-5ee0baa384fa}</Project>
+      <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Settings.Excel\ConfigGen.Settings.Excel.csproj">
-      <Project>{90A5D982-3422-4C11-94C1-E1AA924FC5A6}</Project>
-      <Name>ConfigGen.Settings.Excel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Settings.Text\ConfigGen.Settings.Text.csproj">
-      <Project>{50FFE39A-D5BA-448F-864A-5B858A9412A1}</Project>
-      <Name>ConfigGen.Settings.Text</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj">
-      <Project>{C96CB4FE-EFD6-4673-B587-71E1053B970E}</Project>
-      <Name>ConfigGen.Templating.Razor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConfigGen.Templating.Xml\ConfigGen.Templating.Xml.csproj">
-      <Project>{A2A596E2-B503-4311-9AD4-7EDAE03D7B1F}</Project>
-      <Name>ConfigGen.Templating.Xml</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
       <Project>{19F4FCFE-CEB6-4242-81FD-2A35814E6F59}</Project>

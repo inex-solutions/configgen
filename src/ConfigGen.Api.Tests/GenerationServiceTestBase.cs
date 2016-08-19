@@ -37,6 +37,7 @@ namespace ConfigGen.Api.Tests
             public const string TemplateFilePath = "TemplateFile";
             public const string TemplateFileType = "TemplateFileType";
             public const string SettingsFilePath = "SettingsFile";
+            public const string SettingsFileType = "SettingsFileType";
             public const string ErrorOnWarnings = "ErrorOnWarnings";
             public const string ConfigurationNameSetting = "ConfigurationNameSetting";
 

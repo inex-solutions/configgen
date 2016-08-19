@@ -25,6 +25,7 @@ using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Settings.Excel;
+using ConfigGen.Settings.Text.Xml;
 using ConfigGen.Templating.Razor;
 using ConfigGen.Templating.Xml;
 using ConfigGen.Utilities.IO;
@@ -38,6 +39,7 @@ namespace ConfigGen.Domain
         {
             builder.RegisterModule<Log4NetLoggerModule>();
             builder.RegisterModule<ExcelSettingsLoaderModule>();
+            builder.RegisterModule<XmlSettingsLoaderModule>();
             builder.RegisterModule<FileOutputModule>();
             builder.RegisterModule<ConfigurationFilteringModule>();
             builder.RegisterModule<XmlTemplateModule>(); //TODO: NDepend rule -> only this should be referenced from ConfigGen.Templating.Xml.dll

@@ -18,14 +18,23 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Templating.Xml
-{
-    public class XmlTemplatePreferences
-    {
-        public bool PrettyPrintEnabled { get; set; }
 
-        public int PrettyPrintLineLength { get; set; }
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-        public int PrettyPrintTabSize { get; set; }
-    }
-}
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("ConfigGen.Settings.Xml")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyProduct("ConfigGen.Settings.Xml")]
+[assembly: AssemblyCulture("")]
+
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("50ffe39a-d5ba-448f-864a-5b858a9412a1")]

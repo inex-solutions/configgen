@@ -18,14 +18,28 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Templating.Xml
+
+using System;
+using System.Xml.Serialization;
+
+namespace ConfigGen.Settings.Text.Xml
 {
-    public class XmlTemplatePreferences
+    /// <summary>
+    /// A group of settings to be applied to a <see cref="Configuration"/> or <see cref="Group"/>
+    /// </summary>
+    [Serializable]
+    public class SettingGroup
     {
-        public bool PrettyPrintEnabled { get; set; }
+        /// <summary>
+        /// Identifies the <see cref="SettingGroup"/>
+        /// </summary>
+        [XmlAttribute("Key")]
+        public string Key { get; set; }
 
-        public int PrettyPrintLineLength { get; set; }
-
-        public int PrettyPrintTabSize { get; set; }
+        /// <summary>
+        /// Settings to be applied when this <see cref="SettingGroup"/> is included
+        /// </summary>
+        [XmlElement("Setting")]
+        public Setting[] Settings { get; set; } 
     }
 }

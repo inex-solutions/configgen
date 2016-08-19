@@ -18,14 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Templating.Xml
+namespace ConfigGen.Settings.Text.Xml
 {
-    public class XmlTemplatePreferences
+    internal interface IConfigurationContainer : ISettingContainer
     {
-        public bool PrettyPrintEnabled { get; set; }
-
-        public int PrettyPrintLineLength { get; set; }
-
-        public int PrettyPrintTabSize { get; set; }
+        string ConfigFileName { get; set; }
+        Configuration[] Configurations { get; set; }
+        Group[] Groups { get; set; }
     }
 }

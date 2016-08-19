@@ -36,6 +36,14 @@ namespace ConfigGen.Domain
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.SettingsFilePath = stringValue);
 
+            SettingsFileType = new Preference<ConfigurationGeneratorPreferences, string>(
+                name: "SettingsFileType",
+                shortName: "SettingsType",
+                description: "specifies the settings file type (e.g. xls, xml)",
+                parameterDescription: new PreferenceParameterDescription("settings file type", "type of settings file: xls, xml"),
+                parseAction: stringValue => stringValue,
+                setAction: (stringValue, preferences) => preferences.SettingsFileType = stringValue);
+
             TemplateFilePath = new Preference<ConfigurationGeneratorPreferences, string>(
                 name: "TemplateFile",
                 shortName: "Template",
@@ -82,6 +90,7 @@ namespace ConfigGen.Domain
             preferences: new IPreference<ConfigurationGeneratorPreferences>[]
             {
                 SettingsFilePath,
+                SettingsFileType,
                 TemplateFilePath,
                 TemplateFileType,
                 Verbose,
@@ -100,6 +109,8 @@ namespace ConfigGen.Domain
         public static Preference<ConfigurationGeneratorPreferences, string> TemplateFilePath { get; }
 
         public static Preference<ConfigurationGeneratorPreferences, string> SettingsFilePath { get; }
+
+        public static Preference<ConfigurationGeneratorPreferences, string> SettingsFileType { get; }
 
         public static Preference<ConfigurationGeneratorPreferences, string> ConfigurationNameSetting { get; }
     }

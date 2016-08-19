@@ -18,14 +18,28 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Templating.Xml
+
+using System;
+using System.Xml.Serialization;
+
+namespace ConfigGen.Settings.Text.Xml
 {
-    public class XmlTemplatePreferences
+    /// <summary>
+    /// A setting to be used in file generation
+    /// </summary>
+    [Serializable]
+    public class Setting
     {
-        public bool PrettyPrintEnabled { get; set; }
+        /// <summary>
+        /// The token used in the template to represent this setting
+        /// </summary>
+        [XmlAttribute("Token")]
+        public string Token { get; set; }
 
-        public int PrettyPrintLineLength { get; set; }
-
-        public int PrettyPrintTabSize { get; set; }
+        /// <summary>
+        /// The value of this setting
+        /// </summary>
+        [XmlText]
+        public string Value { get; set; }
     }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ConfigGenSettings xmlns="http://roblevine.co.uk/Namespaces/ConfigGen/Settings/1/0/" ConfigFileName="App.Config">
+  <Setting Token="CustomErrorMode">Off</Setting>
+
+  <Group Name="Dev">
+    <Setting Token="Environment">DEV</Setting>
+    <Configuration Name="DevServer">
+      <Include SettingGroup="CustomErrorsRemoteOnly" />
+    </Configuration>
+    <Configuration Name="MyWorkstation" />
+    <Configuration Name="Default" />
+  </Group>
+
+  <Configuration Name="UatServer">
+    <Setting Token="Environment">UAT</Setting>
+    <Include SettingGroup="CustomErrorsRemoteOnly" />
+  </Configuration>
+
+  <Configuration Name="ProdServer">
+    <Setting Token="Environment">PROD</Setting>
+    <Setting Token="CustomErrorMode">On</Setting>
+  </Configuration>
+
+  <SettingGroup Key="CustomErrorsRemoteOnly">
+    <Setting Token="CustomErrorMode">RemoteOnly</Setting>
+  </SettingGroup>
+</ConfigGenSettings>

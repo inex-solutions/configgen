@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,14 +18,17 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Templating.Xml
+
+using Autofac;
+using ConfigGen.Domain.Contract.Settings;
+
+namespace ConfigGen.Settings.Text.Xml
 {
-    public class XmlTemplatePreferences
+    public class XmlSettingsLoaderModule : Module
     {
-        public bool PrettyPrintEnabled { get; set; }
-
-        public int PrettyPrintLineLength { get; set; }
-
-        public int PrettyPrintTabSize { get; set; }
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<XmlSettingsLoader>().As<ISettingsLoader>().As<XmlSettingsLoader>();
+        }
     }
 }

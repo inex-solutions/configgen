@@ -39,8 +39,8 @@ namespace ConfigGen.Domain
             SettingsFileType = new Preference<ConfigurationGeneratorPreferences, string>(
                 name: "SettingsFileType",
                 shortName: "SettingsType",
-                description: "specifies the settings file type (e.g. xls, xml)",
-                parameterDescription: new PreferenceParameterDescription("settings file type", "type of settings file: xls, xml"),
+                description: "specifies the settings file type (e.g. xls, xml, csv)",
+                parameterDescription: new PreferenceParameterDescription("settings file type", "type of settings file: xls, xml, csv"),
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.SettingsFileType = stringValue);
 

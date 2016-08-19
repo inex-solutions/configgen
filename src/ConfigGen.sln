@@ -44,6 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleFiles", "SampleFiles"
 		SampleFiles\SimpleSettings.FiveConfigurations.TwoValues.xls = SampleFiles\SimpleSettings.FiveConfigurations.TwoValues.xls
 		SampleFiles\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls = SampleFiles\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls
 		SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls = SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls
+		SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.csv = SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.csv
 		SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls = SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls
 		SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xml = SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xml
 		SampleFiles\SimpleTemplate.TwoTokens.razor = SampleFiles\SimpleTemplate.TwoTokens.razor

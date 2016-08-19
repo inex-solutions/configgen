@@ -39,6 +39,10 @@
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Net.Code.Csv, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Net.Code.Csv.1.0.3\lib\net45\Net.Code.Csv.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,6 +56,8 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Csv\CsvSettingsLoader.cs" />
+    <Compile Include="Csv\CsvSettingsLoaderModule.cs" />
     <Compile Include="Xml\Configuration.cs" />
     <Compile Include="Xml\Group.cs" />
     <Compile Include="Xml\IConfigurationContainer.cs" />

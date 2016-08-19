@@ -58,6 +58,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CsvSettingsLoaderTests\CsvSettingsLoaderTests.cs" />
     <Compile Include="GenerationServiceTestBase.cs" />
     <Compile Include="ConfigurationNameSettingTests\ConfigurationNameSettingTests.cs" />
     <Compile Include="FakeLocalEnvironment.cs" />
@@ -102,6 +103,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.csv">
+      <Link>TestResources\SimpleSettings.TwoConfigurations.TwoValues.csv</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

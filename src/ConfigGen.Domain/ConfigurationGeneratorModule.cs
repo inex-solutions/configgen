@@ -25,6 +25,7 @@ using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Settings.Excel;
+using ConfigGen.Settings.Text.Csv;
 using ConfigGen.Settings.Text.Xml;
 using ConfigGen.Templating.Razor;
 using ConfigGen.Templating.Xml;
@@ -38,8 +39,12 @@ namespace ConfigGen.Domain
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule<Log4NetLoggerModule>();
-            builder.RegisterModule<ExcelSettingsLoaderModule>();
+            builder.RegisterModule<ExcelSettingsLoaderModule>(); //TODO: NDepend rule -> only this should be referenced from ConfigGen.Settings.Excel.dll
+
+            // TODO: NDepend rule -> only these two should be referenced from ConfigGen.Settings.Text.dll
             builder.RegisterModule<XmlSettingsLoaderModule>();
+            builder.RegisterModule<CsvSettingsLoaderModule>();
+
             builder.RegisterModule<FileOutputModule>();
             builder.RegisterModule<ConfigurationFilteringModule>();
             builder.RegisterModule<XmlTemplateModule>(); //TODO: NDepend rule -> only this should be referenced from ConfigGen.Templating.Xml.dll

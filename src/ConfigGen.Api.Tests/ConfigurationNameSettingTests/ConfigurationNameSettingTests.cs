@@ -22,7 +22,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ConfigGen.Domain;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
 using ConfigGen.Utilities.Extensions;
@@ -59,7 +58,7 @@ namespace ConfigGen.Api.Tests.ConfigurationNameSettingTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.ConfigurationNameSetting.Name, "Value1"}
+                {PreferenceNames.ConfigurationNameSetting, "Value1"}
             };
         };
 
@@ -84,7 +83,7 @@ namespace ConfigGen.Api.Tests.ConfigurationNameSettingTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.ConfigurationNameSetting.Name, "ValueXXX"}
+                {PreferenceNames.ConfigurationNameSetting, "ValueXXX"}
             };
         };
 
@@ -93,6 +92,6 @@ namespace ConfigGen.Api.Tests.ConfigurationNameSettingTests
         It no_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(0);
 
         It an_error_was_reported_indicating_the_configuration_name_token_was_not_found = 
-            () => Result.Errors.ShouldContainSingleItemWithCode(ConfigurationGeneratorErrorCodes.UnknownConfigurationNameSetting);
+            () => Result.Errors.ShouldContainSingleItemWithCode(ErrorCodes.UnknownConfigurationNameSetting);
     }
 }

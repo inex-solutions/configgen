@@ -24,8 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using ConfigGen.Domain;
-using ConfigGen.Domain.FileOutput;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Utilities.Extensions;
@@ -63,7 +61,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {FileOutputPreferenceGroup.FilenameSetting.Name, "Value1"}
+                {PreferenceNames.FilenameSetting, "Value1"}
             };
         };
 
@@ -89,7 +87,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {FileOutputPreferenceGroup.ForceFilename.Name, "ForcedFilename.xml"}
+                {PreferenceNames.ForceFilename, "ForcedFilename.xml"}
             };
         };
 
@@ -188,7 +186,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
             };
         };
 
@@ -212,7 +210,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
             };
         };
 
@@ -236,7 +234,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
             };
         };
 

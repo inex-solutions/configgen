@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ConfigGen.Domain;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Utilities.Extensions;
@@ -46,7 +45,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
 
                 PreferencesToSupplyToGenerator = new Dictionary<string, string>
                 {
-                    {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                    {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
                 };
             };
 
@@ -87,7 +86,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
 
                 PreferencesToSupplyToGenerator = new Dictionary<string, string>
                 {
-                    { ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.xml" }
+                    { PreferenceNames.TemplateFilePath, "App.Config.Template.xml" }
                 };
             };
 

@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
-using ConfigGen.Domain.Filtering;
 using ConfigGen.Tests.Common.MSpecShouldExtensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Utilities;
@@ -42,7 +41,7 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.LocalOnly.Name, null}
+                {PreferenceNames.LocalOnly, null}
             };
 
             ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "Configuration3")).As<ILocalEnvironment>();
@@ -67,7 +66,7 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.LocalOnly.Name, null}
+                {PreferenceNames.LocalOnly, null}
             };
 
             ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "SomeMachineNameOrOther")).As<ILocalEnvironment>();
@@ -99,7 +98,7 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.LocalOnly.Name, null}
+                {PreferenceNames.LocalOnly, null}
             };
 
             ContainerBuilder.RegisterInstance(new FakeLocalEnvironment(machineName: "SomeMachineNameOrOther")).As<ILocalEnvironment>();
@@ -121,7 +120,7 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.GenerateSpecifiedOnly.Name, "MatchesNothing"}
+                {PreferenceNames.GenerateSpecifiedOnly, "MatchesNothing"}
             };
         };
 
@@ -141,7 +140,7 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.GenerateSpecifiedOnly.Name, "Configuration2,Configuration3"}
+                {PreferenceNames.GenerateSpecifiedOnly, "Configuration2,Configuration3"}
             };
         };
 
@@ -164,7 +163,7 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.FilterMachinesRegexp.Name, "Configuration[6-7]"}
+                {PreferenceNames.FilterMachinesRegexp, "Configuration[6-7]"}
             };
         };
 
@@ -184,7 +183,7 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.FilterMachinesRegexp.Name, "Configuration[2-3]"}
+                {PreferenceNames.FilterMachinesRegexp, "Configuration[2-3]"}
             };
         };
 
@@ -207,8 +206,8 @@ namespace ConfigGen.Api.Tests.FilteringTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationCollectionFilterPreferencesGroup.FilterMachinesRegexp.Name, "Configuration[2-3]"},
-                {ConfigurationCollectionFilterPreferencesGroup.GenerateSpecifiedOnly.Name, "Configuration3"}
+                {PreferenceNames.FilterMachinesRegexp, "Configuration[2-3]"},
+                {PreferenceNames.GenerateSpecifiedOnly, "Configuration3"}
             };
         };
 

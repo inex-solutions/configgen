@@ -22,7 +22,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ConfigGen.Domain;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
@@ -64,7 +63,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
             };
         };
 
@@ -93,7 +92,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.unknown"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.unknown"}
             };
         };
 
@@ -102,7 +101,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
         It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It the_result_should_contain_a_single_error_indicating_unknown_template_type =
-            () => Result.Errors.ShouldContainSingleItemWithCode(ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure);
+            () => Result.Errors.ShouldContainSingleItemWithCode(ErrorCodes.TemplateTypeResolutionFailure);
     }
 
     internal class when_invoked_with_an_unrecognised_TemplateType_preference : GenerationServiceTestBase
@@ -114,7 +113,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFileType.Name, "notxml"}
+                {PreferenceNames.TemplateFileType, "notxml"}
             };
         };
 
@@ -123,7 +122,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
         It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It the_result_should_contain_a_single_error_indicating_unknown_template_type =
-            () => Result.Errors.ShouldContainSingleItemWithCode(ConfigurationGeneratorErrorCodes.UnknownTemplateType);
+            () => Result.Errors.ShouldContainSingleItemWithCode(ErrorCodes.UnknownTemplateType);
     }
 
     internal class when_invoked_for_an_xml_template_with_an_unrecognised_extension_and_the_TemplateType_preference : GenerationServiceTestBase
@@ -135,8 +134,8 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.unknown"},
-                {ConfigurationGeneratorPreferenceGroup.TemplateFileType.Name, "xml"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.unknown"},
+                {PreferenceNames.TemplateFileType, "xml"}
             };
         };
 
@@ -163,8 +162,8 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.unknown"},
-                {ConfigurationGeneratorPreferenceGroup.TemplateFileType.Name, "razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.unknown"},
+                {PreferenceNames.TemplateFileType, "razor"}
             };
         };
 

@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ConfigGen.Api.Contract;
-using ConfigGen.Domain;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
 using ConfigGen.Utilities.Extensions;
@@ -79,7 +78,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
         It one_overall_generation_errors_is_reported = () => Result.Errors.Count().ShouldEqual(1);
 
         It the_single_error_indicates_the_template_file_was_not_found =
-            () => Result.Errors.ShouldContainAnItemWithCode(ConfigurationGeneratorErrorCodes.TemplateFileNotFound);
+            () => Result.Errors.ShouldContainAnItemWithCode(GenerationServiceTestBase.ErrorCodes.TemplateFileNotFound);
 
         It no_individual_file_generation_errors_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Errors).ShouldBeEmpty();
 
@@ -110,7 +109,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
         It one_overall_generation_errors_is_reported = () => Result.Errors.Count().ShouldEqual(1);
 
         It the_single_error_indicates_the_template_file_was_not_found =
-            () => Result.Errors.ShouldContainAnItemWithCode(ConfigurationGeneratorErrorCodes.SettingsFileNotFound);
+            () => Result.Errors.ShouldContainAnItemWithCode(GenerationServiceTestBase.ErrorCodes.SettingsFileNotFound);
 
         It no_individual_file_generation_errors_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Errors).ShouldBeEmpty();
 
@@ -140,7 +139,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
             };
         };
 
@@ -180,7 +179,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
             };
         };
 
@@ -223,7 +222,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
             };
         };
 
@@ -266,8 +265,8 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"},
-                {ConfigurationGeneratorPreferenceGroup.ErrorOnWarnings.Name, "true"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"},
+                {PreferenceNames.ErrorOnWarnings, "true"}
             };
         };
 

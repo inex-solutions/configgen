@@ -54,7 +54,7 @@ namespace ConfigGen.ConsoleApp.Tests
 
             GenerateConfigurationsWasCalled = true;
 
-            return new GenerateResult(Enumerable.Empty<GeneratedFile>(), Enumerable.Empty<GenerationError>());
+            return new GenerateResult(Enumerable.Empty<GeneratedFile>(), Enumerable.Empty<GenerationIssue>());
         }
 
         public IDictionary<string, string> PreferenceValues { get; set; }

@@ -28,7 +28,7 @@ namespace ConfigGen.Api
 {
     public class GenerateResult
     {
-        public GenerateResult([NotNull] IEnumerable<GeneratedFile> generatedFiles, [NotNull] IEnumerable<GenerationError> errors)
+        public GenerateResult([NotNull] IEnumerable<GeneratedFile> generatedFiles, [NotNull] IEnumerable<GenerationIssue> errors)
         {
             if (generatedFiles == null) throw new ArgumentNullException(nameof(generatedFiles));
             if (errors == null) throw new ArgumentNullException(nameof(errors));
@@ -41,7 +41,7 @@ namespace ConfigGen.Api
         public bool Success { get; }
 
         [NotNull]
-        public IEnumerable<GenerationError> Errors { get; }
+        public IEnumerable<GenerationIssue> Errors { get; }
 
         [NotNull]
         public IEnumerable<GeneratedFile> GeneratedFiles { get; }

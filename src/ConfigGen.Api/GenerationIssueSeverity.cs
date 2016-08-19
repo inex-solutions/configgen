@@ -18,25 +18,11 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using ConfigGen.Utilities.Logging;
-
-namespace ConfigGen.Domain
+namespace ConfigGen.Api
 {
-    public class ConfigurationGeneratorPreferences
+    public enum GenerationIssueSeverity
     {
-        public string SettingsFilePath { get; set; }
-
-        public string SettingsFileType { get; set; }
-
-        public string TemplateFilePath { get; set; }
-
-        public string TemplateFileType { get; set; }
-
-        public LoggingVerbosity Verbosity { get; set; }
-
-        public string ConfigurationNameSetting { get; set; }
-
-        public bool ErrorOnWarnings { get; set; }
+        Error = 1,
+        Warning = 2
     }
 }

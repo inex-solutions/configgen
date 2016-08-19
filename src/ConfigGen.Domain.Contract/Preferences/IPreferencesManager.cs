@@ -35,7 +35,7 @@ namespace ConfigGen.Domain.Contract.Preferences
         [NotNull]
         IEnumerable<Error> ApplyDefaultPreferences([NotNull] IEnumerable<KeyValuePair<string, string>> defaultPreferences);
 
-        [CanBeNull]
+        [NotNull]
         TPreferenceType GetPreferenceInstance<TPreferenceType>() where TPreferenceType : new();
     }
 }

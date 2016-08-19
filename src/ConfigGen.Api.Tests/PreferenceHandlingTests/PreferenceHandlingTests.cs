@@ -77,10 +77,10 @@ namespace ConfigGen.Api.Tests.PreferenceHandlingTests
         It the_result_should_contain_two_errors = () => Result.Errors.Count().ShouldEqual(2);
 
         It one_error_should_indicate_an_unrecognised_preference_for_one_supplied_preference =
-            () => Result.Errors.ShouldContainAnErrorWithCode("UnrecognisedPreference").AndWithTextContaining("SomeUnknownPreference");
+            () => Result.Errors.ShouldContainAnItemWithCode("UnrecognisedPreference").AndWithTextContaining("SomeUnknownPreference");
 
         It one_error_should_indicate_an_unrecognised_preference_for_the_other_supplied_preference =
-            () => Result.Errors.ShouldContainAnErrorWithCode("UnrecognisedPreference").AndWithTextContaining("AnotherUnknownPreference");
+            () => Result.Errors.ShouldContainAnItemWithCode("UnrecognisedPreference").AndWithTextContaining("AnotherUnknownPreference");
 
         It no_files_should_have_been_generated = () => Result.GeneratedFiles.ShouldBeEmpty();
     }

@@ -25,18 +25,24 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Api
 {
-    public class GenerationError : IDisplayText
+    /// <summary>
+    /// Represents an issue (either an error or a warning) during file generation
+    /// </summary>
+    public class GenerationIssue : IDisplayText
     {
-        public GenerationError([NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
+        public GenerationIssue(GenerationIssueSeverity severity, [NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
         {
             if (code == null) throw new ArgumentNullException(nameof(code));
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (detail == null) throw new ArgumentNullException(nameof(detail));
 
+            Severity = severity;
             Code = code;
             Source = source;
             Detail = detail;
         }
+
+        public GenerationIssueSeverity Severity { get; }
 
         [NotNull]
         public string Code { get; }
@@ -49,7 +55,7 @@ namespace ConfigGen.Api
 
         public override string ToString()
         {
-            return $"ERROR: {ToDisplayText()}";
+            return $"{Severity.ToString().ToUpper()}: {ToDisplayText()}";
         }
 
         public string ToDisplayText()

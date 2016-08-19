@@ -33,8 +33,8 @@ namespace ConfigGen.Api
             [NotNull] IEnumerable<string> usedTokens,
             [NotNull] IEnumerable<string> unusedTokens,
             [NotNull] IEnumerable<string> unrecognisedTokens,
-            [NotNull] IEnumerable<GenerationWarning> warnings,
-            [NotNull] IEnumerable<GenerationError> errors, 
+            [NotNull] IEnumerable<GenerationIssue> warnings,
+            [NotNull] IEnumerable<GenerationIssue> errors, 
             bool hasChanged)
         {
             if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
@@ -65,11 +65,11 @@ namespace ConfigGen.Api
 
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<GenerationError> Errors { get; }
+        public IEnumerable<GenerationIssue> Errors { get; }
 
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<GenerationWarning> Warnings { get; }
+        public IEnumerable<GenerationIssue> Warnings { get; }
 
         [NotNull]
         [ItemNotNull]

@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Api;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 using Machine.Specifications;
@@ -33,7 +34,7 @@ namespace ConfigGen.Tests.Common.MSpec.GenerationError
         /// <summary>
         /// Asserts that the supplied collection of errors contains a single entry only, and that the single error entry has the supplied error code.
         /// </summary>
-        public static IEnumerable<Api.GenerationError> ShouldContainSingleErrorWithCode(this IEnumerable<Api.GenerationError> actual, string expectedErrorCode)
+        public static IEnumerable<GenerationIssue> ShouldContainSingleItemWithCode(this IEnumerable<GenerationIssue> actual, string expectedErrorCode)
         {
             if (actual == null)
             {
@@ -59,38 +60,8 @@ namespace ConfigGen.Tests.Common.MSpec.GenerationError
             return actual;
         }
 
-        /// <summary>
-        /// Asserts that the supplied collection of warnings contains a single entry only, and that the single warning entry has the supplied warning code.
-        /// </summary>
-        public static IEnumerable<Api.GenerationWarning> ShouldContainSingleWarningWithCode(this IEnumerable<Api.GenerationWarning> actual, string expectedWarningCode)
-        {
-            if (actual == null)
-            {
-                throw new SpecificationException("Expected warning collection to contain a single item, but was null");
-            }
-
-            var actualArray = actual.ToArray();
-
-            var count = actualArray.Length;
-
-            if (count != 1)
-            {
-                throw new SpecificationException($"Expected warning collection to contain a single item, but there were {count} items");
-            }
-
-            var warning
-                 = actualArray[0];
-
-            if (warning.Code != expectedWarningCode)
-            {
-                throw new SpecificationException($"Incorrect warning code. Expected {expectedWarningCode}, but was {warning.Code} (\"{warning.Detail}\")");
-            }
-
-            return actual;
-        }
-
         [NotNull]
-        public static ErrorAssertions ShouldContainAnErrorWithCode([NotNull] this IEnumerable<Api.GenerationError> actual, string code)
+        public static ErrorAssertions ShouldContainAnItemWithCode([NotNull] this IEnumerable<GenerationIssue> actual, string code)
         {
             if (actual == null) throw new ArgumentNullException(nameof(actual));
 
@@ -109,17 +80,17 @@ namespace ConfigGen.Tests.Common.MSpec.GenerationError
         public class ErrorAssertions
         {
             [NotNull]
-            private readonly IReadOnlyCollection<Api.GenerationError> _matchingItems;
+            private readonly IReadOnlyCollection<GenerationIssue> _matchingItems;
 
             [NotNull]
-            private readonly IReadOnlyCollection<Api.GenerationError> _allItems;
+            private readonly IReadOnlyCollection<GenerationIssue> _allItems;
 
             [NotNull]
             private readonly string _partialMatchDescription;
 
             public ErrorAssertions(
-                [NotNull] IReadOnlyCollection<Api.GenerationError> matchingItems,
-                [NotNull] IReadOnlyCollection<Api.GenerationError> allItems,
+                [NotNull] IReadOnlyCollection<GenerationIssue> matchingItems,
+                [NotNull] IReadOnlyCollection<GenerationIssue> allItems,
                 [NotNull] string partialMatchDescription)
             {
                 if (matchingItems == null) throw new ArgumentNullException(nameof(matchingItems));

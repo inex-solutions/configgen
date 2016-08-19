@@ -102,7 +102,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
         It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It the_result_should_contain_a_single_error_indicating_unknown_template_type =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure);
+            () => Result.Errors.ShouldContainSingleItemWithCode(ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure);
     }
 
     internal class when_invoked_with_an_unrecognised_TemplateType_preference : GenerationServiceTestBase
@@ -123,7 +123,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
         It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It the_result_should_contain_a_single_error_indicating_unknown_template_type =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(ConfigurationGeneratorErrorCodes.UnknownTemplateType);
+            () => Result.Errors.ShouldContainSingleItemWithCode(ConfigurationGeneratorErrorCodes.UnknownTemplateType);
     }
 
     internal class when_invoked_for_an_xml_template_with_an_unrecognised_extension_and_the_TemplateType_preference : GenerationServiceTestBase

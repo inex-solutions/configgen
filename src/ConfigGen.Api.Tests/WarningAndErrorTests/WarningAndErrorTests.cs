@@ -78,7 +78,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
         It one_overall_generation_errors_is_reported = () => Result.Errors.Count().ShouldEqual(1);
 
         It the_single_error_indicates_the_template_file_was_not_found =
-            () => Result.Errors.ShouldContainAnErrorWithCode(ConfigurationGeneratorErrorCodes.TemplateFileNotFound);
+            () => Result.Errors.ShouldContainAnItemWithCode(ConfigurationGeneratorErrorCodes.TemplateFileNotFound);
 
         It no_individual_file_generation_errors_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Errors).ShouldBeEmpty();
 
@@ -109,7 +109,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
         It one_overall_generation_errors_is_reported = () => Result.Errors.Count().ShouldEqual(1);
 
         It the_single_error_indicates_the_template_file_was_not_found =
-            () => Result.Errors.ShouldContainAnErrorWithCode(ConfigurationGeneratorErrorCodes.SettingsFileNotFound);
+            () => Result.Errors.ShouldContainAnItemWithCode(ConfigurationGeneratorErrorCodes.SettingsFileNotFound);
 
         It no_individual_file_generation_errors_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Errors).ShouldBeEmpty();
 
@@ -153,7 +153,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             () => Result.Configuration("Configuration1").Errors.ShouldBeEmpty();
 
         It a_single_file_generation_error_is_reported_for_the_failed_generation =
-            () => Result.Configuration("Configuration2").Errors.ShouldContainSingleErrorWithCode("GeneralRazorTemplateError");
+            () => Result.Configuration("Configuration2").Errors.ShouldContainSingleItemWithCode("GeneralRazorTemplateError");
 
         It no_individual_file_generation_warnings_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Warnings).ShouldBeEmpty();
     }
@@ -198,7 +198,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             () => Result.Configuration("Configuration1").Warnings.ShouldBeEmpty();
 
         It a_single_file_generation_warning_is_reported_for_the_failed_generation_that_did_not_use_all_tokens =
-            () => Result.Configuration("Configuration2").Warnings.ShouldContainSingleWarningWithCode(GenerationServiceErrorCodes.UnusedTokenErrorCode);
+            () => Result.Configuration("Configuration2").Warnings.ShouldContainSingleItemWithCode(GenerationServiceErrorCodes.UnusedTokenErrorCode);
     }
 
     [Subject(typeof(GenerationService))]
@@ -241,6 +241,47 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             () => Result.Configuration("Configuration1").Warnings.ShouldBeEmpty();
 
         It a_single_file_generation_warning_is_reported_for_the_failed_generation_that_did_not_use_all_tokens =
-            () => Result.Configuration("Configuration2").Warnings.ShouldContainSingleWarningWithCode(GenerationServiceErrorCodes.UnrecognisedToken);
+            () => Result.Configuration("Configuration2").Warnings.ShouldContainSingleItemWithCode(GenerationServiceErrorCodes.UnrecognisedToken);
+    }
+
+    [Subject(typeof(GenerationService))]
+    internal class when_invoked_with_the_warnings_as_errors_preference_and_a_warning_occurs : GenerationServiceTestBase
+    {
+        Establish context = () =>
+        {
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
+
+            // this razor template will use an unregocnised token for Configuration2
+            string template =
+@"<root>
+@if (Model.MachineName == ""Configuration2"")
+{
+    @Model.AnUnrecognisedToken
+}
+@Model.Value1
+@Model.Value2
+</root>";
+            File.WriteAllText("App.Config.Template.razor", template);
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
+            {
+                {ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.razor"},
+                {ConfigurationGeneratorPreferenceGroup.ErrorOnWarnings.Name, "true"}
+            };
+        };
+
+        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+        It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+
+        It no_overall_generation_errors_are_reported = () => Result.Errors.ShouldBeEmpty();
+
+        It no_individual_file_generation_warnings_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Warnings).ShouldBeEmpty();
+
+        It no_individual_file_generation_errors_are_reported_for_the_generation_that_succeeded_without_warnings =
+            () => Result.Configuration("Configuration1").Errors.ShouldBeEmpty();
+
+        It a_single_file_generation_error_is_reported_for_the_generation_that_had_a_warning =
+            () => Result.Configuration("Configuration2").Errors.ShouldContainSingleItemWithCode(GenerationServiceErrorCodes.UnrecognisedToken);
     }
 }

@@ -74,11 +74,13 @@ namespace ConfigGen.Api
         {
             var applyErrors = _preferencesManager.ApplyPreferences(preferences);
 
+            var configuration = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
+
             if (applyErrors.Any())
             {
                 return new GenerateResult(
                 generatedFiles: Enumerable.Empty<GeneratedFile>(),
-                errors: applyErrors.Select(p => new GenerationError(p.Code, "GenerationService", p.Detail)));
+                errors: applyErrors.Select(p => new GenerationIssue(GenerationIssueSeverity.Error, p.Code, "GenerationService", p.Detail)));
             }
 
             //TODO: doesn't belong here
@@ -93,7 +95,7 @@ namespace ConfigGen.Api
             foreach (var generatedFile in result.GeneratedFiles)
             {
                 TokenUsageStatistics tokenUsageStatistics = _tokenUsageTracker.GetTokenUsageStatistics(generatedFile.Configuration);
-                generatedFiles.Add(MapFileGenerationResults(generatedFile, tokenUsageStatistics));
+                generatedFiles.Add(MapFileGenerationResults(generatedFile, tokenUsageStatistics, configuration));
             }
 
             return new GenerateResult(
@@ -102,21 +104,32 @@ namespace ConfigGen.Api
         }
 
         [NotNull]
-        public static GeneratedFile MapFileGenerationResults([NotNull] SingleFileGenerationResult result, [NotNull] TokenUsageStatistics tokenUsageStatistics)
+        public GeneratedFile MapFileGenerationResults(
+            [NotNull] SingleFileGenerationResult result, 
+            [NotNull] TokenUsageStatistics tokenUsageStatistics, 
+            [NotNull] ConfigurationGeneratorPreferences configuration)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (tokenUsageStatistics == null) throw new ArgumentNullException(nameof(tokenUsageStatistics));
 
             var errors = result.Errors.Select(e => e.ToGenerationError());
 
-            IEnumerable<GenerationWarning> warnings = Enumerable.Empty<GenerationWarning>();
-
+            IEnumerable<GenerationIssue> warnings = Enumerable.Empty<GenerationIssue>();
             if (!errors.Any())
             {
+                var severity = configuration.ErrorOnWarnings ? GenerationIssueSeverity.Error : GenerationIssueSeverity.Warning;
                 warnings = tokenUsageStatistics.UnusedTokens.Select(t =>
-                    new GenerationWarning(GenerationServiceErrorCodes.UnusedTokenErrorCode, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unused token: {t}"))
+                    new GenerationIssue(severity, GenerationServiceErrorCodes.UnusedTokenErrorCode, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unused token: {t}"))
                     .Concat(tokenUsageStatistics.UnrecognisedTokens.Select(t =>
-                        new GenerationWarning(GenerationServiceErrorCodes.UnrecognisedToken, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unrecognised token: {t}")));
+                        new GenerationIssue(severity, GenerationServiceErrorCodes.UnrecognisedToken, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unrecognised token: {t}")));
+            }
+
+
+            //TODO: Not convinced reporting errors as warnings belongs inside the api boundary.
+            if (configuration.ErrorOnWarnings)
+            {
+                errors = errors.Concat(warnings);
+                warnings = Enumerable.Empty<GenerationIssue>();
             }
             
             return new GeneratedFile(

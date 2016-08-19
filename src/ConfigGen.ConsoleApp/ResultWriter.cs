@@ -43,7 +43,7 @@ namespace ConfigGen.ConsoleApp
             if (results.Errors.Any())
             {
                 _logger.Error("Generation process failed: ");
-                foreach (GenerationError error in results.Errors)
+                foreach (GenerationIssue error in results.Errors)
                 {
                     _logger.Error(error.ToDisplayText());
                 }

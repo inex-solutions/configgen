@@ -93,6 +93,6 @@ namespace ConfigGen.Api.Tests.ConfigurationNameSettingTests
         It no_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(0);
 
         It an_error_was_reported_indicating_the_configuration_name_token_was_not_found = 
-            () => Result.Errors.ShouldContainSingleErrorWithCode(ConfigurationGeneratorErrorCodes.UnknownConfigurationNameSetting);
+            () => Result.Errors.ShouldContainSingleItemWithCode(ConfigurationGeneratorErrorCodes.UnknownConfigurationNameSetting);
     }
 }

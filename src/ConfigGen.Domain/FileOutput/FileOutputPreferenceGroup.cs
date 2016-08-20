@@ -25,35 +25,27 @@ namespace ConfigGen.Domain.FileOutput
 {
     public class FileOutputPreferenceGroup : PreferenceGroup<FileOutputPreferences>
     {
-        public static string PreferenceGroupName = "FileOutputPreferenceGroup";
-
-        static FileOutputPreferenceGroup()
-        {
-            FilenameSetting = new Preference<FileOutputPreferences, string>(
+        public FileOutputPreferenceGroup() : base(
+            name: "File Output Preferences",
+            preferences: new[]
+            {
+                new Preference<FileOutputPreferences, string>(
                     name: "FilenameSetting",
                     shortName: "Filename",
                     description: "specifies the setting to use for the filename of the generated configuration file",
-                      argumentHelpText: "<filename setting>",
+                    argumentHelpText: "<filename setting>",
                     parseAction: stringValue => stringValue,
-                    setAction: (stringValue, preferences) => preferences.FilenameSetting = stringValue);
+                    setAction: (stringValue, preferences) => preferences.FilenameSetting = stringValue),
 
-            ForceFilename = new Preference<FileOutputPreferences, string>(
+                new Preference<FileOutputPreferences, string>(
                     name: "ForceFilename",
                     shortName: null,
                     description: "forces all generated files to have the specified filename",
                     argumentHelpText: "<filename>",
                     parseAction: stringValue => stringValue,
-                    setAction: (stringValue, preferences) => preferences.ForceFilename = stringValue);
-        }
-
-        public FileOutputPreferenceGroup() : base(
-            name: "File Output Preferences", 
-            preferences: new [] { FilenameSetting, ForceFilename })
+                    setAction: (stringValue, preferences) => preferences.ForceFilename = stringValue)
+            })
         {
         }
-
-        public static IPreference<FileOutputPreferences> ForceFilename { get; set; }
-
-        public static IPreference<FileOutputPreferences> FilenameSetting { get; set; }
     }
 }

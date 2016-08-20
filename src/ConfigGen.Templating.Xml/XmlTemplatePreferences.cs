@@ -22,6 +22,11 @@ namespace ConfigGen.Templating.Xml
 {
     public class XmlTemplatePreferences
     {
+        public XmlTemplatePreferences()
+        {
+            PrettyPrintTabSize = 3;
+        }
+
         public bool PrettyPrintEnabled { get; set; }
 
         public int PrettyPrintLineLength { get; set; }

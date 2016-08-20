@@ -79,15 +79,6 @@ namespace ConfigGen.Domain
 
         public GenerationResults GenerateConfigurations()
         {
-            //TODO: setting the defaults doesn't belong here.
-            _preferencesManager.ApplyDefaultPreferences(
-                new[]
-                {
-                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.TemplateFilePath.Name, "App.Config.Template.xml"),
-                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.SettingsFilePath.Name, "App.Config.Settings.xls"),
-                    new KeyValuePair<string, string>(ConfigurationGeneratorPreferenceGroup.ConfigurationNameSetting.Name, "MachineName"),
-                });
-
             var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
 
             //TODO - To API: Template Load stuff

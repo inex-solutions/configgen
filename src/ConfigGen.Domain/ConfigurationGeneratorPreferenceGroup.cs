@@ -26,92 +26,67 @@ namespace ConfigGen.Domain
 {
     public class ConfigurationGeneratorPreferenceGroup : PreferenceGroup<ConfigurationGeneratorPreferences>
     {
-        static ConfigurationGeneratorPreferenceGroup()
-        {
-            SettingsFilePath = new Preference<ConfigurationGeneratorPreferences, string>(
-                name: "SettingsFile",
-                shortName: "Settings",
-                description: "specifies the settings file containing config gen settings",
-                argumentHelpText: "<settings file path>",
-                parseAction: stringValue => stringValue,
-                setAction: (stringValue, preferences) => preferences.SettingsFilePath = stringValue);
-
-            SettingsFileType = new Preference<ConfigurationGeneratorPreferences, string>(
-                name: "SettingsFileType",
-                shortName: "SettingsType",
-                description: "specifies the settings file type (e.g. xls, xml, csv)",
-                argumentHelpText: "xls | xml | csv",
-                parseAction: stringValue => stringValue,
-                setAction: (stringValue, preferences) => preferences.SettingsFileType = stringValue);
-
-            TemplateFilePath = new Preference<ConfigurationGeneratorPreferences, string>(
-                name: "TemplateFile",
-                shortName: "Template",
-                description: "specifies the template file",
-                argumentHelpText: "<template file path>",
-                parseAction: stringValue => stringValue,
-                setAction: (stringValue, preferences) => preferences.TemplateFilePath = stringValue);
-
-            TemplateFileType = new Preference<ConfigurationGeneratorPreferences, string>(
-                name: "TemplateFileType",
-                shortName: "TemplateType",
-                description: "specifies the template file type (e.g. xml, razor)",
-                argumentHelpText: "xml | razor",
-                parseAction: stringValue => stringValue,
-                setAction: (stringValue, preferences) => preferences.TemplateFileType = stringValue);
-
-            Verbose = new Preference<ConfigurationGeneratorPreferences, bool>(
-                name: "VerboseOutput",
-                shortName: "Verbose",
-                description: "verbose output",
-                argumentHelpText: "[true | false]",
-                parseAction: bool.Parse,
-                setAction: (verbosity, preferences) => preferences.Verbosity = verbosity ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal);
-
-            ErrorOnWarnings = new Preference<ConfigurationGeneratorPreferences, bool>(
-                name: "ErrorOnWarnings",
-                shortName: "Error",
-                description: "report warnings as errors",
-                argumentHelpText: "[true | false]",
-                parseAction: bool.Parse,
-                setAction: (flag, preferences) => preferences.ErrorOnWarnings = flag);
-
-            ConfigurationNameSetting = new Preference<ConfigurationGeneratorPreferences, string>(
-                name: "ConfigurationNameSetting",
-                shortName: null,
-                description: "Token to use as configuration name",
-                argumentHelpText: "<configuration name setting>",
-                parseAction: stringValue => stringValue,
-                setAction: (stringValue, preferences) => preferences.ConfigurationNameSetting = stringValue);
-        }
-
         public ConfigurationGeneratorPreferenceGroup() : base(
             name: "Configuration Generation Preferences",
             preferences: new IPreference<ConfigurationGeneratorPreferences>[]
             {
-                SettingsFilePath,
-                SettingsFileType,
-                TemplateFilePath,
-                TemplateFileType,
-                Verbose,
-                ErrorOnWarnings,
-                ConfigurationNameSetting
+                new Preference<ConfigurationGeneratorPreferences, string>(
+                    name: "SettingsFile",
+                    shortName: "Settings",
+                    description: "specifies the settings file containing config gen settings",
+                    argumentHelpText: "<settings file path>",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.SettingsFilePath = stringValue),
+
+                new Preference<ConfigurationGeneratorPreferences, string>(
+                    name: "SettingsFileType",
+                    shortName: "SettingsType",
+                    description: "specifies the settings file type (e.g. xls, xml, csv)",
+                    argumentHelpText: "xls | xml | csv",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.SettingsFileType = stringValue),
+
+                new Preference<ConfigurationGeneratorPreferences, string>(
+                    name: "TemplateFile",
+                    shortName: "Template",
+                    description: "specifies the template file",
+                    argumentHelpText: "<template file path>",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.TemplateFilePath = stringValue),
+
+                new Preference<ConfigurationGeneratorPreferences, string>(
+                    name: "TemplateFileType",
+                    shortName: "TemplateType",
+                    description: "specifies the template file type (e.g. xml, razor)",
+                    argumentHelpText: "xml | razor",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.TemplateFileType = stringValue),
+
+                new Preference<ConfigurationGeneratorPreferences, bool>(
+                    name: "VerboseOutput",
+                    shortName: "Verbose",
+                    description: "verbose output",
+                    argumentHelpText: "[true | false]",
+                    parseAction: bool.Parse,
+                    setAction: (verbosity, preferences) => preferences.Verbosity = verbosity ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal),
+
+                new Preference<ConfigurationGeneratorPreferences, bool>(
+                    name: "ErrorOnWarnings",
+                    shortName: "Error",
+                    description: "report warnings as errors",
+                    argumentHelpText: "[true | false]",
+                    parseAction: bool.Parse,
+                    setAction: (flag, preferences) => preferences.ErrorOnWarnings = flag),
+
+                new Preference<ConfigurationGeneratorPreferences, string>(
+                    name: "ConfigurationNameSetting",
+                    shortName: null,
+                    description: "Token to use as configuration name",
+                    argumentHelpText: "<configuration name setting>",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.ConfigurationNameSetting = stringValue)
             })
         {
         }
-
-        public static Preference<ConfigurationGeneratorPreferences, bool> Verbose { get; }
-
-        public static Preference<ConfigurationGeneratorPreferences, bool> ErrorOnWarnings { get; }
-
-        public static Preference<ConfigurationGeneratorPreferences, string> TemplateFileType { get; }
-
-        public static Preference<ConfigurationGeneratorPreferences, string> TemplateFilePath { get; }
-
-        public static Preference<ConfigurationGeneratorPreferences, string> SettingsFilePath { get; }
-
-        public static Preference<ConfigurationGeneratorPreferences, string> SettingsFileType { get; }
-
-        public static Preference<ConfigurationGeneratorPreferences, string> ConfigurationNameSetting { get; }
     }
 }

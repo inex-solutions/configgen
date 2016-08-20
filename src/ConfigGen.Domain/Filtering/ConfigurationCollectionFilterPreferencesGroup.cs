@@ -25,50 +25,35 @@ namespace ConfigGen.Domain.Filtering
 {
     public class ConfigurationCollectionFilterPreferencesGroup : PreferenceGroup<ConfigurationCollectionFilterPreferences>
     {
-        public static string PreferenceGroupName = "ConfigurationCollectionFilterPreferencesGroup";
-
-        static ConfigurationCollectionFilterPreferencesGroup ()
-        {
-            GenerateSpecifiedOnly = new Preference<ConfigurationCollectionFilterPreferences, string>(
-                name: "GenerateSpecifiedOnly",
-                shortName: "Generate",
-                description: "specifies a list of configurations, comma seperated without spaces, for which to generate configuration files.",
-                argumentHelpText: "<comma separated list of configuration names>",
-                parseAction: stringValue => stringValue,
-                setAction: (stringValue, preferences) => preferences.GenerateSpecifiedOnly = stringValue);
-
-            FilterMachinesRegexp = new Preference<ConfigurationCollectionFilterPreferences, string>(
-                name: "FilterMachinesRegexp",
-                shortName: null,
-                description: "specifies a regular expression to identify configurations, for which to generate configuration files",
-                 argumentHelpText: "<regular expression to match configuration names>",
-                parseAction: stringValue => stringValue,
-                setAction: (stringValue, preferences) => preferences.FilterMachinesRegexp = stringValue);
-
-            LocalOnly = new Preference<ConfigurationCollectionFilterPreferences, bool>(
-                name: "LocalOnly",
-                shortName: "Local",
-                description: "generate configuration for the local machine only.",
-                argumentHelpText: "[true | false]",
-                parseAction: bool.Parse,
-                setAction: (value, preferences) => preferences.LocalOnly = value);
-        }
-
         public ConfigurationCollectionFilterPreferencesGroup() : base(
             name: "Configuration Filtering Preferences",
             preferences: new IPreference<ConfigurationCollectionFilterPreferences>[]
             {
-                GenerateSpecifiedOnly,
-                FilterMachinesRegexp,
-                LocalOnly
+                new Preference<ConfigurationCollectionFilterPreferences, string>(
+                    name: "GenerateSpecifiedOnly",
+                    shortName: "Generate",
+                    description: "specifies a list of configurations, comma seperated without spaces, for which to generate configuration files.",
+                    argumentHelpText: "<comma separated list of configuration names>",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.GenerateSpecifiedOnly = stringValue),
+
+                new Preference<ConfigurationCollectionFilterPreferences, string>(
+                    name: "FilterMachinesRegexp",
+                    shortName: null,
+                    description: "specifies a regular expression to identify configurations, for which to generate configuration files",
+                    argumentHelpText: "<regular expression to match configuration names>",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.FilterMachinesRegexp = stringValue),
+
+                new Preference<ConfigurationCollectionFilterPreferences, bool>(
+                    name: "LocalOnly",
+                    shortName: "Local",
+                    description: "generate configuration for the local machine only.",
+                    argumentHelpText: "[true | false]",
+                    parseAction: bool.Parse,
+                    setAction: (value, preferences) => preferences.LocalOnly = value)
             })
         {
         }
-
-        public static IPreference<ConfigurationCollectionFilterPreferences> GenerateSpecifiedOnly { get; }
-
-        public static IPreference<ConfigurationCollectionFilterPreferences> FilterMachinesRegexp { get; }
-
-        public static IPreference<ConfigurationCollectionFilterPreferences> LocalOnly { get; }
     }
 }

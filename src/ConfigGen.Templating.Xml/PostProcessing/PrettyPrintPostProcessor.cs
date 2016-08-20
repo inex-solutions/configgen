@@ -49,12 +49,6 @@ namespace ConfigGen.Templating.Xml.PostProcessing
 
         public string Process(string renderedOutput)
         {
-            //TODO: doesn't belong here
-            _preferencesManager.ApplyDefaultPreferences(new []
-            {
-                new KeyValuePair<string, string>(XmlTemplatePreferenceGroup.PrettyPrintTabSize.Name, "3"), 
-            });
-
             var preferences = _preferencesManager.GetPreferenceInstance<XmlTemplatePreferences>();
 
             if (!preferences.PrettyPrintEnabled)

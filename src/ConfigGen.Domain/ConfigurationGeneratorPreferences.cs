@@ -25,6 +25,13 @@ namespace ConfigGen.Domain
 {
     public class ConfigurationGeneratorPreferences
     {
+        public ConfigurationGeneratorPreferences()
+        {
+            TemplateFilePath = "App.Config.Template.xml";
+            SettingsFilePath = "App.Config.Settings.xls";
+            ConfigurationNameSetting = "MachineName";
+        }
+
         public string SettingsFilePath { get; set; }
 
         public string SettingsFileType { get; set; }

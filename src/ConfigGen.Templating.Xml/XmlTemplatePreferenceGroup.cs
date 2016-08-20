@@ -36,7 +36,7 @@ namespace ConfigGen.Templating.Xml
                 //+ "NOTE: This setting has been deprecated - pretty print preferences should now be set via the configuration "
                 //+ "template itself (in the preferences section). However, this setting will "
                 //+ "override the setting in the configuration template.",
-                parameterDescription: new PreferenceParameterDescription("flag", "name of the column"),
+                argumentHelpText: "[true | false]",
                 parseAction: bool.Parse,
                 setAction: (flag, preferences) => preferences.PrettyPrintEnabled = flag);
 
@@ -48,7 +48,7 @@ namespace ConfigGen.Templating.Xml
                 //+ "NOTE: This setting has been deprecated - pretty print preferences should now be set via the "
                 //+ "configuration template itself (in the preferences section). However, this "
                 //+ "setting will override the setting in the configuration template.",
-                parameterDescription: new PreferenceParameterDescription("line-length", ""),
+                argumentHelpText: "<line length>",
                 parseAction: int.Parse,
                 setAction: (lineLength, preferences) => preferences.PrettyPrintLineLength = lineLength);
 
@@ -60,13 +60,13 @@ namespace ConfigGen.Templating.Xml
                 //+ "NOTE: This setting has been deprecated - pretty print preferences should now be set via the "
                 //+ "configuration template itself (in the preferences section). However, this "
                 //+ "setting will override the setting in the configuration template.",
-                parameterDescription: new PreferenceParameterDescription("tab-size", ""),
+                argumentHelpText: "<tab size>",
                 parseAction: int.Parse,
                 setAction: (tabSize, preferences) => preferences.PrettyPrintTabSize = tabSize);
         }
 
         public XmlTemplatePreferenceGroup() : base(
-            name: "XmlTemplatePreferenceGroup",
+            name: "Xml Template Preferences",
             preferences: new IPreference<XmlTemplatePreferences>[] {PrettyPrint, PrettyPrintLineLength, PrettyPrintTabSize })
         {
         }

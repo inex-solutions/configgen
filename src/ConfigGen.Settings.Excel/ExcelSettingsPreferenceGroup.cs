@@ -26,14 +26,14 @@ namespace ConfigGen.Settings.Excel
     public class ExcelSettingsPreferenceGroup : PreferenceGroup<ExcelSettingsPreferences>
     {
         public ExcelSettingsPreferenceGroup() : base(
-            name: "ExcelSettingsPreferenceGroup",
+            name: "Excel Settings Preferences",
             preferences: new []
             {
                 new Preference<ExcelSettingsPreferences,string>(
                     name: "ConfigurationNameColumn",
                     shortName: null,
                     description: "specifies the name of the column in the spreadsheet to use as the configuration name",
-                    parameterDescription: new PreferenceParameterDescription("column name", "name of the column"), 
+                    argumentHelpText: "<column name>", 
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.ConfigurationNameColumn = stringValue), 
 
@@ -41,7 +41,7 @@ namespace ConfigGen.Settings.Excel
                     name: "WorksheetName",
                     shortName: null,
                     description: "specifies the name of the worksheet containing configuration settings",
-                    parameterDescription: new PreferenceParameterDescription("worksheet name", "name of the worksheet"),
+                    argumentHelpText: "<worksheet-name>",
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.WorksheetName = stringValue)
             })

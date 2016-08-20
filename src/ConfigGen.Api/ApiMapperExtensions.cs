@@ -48,7 +48,8 @@ namespace ConfigGen.Api
         public static PreferenceInfo ToPreferenceInfo([NotNull] this IPreference preference)
         {
             if (preference == null) throw new ArgumentNullException(nameof(preference));
-            return new PreferenceInfo(preference.Name, preference.ShortName, preference.Description);
+
+            return new PreferenceInfo(preference.Name, preference.ShortName, preference.Description, preference.ArgumentHelpText);
         }
     }
 }

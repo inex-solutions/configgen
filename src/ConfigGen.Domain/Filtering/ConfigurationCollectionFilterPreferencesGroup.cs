@@ -33,7 +33,7 @@ namespace ConfigGen.Domain.Filtering
                 name: "GenerateSpecifiedOnly",
                 shortName: "Generate",
                 description: "specifies a list of configurations, comma seperated without spaces, for which to generate configuration files.",
-                parameterDescription: new PreferenceParameterDescription("config name list", "comma separated (no spaces) list of configurations names to generate"),
+                argumentHelpText: "<comma separated list of configuration names>",
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.GenerateSpecifiedOnly = stringValue);
 
@@ -41,7 +41,7 @@ namespace ConfigGen.Domain.Filtering
                 name: "FilterMachinesRegexp",
                 shortName: null,
                 description: "specifies a regular expression to identify configurations, for which to generate configuration files",
-                parameterDescription: new PreferenceParameterDescription("regexp", "regular expression with which to filter configuration names"),
+                 argumentHelpText: "<regular expression to match configuration names>",
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.FilterMachinesRegexp = stringValue);
 
@@ -49,13 +49,13 @@ namespace ConfigGen.Domain.Filtering
                 name: "LocalOnly",
                 shortName: "Local",
                 description: "generate configuration for the local machine only.",
-                parameterDescription: new PreferenceParameterDescription("localOnly", "generate configuration for the local machine only or, if a matching entry for the local machine is not present, generate a configuration named 'default'."),
+                argumentHelpText: "[true | false]",
                 parseAction: bool.Parse,
                 setAction: (value, preferences) => preferences.LocalOnly = value);
         }
 
         public ConfigurationCollectionFilterPreferencesGroup() : base(
-            name: "ConfigurationCollectionFilterPreferencesGroup",
+            name: "Configuration Filtering Preferences",
             preferences: new IPreference<ConfigurationCollectionFilterPreferences>[]
             {
                 GenerateSpecifiedOnly,

@@ -32,7 +32,7 @@ namespace ConfigGen.Domain
                 name: "SettingsFile",
                 shortName: "Settings",
                 description: "specifies the settings file containing config gen settings",
-                parameterDescription: new PreferenceParameterDescription("settings file path", "path to the settings file"),
+                argumentHelpText: "<settings file path>",
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.SettingsFilePath = stringValue);
 
@@ -40,7 +40,7 @@ namespace ConfigGen.Domain
                 name: "SettingsFileType",
                 shortName: "SettingsType",
                 description: "specifies the settings file type (e.g. xls, xml, csv)",
-                parameterDescription: new PreferenceParameterDescription("settings file type", "type of settings file: xls, xml, csv"),
+                argumentHelpText: "xls | xml | csv",
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.SettingsFileType = stringValue);
 
@@ -48,7 +48,7 @@ namespace ConfigGen.Domain
                 name: "TemplateFile",
                 shortName: "Template",
                 description: "specifies the template file",
-                parameterDescription: new PreferenceParameterDescription("template file path", "path to the template file"),
+                argumentHelpText: "<template file path>",
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.TemplateFilePath = stringValue);
 
@@ -56,7 +56,7 @@ namespace ConfigGen.Domain
                 name: "TemplateFileType",
                 shortName: "TemplateType",
                 description: "specifies the template file type (e.g. xml, razor)",
-                parameterDescription: new PreferenceParameterDescription("template file type", "type of template: xml, razor"),
+                argumentHelpText: "xml | razor",
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.TemplateFileType = stringValue);
 
@@ -64,7 +64,7 @@ namespace ConfigGen.Domain
                 name: "VerboseOutput",
                 shortName: "Verbose",
                 description: "verbose output",
-                parameterDescription: new PreferenceParameterDescription("verbose", "verbose output"),
+                argumentHelpText: "[true | false]",
                 parseAction: bool.Parse,
                 setAction: (verbosity, preferences) => preferences.Verbosity = verbosity ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal);
 
@@ -72,7 +72,7 @@ namespace ConfigGen.Domain
                 name: "ErrorOnWarnings",
                 shortName: "Error",
                 description: "report warnings as errors",
-                parameterDescription: new PreferenceParameterDescription("flag", "ErrorOnWarnings"),
+                argumentHelpText: "[true | false]",
                 parseAction: bool.Parse,
                 setAction: (flag, preferences) => preferences.ErrorOnWarnings = flag);
 
@@ -80,13 +80,13 @@ namespace ConfigGen.Domain
                 name: "ConfigurationNameSetting",
                 shortName: null,
                 description: "Token to use as configuration name",
-                parameterDescription: new PreferenceParameterDescription("token name", "token to use as configuration name"),
+                argumentHelpText: "<configuration name setting>",
                 parseAction: stringValue => stringValue,
                 setAction: (stringValue, preferences) => preferences.ConfigurationNameSetting = stringValue);
         }
 
         public ConfigurationGeneratorPreferenceGroup() : base(
-            name: "ConfigurationGeneratorPreferenceGroup",
+            name: "Configuration Generation Preferences",
             preferences: new IPreference<ConfigurationGeneratorPreferences>[]
             {
                 SettingsFilePath,

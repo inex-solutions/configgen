@@ -26,7 +26,7 @@ namespace ConfigGen.Api.Contract
 {
     public class PreferenceInfo
     {
-        public PreferenceInfo([NotNull] string name, [CanBeNull] string shortName, [NotNull] string description)
+        public PreferenceInfo([NotNull] string name, [CanBeNull] string shortName, [NotNull] string description, [CanBeNull] string argumentHelpText)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             if (description == null) throw new ArgumentNullException(nameof(description));
@@ -34,6 +34,7 @@ namespace ConfigGen.Api.Contract
             Name = name;
             ShortName = shortName;
             Description = description;
+            ArgumentHelpText = argumentHelpText;
         }
 
         [NotNull]
@@ -45,5 +46,8 @@ namespace ConfigGen.Api.Contract
 
         [NotNull]
         public string Description { get; }
+
+        [CanBeNull]
+        public string ArgumentHelpText { get; }
     }
 }

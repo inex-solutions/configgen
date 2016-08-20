@@ -37,7 +37,7 @@ namespace ConfigGen.Domain.Contract.Preferences
             [NotNull] string name,
             [CanBeNull] string shortName,
             [NotNull] string description,
-            [CanBeNull] PreferenceParameterDescription parameterDescription,
+            [CanBeNull] string argumentHelpText,
             [NotNull] Func<string, TTarget> parseAction,
             [NotNull] Action<TTarget, TPreference> setAction)
         {
@@ -51,7 +51,7 @@ namespace ConfigGen.Domain.Contract.Preferences
             Name = name;
             ShortName = shortName;
             Description = description;
-            ParameterDescription = parameterDescription;
+            ArgumentHelpText = argumentHelpText;
         }
 
         [NotNull]
@@ -64,7 +64,7 @@ namespace ConfigGen.Domain.Contract.Preferences
         public string Description { get; }
 
         [CanBeNull]
-        public PreferenceParameterDescription ParameterDescription { get; }
+        public string ArgumentHelpText { get; }
 
         [NotNull]
         public Type PreferenceInstanceType => typeof(TPreference);

@@ -36,6 +36,9 @@ namespace ConfigGen.Domain.Contract.Preferences
         [NotNull]
         string Description { get; }
 
+        [CanBeNull]
+        string ArgumentHelpText { get; }
+
         [NotNull]
         Type PreferenceInstanceType { get; }
 

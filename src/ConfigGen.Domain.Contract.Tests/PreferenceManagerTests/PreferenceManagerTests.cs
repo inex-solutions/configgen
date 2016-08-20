@@ -49,14 +49,14 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
                         name: "PersonName",
                         shortName: "Name",
                         description: "Sets the name of a person",
-                        parameterDescription: new PreferenceParameterDescription("name", "name of the person to set"),
+                        argumentHelpText: "<person name>",
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.PersonName = actualValue),
                     new Preference<PersonPreferences, int>(
                         name: "PersonAge",
                         shortName: "Age",
                         description: "Sets the age of a person",
-                        parameterDescription: new PreferenceParameterDescription("age", "age of the person to set"),
+                        argumentHelpText: "<person age>",
                         parseAction: stringValue => int.Parse(stringValue),
                         setAction: (actualValue, target) => target.PersonAge = actualValue)
                 });
@@ -69,14 +69,14 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
                         name: "HouseAddress",
                         shortName: "Address",
                         description: "Sets the address of the house",
-                        parameterDescription: new PreferenceParameterDescription("address", "address of the house to set"),
+                        argumentHelpText: "<house address>",
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.Address = actualValue),
                     new Preference<HousePreferences, bool>(
                         name: "IsFlat",
                         shortName: "Flat",
                         description: "Indicates if the house is a flat",
-                        parameterDescription: new PreferenceParameterDescription("isFlat", "true if flat, otherwise false. Defaults to true if omitted"),
+                        argumentHelpText: "[true | false]",
                         parseAction: stringValue => bool.Parse(stringValue),
                         setAction: (actualValue, target) => target.IsFlat = actualValue)
                 });
@@ -134,7 +134,7 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
                         name: "PersonName",
                         shortName: "OtherName",
                         description: "Other name",
-                        parameterDescription: new PreferenceParameterDescription("name", "other name"),
+                        argumentHelpText: "<other name>",
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.PersonName = actualValue),
                 });
@@ -168,7 +168,7 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
                         name: "OtherPersonName",
                         shortName: "Name",
                         description: "Other name",
-                        parameterDescription: new PreferenceParameterDescription("name", "other name"),
+                        argumentHelpText: "<other name>",
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.PersonName = actualValue),
                 });
@@ -202,7 +202,7 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
                         name: "Name",
                         shortName: "OtherName",
                         description: "Other name",
-                        parameterDescription: new PreferenceParameterDescription("name", "other name"),
+                        argumentHelpText: "<other name>",
                         parseAction: stringValue => stringValue,
                         setAction: (actualValue, target) => target.PersonName = actualValue),
                 });

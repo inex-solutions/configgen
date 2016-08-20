@@ -59,7 +59,6 @@
     <Compile Include="Preferences\Preference.cs" />
     <Compile Include="Preferences\PreferenceGroup.cs" />
     <Compile Include="Preferences\PreferenceManagerError.cs" />
-    <Compile Include="Preferences\PreferenceParameterDescription.cs" />
     <Compile Include="Preferences\PreferencesManagementModule.cs" />
     <Compile Include="Preferences\PreferencesManager.cs" />
     <Compile Include="Preferences\PreferencesManagerInitialisationException.cs" />

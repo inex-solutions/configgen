@@ -30,12 +30,14 @@ namespace ConfigGen.ConsoleApp.Tests
             StringParameterPreference = new PreferenceInfo(
                 name: "StringParameter",
                 shortName: "String",
-                description: "specifies the string parameter");
+                description: "specifies the string parameter",
+                argumentHelpText: null);
 
             BooleanSwitchPreference = new PreferenceInfo(
                 name: "BooleanSwitch",
                 shortName: "Boolean",
-                description: "a switch");
+                description: "a switch",
+                argumentHelpText: null);
         }
 
         public ConsoleRunnerTestPreferencesGroup() : base(

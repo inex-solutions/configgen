@@ -21,7 +21,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using ConfigGen.Api.Contract;
+using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Logging;
 using JetBrains.Annotations;
 
@@ -32,44 +34,70 @@ namespace ConfigGen.ConsoleApp
         [NotNull]
         private readonly ILogger _logger;
 
+        [NotNull]
         private readonly ConsoleInputToPreferenceConverter _consoleInputToPreferenceConverter;
+
+        private readonly int _width;
 
         public HelpWriter([NotNull] ILogger logger)
         {
             if (logger == null) throw new ArgumentNullException(nameof(logger));
             _logger = logger;
-
             _consoleInputToPreferenceConverter = new ConsoleInputToPreferenceConverter();
+
+            try
+            {
+                int width = Console.WindowWidth;
+                _width = width - 20;
+                if (_width < 20)
+                {
+                    _width = 20;
+                }
+            }
+            catch (Exception)
+            {
+                // probably not actually running in a console window
+                _width = 50;
+            }
         }
 
         public void WriteHelp([NotNull] [ItemNotNull] IEnumerable<PreferenceGroupInfo> preferenceGroups)
         {
             if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
 
-            _logger.Info();
-            _logger.Info("ConfigGen help: ");
-            _logger.Info();
+            _logger.Info(String.Empty);
+            _logger.Info("USAGE: cfg.exe [options]");
+            _logger.Info(String.Empty);
+            _logger.Info("WHERE OPTIONS: ");
+            _logger.Info(String.Empty);
 
-            foreach (PreferenceGroupInfo preferenceGroup in preferenceGroups)
+            foreach (var preferenceGroup in preferenceGroups)
             {
                 _logger.Info($"******** {preferenceGroup.Name} ********");
-                _logger.Info();
-                ShowCommands(preferenceGroup.Preferences);
-                _logger.Info();
+                _logger.Info(String.Empty);
+                foreach (var preference in preferenceGroup.Preferences)
+                {
+                    _logger.Info(GetHelpTextForCommand(preference));
+                }
+                _logger.Info(String.Empty);
             }
+
+            _logger.Info(String.Empty);
+            _logger.Info("cfg.exe with no options is equivalent to:");
+            _logger.Info(String.Empty);
+            _logger.Info("cfg.exe -s App.Config.Settings.xls -t App.Config.Template.xml -o Configs"); //TODO: NO IT ISN'T!
         }
 
-        private void ShowCommands([NotNull][ItemNotNull] IEnumerable<PreferenceInfo> preferences)
+        private string GetHelpTextForCommand(PreferenceInfo preference)
         {
-            if (preferences == null) throw new ArgumentNullException(nameof(preferences));
-
-            foreach (var preference in preferences)
+            var sb = new StringBuilder();
+            sb.AppendFormat("{0} {1}\n", _consoleInputToPreferenceConverter.GetShortConsoleCommandWithArgumentText(preference), preference.ArgumentHelpText);
+            sb.AppendFormat(" or {0} {1}\n", _consoleInputToPreferenceConverter.GetLongConsoleCommandWithArgumentText(preference), preference.ArgumentHelpText);
+            foreach (var line in preference.Description.WordWrap(_width))
             {
-                _logger.Info("{0} or {1} : {2}",
-                    _consoleInputToPreferenceConverter.GetShortConsoleCommandWithArgumentText(preference),
-                    _consoleInputToPreferenceConverter.GetLongConsoleCommandWithArgumentText(preference),
-                    preference.Description);
+                sb.AppendFormat("    {0}\n", line);
             }
+            return sb.ToString();
         }
     }
 }

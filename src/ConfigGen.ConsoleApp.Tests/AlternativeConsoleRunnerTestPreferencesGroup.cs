@@ -30,7 +30,8 @@ namespace ConfigGen.ConsoleApp.Tests
             IntParameterPreference = new PreferenceInfo(
                 name: "IntParameter",
                 shortName: "Int",
-                description: "specifies the int parameter");
+                description: "specifies the int parameter",
+                argumentHelpText: null);
         }
 
         public AlternativeConsoleRunnerTestPreferencesGroup() : base(

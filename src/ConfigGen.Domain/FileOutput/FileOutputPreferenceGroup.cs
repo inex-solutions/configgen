@@ -33,7 +33,7 @@ namespace ConfigGen.Domain.FileOutput
                     name: "FilenameSetting",
                     shortName: "Filename",
                     description: "specifies the setting to use for the filename of the generated configuration file",
-                    parameterDescription: new PreferenceParameterDescription("filename setting", "name of the setting to use for the filename"),
+                      argumentHelpText: "<filename setting>",
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.FilenameSetting = stringValue);
 
@@ -41,13 +41,13 @@ namespace ConfigGen.Domain.FileOutput
                     name: "ForceFilename",
                     shortName: null,
                     description: "forces all generated files to have the specified filename",
-                    parameterDescription: new PreferenceParameterDescription("filename", "filename for generated files"),
+                    argumentHelpText: "<filename>",
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.ForceFilename = stringValue);
         }
 
         public FileOutputPreferenceGroup() : base(
-            name: "FileOutputPreferenceGroup", 
+            name: "File Output Preferences", 
             preferences: new [] { FilenameSetting, ForceFilename })
         {
         }

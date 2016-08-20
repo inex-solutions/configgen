@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using JetBrains.Annotations;
@@ -36,6 +37,10 @@ namespace ConfigGen.Utilities.Extensions
             return String.IsNullOrEmpty(s);
         }
 
+        /// <summary>
+        /// Returns <see cref="IDisplayText.ToDisplayText"/> for the supplied object, if it implements
+        /// <see cref="IDisplayText"/>, otherwise it returns <see cref="object.ToString"/>
+        /// </summary>
         [NotNull]
         public static string ToDisplayText([CanBeNull] this object obj)
         {
@@ -53,6 +58,9 @@ namespace ConfigGen.Utilities.Extensions
             return obj.ToString();
         }
 
+        /// <summary>
+        /// Returns a <see cref="Stream"/> continaining the contents of the supplied string.
+        /// </summary>
         [NotNull]
         public static Stream ToStream([NotNull] this string s)
         {
@@ -66,6 +74,9 @@ namespace ConfigGen.Utilities.Extensions
             return ms;
         }
 
+        /// <summary>
+        /// Returns a <see cref="Stream"/> continaining the contents of the supplied string, with the specified encoding.
+        /// </summary>
         [NotNull]
         public static Stream ToStream([NotNull] this string s, [NotNull] Encoding encoding)
         {
@@ -80,10 +91,63 @@ namespace ConfigGen.Utilities.Extensions
             return ms;
         }
 
+        /// <summary>
+        /// Returns the contents of <see cref="object.ToString()"/> in lower case.
+        /// </summary>
         [CanBeNull]
         public static string ToLowerCaseString([CanBeNull] this object s)
         {
             return s?.ToString().ToLower();
+        }
+
+        /// <summary>
+        /// Returns an enumerable list of lines of text which are the result of word-wrapping the source string to the max length specified.
+        /// </summary>
+        /// <remarks>This word wrap is crude, and merely wraps on spaces between words.</remarks>
+        /// <param name="source">Source string</param>
+        /// <param name="maxLineLength">Max length</param>
+        /// <returns>Lines of wrapped text</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is null.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="maxLineLength"/> is less than one.</exception>
+        [NotNull]
+        public static IEnumerable<string> WordWrap(this string source, int maxLineLength)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (maxLineLength < 1) throw new ArgumentOutOfRangeException(nameof(maxLineLength));
+
+            if (source.Length <= maxLineLength)
+            {
+                yield return source;
+            }
+            else
+            {
+                var words = new Queue<string>(source.Split(' '));
+                var sb = new StringBuilder();
+
+                while (words.Count > 0)
+                {
+                    // always put at least one word on a line
+                    if (sb.Length == 0)
+                    {
+                        sb.Append(words.Dequeue());
+                    }
+                    else if (sb.Length + words.Peek().Length + 1 <= maxLineLength)
+                    {
+                        sb.Append(" ");
+                        sb.Append(words.Dequeue());
+                    }
+                    else
+                    {
+                        yield return sb.ToString();
+                        sb = new StringBuilder();
+                    }
+                }
+
+                if (sb.Length > 0)
+                {
+                    yield return sb.ToString();
+                }
+            }
         }
     }
 }

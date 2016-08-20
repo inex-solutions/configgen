@@ -30,7 +30,7 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.UnitTests
     [Subject(typeof(ConsoleApp.ConsoleRunner))]
     public abstract class ConsoleRunnerUnitTestBase : MachineSpecificationTestBase<ConsoleApp.ConsoleRunner>
     {
-        protected const string HelpText = "ConfigGen help";
+        protected const string HelpText = "USAGE: cfg.exe [options]";
 
         protected static TestLogger Logger;
         protected static GenerationServiceMock GenerationServiceMock;

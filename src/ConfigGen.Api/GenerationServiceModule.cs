@@ -22,6 +22,11 @@
 using Autofac;
 using ConfigGen.Api.Contract;
 using ConfigGen.Domain;
+using ConfigGen.Settings.Excel;
+using ConfigGen.Settings.Text.Csv;
+using ConfigGen.Settings.Text.Xml;
+using ConfigGen.Templating.Razor;
+using ConfigGen.Templating.Xml;
 
 namespace ConfigGen.Api
 {
@@ -29,6 +34,14 @@ namespace ConfigGen.Api
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule<ExcelSettingsLoaderModule>();
+
+            builder.RegisterModule<XmlSettingsLoaderModule>();
+            builder.RegisterModule<CsvSettingsLoaderModule>();
+
+            builder.RegisterModule<XmlTemplateModule>(); 
+            builder.RegisterModule<RazorTemplateModule>();
+
             builder.RegisterModule<ConfigurationGeneratorModule>();
             builder.RegisterType<GenerationService>().As<IGenerationService>();
         }

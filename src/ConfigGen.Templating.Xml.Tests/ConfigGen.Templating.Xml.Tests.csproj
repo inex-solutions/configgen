@@ -71,10 +71,6 @@
     <Compile Include="XmlTemplateTests\XmlTemplateTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">
-      <Project>{28ff448c-08ea-4ec4-8005-32f80ec4b6c9}</Project>
-      <Name>ConfigGen.Api</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">
       <Project>{922A7CAC-D79F-47A8-A780-5EE0BAA384FA}</Project>
       <Name>ConfigGen.Domain.Contract</Name>

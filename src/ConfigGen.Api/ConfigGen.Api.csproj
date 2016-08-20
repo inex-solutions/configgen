@@ -70,6 +70,22 @@
       <Project>{b1f73633-082f-4ca1-8bd5-575283c19839}</Project>
       <Name>ConfigGen.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Settings.Excel\ConfigGen.Settings.Excel.csproj">
+      <Project>{90A5D982-3422-4C11-94C1-E1AA924FC5A6}</Project>
+      <Name>ConfigGen.Settings.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Settings.Text\ConfigGen.Settings.Text.csproj">
+      <Project>{50FFE39A-D5BA-448F-864A-5B858A9412A1}</Project>
+      <Name>ConfigGen.Settings.Text</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj">
+      <Project>{C96CB4FE-EFD6-4673-B587-71E1053B970E}</Project>
+      <Name>ConfigGen.Templating.Razor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigGen.Templating.Xml\ConfigGen.Templating.Xml.csproj">
+      <Project>{A2A596E2-B503-4311-9AD4-7EDAE03D7B1F}</Project>
+      <Name>ConfigGen.Templating.Xml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj">
       <Project>{19f4fcfe-ceb6-4242-81fd-2a35814e6f59}</Project>
       <Name>ConfigGen.Utilities</Name>

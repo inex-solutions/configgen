@@ -71,7 +71,7 @@
     </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Settings.Text\ConfigGen.Settings.Text.csproj">
       <Project>{50FFE39A-D5BA-448F-864A-5B858A9412A1}</Project>
-      <Name>ConfigGen.Settings.Xml</Name>
+      <Name>ConfigGen.Settings.Text</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConfigGen.Tests.Common\ConfigGen.Tests.Common.csproj">
       <Project>{3febff76-6425-454a-bef3-5acb437b6a5d}</Project>

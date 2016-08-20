@@ -81,7 +81,7 @@ namespace ConfigGen.Domain
         {
             var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
 
-            //TODO - To API: Template Load stuff
+            //TODO - To API: Template Load stuff?
             ITemplate template;
             TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType, out template);
             
@@ -103,7 +103,7 @@ namespace ConfigGen.Domain
                          $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
             }
 
-            //TODO - To API: Settings Load stuff
+            //TODO - To API: Settings Load stuff?
             ISettingsLoader settingsLoader;
             TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(configGenerationPreferences.SettingsFilePath, configGenerationPreferences.SettingsFileType, out settingsLoader);
 
@@ -170,7 +170,7 @@ namespace ConfigGen.Domain
 
                 foreach (var configuration in configurations)
                 {
-                    SingleTemplateRenderResults renderResult = template.Render(configuration); //NOPUSH - duplicate will throw error?);
+                    SingleTemplateRenderResults renderResult = template.Render(configuration);
 
                     var writeResults = _fileOutputWriter.WriteOutput(
                        renderResult,

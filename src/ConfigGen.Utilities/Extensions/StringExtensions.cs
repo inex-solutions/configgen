@@ -29,6 +29,8 @@ namespace ConfigGen.Utilities.Extensions
 {
     public static class StringExtensions
     {
+        private static readonly char Utf8ByteOrderMark = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble())[0];
+
         /// <summary>
         /// Returns true if the supplied string is either null or an empty string, otherwise false.
         /// </summary>
@@ -131,6 +133,7 @@ namespace ConfigGen.Utilities.Extensions
                     {
                         sb.Append(words.Dequeue());
                     }
+                    // ReSharper disable once PossibleNullReferenceException
                     else if (sb.Length + words.Peek().Length + 1 <= maxLineLength)
                     {
                         sb.Append(" ");
@@ -148,6 +151,25 @@ namespace ConfigGen.Utilities.Extensions
                     yield return sb.ToString();
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the supplied string, without its UTF-8 BOM if it was present.
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public static string RemoveUtf8BOM(this string s)
+        {
+            if (s == null)
+            {
+                return null;
+            }
+
+            if (s[0] == Utf8ByteOrderMark)
+            {
+                return s.Remove(0, 1);
+            }
+
+            return s;
         }
     }
 }

@@ -19,11 +19,14 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
 using Machine.Specifications;
+using Machine.Specifications.Annotations;
 
 namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
 {
@@ -43,17 +46,20 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
             XmlStreamFormatterOptions = null;
         };
 
-        protected static void RunFormatterTest(string input)
+        protected static void RunFormatterTest([NotNull] string input)
         {
             var copierOptions = XmlStreamFormatterOptions.Default;
             copierOptions.Indent = false;
             RunFormatterTest(input, copierOptions);
         }
 
-        protected static void RunFormatterTest(string input, XmlStreamFormatterOptions formatterOptions)
+        protected static void RunFormatterTest([NotNull] string input, [NotNull] XmlStreamFormatterOptions formatterOptions)
         {
-            var encoding = Encoding.UTF8;
-            using (var readerStream = new MemoryStream(encoding.GetBytes(input).ToArray()))
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (formatterOptions == null) throw new ArgumentNullException(nameof(formatterOptions));
+
+            var encoding = new UTF8Encoding();
+            using (var readerStream = input.ToStream(encoding))
             {
                 using (var writerStream = new MemoryStream())
                 {
@@ -61,17 +67,7 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
                     copier.Format(readerStream, writerStream, formatterOptions);
                     writerStream.Position = 0;
                     var byteArray = writerStream.ToArray();
-
-                    var ret = encoding.GetString(byteArray);
-
-                    // TODO: RJL: this isn't right - this shouldn't be necessary. Is this a side effect of doing this via the encoding class?
-                    if (ret[0] != '<')
-                    {
-                        // remove BOM if present. RJL - could be a little more scientific here!
-                        ret = ret.Substring(1);
-                    }
-
-                    Result = ret;
+                    Result = encoding.GetString(byteArray).RemoveUtf8BOM();
                 }
             }
         }

@@ -22,14 +22,24 @@ namespace ConfigGen.Domain.FileOutput
 {
     public class FileOutputPreferences
     {
+        public FileOutputPreferences()
+        {
+            OutputDirectory = "Configs";
+        }
+
         /// <summary>
-        /// Specifies the setting to use for the filename of the generated configuration file.
+        /// Gets or sets the setting to use for the filename of the generated configuration file.
         /// </summary>
         public string FilenameSetting { get; set; }
 
         /// <summary>
-        /// Forces all generated files to have the specified filename.
+        /// Gets or sets the forced filename. If specified, this filename overrides the filename specified in the settings spreadsheet.
         /// </summary>
         public string ForceFilename { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output directory into which to write the generated files.
+        /// </summary>
+        public string OutputDirectory { get; set; }
     }
 }

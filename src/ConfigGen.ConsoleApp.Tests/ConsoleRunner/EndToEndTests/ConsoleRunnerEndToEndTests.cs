@@ -69,16 +69,16 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
         It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
 
         It a_configuration_named_Configuration1_was_generated_in_its_own_folder = 
-            () => File.Exists("Configuration1\\Configuration1.xml");
+            () => File.Exists("Configs\\Configuration1\\Configuration1.xml");
 
         It configuration1_contains_the_correct_contents = 
-            () => File.ReadAllText("Configuration1\\Configuration1.xml").ShouldContainXml(Configuration1ExpectedContents);
+            () => File.ReadAllText("Configs\\Configuration1\\Configuration1.xml").ShouldContainXml(Configuration1ExpectedContents);
 
         It a_configuration_named_Configuration2_was_generated_in_its_own_folder = 
-            () => File.Exists("Configuration2\\Configuration2.xml");
+            () => File.Exists("Configs\\Configuration2\\Configuration2.xml");
 
         It configuration2_contains_the_correct_contents = 
-            () => File.ReadAllText("Configuration2\\Configuration2.xml").ShouldContainXml(Configuration2ExpectedContents);
+            () => File.ReadAllText("Configs\\Configuration2\\Configuration2.xml").ShouldContainXml(Configuration2ExpectedContents);
     }
 
     public class when_invoked_with_preferences_specifying_non_default_settings_and_template_files_using_their_long_versions : ConsoleRunnerEndToEndTestBase
@@ -94,23 +94,15 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
         It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
 
         It a_configuration_named_Configuration1_was_generated_in_its_own_folder = 
-            () => File.Exists("Configuration1\\Configuration1.xml");
+            () => File.Exists("Configs\\Configuration1\\Configuration1.xml");
 
         It configuration1_contains_the_correct_contents = 
-            () => File.ReadAllText("Configuration1\\Configuration1.xml").ShouldContainXml(Configuration1ExpectedContents);
+            () => File.ReadAllText("Configs\\Configuration1\\Configuration1.xml").ShouldContainXml(Configuration1ExpectedContents);
 
         It a_configuration_named_Configuration2_was_generated_in_its_own_folder = 
-            () => File.Exists("Configuration2\\Configuration2.xml");
+            () => File.Exists("Configs\\Configuration2\\Configuration2.xml");
 
         It configuration2_contains_the_correct_contents = 
-            () => File.ReadAllText("Configuration2\\Configuration2.xml").ShouldContainXml(Configuration2ExpectedContents);
+            () => File.ReadAllText("Configs\\Configuration2\\Configuration2.xml").ShouldContainXml(Configuration2ExpectedContents);
     }
-
-    //TODO: failure mode tests
-    //public class when_invoked_with_an_unknown_preference : ConsoleRunnerEndToEndTestBase
-    //{
-    //    Because of = () => Subject.Run("--not-a-recognised-preference".ToConsoleArgs());
-
-    //    It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.);
-    //}
 }

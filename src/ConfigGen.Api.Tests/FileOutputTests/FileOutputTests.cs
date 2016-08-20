@@ -49,7 +49,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
             Result.EachConfiguration().ShouldHaveFilename(configName => $"{configName}.xml");
 
         It all_files_are_in_a_subdirectory_named_with_their_configuration_name = () =>
-            Result.EachConfiguration().ShouldBeInDirectory((configName, currentDirectory) => $"{Path.Combine(currentDirectory, configName)}");
+            Result.EachConfiguration().ShouldBeInDirectory((configName, currentDirectory) => $"{Path.Combine(currentDirectory + "\\Configs", configName)}");
     }
 
     internal class when_invoked_specifying_the_FilenameSetting_preference : GenerationServiceTestBase
@@ -76,6 +76,32 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
         It the_file_for_the_second_row_defaults_to_using_the_configuration_for_the_filename = () =>
             Result.Configuration("Configuration2").ShouldHaveFilename(configName => "Config2-Value1");
+    }
+
+    internal class when_invoked_specifying_the_OutputDirectory_preference : GenerationServiceTestBase
+    {
+        Establish context = () =>
+        {
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
+            {
+                {PreferenceNames.OutputDirectory, "SomeOutputDirectory"}
+            };
+        };
+
+        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+        It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+        It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
+
+        It all_files_are_named_with_their_configuration_name = () =>
+            Result.EachConfiguration().ShouldHaveFilename(configName => $"{configName}.xml");
+
+        It all_configurations_are_in_the_specified_output_directory = () =>
+            Result.EachConfiguration().ShouldBeInDirectory((configName, currentDirectory) => $"{Path.Combine(currentDirectory + "\\SomeOutputDirectory", configName)}");
     }
 
     internal class when_invoked_specifying_the_ForceFilename_preference : GenerationServiceTestBase

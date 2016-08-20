@@ -47,6 +47,7 @@ namespace ConfigGen.Api.Tests
 
             public const string FilenameSetting = "FilenameSetting";
             public const string ForceFilename = "ForceFilename";
+            public const string OutputDirectory = "OutputDirectory";
         }
 
         public class ErrorCodes

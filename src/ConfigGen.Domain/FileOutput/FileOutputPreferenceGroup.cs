@@ -43,7 +43,15 @@ namespace ConfigGen.Domain.FileOutput
                     description: "forces all generated files to have the specified filename",
                     argumentHelpText: "<filename>",
                     parseAction: stringValue => stringValue,
-                    setAction: (stringValue, preferences) => preferences.ForceFilename = stringValue)
+                    setAction: (stringValue, preferences) => preferences.ForceFilename = stringValue),
+
+                new Preference<FileOutputPreferences, string>(
+                    name: "OutputDirectory",
+                    shortName: "Output",
+                    description: "specifies the output directory into which to write the generated config files. If this directory does not exist, it will be created.",
+                    argumentHelpText: "<output directory>",
+                    parseAction: stringValue => stringValue,
+                    setAction: (stringValue, preferences) => preferences.OutputDirectory = stringValue)
             })
         {
         }

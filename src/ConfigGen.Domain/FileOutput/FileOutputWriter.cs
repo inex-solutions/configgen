@@ -68,7 +68,14 @@ namespace ConfigGen.Domain.FileOutput
                 outputFilename = $"{result.ConfigurationName}.xml";
             }
 
-            var fullPath = new FileInfo(Path.Combine($"{result.ConfigurationName}", outputFilename));
+            outputFilename = Path.Combine($"{result.ConfigurationName}", outputFilename);
+
+            if (!fileOutputPreferences.OutputDirectory.IsNullOrEmpty())
+            {
+                outputFilename = Path.Combine(fileOutputPreferences.OutputDirectory, outputFilename);
+            }
+
+            var fullPath = new FileInfo(outputFilename);
             if (!fullPath.Directory.Exists)
             {
                 fullPath.Directory.Create();

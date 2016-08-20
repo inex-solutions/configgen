@@ -85,7 +85,7 @@ namespace ConfigGen.ConsoleApp
             _logger.Info(String.Empty);
             _logger.Info("cfg.exe with no options is equivalent to:");
             _logger.Info(String.Empty);
-            _logger.Info("cfg.exe -s App.Config.Settings.xls -t App.Config.Template.xml -o Configs"); //TODO: NO IT ISN'T!
+            _logger.Info("cfg.exe -s App.Config.Settings.xls -t App.Config.Template.xml -o Configs");
         }
 
         private string GetHelpTextForCommand(PreferenceInfo preference)

@@ -113,7 +113,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PreferenceNames.ForceFilename, "ForcedFilename.xml"}
+                {PreferenceNames.ForceName, "ForcedFilename.xml"}
             };
         };
 

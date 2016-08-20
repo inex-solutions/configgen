@@ -54,7 +54,7 @@ namespace ConfigGen.Domain.FileOutput
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (fileOutputPreferences == null) throw new ArgumentNullException(nameof(fileOutputPreferences));
 
-            string outputFilename = fileOutputPreferences.ForceFilename;
+            string outputFilename = fileOutputPreferences.ForcedFilename;
             object val;
             if (!fileOutputPreferences.FilenameSetting.IsNullOrEmpty()
                 && result.Configuration.TryGetValue(fileOutputPreferences.FilenameSetting, out val)

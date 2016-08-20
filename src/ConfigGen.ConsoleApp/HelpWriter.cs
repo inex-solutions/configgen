@@ -65,7 +65,6 @@ namespace ConfigGen.ConsoleApp
         {
             if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
 
-            _logger.Info(String.Empty);
             _logger.Info("USAGE: cfg.exe [options]");
             _logger.Info(String.Empty);
             _logger.Info("WHERE OPTIONS: ");

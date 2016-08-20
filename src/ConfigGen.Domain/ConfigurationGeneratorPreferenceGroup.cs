@@ -33,7 +33,8 @@ namespace ConfigGen.Domain
                 new Preference<ConfigurationGeneratorPreferences, string>(
                     name: "SettingsFile",
                     shortName: "Settings",
-                    description: "specifies the settings file containing config gen settings",
+                    description: "specifies the settings file containing config gen settings (files with extensions csv, .xls, .xlsx or .xml "
+                    + "will have their template file type auto-detected)",
                     argumentHelpText: "<settings file path>",
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.SettingsFilePath = stringValue),
@@ -49,7 +50,8 @@ namespace ConfigGen.Domain
                 new Preference<ConfigurationGeneratorPreferences, string>(
                     name: "TemplateFile",
                     shortName: "Template",
-                    description: "specifies the template file",
+                    description: "specifies the template file (files with extensions .xml or .razor "
+                    + "will have their settings file type auto-detected)",
                     argumentHelpText: "<template file path>",
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.TemplateFilePath = stringValue),
@@ -65,7 +67,7 @@ namespace ConfigGen.Domain
                 new Preference<ConfigurationGeneratorPreferences, bool>(
                     name: "VerboseOutput",
                     shortName: "Verbose",
-                    description: "verbose output",
+                    description: "write verbose logging to the console during execution",
                     argumentHelpText: "[true | false]",
                     parseAction: bool.Parse,
                     setAction: (verbosity, preferences) => preferences.Verbosity = verbosity ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal),
@@ -81,7 +83,7 @@ namespace ConfigGen.Domain
                 new Preference<ConfigurationGeneratorPreferences, string>(
                     name: "ConfigurationNameSetting",
                     shortName: null,
-                    description: "Token to use as configuration name",
+                    description: "token to use as configuration name",
                     argumentHelpText: "<configuration name setting>",
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.ConfigurationNameSetting = stringValue)

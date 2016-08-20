@@ -38,12 +38,12 @@ namespace ConfigGen.Domain.FileOutput
                     setAction: (stringValue, preferences) => preferences.FilenameSetting = stringValue),
 
                 new Preference<FileOutputPreferences, string>(
-                    name: "ForceFilename",
-                    shortName: null,
-                    description: "forces all generated files to have the specified filename",
+                    name: "ForceName",
+                    shortName: "Name",
+                    description: "forces the filename of the any generated config files, ignoring the name specified in the settings",
                     argumentHelpText: "<filename>",
                     parseAction: stringValue => stringValue,
-                    setAction: (stringValue, preferences) => preferences.ForceFilename = stringValue),
+                    setAction: (stringValue, preferences) => preferences.ForcedFilename = stringValue),
 
                 new Preference<FileOutputPreferences, string>(
                     name: "OutputDirectory",

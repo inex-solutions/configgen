@@ -35,7 +35,7 @@ namespace ConfigGen.Domain.FileOutput
         /// <summary>
         /// Gets or sets the forced filename. If specified, this filename overrides the filename specified in the settings spreadsheet.
         /// </summary>
-        public string ForceFilename { get; set; }
+        public string ForcedFilename { get; set; }
 
         /// <summary>
         /// Gets or sets the output directory into which to write the generated files.

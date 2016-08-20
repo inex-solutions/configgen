@@ -48,7 +48,8 @@ namespace ConfigGen.Domain.Filtering
                 new Preference<ConfigurationCollectionFilterPreferences, bool>(
                     name: "LocalOnly",
                     shortName: "Local",
-                    description: "generate configuration for the local machine only.",
+                    description: "generate a configuration file for the local machine only. If an entry in the settings matches the local " 
+                    + " machine name, it us used; otherwise an entry in the name of \"default\" is used instead.",
                     argumentHelpText: "[true | false]",
                     parseAction: bool.Parse,
                     setAction: (value, preferences) => preferences.LocalOnly = value)

@@ -46,7 +46,7 @@ namespace ConfigGen.Api.Tests
             public const string LocalOnly = "LocalOnly";
 
             public const string FilenameSetting = "FilenameSetting";
-            public const string ForceFilename = "ForceFilename";
+            public const string ForceName = "ForceName";
             public const string OutputDirectory = "OutputDirectory";
         }
 

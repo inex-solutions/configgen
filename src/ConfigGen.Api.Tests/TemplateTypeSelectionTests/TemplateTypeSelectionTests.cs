@@ -35,7 +35,12 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
         Establish context = () =>
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.XmL");
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
+            {
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.XmL"} // intentionally mixed case to check this is case insensitive
+            };
         };
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
@@ -59,11 +64,11 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
         Establish context = () =>
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.razor", "App.Config.Template.razor");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.razor", "App.Config.Template.RAZor");
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
+                {PreferenceNames.TemplateFilePath, "App.Config.Template.RAZor"} // intentionally mixed case to check this is case insensitive
             };
         };
 
@@ -135,7 +140,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
                 {PreferenceNames.TemplateFilePath, "App.Config.Template.unknown"},
-                {PreferenceNames.TemplateFileType, "xml"}
+                {PreferenceNames.TemplateFileType, "XmL"} // intentionally mixed case to check this is case insensitive
             };
         };
 
@@ -163,7 +168,7 @@ namespace ConfigGen.Api.Tests.TemplateTypeSelectionTests
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
                 {PreferenceNames.TemplateFilePath, "App.Config.Template.unknown"},
-                {PreferenceNames.TemplateFileType, "razor"}
+                {PreferenceNames.TemplateFileType, "RAZor"} // intentionally mixed case to check this is case insensitive
             };
         };
 

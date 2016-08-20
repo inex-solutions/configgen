@@ -30,10 +30,10 @@ namespace ConfigGen.Utilities
     public class ItemFactoryByTypeOrFileExtensionBase<TItem>
     {
         [NotNull]
-        private readonly Dictionary<string, Func<TItem>> _itemFactoriesByType = new Dictionary<string, Func<TItem>>();
+        private readonly Dictionary<string, Func<TItem>> _itemFactoriesByType = new Dictionary<string, Func<TItem>>(StringComparer.OrdinalIgnoreCase);
 
         [NotNull]
-        private readonly Dictionary<string, Func<TItem>> _itemFactoriesByExtension = new Dictionary<string, Func<TItem>>();
+        private readonly Dictionary<string, Func<TItem>> _itemFactoriesByExtension = new Dictionary<string, Func<TItem>>(StringComparer.OrdinalIgnoreCase);
 
         public ItemFactoryByTypeOrFileExtensionBase(
             [NotNull]Func<TItem>[] itemFactories,

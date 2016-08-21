@@ -78,6 +78,7 @@
     <Compile Include="NodeProcessing\XElementExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateLoader.cs" />
+    <Compile Include="TemplatePreferencesLoader.cs" />
     <Compile Include="XmlTemplateLoadResults.cs" />
     <Compile Include="TemplatePreprocessor.cs" />
     <Compile Include="TokenReplacer.cs" />

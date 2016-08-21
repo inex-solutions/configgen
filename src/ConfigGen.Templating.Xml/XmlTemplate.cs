@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -52,24 +53,32 @@ namespace ConfigGen.Templating.Xml
         [NotNull]
         private readonly ITokenReplacer _tokenReplacer;
 
+        [NotNull]
+        private readonly TemplatePreferencesLoader _templatePreferencesLoader;
+
+        [NotNull]
         private XmlDeclarationInfo _xmlDeclarationInfo;
+
         private XElement _loadedTemplate;
 
         public XmlTemplate(
             [NotNull] XmlDeclarationParser xmlDeclarationParser, 
             [NotNull] ITemplateLoader templateLoader, 
             [NotNull] ITemplatePreprocessor templatePreprocessor,
-            [NotNull] ITokenReplacer tokenReplacer)
+            [NotNull] ITokenReplacer tokenReplacer,
+            [NotNull] TemplatePreferencesLoader templatePreferencesLoader)
         {
             if (xmlDeclarationParser == null) throw new ArgumentNullException(nameof(xmlDeclarationParser));
             if (templateLoader == null) throw new ArgumentNullException(nameof(templateLoader));
             if (templatePreprocessor == null) throw new ArgumentNullException(nameof(templatePreprocessor));
             if (tokenReplacer == null) throw new ArgumentNullException(nameof(tokenReplacer));
+            if (templatePreferencesLoader == null) throw new ArgumentNullException(nameof(templatePreferencesLoader));
 
             _xmlDeclarationParser = xmlDeclarationParser;
             _templateLoader = templateLoader;
             _templatePreprocessor = templatePreprocessor;
             _tokenReplacer = tokenReplacer;
+            _templatePreferencesLoader = templatePreferencesLoader;
         }
 
         [NotNull]
@@ -90,6 +99,13 @@ namespace ConfigGen.Templating.Xml
             if (xmlTemplateLoadResults.Success)
             {
                 _loadedTemplate = xmlTemplateLoadResults.LoadedTemplate;
+
+                IEnumerable<Error> preferencesLoadErrors = _templatePreferencesLoader.LoadPreferences(_loadedTemplate);
+
+                if (preferencesLoadErrors.Any())
+                {
+                    //TODO: what should we do - error, or warn?    
+                }
             }
 
             //TODO: make result returning more general - this is just another mapping from one result to another

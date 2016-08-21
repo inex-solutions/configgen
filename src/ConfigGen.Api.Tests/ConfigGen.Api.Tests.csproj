@@ -70,6 +70,7 @@
     <Compile Include="TokenUsageTests\TokenUsageTests.cs" />
     <Compile Include="WarningAndErrorTests\WarningAndErrorTests.cs" />
     <Compile Include="XmlSettingsLoaderTests\XmlSettingsLoaderTests.cs" />
+    <Compile Include="XmlTemplateTests\XmlTemplateTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\samplefiles\SimpleSettings.FiveConfigurations.TwoValues.xls">

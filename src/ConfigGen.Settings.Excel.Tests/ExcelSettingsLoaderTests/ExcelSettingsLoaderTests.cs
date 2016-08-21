@@ -29,6 +29,14 @@ using Machine.Specifications;
 namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
 {
     [Subject(typeof(ExcelSettingsLoader))]
+    public class the_xml_settings_loader : ExcelSettingsLoaderTestBase
+    {
+        It has_a_loader_type_of_excel = () => Subject.LoaderType.ShouldEqual("excel");
+
+        It supports_the_file_extensions_of_xls_and_xlsx = () => Subject.SupportedExtensions.ShouldContainOnly(".xls", ".xlsx");
+    }
+
+    [Subject(typeof(ExcelSettingsLoader))]
     public class when_loading_a_simple_xlsx_file_containing_two_configurations : ExcelSettingsLoaderTestBase
     {
         Establish context = () =>

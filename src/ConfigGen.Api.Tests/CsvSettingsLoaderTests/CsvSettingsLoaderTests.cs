@@ -29,77 +29,74 @@ using Machine.Specifications;
 
 namespace ConfigGen.Api.Tests.CsvSettingsLoaderTests
 {
-    public class CsvSettingsLoaderTests
+    internal class when_specifying_a_csv_settings_file_containing_two_configurations : GenerationServiceTestBase
     {
-        internal class when_specifying_a_csv_settings_file_containing_two_configurations : GenerationServiceTestBase
+        Establish context = () =>
         {
-            Establish context = () =>
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.csv", "App.Config.Settings.csv");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.csv", "App.Config.Settings.csv");
-                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
-
-                PreferencesToSupplyToGenerator = new Dictionary<string, string>
-                {
-                    {PreferenceNames.SettingsFilePath, "App.Config.Settings.csv"}
-                };
+                {PreferenceNames.SettingsFilePath, "App.Config.Settings.csv"}
             };
+        };
 
-            Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+        It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-            It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
+        It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
 
-            It configuration1_has_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
-    @"<?xml version=""1.0"" encoding=""utf-8""?>
+        It configuration1_has_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <xmlRoot>
   <Value1>Config1-Value1</Value1>
   <Value2>Config1-Value2</Value2>
 </xmlRoot>");
 
-            It configuration2_has_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
-    @"<?xml version=""1.0"" encoding=""utf-8""?>
+        It configuration2_has_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <xmlRoot>
   <Value1>Config2-Value1</Value1>
   <Value2>Config2-Value2</Value2>
 </xmlRoot>");
-        }
+    }
 
-        internal class when_specifying_a_csv_settings_file_containing_two_configurations_with_the_settings_loader_type_option : GenerationServiceTestBase
+    internal class when_specifying_a_csv_settings_file_containing_two_configurations_with_the_settings_loader_type_option : GenerationServiceTestBase
+    {
+        Establish context = () =>
         {
-            Establish context = () =>
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.csv", "App.Config.Settings.somefile");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.csv", "App.Config.Settings.somefile");
-                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
-
-                PreferencesToSupplyToGenerator = new Dictionary<string, string>
-                {
-                    {PreferenceNames.SettingsFilePath, "App.Config.Settings.somefile"},
-                    {PreferenceNames.SettingsFileType, "csv"}
-                };
+                {PreferenceNames.SettingsFilePath, "App.Config.Settings.somefile"},
+                {PreferenceNames.SettingsFileType, "csv"}
             };
+        };
 
-            Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
 
-            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+        It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-            It no_warnings_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Warnings).ShouldBeEmpty();
+        It no_warnings_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Warnings).ShouldBeEmpty();
 
-            It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
+        It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
 
-            It configuration1_has_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
-    @"<?xml version=""1.0"" encoding=""utf-8""?>
+        It configuration1_has_the_correct_contents = () => Result.Configuration("Configuration1").ShouldContainXml(
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <xmlRoot>
   <Value1>Config1-Value1</Value1>
   <Value2>Config1-Value2</Value2>
 </xmlRoot>");
 
-            It configuration2_has_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
-    @"<?xml version=""1.0"" encoding=""utf-8""?>
+        It configuration2_has_the_correct_contents = () => Result.Configuration("Configuration2").ShouldContainXml(
+            @"<?xml version=""1.0"" encoding=""utf-8""?>
 <xmlRoot>
   <Value1>Config2-Value1</Value1>
   <Value2>Config2-Value2</Value2>
 </xmlRoot>");
-        }
     }
 }

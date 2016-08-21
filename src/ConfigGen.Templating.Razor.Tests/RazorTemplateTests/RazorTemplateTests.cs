@@ -34,6 +34,14 @@ using Machine.Specifications;
 namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 {
     [Subject(typeof(RazorTemplate))]
+    public class the_razor_template : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
+    {
+        It has_a_template_type_of_razor = () => Subject.TemplateType.ShouldEqual("razor");
+
+        It supports_the_file_extensions_of_razor_and_cshtml = () => Subject.SupportedExtensions.ShouldContainOnly(".razor", ".cshtml");
+    }
+
+    [Subject(typeof(RazorTemplate))]
     public class when_loading_a_template_which_contains_invalid_csharp : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
     {
         Establish context = () =>

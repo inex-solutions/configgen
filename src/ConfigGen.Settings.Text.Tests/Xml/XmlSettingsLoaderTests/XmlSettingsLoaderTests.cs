@@ -32,6 +32,16 @@ using Machine.Specifications;
 namespace ConfigGen.Settings.Text.Tests.Xml.XmlSettingsLoaderTests
 {
     [Subject(typeof(XmlSettingsLoader))]
+    public class the_xml_settings_loader : MachineSpecificationTestBase<XmlSettingsLoader>
+    {
+        Establish context = () => Subject = new XmlSettingsLoader();
+
+        It has_a_loader_type_of_xml = () => Subject.LoaderType.ShouldEqual("xml");
+
+        It supports_the_file_extension_of_xml = () => Subject.SupportedExtensions.ShouldContainOnly(".xml");
+    }
+
+    [Subject(typeof(XmlSettingsLoader))]
     public class XmlSettingsLoaderTests : MachineSpecificationTestBase<XmlSettingsLoader, IResult<IEnumerable<IDictionary<string, object>>, Error>>
     {
         Establish context = () =>

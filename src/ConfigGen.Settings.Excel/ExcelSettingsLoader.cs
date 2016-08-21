@@ -106,7 +106,7 @@ namespace ConfigGen.Settings.Excel
             return Result<IEnumerable<IDictionary<string, object>>, Error>.CreateSuccessResult(machineSettings);
         }
 
-        public string LoaderType => "Excel";
+        public string LoaderType => "excel";
 
         public string[] SupportedExtensions => new[] {".xls", ".xlsx"};
 

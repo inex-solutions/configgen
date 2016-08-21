@@ -33,6 +33,14 @@ using Machine.Specifications;
 namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
 {
     [Subject(typeof(XmlTemplate))]
+    public class the_razor_template : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
+    {
+        It has_a_template_type_of_xml = () => Subject.TemplateType.ShouldEqual("xml");
+
+        It supports_the_file_extension_xml = () => Subject.SupportedExtensions.ShouldContainOnly(".xml");
+    }
+
+    [Subject(typeof(XmlTemplate))]
     public class when_loading_a_template_which_is_not_well_formed : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>

@@ -177,6 +177,40 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     }
 
     [Subject(typeof(RazorTemplate))]
+    public class when_rendering_a_template_containing_a_single_token_as_an_attribute : RazorTemplateTestBase
+    {
+        Establish context = () =>
+        {
+            TemplateContents = @"<root><child attr=""@Model.TokenOne"" /></root>";
+
+            Configuration = new Configuration("Configuration1", new Dictionary<string, object>
+            {
+                ["TokenOne"] = "One",
+            });
+
+            ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
+        };
+
+        Because of = () =>
+        {
+            LoadResult = Subject.Load(TemplateContents.ToStream());
+            RenderResult = Subject.Render(Configuration);
+        };
+
+        It the_template_load_should_indicate_no_errors = () => LoadResult.TemplateLoadErrors.ShouldBeEmpty();
+
+        It the_template_render_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+        It the_template_render_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
+
+        It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.RenderedResult.ShouldEqual(ExpectedOutput);
+
+        It the_used_supplied_token_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne");
+
+        It no_tokens_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
+    }
+
+    [Subject(typeof(RazorTemplate))]
     public class when_rendering_a_template_containing_an_unrecognised_token : RazorTemplateTestBase
     {
         Establish context = () =>

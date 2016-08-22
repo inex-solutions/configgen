@@ -40,9 +40,6 @@ namespace ConfigGen.Templating.Razor
         private Encoding _encoding;
 
         [NotNull]
-        private const string RazorTemplateErrorSource = nameof(RazorTemplate);
-
-        [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
 
         public RazorTemplate(

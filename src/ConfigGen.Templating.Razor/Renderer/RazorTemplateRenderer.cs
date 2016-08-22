@@ -51,6 +51,7 @@ namespace ConfigGen.Templating.Razor.Renderer
             }
 
             var engine = new RazorTemplateEngineFactory().CreateEngine<TemplateBase<TModel>>(additionalNamespaces);
+
             var generator = new CodeGenerator();
             var codeGenerationResults = generator.Generate(engine, _templateContents);
 

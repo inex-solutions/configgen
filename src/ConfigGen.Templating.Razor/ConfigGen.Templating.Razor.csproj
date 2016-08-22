@@ -39,6 +39,10 @@
       <HintPath>..\packages\JetBrains.Annotations.10.1.5\lib\net\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.9.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.9.0\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -62,16 +66,9 @@
     <Compile Include="RazorTemplateErrorCodes.cs" />
     <Compile Include="RazorTemplateError.cs" />
     <Compile Include="RazorTemplateModule.cs" />
-    <Compile Include="Renderer\CodeGenerationResults.cs" />
-    <Compile Include="Renderer\CodeGenerator.cs" />
     <Compile Include="Renderer\DictionaryBackedDynamicModel.cs" />
     <Compile Include="Renderer\DynamicModel.cs" />
-    <Compile Include="Renderer\RazorTemplateEngineFactory.cs" />
     <Compile Include="Renderer\RazorTemplateLoadResult.cs" />
-    <Compile Include="Renderer\RazorTemplateRenderer.cs" />
-    <Compile Include="Renderer\TemplateBase.cs" />
-    <Compile Include="Renderer\TemplateCompilationResults.cs" />
-    <Compile Include="Renderer\TemplateCompiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

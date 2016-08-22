@@ -20,8 +20,8 @@
 #endregion
 
 using Autofac;
-using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Templating.Razor.Renderer;
+using RazorEngine.Templating;
+using ITemplate = ConfigGen.Domain.Contract.Template.ITemplate;
 
 namespace ConfigGen.Templating.Razor
 {
@@ -29,8 +29,8 @@ namespace ConfigGen.Templating.Razor
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register<IRazorEngineService>(container => RazorEngineService.Create());
             builder.RegisterType<RazorTemplate>().As<ITemplate>().As<RazorTemplate>();
-            builder.RegisterType<RazorTemplateRenderer<DictionaryBackedDynamicModel>>();
         }
     }
 }

@@ -21,34 +21,38 @@
 
 using System;
 using System.IO;
-using System.Text;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Templating.Razor.Renderer;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
+using RazorEngine.Templating;
+using Encoding = System.Text.Encoding;
+using ITemplate = ConfigGen.Domain.Contract.Template.ITemplate;
 
 namespace ConfigGen.Templating.Razor
 {
     public class RazorTemplate : ITemplate
     {
-        [NotNull]
-        private readonly RazorTemplateRenderer<DictionaryBackedDynamicModel> _razorTemplateRenderer;
-
         private string _loadedTemplate;
         private Encoding _encoding;
+        private string _templateKey;
+
+        [NotNull]
+        private readonly IRazorEngineService _razorEngineService;
 
         [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
 
         public RazorTemplate(
-            [NotNull] RazorTemplateRenderer<DictionaryBackedDynamicModel> razorTemplateRenderer,
+            [NotNull] IRazorEngineService razorEngineService,
             [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
-            if (razorTemplateRenderer == null) throw new ArgumentNullException(nameof(razorTemplateRenderer));
+            if (razorEngineService == null) throw new ArgumentNullException(nameof(razorEngineService));
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
-            _razorTemplateRenderer = razorTemplateRenderer;
+            _razorEngineService = razorEngineService;
             _tokenUsageTracker = tokenUsageTracker;
         }
 
@@ -74,7 +78,35 @@ namespace ConfigGen.Templating.Razor
                 _loadedTemplate = reader.ReadToEnd();
             }
 
-            RazorTemplateLoadResult razorTemplateLoadResult = _razorTemplateRenderer.LoadTemplate(_loadedTemplate);
+            _templateKey = Guid.NewGuid().ToString();
+
+            _razorEngineService.AddTemplate(_templateKey, _loadedTemplate);
+
+            RazorTemplateLoadResult razorTemplateLoadResult;
+
+            try
+            {
+                _razorEngineService.Compile(_templateKey);
+                razorTemplateLoadResult = new RazorTemplateLoadResult(RazorTemplateLoadResult.LoadResultStatus.Success);
+            }
+            catch (TemplateParsingException ex)
+            {
+                razorTemplateLoadResult = new RazorTemplateLoadResult(
+                    RazorTemplateLoadResult.LoadResultStatus.CodeGenerationFailed, 
+                    new [] { $"Code Generation Error: {ex.Message} (at line {ex.Line}, column {ex.Column}" });
+            }
+            catch (TemplateCompilationException ex)
+            {
+                razorTemplateLoadResult = new RazorTemplateLoadResult(
+                    RazorTemplateLoadResult.LoadResultStatus.CodeCompilationFailed,
+                    ex.CompilerErrors.Select(e => $"Code Compilation Error: {e}").ToArray());
+            }
+            catch (Exception ex)
+            {
+                razorTemplateLoadResult = new RazorTemplateLoadResult(
+                    RazorTemplateLoadResult.LoadResultStatus.CodeCompilationFailed,
+                    new [] {$"Exception while compiling template: {ex}"});
+            }
 
             return MapToLoadResult(razorTemplateLoadResult);
         }
@@ -94,7 +126,8 @@ namespace ConfigGen.Templating.Razor
             {
                 var settings = configuration.ToDictionary();
                 var model = new DictionaryBackedDynamicModel(settings);
-                string renderResult = _razorTemplateRenderer.Render(model);
+                
+                var renderResult = _razorEngineService.Run(_templateKey, null, model);
 
                 foreach (var settingName in settings)
                 {

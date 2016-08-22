@@ -92,14 +92,14 @@ namespace ConfigGen.Templating.Razor
             catch (TemplateParsingException ex)
             {
                 razorTemplateLoadResult = new RazorTemplateLoadResult(
-                    RazorTemplateLoadResult.LoadResultStatus.CodeGenerationFailed, 
-                    new [] { $"Code Generation Error: {ex.Message} (at line {ex.Line}, column {ex.Column}" });
+                    RazorTemplateLoadResult.LoadResultStatus.CodeGenerationFailed,
+                    new[] { $"Code Generation Error: {ex.Message} (at line {ex.Line}, column {ex.Column}" });
             }
             catch (TemplateCompilationException ex)
             {
                 razorTemplateLoadResult = new RazorTemplateLoadResult(
                     RazorTemplateLoadResult.LoadResultStatus.CodeCompilationFailed,
-                    ex.CompilerErrors.Select(e => $"Code Compilation Error: {e}").ToArray());
+                    ex.CompilerErrors.Select(e => $"Code Compilation Error: {e.ErrorNumber}: {e.ErrorText} (at line {e.Line}, column {e.Column})").ToArray());
             }
             catch (Exception ex)
             {

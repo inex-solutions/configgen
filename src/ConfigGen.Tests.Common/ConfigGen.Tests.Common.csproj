@@ -75,8 +75,7 @@
     <Compile Include="MSpecShouldExtensions\ShouldExtensions.cs" />
     <Compile Include="MSpecShouldExtensions\GenerationError\GenerationErrorExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TemplateLoadTestBase.cs" />
-    <Compile Include="TemplateRenderTestBase.cs" />
+    <Compile Include="TemplateTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Api.Contract\ConfigGen.Api.Contract.csproj">

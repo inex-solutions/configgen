@@ -31,7 +31,7 @@ using Machine.Specifications;
 namespace ConfigGen.Templating.Xml.Tests.ApplyWhenAttributeTests
 {
     [Subject(typeof(XmlTemplate))]
-    public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_applyWhen_attribute_with_an_empty_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -40,18 +40,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenAttributeTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_a_condition_processing_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_applyWhen_attribute_without_an_unparseable_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -60,18 +60,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenAttributeTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_a_condition_processing_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_element_containing_an_applyWhen_attribute_with_a_true_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -87,18 +87,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenAttributeTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
         It the_result_should_contain_the_child_element_but_without_the_applyWhen_attribute =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
         It the_result_should_indicate_the_token_had_been_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val");
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_element_containing_an_applyWhen_attribute_with_a_false_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -114,12 +114,12 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenAttributeTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
         It the_result_should_contain_not_the_child_element =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
         It the_result_should_indicate_the_token_had_been_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val");
     }

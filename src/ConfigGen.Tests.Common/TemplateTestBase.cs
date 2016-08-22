@@ -32,13 +32,14 @@ using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
 {
-    public abstract class TemplateRenderTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new()
+    public abstract class TemplateTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new()
     {
         [NotNull]
         protected static TTemplate Subject;
         protected static string TemplateContents;
         protected static TokenUsageTracker TokenUsageTracker;
-        protected static SingleTemplateRenderResults Result;
+        protected static LoadResult LoadResult;
+        protected static SingleTemplateRenderResults RenderResult;
         protected static Configuration Configuration;
         protected static string ExpectedOutput;
         private static IEnumerable<Configuration> configurations;
@@ -48,7 +49,8 @@ namespace ConfigGen.Tests.Common
             Configuration = null;
             TemplateContents = null;
             configurations = null;
-            Result = null;
+            LoadResult = null;
+            RenderResult = null;
             ExpectedOutput = null;
             TokenUsageTracker = new TokenUsageTracker();
             var containerBuilder = new ContainerBuilder();

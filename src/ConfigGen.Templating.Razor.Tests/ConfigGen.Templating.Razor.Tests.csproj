@@ -62,7 +62,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RazorTemplateTests\RazorTemplateTests.cs" />
-    <Compile Include="RazorTemplateRenderTestBase.cs" />
+    <Compile Include="RazorTemplateTestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Api\ConfigGen.Api.csproj">

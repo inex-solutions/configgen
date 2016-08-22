@@ -31,7 +31,7 @@ namespace ConfigGen.Templating.Xml.Tests.XmlDeclarationTests
 {
     //TODO: add missing tests
     [Subject(typeof(XmlTemplate))]
-    public class when_the_template_contains_an_xml_declaration : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_the_template_contains_an_xml_declaration : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         private static string XmlDeclaration;
         private static string TemplateBody;
@@ -49,14 +49,14 @@ namespace ConfigGen.Templating.Xml.Tests.XmlDeclarationTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_render_should_be_successful = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_render_should_be_successful = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
         It the_resulting_output_should_contain_the_xml_declaration =
-            () => Result.RenderedResult.ShouldStartWith(XmlDeclaration);
+            () => RenderResult.RenderedResult.ShouldStartWith(XmlDeclaration);
 
         It the_resulting_output_should_be_the_rest_of_the_template_unaltered =
-            () => Result.RenderedResult.ShouldContainXml(TemplateContents);
+            () => RenderResult.RenderedResult.ShouldContainXml(TemplateContents);
     }
 }

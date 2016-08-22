@@ -34,7 +34,7 @@ using Machine.Specifications;
 namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 {
     [Subject(typeof(RazorTemplate))]
-    public class the_razor_template : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
+    public class the_razor_template : TemplateTestBase<RazorTemplate, RazorTemplateModule>
     {
         It has_a_template_type_of_razor = () => Subject.TemplateType.ShouldEqual("razor");
 
@@ -42,41 +42,41 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_loading_a_template_which_contains_invalid_csharp : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
+    public class when_loading_a_template_which_contains_invalid_csharp : TemplateTestBase<RazorTemplate, RazorTemplateModule>
     {
         Establish context = () =>
         {
             TemplateContents = "@forNOT_A_KEYWORD (var item in new [0]) { @:@item }";
         };
 
-        Because of = () => Result = Subject.Load(TemplateContents.ToStream());
+        Because of = () => LoadResult = Subject.Load(TemplateContents.ToStream());
 
-        It the_load_fails = () => Result.Success.ShouldBeFalse();
+        It the_load_fails = () => LoadResult.Success.ShouldBeFalse();
 
-        It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count.ShouldEqual(1);
+        It there_is_a_single_load_error = () => LoadResult.TemplateLoadErrors.Count.ShouldEqual(1);
 
-        It the_single_error_should_be_a_code_compilation_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeGenerationError);
+        It the_single_error_should_be_a_code_compilation_error = () => LoadResult.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeGenerationError);
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_loading_a_template_which_contains_invalid_razor_syntax : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
+    public class when_loading_a_template_which_contains_invalid_razor_syntax : TemplateTestBase<RazorTemplate, RazorTemplateModule>
     {
         Establish context = () =>
         {
             TemplateContents = "<root>!£$%^&*()_{}~@L\"\"</root>";
         };
 
-        Because of = () => Result = Subject.Load(TemplateContents.ToStream());
+        Because of = () => LoadResult = Subject.Load(TemplateContents.ToStream());
 
-        It the_load_fails = () => Result.Success.ShouldBeFalse();
+        It the_load_fails = () => LoadResult.Success.ShouldBeFalse();
 
-        It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count.ShouldEqual(1);
+        It there_is_a_single_load_error = () => LoadResult.TemplateLoadErrors.Count.ShouldEqual(1);
 
-        It the_single_error_should_be_a_code_compilation_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeCompilationError);
+        It the_single_error_should_be_a_code_compilation_error = () => LoadResult.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeCompilationError);
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_loading_a_template_a_second_time : TemplateLoadTestBase<RazorTemplate, RazorTemplateModule>
+    public class when_loading_a_template_a_second_time : TemplateTestBase<RazorTemplate, RazorTemplateModule>
     {
         private static Exception CaughtException;
 
@@ -87,13 +87,13 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => CaughtException = Catch.Exception(() => Result = Subject.Load(TemplateContents.ToStream()));
+        Because of = () => CaughtException = Catch.Exception(() => LoadResult = Subject.Load(TemplateContents.ToStream()));
 
         It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_rendering_a_template_without_calling_load_first : TemplateRenderTestBase<RazorTemplate, RazorTemplateModule>
+    public class when_rendering_a_template_without_calling_load_first : TemplateTestBase<RazorTemplate, RazorTemplateModule>
     {
         private static Exception CaughtException;
         
@@ -113,7 +113,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateRenderTestBase
+    public class when_rendering_a_template_which_contains_no_tokens : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -128,13 +128,13 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+        It the_resulting_output_should_be_the_unaltered_template = () => RenderResult.RenderedResult.ShouldEqual(TemplateContents);
 
         It both_supplied_tokens_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 
@@ -144,7 +144,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_rendering_a_template_containing_a_single_token_which_was_supplied : RazorTemplateRenderTestBase
+    public class when_rendering_a_template_containing_a_single_token_which_was_supplied : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -161,13 +161,13 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+        It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.RenderedResult.ShouldEqual(ExpectedOutput);
 
         It the_used_supplied_token_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne");
 
@@ -177,7 +177,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_rendering_a_template_containing_an_unrecognised_token : RazorTemplateRenderTestBase
+    public class when_rendering_a_template_containing_an_unrecognised_token : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -190,13 +190,13 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        It the_resulting_output_should_be_the_template_with_the_token_removed = () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
         It the_unrecognised_token_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
@@ -206,7 +206,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_rendering_a_template_which_contains_code_that_will_throw_an_exception_on_evaluation : RazorTemplateRenderTestBase
+    public class when_rendering_a_template_which_contains_code_that_will_throw_an_exception_on_evaluation : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -222,19 +222,19 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_resulting_status_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_resulting_status_should_a_single_error_with_GeneralRazorTemplateError_code =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.GeneralRazorTemplateError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(RazorTemplateErrorCodes.GeneralRazorTemplateError);
 
         It the_resulting_status_should_a_single_error_with_DivideByZeroException_in_its_detail_text =
-            () => Result.Errors.ShouldContainSingleErrorWithText("DivideByZeroException");
+            () => RenderResult.Errors.ShouldContainSingleErrorWithText("DivideByZeroException");
     }
 
     [Subject(typeof(RazorTemplate))]
-    public class when_rendering_the_same_template_a_second_time : RazorTemplateRenderTestBase
+    public class when_rendering_the_same_template_a_second_time : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -258,13 +258,13 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "OneAgain");
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+        It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.RenderedResult.ShouldEqual(ExpectedOutput);
 
         It the_used_supplied_token_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne");
 
@@ -273,7 +273,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
         It no_tokens_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
     }
 
-    public class when_rendering_a_template_which_has_a_ascii_encoding : RazorTemplateRenderTestBase
+    public class when_rendering_a_template_which_has_a_ascii_encoding : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -283,18 +283,18 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             Subject.Load(TemplateContents.ToStream(Encoding.ASCII));
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+        It the_resulting_output_should_be_the_unaltered_template = () => RenderResult.RenderedResult.ShouldEqual(TemplateContents);
 
-        It the_resulting_should_indicate_an_ascii_encoding = () => Result.Encoding.ShouldBeOfExactType<ASCIIEncoding>();
+        It the_resulting_should_indicate_an_ascii_encoding = () => RenderResult.Encoding.ShouldBeOfExactType<ASCIIEncoding>();
     }
 
-    public class when_rendering_a_template_which_has_a_utf16_encoding : RazorTemplateRenderTestBase
+    public class when_rendering_a_template_which_has_a_utf16_encoding : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -304,18 +304,18 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             Subject.Load(TemplateContents.ToStream(Encoding.Unicode));
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+        It the_resulting_output_should_be_the_unaltered_template = () => RenderResult.RenderedResult.ShouldEqual(TemplateContents);
 
-        It the_resulting_should_indicate_a_unicode_encoding = () => Result.Encoding.ShouldBeOfExactType<UnicodeEncoding>();
+        It the_resulting_should_indicate_a_unicode_encoding = () => RenderResult.Encoding.ShouldBeOfExactType<UnicodeEncoding>();
     }
 
-    public class when_rendering_a_template_which_has_a_utf8_encoding : RazorTemplateRenderTestBase
+    public class when_rendering_a_template_which_has_a_utf8_encoding : RazorTemplateTestBase
     {
         Establish context = () =>
         {
@@ -325,14 +325,14 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
             Subject.Load(TemplateContents.ToStream(Encoding.UTF8));
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldEqual(TemplateContents);
+        It the_resulting_output_should_be_the_unaltered_template = () => RenderResult.RenderedResult.ShouldEqual(TemplateContents);
 
-        It the_resulting_should_indicate_a_unicode_encoding = () => Result.Encoding.ShouldBeOfExactType<UTF8Encoding>();
+        It the_resulting_should_indicate_a_unicode_encoding = () => RenderResult.Encoding.ShouldBeOfExactType<UTF8Encoding>();
     }
 }

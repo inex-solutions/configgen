@@ -25,7 +25,7 @@ using Machine.Specifications;
 namespace ConfigGen.Templating.Razor.Tests
 {
     [Subject(typeof(RazorTemplate))]
-    public abstract class RazorTemplateRenderTestBase : TemplateRenderTestBase<RazorTemplate, RazorTemplateModule>
+    public abstract class RazorTemplateTestBase : TemplateTestBase<RazorTemplate, RazorTemplateModule>
     {
     }
 }

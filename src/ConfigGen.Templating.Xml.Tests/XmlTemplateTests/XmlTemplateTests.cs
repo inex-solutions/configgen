@@ -33,7 +33,7 @@ using Machine.Specifications;
 namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
 {
     [Subject(typeof(XmlTemplate))]
-    public class the_razor_template : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
+    public class the_razor_template : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         It has_a_template_type_of_xml = () => Subject.TemplateType.ShouldEqual("xml");
 
@@ -41,39 +41,37 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_loading_a_template_which_is_not_well_formed : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_loading_a_template_which_is_not_well_formed : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
             TemplateContents = "<root>[%TokenThree%]";
-            SingleConfiguration = new Dictionary<string, object>();
         };
 
-        Because of = () => Result = Subject.Load(TemplateContents.ToStream());
+        Because of = () => LoadResult = Subject.Load(TemplateContents.ToStream());
 
-        It the_load_fails = () => Result.Success.ShouldBeFalse();
+        It the_load_fails = () => LoadResult.Success.ShouldBeFalse();
 
-        It there_is_a_single_load_error = () => Result.TemplateLoadErrors.Count.ShouldEqual(1);
+        It there_is_a_single_load_error = () => LoadResult.TemplateLoadErrors.Count.ShouldEqual(1);
 
-        It the_error_indicates_an_xml_load_error = () => Result.TemplateLoadErrors.First().Code.ShouldEqual(XmlTemplateErrorCodes.TemplateLoadError);
+        It the_error_indicates_an_xml_load_error = () => LoadResult.TemplateLoadErrors.First().Code.ShouldEqual(XmlTemplateErrorCodes.TemplateLoadError);
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_loading_a_template_which_is_well_formed : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_loading_a_template_which_is_well_formed : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
             TemplateContents = "<root>some template</root>";
-            SingleConfiguration = new Dictionary<string, object>();
         };
 
-        Because of = () => Result = Subject.Load(TemplateContents.ToStream());
+        Because of = () => LoadResult = Subject.Load(TemplateContents.ToStream());
 
-        It the_load_passes = () => Result.ShouldIndicateSuccess();
+        It the_load_passes = () => LoadResult.ShouldIndicateSuccess();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_loading_a_template_a_second_time : TemplateLoadTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_loading_a_template_a_second_time : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         private static Exception CaughtException;
 
@@ -84,13 +82,13 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => CaughtException = Catch.Exception(() => Result = Subject.Load(TemplateContents.ToStream()));
+        Because of = () => CaughtException = Catch.Exception(() => LoadResult = Subject.Load(TemplateContents.ToStream()));
 
         It an_InvalidOperationException_should_be_thrown = () => CaughtException.ShouldBeOfExactType<InvalidOperationException>();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_rendering_a_template_without_calling_load_first : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_rendering_a_template_without_calling_load_first : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         private static Exception CaughtException;
 
@@ -110,7 +108,7 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_rendering_a_template_which_contains_no_tokens : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_rendering_a_template_which_contains_no_tokens : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -125,13 +123,13 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_should_be_the_unaltered_template = () => Result.RenderedResult.ShouldContainXml(TemplateContents);
+        It the_resulting_output_should_be_the_unaltered_template = () => RenderResult.RenderedResult.ShouldContainXml(TemplateContents);
 
         It both_supplied_tokens_should_be_listed_as_unused = () => TokenStatsFor(Configuration).UnusedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 
@@ -139,7 +137,7 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_rendering_a_template_containing_a_single_token_which_was_supplied : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_rendering_a_template_containing_a_single_token_which_was_supplied : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -155,14 +153,14 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
         It the_used_supplied_token_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne");
 
@@ -170,7 +168,7 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_rendering_a_template_containing_an_unrecognised_token : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_rendering_a_template_containing_an_unrecognised_token : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -182,13 +180,13 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_should_be_the_template_with_the_token_removed = () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+        It the_resulting_output_should_be_the_template_with_the_token_removed = () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
         It the_unrecognised_token_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("TokenThree");
 
@@ -198,7 +196,7 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_rendering_the_same_template_a_second_time : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_rendering_the_same_template_a_second_time : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -222,13 +220,13 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
             ExpectedOutput = TemplateContents.Replace("[%TokenOne%]", "OneAgain");
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
-        It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => Result.RenderedResult.ShouldEqual(ExpectedOutput);
+        It the_resulting_output_contains_the_template_with_the_token_substituted_for_its_value = () => RenderResult.RenderedResult.ShouldEqual(ExpectedOutput);
 
         It the_used_supplied_token_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne");
 
@@ -238,7 +236,7 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_rendering_a_template_which_has_two_tokens_immediately_next_to_eachother : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_rendering_a_template_which_has_two_tokens_immediately_next_to_eachother : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -254,14 +252,14 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_resulting_status_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_resulting_status_should_contain_no_errors = () => Result.Errors.ShouldBeEmpty();
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_resulting_output_contains_the_template_with_both_tokens_substituted_for_their_values =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
 
         It both_used_supplied_tokens_should_be_listed_as_used = () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("TokenOne", "TokenTwo");
 

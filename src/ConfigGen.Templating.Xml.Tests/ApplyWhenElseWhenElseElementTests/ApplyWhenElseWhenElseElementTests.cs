@@ -31,7 +31,7 @@ using Machine.Specifications;
 namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
 {
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_no_child_node_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_no_child_node_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -41,18 +41,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_an_applyWhenElse_format_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_an_incorrect_child_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_an_incorrect_child_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -68,18 +68,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_an_applyWhenElse_format_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -97,15 +97,15 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_in_the_wrong_order_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_When_ElseWhen_and_Else_children_in_the_wrong_order_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -124,18 +124,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_an_applyWhenElse_format_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_too_many_Else_elements_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_too_many_Else_elements_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -154,18 +154,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_an_applyWhenElse_format_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_an_empty_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_an_empty_When_element_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -180,18 +180,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_a_condition_processing_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_an_empty_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_an_empty_ElseWhen_element_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -208,18 +208,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_a_condition_processing_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_an_unparseable_When_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_an_unparseable_When_element_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -235,18 +235,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_a_condition_processing_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_with_an_unparseable_ElseWhen_element_condition_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_with_an_unparseable_ElseWhen_element_condition_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -263,18 +263,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_a_condition_processing_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ConditionProcessingError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_Apply_element_containing_an_unexpected_child_node_is_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_Apply_element_containing_an_unexpected_child_node_is_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -291,18 +291,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_failure = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
+        It the_result_should_indicate_failure = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Failure);
 
         It the_errors_collection_should_specify_a_condition_processing_error =
-            () => Result.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
+            () => RenderResult.Errors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.ApplyWhenElseFormatError);
 
-        It the_result_should_contain_no_generated_output = () => Result.RenderedResult.ShouldBeNull();
+        It the_result_should_contain_no_generated_output = () => RenderResult.RenderedResult.ShouldBeNull();
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_ApplyWhenElseWhenElse_elements_with_a_true_When_condition_are_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_ApplyWhenElseWhenElse_elements_with_a_true_When_condition_are_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -326,11 +326,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             ExpectedOutput = @"<Root><contents of=""when""/></Root>";
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_token_from_the_When_element_should_be_listed_as_used =
             () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1");
@@ -342,11 +342,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
 
         It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_when_element =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_ApplyWhenElseWhenElse_elements_with_a_true_ElseWhen_condition_are_rendered : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_ApplyWhenElseWhenElse_elements_with_a_true_ElseWhen_condition_are_rendered : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -371,11 +371,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             ExpectedOutput = @"<Root><contents of=""elseWhen""/></Root>";
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_tokens_from_both_the_When_and_ElseWhen_elements_should_be_listed_as_used =
             () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1", "val2");
@@ -387,12 +387,12 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
 
         It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_elseWhen_element =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 
     [Subject(typeof(XmlTemplate))]
     public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_neither_When_nor_ElseWhen_conditions_are_true :
-        TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -417,11 +417,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             ExpectedOutput = @"<Root><contents of=""else""/></Root>";
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_tokens_from_both_the_When_and_ElseWhen_elements_should_be_listed_as_used =
             () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1", "val2");
@@ -433,12 +433,12 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
 
         It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_else_element =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 
     [Subject(typeof(XmlTemplate))]
     public class when_ApplyWhenElseWhenElse_elements_are_rendered_where_both_When_and_ElseWhen_conditions_are_true :
-        TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -462,19 +462,19 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             ExpectedOutput = @"<Root><contents of=""when""/></Root>";
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_when_element =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 
     [Subject(typeof(XmlTemplate))]
     public class when_ApplyWhenElseWhenElse_elements_are_rendered_but_When_contains_an_unrecognised_token_and_ElseWhen_is_true :
-        TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -497,11 +497,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             ExpectedOutput = @"<Root><contents of=""elseWhen""/></Root>";
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_token_from_the_ElseWhen_element_should_be_listed_as_used =
             () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val2");
@@ -513,12 +513,12 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("valX");
 
         It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_elseWhen_element =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 
     [Subject(typeof(XmlTemplate))]
     public class when_ApplyWhenElseWhenElse_elements_are_rendered_but_ElseWhen_contains_an_unrecognised_token_and_When_is_false :
-        TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+        TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -542,11 +542,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             ExpectedOutput = @"<Root><contents of=""else""/></Root>";
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_token_from_the_When_element_should_be_listed_as_used =
             () => TokenStatsFor(Configuration).UsedTokens.ShouldContainOnly("val1");
@@ -558,11 +558,11 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldContainOnly("valX");
 
         It the_resulting_output_should_contain_only_the_root_element_and_the_contents_of_the_else_element =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_ApplyWhenElseWhenElse_elements_are_rendered_with_an_onNotApplied_action_of_CommentOut : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_ApplyWhenElseWhenElse_elements_are_rendered_with_an_onNotApplied_action_of_CommentOut : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -586,18 +586,18 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             ExpectedOutput = @"<Root><contents of=""when"" /><!--<contents of=""elseWhen"" />--><!--<contents of=""else"" />--></Root > ";
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_resulting_output_should_have_commented_out_the_contents_of_the_elements_with_the_failed_conditions =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 
     [Subject(typeof(XmlTemplate))]
-    public class when_an_onCommentedOutComment_value_is_specfied_on_nodes_which_are_commented_out : TemplateRenderTestBase<XmlTemplate, XmlTemplateModule>
+    public class when_an_onCommentedOutComment_value_is_specfied_on_nodes_which_are_commented_out : TemplateTestBase<XmlTemplate, XmlTemplateModule>
     {
         Establish context = () =>
         {
@@ -626,13 +626,13 @@ namespace ConfigGen.Templating.Xml.Tests.ApplyWhenElseWhenElseElementTests
             Subject.Load(TemplateContents.ToStream());
         };
 
-        Because of = () => Result = Subject.Render(Configuration);
+        Because of = () => RenderResult = Subject.Render(Configuration);
 
-        It the_result_should_indicate_success = () => Result.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+        It the_result_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
 
-        It the_errors_collection_should_be_empty = () => Result.Errors.ShouldBeEmpty();
+        It the_errors_collection_should_be_empty = () => RenderResult.Errors.ShouldBeEmpty();
 
         It the_resulting_output_should_prepend_the_commented_out_section_with_the_specified_comment =
-            () => Result.RenderedResult.ShouldContainXml(ExpectedOutput);
+            () => RenderResult.RenderedResult.ShouldContainXml(ExpectedOutput);
     }
 }

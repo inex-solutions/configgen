@@ -43,7 +43,7 @@ namespace ConfigGen.Domain
                     name: "SettingsFileType",
                     shortName: "SettingsType",
                     description: "specifies the settings file type (e.g. excel, xml, csv)",
-                    argumentHelpText: "xls | xml | csv",
+                    argumentHelpText: "excel | xml | csv",
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.SettingsFileType = stringValue),
 

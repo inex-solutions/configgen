@@ -18,8 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System;
+
 namespace ConfigGen.Templating.Razor.Renderer
 {
+    [Serializable]
     public sealed class RazorTemplateLoadResult
     {
         public RazorTemplateLoadResult(LoadResultStatus status, string[] errors = null)

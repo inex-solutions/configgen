@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
@@ -29,7 +30,6 @@ using ConfigGen.Templating.Razor.Renderer;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
 using RazorEngine.Templating;
-using Encoding = System.Text.Encoding;
 using ITemplate = ConfigGen.Domain.Contract.Template.ITemplate;
 
 namespace ConfigGen.Templating.Razor
@@ -38,21 +38,20 @@ namespace ConfigGen.Templating.Razor
     {
         private string _loadedTemplate;
         private Encoding _encoding;
-        private string _templateKey;
 
-        [NotNull]
-        private readonly IRazorEngineService _razorEngineService;
+        private AppDomainIsolatedHost<RazorEngineRenderer> _razorEngineRendererHost;
+
+        private IRazorEngineRenderer _razorEngineRenderer;
 
         [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
 
+        private bool _loadCalled;
+
         public RazorTemplate(
-            [NotNull] IRazorEngineService razorEngineService,
             [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
-            if (razorEngineService == null) throw new ArgumentNullException(nameof(razorEngineService));
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
-            _razorEngineService = razorEngineService;
             _tokenUsageTracker = tokenUsageTracker;
         }
 
@@ -66,10 +65,14 @@ namespace ConfigGen.Templating.Razor
                 throw new ArgumentException("The supplied stream must be readable and seekable", nameof(templateStream));
             }
 
-            if (_loadedTemplate != null)
+            if (_loadCalled)
             {
                 throw new InvalidOperationException("Cannot call Load more than once");
             }
+
+            _loadCalled = true;
+
+            _razorEngineRendererHost = new AppDomainIsolatedHost<RazorEngineRenderer>();
 
             _encoding = TextEncodingDetector.GetEncoding(templateStream);
 
@@ -78,16 +81,13 @@ namespace ConfigGen.Templating.Razor
                 _loadedTemplate = reader.ReadToEnd();
             }
 
-            _templateKey = Guid.NewGuid().ToString();
-
-            _razorEngineService.AddTemplate(_templateKey, _loadedTemplate);
-
             RazorTemplateLoadResult razorTemplateLoadResult;
 
             try
             {
-                _razorEngineService.Compile(_templateKey);
-                razorTemplateLoadResult = new RazorTemplateLoadResult(RazorTemplateLoadResult.LoadResultStatus.Success);
+                _razorEngineRenderer = _razorEngineRendererHost.CreateHostedInstance();
+
+                razorTemplateLoadResult = _razorEngineRenderer.LoadTemplate(_loadedTemplate);
             }
             catch (TemplateParsingException ex)
             {
@@ -125,19 +125,28 @@ namespace ConfigGen.Templating.Razor
             try
             {
                 var settings = configuration.ToDictionary();
-                var model = new DictionaryBackedDynamicModel(settings);
-                
-                var renderResult = _razorEngineService.Run(_templateKey, null, model);
+
+                RazorTemplateRenderResult renderResult = _razorEngineRenderer.Render(settings);
+
+                if (!renderResult.Success)
+                {
+                    return new SingleTemplateRenderResults(
+                    configuration: configuration,
+                    status: TemplateRenderResultStatus.Failure,
+                    renderedResult: null,
+                    encoding: _encoding,
+                    errors: new[] { new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, renderResult.Error) });
+                }
 
                 foreach (var settingName in settings)
                 {
-                    if (model.AccessedTokens.Contains(settingName.Key))
+                    if (renderResult.UsedTokens.Contains(settingName.Key))
                     {
                         _tokenUsageTracker.OnTokenUsed(configuration.ConfigurationName, settingName.Key);
                     }
                 }
 
-                foreach (var settingName in model.UnrecognisedTokens)
+                foreach (var settingName in renderResult.UnrecognisedTokens)
                 {
                     _tokenUsageTracker.OnTokenNotRecognised(configuration.ConfigurationName, settingName);
                 }
@@ -145,7 +154,7 @@ namespace ConfigGen.Templating.Razor
                 return new SingleTemplateRenderResults(
                     configuration: configuration,
                     status: TemplateRenderResultStatus.Success,
-                    renderedResult: renderResult,
+                    renderedResult: renderResult.RenderedResult,
                     encoding: _encoding,
                     errors: null);
             }
@@ -196,6 +205,11 @@ namespace ConfigGen.Templating.Razor
 
         public void Dispose()
         {
+            if (_razorEngineRendererHost != null)
+            {
+                _razorEngineRendererHost.Dispose();
+                _razorEngineRendererHost = null;
+            }
         }
     }
 }

@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
@@ -84,108 +85,126 @@ namespace ConfigGen.Domain
             //TODO - To API: Template Load stuff?
             ITemplate template;
             TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType, out template);
-            
-            switch (templateCreationResult)
-            {
-                case TryCreateResult.FileNotFound:
-                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
-                        ConfigurationGeneratorErrorCodes.TemplateFileNotFound,
-                        $"Specified template file not found: {configGenerationPreferences.TemplateFilePath}"));
 
-                case TryCreateResult.FailedByExtension:
-                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+            using (template)
+            {
+                switch (templateCreationResult)
+                {
+                    case TryCreateResult.FileNotFound:
+                        return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                            ConfigurationGeneratorErrorCodes.TemplateFileNotFound,
+                            $"Specified template file not found: {configGenerationPreferences.TemplateFilePath}"));
+
+                    case TryCreateResult.FailedByExtension:
+                        return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure,
                             $"Failed to resolve template type from file extension: {configGenerationPreferences.TemplateFilePath.GetFileExtension()}"));
 
-                case TryCreateResult.FailedByType:
-                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
-                         ConfigurationGeneratorErrorCodes.UnknownTemplateType,
-                         $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
-            }
+                    case TryCreateResult.FailedByType:
+                        return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                            ConfigurationGeneratorErrorCodes.UnknownTemplateType,
+                            $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
+                }
 
-            //TODO - To API: Settings Load stuff?
-            ISettingsLoader settingsLoader;
-            TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(configGenerationPreferences.SettingsFilePath, configGenerationPreferences.SettingsFileType, out settingsLoader);
+                //TODO - To API: Settings Load stuff?
+                ISettingsLoader settingsLoader;
+                TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(configGenerationPreferences.SettingsFilePath,
+                    configGenerationPreferences.SettingsFileType, out settingsLoader);
 
-            switch (settingsLoaderCreationResult)
-            {
-                case TryCreateResult.FileNotFound:
-                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
-                        ConfigurationGeneratorErrorCodes.SettingsFileNotFound,
-                        $"Specified settings file not found: {configGenerationPreferences.SettingsFilePath}"));
+                switch (settingsLoaderCreationResult)
+                {
+                    case TryCreateResult.FileNotFound:
+                        return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                            ConfigurationGeneratorErrorCodes.SettingsFileNotFound,
+                            $"Specified settings file not found: {configGenerationPreferences.SettingsFilePath}"));
 
-                case TryCreateResult.FailedByExtension:
-                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                    case TryCreateResult.FailedByExtension:
+                        return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.SettingsLoaderTypeResolutionFailure,
                             $"Failed to resolve settings loader type from file extension: {configGenerationPreferences.SettingsFilePath.GetFileExtension()}"));
 
-                case TryCreateResult.FailedByType:
-                    return GenerationResults.CreateFail(new ConfigurationGeneratorError(
-                         ConfigurationGeneratorErrorCodes.UnknownSettingsLoaderType,
-                         $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
-            }
-
-            var result = settingsLoader.LoadSettings(
-                configGenerationPreferences.SettingsFilePath,
-                configGenerationPreferences.SettingsFileType);
-
-            if (!result.Success)
-            {
-                return GenerationResults.CreateFail(result.Error);
-            }
-
-            IEnumerable<IDictionary<string, object>> loadedSettings = result.Value;
-
-            var configurationCreationResult = _configurationFactory.CreateConfigurations(configGenerationPreferences, loadedSettings);
-            if (!configurationCreationResult.Success)
-            {
-                return GenerationResults.CreateFail(configurationCreationResult.Error);
-            }
-
-            IEnumerable<IConfiguration> configurations = configurationCreationResult.Value;
-
-            var configurationCollectionFilterPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationCollectionFilterPreferences>();
-
-            var globallyUsedTokens = new HashSet<string>();
-
-            configurations = _configurationCollectionFilter.Filter(
-                configurationCollectionFilterPreferences,
-                configurations,
-                token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
-
-            var fileOutputPreferences = _preferencesManager.GetPreferenceInstance<FileOutputPreferences>();
-
-            //TODO: make this pipeline async and parallelised
-            //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
-            using (var templateStream = File.OpenRead(configGenerationPreferences.TemplateFilePath))
-            {
-                var loadResults = template.Load(templateStream);
-
-                if (!loadResults.Success)
-                {
-                    return GenerationResults.CreateFail(loadResults.TemplateLoadErrors);
+                    case TryCreateResult.FailedByType:
+                        return GenerationResults.CreateFail(new ConfigurationGeneratorError(
+                            ConfigurationGeneratorErrorCodes.UnknownSettingsLoaderType,
+                            $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
                 }
 
-                var singleFileGenerationResults = new List<SingleFileGenerationResult>();
+                var result = settingsLoader.LoadSettings(
+                    configGenerationPreferences.SettingsFilePath,
+                    configGenerationPreferences.SettingsFileType);
 
-                foreach (var configuration in configurations)
+                if (!result.Success)
                 {
-                    SingleTemplateRenderResults renderResult = template.Render(configuration);
-
-                    var writeResults = _fileOutputWriter.WriteOutput(
-                       renderResult,
-                       fileOutputPreferences);
-
-                    singleFileGenerationResults.Add(
-                        new SingleFileGenerationResult(
-                            renderResult.Configuration,
-                            writeResults.FullPath,
-                            renderResult.Errors,
-                            writeResults.FileChanged,
-                            writeResults.WasWritten));
+                    return GenerationResults.CreateFail(result.Error);
                 }
 
-                return GenerationResults.CreateSuccess(singleFileGenerationResults);
+                IEnumerable<IDictionary<string, object>> loadedSettings = result.Value;
+
+                var configurationCreationResult = _configurationFactory.CreateConfigurations(configGenerationPreferences, loadedSettings);
+                if (!configurationCreationResult.Success)
+                {
+                    return GenerationResults.CreateFail(configurationCreationResult.Error);
+                }
+
+                IEnumerable<IConfiguration> configurations = configurationCreationResult.Value;
+
+                var configurationCollectionFilterPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationCollectionFilterPreferences>();
+
+                var globallyUsedTokens = new HashSet<string>();
+
+                configurations = _configurationCollectionFilter.Filter(
+                    configurationCollectionFilterPreferences,
+                    configurations,
+                    token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
+
+                var fileOutputPreferences = _preferencesManager.GetPreferenceInstance<FileOutputPreferences>();
+
+                //TODO: make this pipeline async and parallelised
+                //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
+                using (var templateStream = File.OpenRead(configGenerationPreferences.TemplateFilePath))
+                {
+                    var loadResults = template.Load(templateStream);
+
+                    if (!loadResults.Success)
+                    {
+                        return GenerationResults.CreateFail(loadResults.TemplateLoadErrors);
+                    }
+
+                    var singleFileGenerationResults = new List<SingleFileGenerationResult>();
+
+                    foreach (var configuration in configurations)
+                    {
+                        SingleTemplateRenderResults renderResult = template.Render(configuration);
+
+                        if (renderResult.Errors.Any())
+                        {
+                            singleFileGenerationResults.Add(
+                                new SingleFileGenerationResult(
+                                    renderResult.Configuration,
+                                    null,
+                                    renderResult.Errors,
+                                    false,
+                                    false));
+                        }
+                        else
+                        {
+                            var writeResults = _fileOutputWriter.WriteOutput(
+                                renderResult,
+                                fileOutputPreferences);
+
+                            //TODO: clean this up - why is the errors collection in here?
+                            singleFileGenerationResults.Add(
+                                new SingleFileGenerationResult(
+                                    renderResult.Configuration,
+                                    writeResults.FullPath,
+                                    renderResult.Errors,
+                                    writeResults.FileChanged,
+                                    writeResults.WasWritten));
+                        }
+                    }
+
+                    return GenerationResults.CreateSuccess(singleFileGenerationResults);
+                }
             }
         }
     }

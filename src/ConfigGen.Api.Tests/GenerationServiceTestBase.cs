@@ -68,7 +68,7 @@ namespace ConfigGen.Api.Tests
         Establish context = () =>
         {
             ContainerBuilder.RegisterModule<GenerationServiceModule>();
-            
+
             lazyPreferenceGroups = new Lazy<IEnumerable<PreferenceGroupInfo>>(() =>  Subject.GetPreferences());
             PreferencesToSupplyToGenerator = new Dictionary<string, string>();
             Result = null;

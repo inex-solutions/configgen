@@ -20,24 +20,40 @@
 #endregion
 
 using System;
-using System.Dynamic;
+using System.Collections.Generic;
+using System.Linq;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Razor.Renderer
 {
     [Serializable]
-    public abstract class DynamicModel : DynamicObject
+    public class RazorTemplateRenderResult
     {
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        public RazorTemplateRenderResult(string error)
         {
-            TryGetValue(binder.Name, out result);
-            return true;
+            Error = error;
+            UsedTokens = Enumerable.Empty<string>();
+            UnrecognisedTokens = Enumerable.Empty<string>();
         }
 
-        public override bool TrySetMember(SetMemberBinder binder, object value)
+        public RazorTemplateRenderResult(string renderedResult, IEnumerable<string> usedTokens, IEnumerable<string> unrecognisedTokens)
         {
-            throw new NotSupportedException("DynamicDictionary does not support setting of members");
+            RenderedResult = renderedResult;
+            UsedTokens = usedTokens ?? Enumerable.Empty<string>();
+            UnrecognisedTokens = unrecognisedTokens ?? Enumerable.Empty<string>();
+            Success = true;
         }
 
-        protected abstract bool TryGetValue(string name, out object result);
+        public string Error { get; }
+        
+        public bool Success { get; }
+
+        [NotNull]
+        public IEnumerable<string> UnrecognisedTokens { get; }
+
+        [NotNull]
+        public IEnumerable<string> UsedTokens { get; }
+
+        public string RenderedResult { get; }
     }
 }

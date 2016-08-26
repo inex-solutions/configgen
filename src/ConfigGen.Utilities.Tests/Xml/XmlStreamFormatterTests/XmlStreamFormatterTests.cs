@@ -21,7 +21,6 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;

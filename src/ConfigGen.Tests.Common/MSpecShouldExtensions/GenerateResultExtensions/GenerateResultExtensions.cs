@@ -37,13 +37,14 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions
         {
             if (results == null) throw new ArgumentNullException(nameof(results));
 
-            if (!results.Errors.Any()
-                && !results.GeneratedFiles.SelectMany(f => f.Errors).Any())
+            var combinedErrors = results.Errors.Union(results.GeneratedFiles.SelectMany(f => f.Errors)).ToArray();
+
+            if (!combinedErrors.Any())
             {
                 return results;
             }
 
-            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", results.Errors.Select(e => e.ToString()))}");
+            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", combinedErrors.Select(e => e.ToString()))}");
         }
 
         /// <summary>

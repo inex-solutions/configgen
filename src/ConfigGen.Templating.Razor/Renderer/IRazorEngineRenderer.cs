@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,16 +19,16 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
-using ConfigGen.Domain.Contract.Template;
+using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor
+namespace ConfigGen.Templating.Razor.Renderer
 {
-    public class RazorTemplateModule : Module
+    public interface IRazorEngineRenderer : IDisposable
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<RazorTemplate>().As<ITemplate>().As<RazorTemplate>();
-        }
+        RazorTemplateLoadResult LoadTemplate(string templateContents);
+
+        RazorTemplateRenderResult Render([NotNull] IDictionary<string, object> settings);
     }
 }

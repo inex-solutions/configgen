@@ -32,9 +32,8 @@ using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
 {
-    public abstract class TemplateTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new()
+    public abstract class TemplateTestBase<TTemplate, TContainerModule> where TContainerModule : IModule, new() where TTemplate : class
     {
-        [NotNull]
         protected static TTemplate Subject;
         protected static string TemplateContents;
         protected static TokenUsageTracker TokenUsageTracker;
@@ -58,6 +57,16 @@ namespace ConfigGen.Tests.Common
             containerBuilder.RegisterInstance(TokenUsageTracker).As<ITokenUsageTracker>();
             var container = containerBuilder.Build();
             Subject = container.Resolve<TTemplate>();
+        };
+
+        Cleanup cleanup = () =>
+        {
+            if (Subject != null 
+                && Subject is IDisposable)
+            {
+                ((IDisposable)Subject).Dispose();
+                Subject = null;
+            }
         };
 
         [NotNull]

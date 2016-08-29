@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,28 +20,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Razor.Renderer
 {
-    [Serializable]
-    public sealed class RazorTemplateLoadResult
+    public interface IRazorEngineRenderer : IDisposable
     {
-        public RazorTemplateLoadResult(LoadResultStatus status, string[] errors = null)
-        {
-            Status = status;
-            Errors = errors ?? new string[0];
-        }
+        RazorTemplateLoadResult LoadTemplate(string templateContents);
 
-        public LoadResultStatus Status { get; }
-
-        public string[] Errors { get; }
-
-        public enum LoadResultStatus
-        {
-            Unknown,
-            Success,
-            CodeGenerationFailed,
-            CodeCompilationFailed
-        }
+        RazorTemplateRenderResult Render([NotNull] IDictionary<string, object> settings);
     }
 }

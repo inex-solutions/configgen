@@ -31,13 +31,12 @@ namespace ConfigGen.Domain.Contract
     {
         public SingleFileGenerationResult(
             [NotNull] IConfiguration configuration, 
-            [NotNull] string fullPath,
+            [CanBeNull] string fullPath,
             [NotNull] IEnumerable<Error> errors,
             bool hasChanged,
             bool wasWritten)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-            if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
             if (errors == null) throw new ArgumentNullException(nameof(errors));
 
             Configuration = configuration;
@@ -54,7 +53,7 @@ namespace ConfigGen.Domain.Contract
         [NotNull]
         public string ConfigurationName => Configuration.ConfigurationName;
 
-        [NotNull]
+        [CanBeNull]
         public string FullPath { get; }
 
         public bool HasChanged { get; }

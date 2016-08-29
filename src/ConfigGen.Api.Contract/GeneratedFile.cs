@@ -29,7 +29,7 @@ namespace ConfigGen.Api.Contract
     {
         public GeneratedFile(
             [NotNull] string configurationName,
-            [NotNull] string fullPath,
+            [CanBeNull] string fullPath,
             [NotNull] IEnumerable<string> usedTokens,
             [NotNull] IEnumerable<string> unusedTokens,
             [NotNull] IEnumerable<string> unrecognisedTokens,
@@ -38,7 +38,6 @@ namespace ConfigGen.Api.Contract
             bool hasChanged)
         {
             if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
-            if (fullPath == null) throw new ArgumentNullException(nameof(fullPath));
             if (usedTokens == null) throw new ArgumentNullException(nameof(usedTokens));
             if (unusedTokens == null) throw new ArgumentNullException(nameof(unusedTokens));
             if (unrecognisedTokens == null) throw new ArgumentNullException(nameof(unrecognisedTokens));
@@ -58,7 +57,7 @@ namespace ConfigGen.Api.Contract
         [NotNull]
         public string ConfigurationName { get; }
 
-        [NotNull]
+        [CanBeNull]
         public string FullPath { get; }
 
         public bool HasChanged { get; }

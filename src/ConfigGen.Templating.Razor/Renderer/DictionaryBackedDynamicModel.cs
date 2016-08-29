@@ -25,6 +25,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Razor.Renderer
 {
+    [Serializable]
     public class DictionaryBackedDynamicModel : DynamicModel
     {
         [NotNull]

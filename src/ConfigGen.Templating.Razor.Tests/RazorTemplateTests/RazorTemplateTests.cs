@@ -55,7 +55,11 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 
         It there_is_a_single_load_error = () => LoadResult.TemplateLoadErrors.Count.ShouldEqual(1);
 
-        It the_single_error_should_be_a_code_compilation_error = () => LoadResult.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeGenerationError);
+        It the_single_error_should_be_a_code_compilation_error =
+            () => LoadResult.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeGenerationError);
+
+        It the_single_error_should_contain_the_correct_error_text =
+            () => LoadResult.TemplateLoadErrors.First().Detail.ShouldContain("is not valid at the start of a code block");
     }
 
     [Subject(typeof(RazorTemplate))]
@@ -72,7 +76,11 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 
         It there_is_a_single_load_error = () => LoadResult.TemplateLoadErrors.Count.ShouldEqual(1);
 
-        It the_single_error_should_be_a_code_compilation_error = () => LoadResult.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeCompilationError);
+        It the_single_error_should_be_a_code_compilation_error = 
+            () => LoadResult.TemplateLoadErrors.First().Code.ShouldEqual(RazorTemplateErrorCodes.CodeCompilationError);
+
+        It the_single_error_should_contain_the_correct_error_text = 
+            () => LoadResult.TemplateLoadErrors.First().Detail.ShouldContain("The name 'L' does not exist ");
     }
 
     [Subject(typeof(RazorTemplate))]

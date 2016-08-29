@@ -33,10 +33,6 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
     {
         protected static string ExpectedResult;
 
-        protected const string PrettyPrintPreferenceName = "PrettyPrint";
-        protected const string PrettyPrintLineLengthPreferenceName = "PrettyPrintLineLength";
-        protected const string PrettyPrintTabSizePreferenceName = "PrettyPrintTabSize";
-
         Establish context = () =>
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
@@ -88,8 +84,8 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PrettyPrintPreferenceName, true.ToString()},
-                {PrettyPrintLineLengthPreferenceName, 500.ToString()}
+                {PreferenceNames.XmlPrettyPrintPreferenceName, true.ToString()},
+                {PreferenceNames.XmlPrettyPrintLineLengthPreferenceName, 500.ToString()}
             };
         };
 
@@ -121,8 +117,8 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PrettyPrintPreferenceName, true.ToString()},
-                {PrettyPrintLineLengthPreferenceName, 40.ToString()}
+                {PreferenceNames.XmlPrettyPrintPreferenceName, true.ToString()},
+                {PreferenceNames.XmlPrettyPrintLineLengthPreferenceName, 40.ToString()}
             };
         };
 
@@ -152,9 +148,9 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PrettyPrintPreferenceName, true.ToString()},
-                {PrettyPrintLineLengthPreferenceName, 500.ToString()},
-                {PrettyPrintTabSizePreferenceName, 20.ToString()},
+                {PreferenceNames.XmlPrettyPrintPreferenceName, true.ToString()},
+                {PreferenceNames.XmlPrettyPrintLineLengthPreferenceName, 500.ToString()},
+                {PreferenceNames.XmlPrettyPrintTabSizePreferenceName, 20.ToString()},
             };
         };
 

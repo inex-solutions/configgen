@@ -24,13 +24,13 @@ namespace ConfigGen.Templating.Xml
     {
         public XmlTemplatePreferences()
         {
-            PrettyPrintTabSize = 3;
+            XmlPrettyPrintTabSize = 3;
         }
 
-        public bool PrettyPrintEnabled { get; set; }
+        public bool XmlPrettyPrintEnabled { get; set; }
 
-        public int PrettyPrintLineLength { get; set; }
+        public int XmlPrettyPrintLineLength { get; set; }
 
-        public int PrettyPrintTabSize { get; set; }
+        public int XmlPrettyPrintTabSize { get; set; }
     }
 }

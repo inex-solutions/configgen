@@ -45,6 +45,10 @@ namespace ConfigGen.Api.Tests
             public const string FilterMachinesRegexp = "FilterMachinesRegexp";
             public const string LocalOnly = "LocalOnly";
 
+            public const string XmlPrettyPrintPreferenceName = "XmlPrettyPrint";
+            public const string XmlPrettyPrintLineLengthPreferenceName = "XmlPrettyPrintLineLength";
+            public const string XmlPrettyPrintTabSizePreferenceName = "XmlPrettyPrintTabSize";
+
             public const string FilenameSetting = "FilenameSetting";
             public const string ForceName = "ForceName";
             public const string OutputDirectory = "OutputDirectory";

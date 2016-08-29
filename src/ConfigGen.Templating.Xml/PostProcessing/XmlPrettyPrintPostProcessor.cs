@@ -27,7 +27,7 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.PostProcessing
 {
-    public class PrettyPrintPostProcessor : ITemplatePostprocessor
+    public class XmlPrettyPrintPostProcessor : ITemplatePostprocessor
     {
         [NotNull]
         private readonly IXmlStreamFormatter _prettyPrintFormatter;
@@ -35,7 +35,7 @@ namespace ConfigGen.Templating.Xml.PostProcessing
         [NotNull]
         private readonly IPreferencesManager _preferencesManager;
 
-        public PrettyPrintPostProcessor(
+        public XmlPrettyPrintPostProcessor(
             [NotNull] IXmlStreamFormatter prettyPrintFormatter,
             [NotNull] IPreferencesManager preferencesManager)
         {
@@ -50,14 +50,14 @@ namespace ConfigGen.Templating.Xml.PostProcessing
         {
             var preferences = _preferencesManager.GetPreferenceInstance<XmlTemplatePreferences>();
 
-            if (!preferences.PrettyPrintEnabled)
+            if (!preferences.XmlPrettyPrintEnabled)
             {
                 return renderedOutput;
             }
 
             var xmlStreamFormatterOptions = XmlStreamFormatterOptions.Default;
-            xmlStreamFormatterOptions.MaxElementLineLength = preferences.PrettyPrintLineLength;
-            xmlStreamFormatterOptions.IndentChars = "".PadRight(preferences.PrettyPrintTabSize, ' ');
+            xmlStreamFormatterOptions.MaxElementLineLength = preferences.XmlPrettyPrintLineLength;
+            xmlStreamFormatterOptions.IndentChars = "".PadRight(preferences.XmlPrettyPrintTabSize, ' ');
            
             using (var sourceStream = new MemoryStream())
             using (var targetStream = new MemoryStream())

@@ -30,7 +30,7 @@ namespace ConfigGen.Templating.Xml
             preferences: new IPreference<XmlTemplatePreferences>[]
             {
                 new Preference<XmlTemplatePreferences, bool>(
-                    name: "PrettyPrint",
+                    name: "XmlPrettyPrint",
                     shortName: "Pretty",
                     description: "causes the generated xml to be pretty-printed. This is especially useful for "
                                  + "heavily attributised configurations where a single element may contain many "
@@ -40,10 +40,10 @@ namespace ConfigGen.Templating.Xml
                     //+ "override the setting in the configuration template.",
                     argumentHelpText: "[true | false]",
                     parseAction: bool.Parse,
-                    setAction: (flag, preferences) => preferences.PrettyPrintEnabled = flag),
+                    setAction: (flag, preferences) => preferences.XmlPrettyPrintEnabled = flag),
 
                 new Preference<XmlTemplatePreferences, int>(
-                    name: "PrettyPrintLineLength",
+                    name: "XmlPrettyPrintLineLength",
                     shortName: null,
                     description: "sets the maximum line length while pretty printing. This setting must be used in "
                                  + "conjunction with the pretty print option, -p / --pretty-print. ",
@@ -52,10 +52,10 @@ namespace ConfigGen.Templating.Xml
                     //+ "setting will override the setting in the configuration template.",
                     argumentHelpText: "<line length>",
                     parseAction: int.Parse,
-                    setAction: (lineLength, preferences) => preferences.PrettyPrintLineLength = lineLength),
+                    setAction: (lineLength, preferences) => preferences.XmlPrettyPrintLineLength = lineLength),
 
                 new Preference<XmlTemplatePreferences, int>(
-                    name: "PrettyPrintTabSize",
+                    name: "XmlPrettyPrintTabSize",
                     shortName: null,
                     description: "sets the tab size for pretty printing. This setting must be used in "
                                  + "conjunction with the pretty print option, -p / --pretty-print. ",
@@ -64,7 +64,7 @@ namespace ConfigGen.Templating.Xml
                     //+ "setting will override the setting in the configuration template.",
                     argumentHelpText: "<tab size>",
                     parseAction: int.Parse,
-                    setAction: (tabSize, preferences) => preferences.PrettyPrintTabSize = tabSize)
+                    setAction: (tabSize, preferences) => preferences.XmlPrettyPrintTabSize = tabSize)
             })
         {
         }

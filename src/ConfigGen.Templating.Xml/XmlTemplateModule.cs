@@ -43,7 +43,7 @@ namespace ConfigGen.Templating.Xml
             builder.RegisterModule<PreferencesManagementModule>();
 
             builder.RegisterType<XmlStreamFormatter>().As<IXmlStreamFormatter>();
-            builder.RegisterType<PrettyPrintPostProcessor>().As<ITemplatePostprocessor>();
+            builder.RegisterType<XmlPrettyPrintPostProcessor>().As<ITemplatePostprocessor>();
         }
     }
 }

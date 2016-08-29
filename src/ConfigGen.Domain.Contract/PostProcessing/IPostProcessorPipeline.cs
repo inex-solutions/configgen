@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,25 +19,14 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
-using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Templating.Xml.NodeProcessing;
-using ConfigGen.Utilities.Xml;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Xml
+namespace ConfigGen.Domain.Contract.PostProcessing
 {
-    public class XmlTemplateModule : Module
+    public interface IPostProcessorPipeline
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<XmlTemplate>().As<ITemplate>().As<XmlTemplate>();
-            builder.RegisterType<TemplateLoader>().As<ITemplateLoader>();
-            builder.RegisterType<TemplatePreprocessor>().As<ITemplatePreprocessor>();
-            builder.RegisterType<TokenReplacer>().As<ITokenReplacer>();
-            builder.RegisterType<XmlDeclarationParser>();
-            builder.RegisterType<ConfigGenNodeProcessorFactory>().As<IConfigGenNodeProcessorFactory>();
-            builder.RegisterModule<PreferencesManagementModule>();
-        }
+        [NotNull]
+        SingleTemplateRenderResults PostProcessResult([NotNull] SingleTemplateRenderResults renderResult);
     }
 }

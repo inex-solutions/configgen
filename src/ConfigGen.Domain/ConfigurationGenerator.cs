@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.PostProcessing;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
@@ -53,6 +54,9 @@ namespace ConfigGen.Domain
         private readonly ConfigurationCollectionFilter _configurationCollectionFilter;
 
         [NotNull]
+        private readonly IPostProcessorPipeline _postProcessorPipeline;
+
+        [NotNull]
         private readonly FileOutputWriter _fileOutputWriter;
 
         public ConfigurationGenerator(
@@ -61,12 +65,14 @@ namespace ConfigGen.Domain
             [NotNull] ConfigurationCollectionLoaderFactory configurationCollectionLoaderFactory,
             [NotNull] IConfigurationFactory configurationFactory,
             [NotNull] ConfigurationCollectionFilter configurationCollectionFilter,
+            [NotNull] IPostProcessorPipeline postProcessorPipeline,
             [NotNull] FileOutputWriter fileOutputWriter)
         {
             if (templateFactory == null) throw new ArgumentNullException(nameof(templateFactory));
             if (configurationCollectionLoaderFactory == null) throw new ArgumentNullException(nameof(configurationCollectionLoaderFactory));
             if (configurationFactory == null) throw new ArgumentNullException(nameof(configurationFactory));
             if (configurationCollectionFilter == null) throw new ArgumentNullException(nameof(configurationCollectionFilter));
+            if (postProcessorPipeline == null) throw new ArgumentNullException(nameof(postProcessorPipeline));
             if (fileOutputWriter == null) throw new ArgumentNullException(nameof(fileOutputWriter));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
 
@@ -74,6 +80,7 @@ namespace ConfigGen.Domain
             _configurationCollectionLoaderFactory = configurationCollectionLoaderFactory;
             _configurationFactory = configurationFactory;
             _configurationCollectionFilter = configurationCollectionFilter;
+            _postProcessorPipeline = postProcessorPipeline;
             _fileOutputWriter = fileOutputWriter;
              _preferencesManager = preferencesManager;
         }
@@ -157,7 +164,6 @@ namespace ConfigGen.Domain
                     configurations,
                     token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
 
-                var fileOutputPreferences = _preferencesManager.GetPreferenceInstance<FileOutputPreferences>();
 
                 //TODO: make this pipeline async and parallelised
                 //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
@@ -188,9 +194,8 @@ namespace ConfigGen.Domain
                         }
                         else
                         {
-                            var writeResults = _fileOutputWriter.WriteOutput(
-                                renderResult,
-                                fileOutputPreferences);
+                            renderResult = _postProcessorPipeline.PostProcessResult(renderResult);
+                            var writeResults = _fileOutputWriter.WriteOutput(renderResult);
 
                             //TODO: clean this up - why is the errors collection in here?
                             singleFileGenerationResults.Add(

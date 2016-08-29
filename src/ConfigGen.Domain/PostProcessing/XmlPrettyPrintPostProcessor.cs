@@ -21,13 +21,14 @@
 
 using System;
 using System.IO;
+using ConfigGen.Domain.Contract.PostProcessing;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Xml;
 using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Xml.PostProcessing
+namespace ConfigGen.Domain.PostProcessing
 {
-    public class XmlPrettyPrintPostProcessor : ITemplatePostprocessor
+    public class XmlPrettyPrintPostProcessor : IPostprocessor
     {
         [NotNull]
         private readonly IXmlStreamFormatter _prettyPrintFormatter;
@@ -48,7 +49,7 @@ namespace ConfigGen.Templating.Xml.PostProcessing
 
         public string Process(string renderedOutput)
         {
-            var preferences = _preferencesManager.GetPreferenceInstance<XmlTemplatePreferences>();
+            var preferences = _preferencesManager.GetPreferenceInstance<PostProcessingPreferences>();
 
             if (!preferences.XmlPrettyPrintEnabled)
             {

@@ -20,24 +20,24 @@
 #endregion
 
 using Autofac;
+using ConfigGen.Domain.Contract.PostProcessing;
 using ConfigGen.Domain.Contract.Preferences;
-using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Templating.Xml.NodeProcessing;
 using ConfigGen.Utilities.Xml;
 
-namespace ConfigGen.Templating.Xml
+namespace ConfigGen.Domain.PostProcessing
 {
-    public class XmlTemplateModule : Module
+    public class PostProcessingModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<XmlTemplate>().As<ITemplate>().As<XmlTemplate>();
-            builder.RegisterType<TemplateLoader>().As<ITemplateLoader>();
-            builder.RegisterType<TemplatePreprocessor>().As<ITemplatePreprocessor>();
-            builder.RegisterType<TokenReplacer>().As<ITokenReplacer>();
-            builder.RegisterType<XmlDeclarationParser>();
-            builder.RegisterType<ConfigGenNodeProcessorFactory>().As<IConfigGenNodeProcessorFactory>();
             builder.RegisterModule<PreferencesManagementModule>();
+
+            builder.RegisterType<PostProcessingPreferenceGroup>().As<IPreferenceGroup>();
+
+            builder.RegisterType<XmlStreamFormatter>().As<IXmlStreamFormatter>();
+            builder.RegisterType<XmlPrettyPrintPostProcessor>();
+
+            builder.RegisterType<PostProcessorPipeline>().As<IPostProcessorPipeline>();
         }
     }
 }

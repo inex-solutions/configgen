@@ -21,15 +21,15 @@
 
 using ConfigGen.Domain.Contract.Preferences;
 
-namespace ConfigGen.Templating.Xml
+namespace ConfigGen.Domain.PostProcessing
 {
-    public class XmlTemplatePreferenceGroup : PreferenceGroup<XmlTemplatePreferences>
+    public class PostProcessingPreferenceGroup : PreferenceGroup<PostProcessingPreferences>
     {
-        public XmlTemplatePreferenceGroup() : base(
-            name: "Xml Template Preferences",
-            preferences: new IPreference<XmlTemplatePreferences>[]
+        public PostProcessingPreferenceGroup() : base(
+            name: "Post Processing Preferences",
+            preferences: new IPreference<PostProcessingPreferences>[]
             {
-                new Preference<XmlTemplatePreferences, bool>(
+                new Preference<PostProcessingPreferences, bool>(
                     name: "XmlPrettyPrint",
                     shortName: "Pretty",
                     description: "causes the generated xml to be pretty-printed. This is especially useful for "
@@ -42,7 +42,7 @@ namespace ConfigGen.Templating.Xml
                     parseAction: bool.Parse,
                     setAction: (flag, preferences) => preferences.XmlPrettyPrintEnabled = flag),
 
-                new Preference<XmlTemplatePreferences, int>(
+                new Preference<PostProcessingPreferences, int>(
                     name: "XmlPrettyPrintLineLength",
                     shortName: null,
                     description: "sets the maximum line length while pretty printing. This setting must be used in "
@@ -54,7 +54,7 @@ namespace ConfigGen.Templating.Xml
                     parseAction: int.Parse,
                     setAction: (lineLength, preferences) => preferences.XmlPrettyPrintLineLength = lineLength),
 
-                new Preference<XmlTemplatePreferences, int>(
+                new Preference<PostProcessingPreferences, int>(
                     name: "XmlPrettyPrintTabSize",
                     shortName: null,
                     description: "sets the tab size for pretty printing. This setting must be used in "

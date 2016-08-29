@@ -73,6 +73,11 @@
     <Compile Include="Filtering\ConfigurationFilteringModule.cs" />
     <Compile Include="Filtering\LocalOnlyConfigurationFilter.cs" />
     <Compile Include="IConfigurationFactory.cs" />
+    <Compile Include="PostProcessing\XmlPrettyPrintPostProcessor.cs" />
+    <Compile Include="PostProcessing\PostProcessingModule.cs" />
+    <Compile Include="PostProcessing\PostProcessingPreferenceGroup.cs" />
+    <Compile Include="PostProcessing\PostProcessingPreferences.cs" />
+    <Compile Include="PostProcessing\PostProcessorPipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateFactory.cs" />
     <Compile Include="TokenUsageTracker.cs" />

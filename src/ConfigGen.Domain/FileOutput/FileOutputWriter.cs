@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Text;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.IO;
@@ -37,22 +38,29 @@ namespace ConfigGen.Domain.FileOutput
         [NotNull]
         private readonly IStreamComparer _streamComparer;
 
-        public FileOutputWriter([NotNull] IStreamComparer streamComparer)
+        [NotNull]
+        private readonly IPreferencesManager _preferencesManager;
+
+        public FileOutputWriter(
+            [NotNull] IStreamComparer streamComparer,
+            [NotNull] IPreferencesManager preferencesManager)
         {
             if (streamComparer == null) throw new ArgumentNullException(nameof(streamComparer));
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+
             _streamComparer = streamComparer;
+            _preferencesManager = preferencesManager;
         }
 
         /// <summary>
-        /// Writes a single rendering <paramref name="result"/> as a file, as specified by the supplied <paramref name="fileOutputPreferences"/>.
+        /// Writes a single rendering <paramref name="result"/> as a file.
         /// </summary>
         [NotNull]
-        public WriteOutputResult WriteOutput(
-            [NotNull] SingleTemplateRenderResults result, 
-            [NotNull] FileOutputPreferences fileOutputPreferences)
+        public WriteOutputResult WriteOutput([NotNull] SingleTemplateRenderResults result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
-            if (fileOutputPreferences == null) throw new ArgumentNullException(nameof(fileOutputPreferences));
+
+            var fileOutputPreferences = _preferencesManager.GetPreferenceInstance<FileOutputPreferences>();
 
             string outputFilename = fileOutputPreferences.ForcedFilename;
             object val;

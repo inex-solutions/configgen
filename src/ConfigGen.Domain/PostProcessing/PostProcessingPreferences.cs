@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,14 +18,19 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using JetBrains.Annotations;
-
-namespace ConfigGen.Templating.Xml
+namespace ConfigGen.Domain.PostProcessing
 {
-    public interface ITemplatePostprocessor
+    public class PostProcessingPreferences
     {
-        [NotNull]
-        string Process([NotNull] string renderedOutput);
+        public PostProcessingPreferences()
+        {
+            XmlPrettyPrintTabSize = 3;
+        }
+
+        public bool XmlPrettyPrintEnabled { get; set; }
+
+        public int XmlPrettyPrintLineLength { get; set; }
+
+        public int XmlPrettyPrintTabSize { get; set; }
     }
 }

@@ -24,6 +24,7 @@ using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
+using ConfigGen.Domain.PostProcessing;
 using ConfigGen.Utilities.IO;
 using ConfigGen.Utilities.Logging;
 
@@ -37,7 +38,8 @@ namespace ConfigGen.Domain
 
             builder.RegisterModule<FileOutputModule>();
             builder.RegisterModule<ConfigurationFilteringModule>();
-
+            builder.RegisterModule<PostProcessingModule>();
+            
             builder.RegisterType<TokenUsageTracker>().As<ITokenUsageTracker>().SingleInstance();
 
             builder.RegisterType<ConfigurationGenerator>().As<IConfigurationGenerator>();

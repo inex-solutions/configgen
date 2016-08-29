@@ -54,6 +54,8 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ITokenUsageTracker.cs" />
+    <Compile Include="PostProcessing\IPostProcessorPipeline.cs" />
+    <Compile Include="PostProcessing\ITemplatePostprocessor.cs" />
     <Compile Include="Preferences\IPreference.cs" />
     <Compile Include="Preferences\IPreferenceGroup.cs" />
     <Compile Include="Preferences\IPreferencesManager.cs" />

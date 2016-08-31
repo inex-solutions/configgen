@@ -73,12 +73,14 @@
     <Compile Include="IExcelFileLoader.cs" />
     <Compile Include="ISpreadsheetDataProcessor.cs" />
     <Compile Include="ISpreadsheetHeaderProcessor.cs" />
+    <Compile Include="ISpreadsheetPreferencesLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpreadsheetDataException.cs" />
     <Compile Include="SpreadsheetDataProcessor.cs" />
     <Compile Include="SpreadsheetException.cs" />
     <Compile Include="SpreadsheetHeaderException.cs" />
     <Compile Include="SpreadsheetHeaderProcessor.cs" />
+    <Compile Include="SpreadsheetPreferencesLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

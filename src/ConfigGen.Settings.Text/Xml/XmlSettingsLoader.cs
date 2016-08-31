@@ -38,7 +38,7 @@ namespace ConfigGen.Settings.Text.Xml
     /// </summary>
     public class XmlSettingsLoader : ISettingsLoader
     {
-        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile, string worksheetName)
+        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile)
         {
             if (settingsFile == null) throw new ArgumentNullException(nameof(settingsFile));
 

@@ -19,23 +19,28 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ConfigGen.Domain.Contract.Preferences;
-using ConfigGen.Domain.Contract.Settings;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Settings.Excel
+namespace ConfigGen.Tests.Common.Extensions
 {
-    public class ExcelSettingsLoaderModule : Module 
+    public static class PreferencesManagerExtensions
     {
-        protected override void Load(ContainerBuilder builder)
+        [NotNull]
+        public static IPreferencesManager ApplyPreference([NotNull] this IPreferencesManager preferencesManager, string preferenceName, string preferenceValue)
         {
-            builder.RegisterType<SpreadsheetHeaderProcessor>().As<ISpreadsheetHeaderProcessor>();
-            builder.RegisterType<CellDataParser>().As<ICellDataParser>();
-            builder.RegisterType<ExcelFileLoader>().As<IExcelFileLoader>();
-            builder.RegisterType<SpreadsheetDataProcessor>().As<ISpreadsheetDataProcessor>();
-            builder.RegisterType<ExcelSettingsLoader>().As<ISettingsLoader>().As<ExcelSettingsLoader>();
-            builder.RegisterType<ExcelSettingsPreferenceGroup>().As<IPreferenceGroup>();
-            builder.RegisterType<SpreadsheetPreferencesLoader>().As<ISpreadsheetPreferencesLoader>();
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+            var errors = preferencesManager.ApplyPreferences(new[] {new KeyValuePair<string, string>(preferenceName, preferenceValue)}).ToArray();
+
+            if (errors.Any())
+            {
+                throw new TestSetupException("One or more errors occurred during test setup while applying preferences", errors);
+            }
+
+            return preferencesManager;
         }
     }
 }

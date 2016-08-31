@@ -25,18 +25,11 @@ namespace ConfigGen.Settings.Excel
         public ExcelSettingsPreferences()
         {
             WorksheetName = "Settings";
-            NullPlaceholder = null;
-            EmptyStringPlaceholder = "[EmptyString]";
             NumColumnsToSkip = 0;
         }
 
         public string WorksheetName { get; set; }
 
-        public string EmptyStringPlaceholder { get; set; }
-
-        public string NullPlaceholder { get; set; }
-
         public int NumColumnsToSkip { get; set; }
-
     }
 }

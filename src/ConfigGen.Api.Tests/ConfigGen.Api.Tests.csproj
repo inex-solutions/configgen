@@ -131,6 +131,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.OneConfiguration.OneValueOneNull.xls">
+      <Link>TestResources\SimpleSettings.OneConfiguration.OneValueOneNull.xls</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="ExcelSettingsLoaderTestBase.cs" />
     <Compile Include="ExcelSettingsLoaderTests\ExcelSettingsLoaderTests.cs" />
+    <Compile Include="PreferencesTests\PreferencesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +96,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\SampleFiles\Settings.NoSettingsWorksheet.xls">
+      <Link>SampleFiles\Settings.NoSettingsWorksheet.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.OneConfiguration.DifferentWorksheetName.TwoValues.xls">
+      <Link>SampleFiles\SimpleSettings.OneConfiguration.DifferentWorksheetName.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls">
+      <Link>SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SettingsWithNumColsToSkipPreference.OneConfiguration.TwoValues.xls">
+      <Link>SampleFiles\SettingsWithNumColsToSkipPreference.OneConfiguration.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SettingsWithUnknownPreference.OneConfiguration.TwoValues.xls">
+      <Link>SampleFiles\SettingsWithUnknownPreference.OneConfiguration.TwoValues.xls</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

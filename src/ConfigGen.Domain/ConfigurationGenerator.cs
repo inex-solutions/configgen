@@ -136,9 +136,7 @@ namespace ConfigGen.Domain
                             $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
                 }
 
-                var result = settingsLoader.LoadSettings(
-                    configGenerationPreferences.SettingsFilePath,
-                    configGenerationPreferences.SettingsFileType);
+                var result = settingsLoader.LoadSettings(configGenerationPreferences.SettingsFilePath);
 
                 if (!result.Success)
                 {

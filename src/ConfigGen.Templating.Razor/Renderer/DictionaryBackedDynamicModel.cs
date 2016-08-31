@@ -52,13 +52,12 @@ namespace ConfigGen.Templating.Razor.Renderer
             bool found = _dictionary.TryGetValue(key, out value);
 
             if (found
-                && !_accessedTokens.Contains(key))
+                && !_accessedTokens.Contains(key)
+                && value != null)
             {
                 _accessedTokens.Add(key);
             }
-
-            if (!found
-                && !_unrecognisedTokens.Contains(key))
+            else if (!_unrecognisedTokens.Contains(key))
             {
                 _unrecognisedTokens.Add(key);
             }

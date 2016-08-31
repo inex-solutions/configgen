@@ -19,23 +19,22 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Autofac;
-using ConfigGen.Domain.Contract.Preferences;
-using ConfigGen.Domain.Contract.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ConfigGen.Domain.Contract;
 
-namespace ConfigGen.Settings.Excel
+namespace ConfigGen.Tests.Common
 {
-    public class ExcelSettingsLoaderModule : Module 
+    public class TestSetupException : Exception
     {
-        protected override void Load(ContainerBuilder builder)
+        public TestSetupException(string message) : base(message)
         {
-            builder.RegisterType<SpreadsheetHeaderProcessor>().As<ISpreadsheetHeaderProcessor>();
-            builder.RegisterType<CellDataParser>().As<ICellDataParser>();
-            builder.RegisterType<ExcelFileLoader>().As<IExcelFileLoader>();
-            builder.RegisterType<SpreadsheetDataProcessor>().As<ISpreadsheetDataProcessor>();
-            builder.RegisterType<ExcelSettingsLoader>().As<ISettingsLoader>().As<ExcelSettingsLoader>();
-            builder.RegisterType<ExcelSettingsPreferenceGroup>().As<IPreferenceGroup>();
-            builder.RegisterType<SpreadsheetPreferencesLoader>().As<ISpreadsheetPreferencesLoader>();
+        }
+
+        public TestSetupException(string message, IEnumerable<Error> errors)
+            : this  (message + ": " + string.Join(",\n", errors.Select(e => e.ToString())))
+        {
         }
     }
 }

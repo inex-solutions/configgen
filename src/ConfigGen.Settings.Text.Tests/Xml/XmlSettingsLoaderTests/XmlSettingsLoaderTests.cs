@@ -51,7 +51,7 @@ namespace ConfigGen.Settings.Text.Tests.Xml.XmlSettingsLoaderTests
             Subject = new XmlSettingsLoader();
         };
 
-        Because of = () => Result = Subject.LoadSettings("App.Config.Settings.xml", null);
+        Because of = () => Result = Subject.LoadSettings("App.Config.Settings.xml");
 
         It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
 

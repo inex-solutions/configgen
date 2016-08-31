@@ -37,7 +37,7 @@ namespace ConfigGen.Settings.Text.Csv
     public class CsvSettingsLoader : ISettingsLoader
     {
 
-        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings(string settingsFile, string worksheetName)
+        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings(string settingsFile)
         {
             if (settingsFile == null) throw new ArgumentNullException(nameof(settingsFile));
             if (settingsFile.Length == 0) throw new ArgumentException("The supplied settings file path string cannot be zero length");

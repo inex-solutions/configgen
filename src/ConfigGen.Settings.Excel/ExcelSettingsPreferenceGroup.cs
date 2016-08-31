@@ -38,22 +38,6 @@ namespace ConfigGen.Settings.Excel
                     parseAction: stringValue => stringValue,
                     setAction: (stringValue, preferences) => preferences.WorksheetName = stringValue),
 
-                new Preference<ExcelSettingsPreferences, string>(
-                    name: "EmptyStringPlaceholder",
-                    shortName: null,
-                    description: "placeholder in a spreadsheet that indicates an empty string, default [EmptyString]. Use the string 'null' for null",
-                    argumentHelpText: "<empty-string-placeholder>",
-                    parseAction: stringValue => string.Equals("null", stringValue, StringComparison.OrdinalIgnoreCase) ? null : stringValue,
-                    setAction: (stringValue, preferences) => preferences.EmptyStringPlaceholder = stringValue),
-
-                new Preference<ExcelSettingsPreferences, string>(
-                    name: "NullPlaceholder",
-                    shortName: null,
-                    description: "placeholder in a spreadsheet that indicates a null, default null]. Use the string 'null' for null",
-                    argumentHelpText: "<null-placeholder>",
-                    parseAction: stringValue => string.Equals("null", stringValue, StringComparison.OrdinalIgnoreCase) ? null : stringValue,
-                    setAction: (stringValue, preferences) => preferences.NullPlaceholder = stringValue),
-
                 new Preference<ExcelSettingsPreferences, int>(
                     name: "NumColumnsToSkip",
                     shortName: null,

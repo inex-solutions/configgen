@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,40 +19,24 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using ConfigGen.Utilities.Extensions;
+using System.Collections.Generic;
+using System.Data;
+using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Settings.Excel
 {
     /// <summary>
-    /// 
+    /// Interface implemented by <see cref="SpreadsheetPreferencesLoader"/>.
     /// </summary>
-    public class CellDataParser : ICellDataParser
+    public interface ISpreadsheetPreferencesLoader
     {
-       // private static readonly ILog Log = LogManager.GetLogger(typeof(CellDataParser));
-
-        public object GetCellValue(object cellData)
-        {
-            bool isEmptyCell = IsCellEmpty(cellData);
-            
-            if (isEmptyCell)
-            {
-                return null;
-            }
-
-            return cellData;
-        }
-
         /// <summary>
-        /// Returns true if the supplied object represents a cell with no data, otherwise false.
+        /// Loads the spreadsheet preferences from the spreadsheet, if any, into the preferences manager.
+        /// Returns an errors that occurred during preference loading.
         /// </summary>
-        /// <param name="cellData"></param>
-        /// <returns></returns>
-        public static bool IsCellEmpty(object cellData)
-        {
-            return cellData == null
-                   || cellData is DBNull
-                   || cellData.ToString().IsNullOrEmpty();
-        }
+        /// <param name="spreadsheetPreferences">Dataset containing the preferences worksheet, if any.</param>
+        [NotNull]
+        IEnumerable<Error> LoadPreferences(DataSet spreadsheetPreferences);
     }
 }

@@ -32,20 +32,29 @@ using Machine.Specifications;
 
 namespace ConfigGen.Settings.Excel.Tests
 {
+    [Subject(typeof(ExcelSettingsLoader))]
     public abstract class ExcelSettingsLoaderTestBase 
         : MachineSpecificationTestBase<ExcelSettingsLoader, IResult<IEnumerable<IDictionary<string, object>>, Error>>
     {
         private static Lazy<string> lazySettingsFileFullPath;
         private static IDisposable disposableFile;
 
+        protected static PreferencesManager PreferencesManager;
         protected static string SourceTestFileName;
         protected static string TargetTestFileName;
 
+        public class ErrorCodes
+        {
+            public const string UnrecognisedPreference = "UnrecognisedPreference";
+            public const string PreferenceLoadError = "PreferenceLoadError";
+        }
+
         Establish context = () =>
         {
+            PreferencesManager = new PreferencesManager(new ExcelSettingsPreferenceGroup());
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<ExcelSettingsLoaderModule>();
-            containerBuilder.RegisterType<PreferencesManager>().As<IPreferencesManager>();
+            containerBuilder.RegisterInstance(PreferencesManager).As<IPreferencesManager>();
             var container = containerBuilder.Build();
             Subject = container.Resolve<ExcelSettingsLoader>();
 

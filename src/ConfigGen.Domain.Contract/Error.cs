@@ -20,13 +20,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {
     public abstract class Error
     {
-        protected Error([NotNull] string source, [NotNull] string code, [CanBeNull] string detail)
+        protected Error([NotNull] string source, [NotNull] string code, [CanBeNull] string detail, [CanBeNull] IEnumerable<Error> subErrors = null)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (code == null) throw new ArgumentNullException(nameof(code));
@@ -35,7 +37,9 @@ namespace ConfigGen.Domain.Contract
             Source = source;
             Code = code;
             Detail = detail;
+            SubErrors = subErrors ?? Enumerable.Empty<Error>();
         }
+
 
         [NotNull]
         public string Source { get; }
@@ -46,9 +50,14 @@ namespace ConfigGen.Domain.Contract
         [CanBeNull]
         public string Detail { get; }
 
+        [NotNull]
+        public IEnumerable<Error> SubErrors { get; }
+
         public override string ToString()
         {
-            return $"Error '{Code}' in '{Source}': {Detail}";
+            var msg = $"Error '{Code}' in '{Source}': {Detail}";
+
+            return SubErrors.Aggregate(msg, (current, subError) => current + $"\n --Sub Error --\n{subError}");
         }
     }
 }

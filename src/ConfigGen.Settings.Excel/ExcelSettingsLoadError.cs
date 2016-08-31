@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using JetBrains.Annotations;
 
@@ -28,7 +29,8 @@ namespace ConfigGen.Settings.Excel
     {
         public static readonly string ExcelSettingsLoadErrorSource = "ExcelSettingsLoader";
 
-        public ExcelSettingsLoadError([NotNull] string code, [CanBeNull] string detail) : base(ExcelSettingsLoadErrorSource, code, detail)
+        public ExcelSettingsLoadError([NotNull] string code, [CanBeNull] string detail, [CanBeNull] IEnumerable<Error> subErrors = null) 
+            : base(ExcelSettingsLoadErrorSource, code, detail, subErrors)
         {
         }
     }

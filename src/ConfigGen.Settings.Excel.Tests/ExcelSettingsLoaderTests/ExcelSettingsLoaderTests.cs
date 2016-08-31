@@ -28,7 +28,6 @@ using Machine.Specifications;
 
 namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
 {
-    [Subject(typeof(ExcelSettingsLoader))]
     public class the_xml_settings_loader : ExcelSettingsLoaderTestBase
     {
         It has_a_loader_type_of_excel = () => Subject.LoaderType.ShouldEqual("excel");
@@ -36,7 +35,6 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
         It supports_the_file_extensions_of_xls_and_xlsx = () => Subject.SupportedExtensions.ShouldContainOnly(".xls", ".xlsx");
     }
 
-    [Subject(typeof(ExcelSettingsLoader))]
     public class when_loading_a_simple_xlsx_file_containing_two_configurations : ExcelSettingsLoaderTestBase
     {
         Establish context = () =>
@@ -79,7 +77,6 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
                 new KeyValuePair<string, object>("Setting2", "Configuration2_Setting2"));
     }
 
-    [Subject(typeof(ExcelSettingsLoader))]
     public class when_loading_a_simple_xls_file_containing_two_configurations : ExcelSettingsLoaderTestBase
     {
         Establish context = () =>
@@ -123,7 +120,6 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
                 new KeyValuePair<string, object>("Setting2", "Configuration2_Setting2"));
     }
 
-    [Subject(typeof(ExcelSettingsLoader))]
     public class when_loading_a_simple_xls_file_that_is_locked_for_writing : ExcelSettingsLoaderTestBase
     {
         private static Exception CaughtException;
@@ -149,7 +145,6 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
         It the_result_should_contain_two_configurations = () => Result.Value.Count().ShouldEqual(2);
     }
 
-    [Subject(typeof(ExcelSettingsLoader))]
     public class when_loading_a_simple_xls_file_that_has_its_readonly_file_attribute_set : ExcelSettingsLoaderTestBase
     {
         private static Exception CaughtException;
@@ -175,7 +170,6 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
         It the_result_should_contain_two_configurations = () => Result.Value.Count().ShouldEqual(2);
     }
 
-    [Subject(typeof(ExcelSettingsLoader))]
     public class when_loading_a_spreadsheet_which_does_not_exist_at_the_specified_path : ExcelSettingsLoaderTestBase
     {
         private static Exception CaughtException;
@@ -191,23 +185,5 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
         It no_exception_is_thrown = () => CaughtException.ShouldBeNull();
 
         It the_result_indicates_a_file_not_found_error = () => Result.Error.Code.ShouldEqual(ExcelSettingsLoadErrorCodes.FileNotFound);
-    }
-
-    [Subject(typeof(ExcelSettingsLoader))]
-    public class when_loading_a_spreadsheet_which_does_not_contain_the_specified_worksheet : ExcelSettingsLoaderTestBase
-    {
-        private static Exception CaughtException;
-
-        Establish context = () =>
-        {
-            SourceTestFileName = "App.Config.Settings.xls";
-            TargetTestFileName = "App.Config.Settings.xls";
-        };
-
-        Because of = () => CaughtException = Catch.Exception(() => Result = Subject.LoadSettings(SettingsFileFullPath, "non-existent-worksheet"));
-
-        It no_exception_is_thrown = () => CaughtException.ShouldBeNull();
-
-        It the_result_indicates_a_file_not_found_error = () => Result.Error.Code.ShouldEqual(ExcelSettingsLoadErrorCodes.WorksheetNotFound);
     }
 }

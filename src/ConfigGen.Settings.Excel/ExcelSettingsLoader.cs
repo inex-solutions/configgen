@@ -44,6 +44,8 @@ namespace ConfigGen.Settings.Excel
         [NotNull]
         private readonly IExcelFileLoader _excelFileLoader;
         [NotNull]
+        private readonly ISpreadsheetPreferencesLoader _preferencesLoader;
+        [NotNull]
         private readonly IPreferencesManager _preferencesManager;
 
         /// <summary>
@@ -52,22 +54,26 @@ namespace ConfigGen.Settings.Excel
         /// <param name="headerProcessor">Class responsible for processing the spreadsheet header.</param>
         /// <param name="dataProcessor">Class responsible for processing the spreadsheet data.</param>
         /// <param name="excelFileLoader">Class responsible for loading the spreadsheet and converting is contents into a dataset.</param>
-        /// <param name="preferencesManager">Preferences manager</param>
+        /// <param name="preferencesLoader">Class responsbile for loading preferences from spreadsheet, if any.</param>
+        /// <param name="preferencesManager">Preferences manager.</param>
         /// <exception cref="ArgumentNullException">Thrown if any argument is null</exception>
         public ExcelSettingsLoader(
             [NotNull] ISpreadsheetHeaderProcessor headerProcessor, 
             [NotNull] ISpreadsheetDataProcessor dataProcessor, 
             [NotNull] IExcelFileLoader excelFileLoader,
+            [NotNull] ISpreadsheetPreferencesLoader preferencesLoader,
             [NotNull] IPreferencesManager preferencesManager)
         {
             if (headerProcessor == null) throw new ArgumentNullException(nameof(headerProcessor));
             if (dataProcessor == null) throw new ArgumentNullException(nameof(dataProcessor));
             if (excelFileLoader == null) throw new ArgumentNullException(nameof(excelFileLoader));
+            if (preferencesLoader == null) throw new ArgumentNullException(nameof(preferencesLoader));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
 
             _headerProcessor = headerProcessor;
             _dataProcessor = dataProcessor;
             _excelFileLoader = excelFileLoader;
+            _preferencesLoader = preferencesLoader;
             _preferencesManager = preferencesManager;
         }
 
@@ -77,15 +83,17 @@ namespace ConfigGen.Settings.Excel
         /// Loads and returns the configuration settings
         /// </summary>
         /// <param name="settingsFilePath">Spreadsheet path</param>
-        /// <param name="worksheetName">worksheet name (defaults to "Settings")</param>
         /// <returns>
         /// A result containing a collection of loaded configuration settings, or an error.
         /// </returns>
         [NotNull]
-        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFilePath, [CanBeNull] string worksheetName = null)
+        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFilePath)
         {
             if (settingsFilePath == null) throw new ArgumentNullException(nameof(settingsFilePath));
-            worksheetName = worksheetName ?? "Settings";
+
+            var spreadsheetPreferences = _preferencesManager.GetPreferenceInstance<ExcelSettingsPreferences>();
+
+            string worksheetName = spreadsheetPreferences.WorksheetName;
 
             var settingsFile = new FileInfo(settingsFilePath);
 
@@ -95,9 +103,14 @@ namespace ConfigGen.Settings.Excel
                     .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.FileNotFound, $"Specified excel spreadsheet not found: {settingsFile.FullName}"));
             }
 
-            var spreadsheetPreferences = _preferencesManager.GetPreferenceInstance<ExcelSettingsPreferences>();
-
             DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile.FullName);
+
+            var preferenceLoadErrors = _preferencesLoader.LoadPreferences(settingsDataSet);
+            if (preferenceLoadErrors.Any())
+            {
+                var error = new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.PreferenceLoadError, $"One or more errors occurred during loading of preferences", preferenceLoadErrors);
+                return Result<IEnumerable<IDictionary<string, object>>, Error>.CreateFailureResult(error);
+            }
 
             DataTable worksheet = settingsDataSet.Tables[worksheetName];
 
@@ -109,6 +122,9 @@ namespace ConfigGen.Settings.Excel
 
             var rows = (from DataRow row in worksheet.Rows select row.ItemArray);
             var rowsQueue = new Queue<object[]>(rows);
+
+            // re-get the preferences, in case any default preferences were applied in the spreadsheet itself
+            spreadsheetPreferences = _preferencesManager.GetPreferenceInstance<ExcelSettingsPreferences>();
 
             List<ExcelColumnInfo> columnList = _headerProcessor.ProcessHeaderRows(spreadsheetPreferences.NumColumnsToSkip, rowsQueue);
 

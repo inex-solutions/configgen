@@ -34,7 +34,7 @@ namespace ConfigGen.Domain.Contract.Settings
         /// Loads and returns the configuration settings
         /// </summary>
         [NotNull]
-        IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile, [CanBeNull] string worksheetName);
+        IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile);
 
         string LoaderType { get; }
 

@@ -206,7 +206,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
-            string contents = @"<root>@Model.Value1 @Model.Value2</root>";
+            string contents = @"<root>@Model.Settings.Value1 @Model.Settings.Value2</root>";
 
             File.WriteAllText("App.Config.Template.razor", contents, Encoding.UTF8);
 
@@ -230,7 +230,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
         Establish context = () =>
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
-            string contents = @"<root>@Model.Value1 @Model.Value2</root>";
+            string contents = @"<root>@Model.Settings.Value1 @Model.Settings.Value2</root>";
 
             File.WriteAllText("App.Config.Template.razor", contents, Encoding.Unicode);
 
@@ -254,7 +254,7 @@ namespace ConfigGen.Api.Tests.FileOutputTests
         Establish context = () =>
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
-            string contents = @"<root>@Model.Value1 @Model.Value2</root>";
+            string contents = @"<root>@Model.Settings.Value1 @Model.Settings.Value2</root>";
 
             File.WriteAllText("App.Config.Template.razor", contents, Encoding.ASCII);
 

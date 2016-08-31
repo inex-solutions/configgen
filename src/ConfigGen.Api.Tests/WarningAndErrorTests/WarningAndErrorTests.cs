@@ -127,10 +127,10 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             string template =
 @"<root>
 
-@Model.Value1
-@Model.Value2
+@Model.Settings.Value1
+@Model.Settings.Value2
 
-@if (Model.MachineName == ""Configuration2"")
+@if (Model.Settings.MachineName == ""Configuration2"")
 {
     throw new InvalidOperationException();
 }
@@ -168,11 +168,11 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             // this razor template will not use TokenTwo for Configuration2
             string template =
 @"<root>
-@if (Model.MachineName == ""Configuration1"")
+@if (Model.Settings.MachineName == ""Configuration1"")
 {
-    @Model.Value2
+    @Model.Settings.Value2
 }
-@Model.Value1
+@Model.Settings.Value1
 
 </root>";
             File.WriteAllText("App.Config.Template.razor", template);
@@ -211,12 +211,12 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             // this razor template will use an unregocnised token for Configuration2
             string template =
 @"<root>
-@if (Model.MachineName == ""Configuration2"")
+@if (Model.Settings.MachineName == ""Configuration2"")
 {
-    @Model.AnUnrecognisedToken
+    @Model.Settings.AnUnrecognisedToken
 }
-@Model.Value1
-@Model.Value2
+@Model.Settings.Value1
+@Model.Settings.Value2
 </root>";
             File.WriteAllText("App.Config.Template.razor", template);
 
@@ -254,12 +254,12 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             // this razor template will use an unregocnised token for Configuration2
             string template =
 @"<root>
-@if (Model.MachineName == ""Configuration2"")
+@if (Model.Settings.MachineName == ""Configuration2"")
 {
-    @Model.AnUnrecognisedToken
+    @Model.Settings.AnUnrecognisedToken
 }
-@Model.Value1
-@Model.Value2
+@Model.Settings.Value1
+@Model.Settings.Value2
 </root>";
             File.WriteAllText("App.Config.Template.razor", template);
 

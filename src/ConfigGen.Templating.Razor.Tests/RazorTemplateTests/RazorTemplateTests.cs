@@ -108,7 +108,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
         Establish context = () =>
         {
             CaughtException = null;
-            TemplateContents = "<root>@Model.TokenOne</root>";
+            TemplateContents = "<root>@Model.Settings.TokenOne</root>";
             Configuration = new Configuration("Configuration1", new Dictionary<string, object>
             {
                 ["TokenOne"] = "One",
@@ -156,7 +156,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     {
         Establish context = () =>
         {
-            TemplateContents = "<root>@Model.TokenOne</root>";
+            TemplateContents = "<root>@Model.Settings.TokenOne</root>";
 
             Configuration = new Configuration("Configuration1", new Dictionary<string, object>
             {
@@ -166,7 +166,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 
             Subject.Load(TemplateContents.ToStream());
 
-            ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
+            ExpectedOutput = TemplateContents.Replace("@Model.Settings.TokenOne", "One");
         };
 
         Because of = () => RenderResult = Subject.Render(Configuration);
@@ -189,14 +189,14 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     {
         Establish context = () =>
         {
-            TemplateContents = @"<root><child attr=""@Model.TokenOne"" /></root>";
+            TemplateContents = @"<root><child attr=""@Model.Settings.TokenOne"" /></root>";
 
             Configuration = new Configuration("Configuration1", new Dictionary<string, object>
             {
                 ["TokenOne"] = "One",
             });
 
-            ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "One");
+            ExpectedOutput = TemplateContents.Replace("@Model.Settings.TokenOne", "One");
         };
 
         Because of = () =>
@@ -223,13 +223,13 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     {
         Establish context = () =>
         {
-            TemplateContents = "<root>@Model.TokenThree</root>";
+            TemplateContents = "<root>@Model.Settings.TokenThree</root>";
 
             Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
 
             Subject.Load(TemplateContents.ToStream());
 
-            ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
+            ExpectedOutput = TemplateContents.Replace("@Model.Settings.TokenThree", "");
         };
 
         Because of = () => RenderResult = Subject.Render(Configuration);
@@ -252,7 +252,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     {
         Establish context = () =>
         {
-            TemplateContents = "<root>@(100/Model.key)</root>"; // this will result in a DivideByZeroException
+            TemplateContents = "<root>@(100/Model.Settings.key)</root>"; // this will result in a DivideByZeroException
 
             Configuration = new Configuration("Configuration1", new Dictionary<string, object>
             {
@@ -261,7 +261,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 
             Subject.Load(TemplateContents.ToStream());
 
-            ExpectedOutput = TemplateContents.Replace("@Model.TokenThree", "");
+            ExpectedOutput = TemplateContents.Replace("@Model.Settings.TokenThree", "");
         };
 
         Because of = () => RenderResult = Subject.Render(Configuration);
@@ -280,7 +280,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
     {
         Establish context = () =>
         {
-            TemplateContents = "<root>@Model.TokenOne</root>";
+            TemplateContents = "<root>@Model.Settings.TokenOne</root>";
 
             Configuration = new Configuration("Configuration1", new Dictionary<string, object>
             {
@@ -297,7 +297,7 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
                 ["TokenTwo"] = "TwoAgain",
             });
 
-            ExpectedOutput = TemplateContents.Replace("@Model.TokenOne", "OneAgain");
+            ExpectedOutput = TemplateContents.Replace("@Model.Settings.TokenOne", "OneAgain");
         };
 
         Because of = () => RenderResult = Subject.Render(Configuration);

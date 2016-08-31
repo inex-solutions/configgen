@@ -40,7 +40,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
             {
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
-                string template = @"Razor Template Token1: @Model.Value1, Unrecognised Token: @Model.UnknownToken";
+                string template = @"Razor Template Token1: @Model.Settings.Value1, Unrecognised Token: @Model.Settings.UnknownToken";
                 File.WriteAllText("App.Config.Template.razor", template);
 
                 PreferencesToSupplyToGenerator = new Dictionary<string, string>

@@ -60,9 +60,7 @@ namespace ConfigGen.Tests.Common
             MockPreferencesManager = new Mock<IPreferencesManager>();
             containerBuilder.RegisterModule<TContainerModule>();
             containerBuilder.RegisterInstance(TokenUsageTracker).As<ITokenUsageTracker>();
-
             containerBuilder.RegisterInstance(MockPreferencesManager.Object).As<IPreferencesManager>();
-
             var container = containerBuilder.Build();
             Subject = container.Resolve<TTemplate>();
         };

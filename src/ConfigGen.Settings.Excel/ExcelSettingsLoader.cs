@@ -25,6 +25,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Utilities;
 using JetBrains.Annotations;
@@ -36,9 +37,14 @@ namespace ConfigGen.Settings.Excel
     /// </summary>
     public class ExcelSettingsLoader : ISettingsLoader
     {
+        [NotNull]
         private readonly ISpreadsheetHeaderProcessor _headerProcessor;
+        [NotNull]
         private readonly ISpreadsheetDataProcessor _dataProcessor;
+        [NotNull]
         private readonly IExcelFileLoader _excelFileLoader;
+        [NotNull]
+        private readonly IPreferencesManager _preferencesManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExcelSettingsLoader"/> class.
@@ -46,18 +52,23 @@ namespace ConfigGen.Settings.Excel
         /// <param name="headerProcessor">Class responsible for processing the spreadsheet header.</param>
         /// <param name="dataProcessor">Class responsible for processing the spreadsheet data.</param>
         /// <param name="excelFileLoader">Class responsible for loading the spreadsheet and converting is contents into a dataset.</param>
+        /// <param name="preferencesManager">Preferences manager</param>
         /// <exception cref="ArgumentNullException">Thrown if any argument is null</exception>
         public ExcelSettingsLoader(
             [NotNull] ISpreadsheetHeaderProcessor headerProcessor, 
             [NotNull] ISpreadsheetDataProcessor dataProcessor, 
-            [NotNull] IExcelFileLoader excelFileLoader)
+            [NotNull] IExcelFileLoader excelFileLoader,
+            [NotNull] IPreferencesManager preferencesManager)
         {
             if (headerProcessor == null) throw new ArgumentNullException(nameof(headerProcessor));
             if (dataProcessor == null) throw new ArgumentNullException(nameof(dataProcessor));
             if (excelFileLoader == null) throw new ArgumentNullException(nameof(excelFileLoader));
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+
             _headerProcessor = headerProcessor;
             _dataProcessor = dataProcessor;
             _excelFileLoader = excelFileLoader;
+            _preferencesManager = preferencesManager;
         }
 
         #region ISettingsLoader Members
@@ -84,9 +95,9 @@ namespace ConfigGen.Settings.Excel
                     .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.FileNotFound, $"Specified excel spreadsheet not found: {settingsFile.FullName}"));
             }
 
-            DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile.FullName);
+            var spreadsheetPreferences = _preferencesManager.GetPreferenceInstance<ExcelSettingsPreferences>();
 
-            var spreadsheetPreferences = new SpreadsheetPreferences();
+            DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile.FullName);
 
             DataTable worksheet = settingsDataSet.Tables[worksheetName];
 
@@ -98,7 +109,7 @@ namespace ConfigGen.Settings.Excel
 
             var rows = (from DataRow row in worksheet.Rows select row.ItemArray);
             var rowsQueue = new Queue<object[]>(rows);
-            
+
             List<ExcelColumnInfo> columnList = _headerProcessor.ProcessHeaderRows(spreadsheetPreferences.NumColumnsToSkip, rowsQueue);
 
             var machineSettings = _dataProcessor.ProcessDataRows(rowsQueue, columnList, spreadsheetPreferences);

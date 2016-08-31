@@ -79,7 +79,6 @@
     <Compile Include="SpreadsheetException.cs" />
     <Compile Include="SpreadsheetHeaderException.cs" />
     <Compile Include="SpreadsheetHeaderProcessor.cs" />
-    <Compile Include="SpreadsheetPreferences.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj">

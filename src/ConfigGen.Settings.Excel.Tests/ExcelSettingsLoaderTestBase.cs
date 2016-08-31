@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
@@ -44,6 +45,7 @@ namespace ConfigGen.Settings.Excel.Tests
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<ExcelSettingsLoaderModule>();
+            containerBuilder.RegisterType<PreferencesManager>().As<IPreferencesManager>();
             var container = containerBuilder.Build();
             Subject = container.Resolve<ExcelSettingsLoader>();
 

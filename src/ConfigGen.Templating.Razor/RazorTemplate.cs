@@ -146,8 +146,6 @@ namespace ConfigGen.Templating.Razor
 
                 var preferenceFailures = _preferencesManager.ApplyDefaultPreferences(renderResult.AppliedPreferences);
 
-                Console.WriteLine(renderResult.AppliedPreferences);
-                Console.WriteLine(preferenceFailures);
                 if (preferenceFailures.Any())
                 {
                     return new SingleTemplateRenderResults(

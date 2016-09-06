@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -19,25 +19,24 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
-using System.Dynamic;
+using System.Collections.Generic;
+using System.Data;
+using ConfigGen.Domain.Contract;
+using JetBrains.Annotations;
 
-namespace ConfigGen.Templating.Razor.Renderer
+namespace ConfigGen.Settings.Excel
 {
-    [Serializable]
-    public abstract class DynamicModel : DynamicObject
+    /// <summary>
+    /// Interface implemented by <see cref="SpreadsheetPreferencesLoader"/>.
+    /// </summary>
+    public interface ISpreadsheetPreferencesLoader
     {
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            TryGetValue(binder.Name, out result);
-            return true;
-        }
-
-        public override bool TrySetMember(SetMemberBinder binder, object value)
-        {
-            throw new NotSupportedException("DynamicDictionary does not support setting of members");
-        }
-
-        protected abstract bool TryGetValue(string name, out object result);
+        /// <summary>
+        /// Loads the spreadsheet preferences from the spreadsheet, if any, into the preferences manager.
+        /// Returns an errors that occurred during preference loading.
+        /// </summary>
+        /// <param name="spreadsheetPreferences">Dataset containing the preferences worksheet, if any.</param>
+        [NotNull]
+        IEnumerable<Error> LoadPreferences(DataSet spreadsheetPreferences);
     }
 }

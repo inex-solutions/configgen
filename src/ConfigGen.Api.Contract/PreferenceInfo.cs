@@ -24,29 +24,46 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Api.Contract
 {
+    /// <summary>
+    /// Represents a single preference that can be supplied to the <see cref="IGenerationService"/> to control how generation is performed.
+    /// </summary>
     public class PreferenceInfo
     {
-        public PreferenceInfo([NotNull] string name, [CanBeNull] string shortName, [NotNull] string description, [CanBeNull] string argumentHelpText)
+        /// <summary>
+        /// Creates a new instance of the <see cref="PreferenceInfo"/> class.
+        /// </summary>
+        public PreferenceInfo([NotNull] string name, [CanBeNull] string shortName, [NotNull] string helpText, [CanBeNull] string argumentHelpText)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
-            if (description == null) throw new ArgumentNullException(nameof(description));
+            if (helpText == null) throw new ArgumentNullException(nameof(helpText));
 
             Name = name;
             ShortName = shortName;
-            Description = description;
+            HelpText = helpText;
             ArgumentHelpText = argumentHelpText;
         }
 
+        /// <summary>
+        /// Gets the name of the preference.
+        /// </summary>
         [NotNull]
         public string Name { get; }
-
         
+        /// <summary>
+        /// Gets the short-name of the preference, if any, otherwise null.
+        /// </summary>
         [CanBeNull]
         public string ShortName { get; }
 
+        /// <summary>
+        /// Gets the help text of the preference.
+        /// </summary>
         [NotNull]
-        public string Description { get; }
+        public string HelpText { get; }
 
+        /// <summary>
+        /// Gets help text for the argument taken by the preference, if any, otherwise null.
+        /// </summary>
         [CanBeNull]
         public string ArgumentHelpText { get; }
     }

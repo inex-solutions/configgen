@@ -55,7 +55,8 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions
         {
             if (results == null) throw new ArgumentNullException(nameof(results));
 
-            if (results.Errors.Any())
+            if (results.Errors.Any()
+                || results.GeneratedFiles.Any(f => f.Errors.Any()))
             {
                 return results;
             }

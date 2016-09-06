@@ -27,23 +27,23 @@ namespace ConfigGen.Settings.Excel
     {
         public ExcelSettingsPreferenceGroup() : base(
             name: "Excel Settings Preferences",
-            preferences: new []
+            preferences: new IPreference<ExcelSettingsPreferences>[]
             {
-                new Preference<ExcelSettingsPreferences,string>(
-                    name: "ConfigurationNameColumn",
-                    shortName: null,
-                    description: "specifies the name of the column in the spreadsheet to use as the configuration name",
-                    argumentHelpText: "<column name>", 
-                    parseAction: stringValue => stringValue,
-                    setAction: (stringValue, preferences) => preferences.ConfigurationNameColumn = stringValue), 
-
                 new Preference<ExcelSettingsPreferences, string>(
                     name: "WorksheetName",
                     shortName: null,
-                    description: "specifies the name of the worksheet containing configuration settings",
+                    description: "specifies the name of the worksheet containing configuration settings, default 'Settings'",
                     argumentHelpText: "<worksheet-name>",
                     parseAction: stringValue => stringValue,
-                    setAction: (stringValue, preferences) => preferences.WorksheetName = stringValue)
+                    setAction: (stringValue, preferences) => preferences.WorksheetName = stringValue),
+
+                new Preference<ExcelSettingsPreferences, int>(
+                    name: "NumColumnsToSkip",
+                    shortName: null,
+                    description: "specifies the number of columns to skip in the spreadsheet",
+                    argumentHelpText: "<num-columns>",
+                    parseAction: int.Parse,
+                    setAction: (integerValue, preferences) => preferences.NumColumnsToSkip = integerValue)
             })
         {
         }

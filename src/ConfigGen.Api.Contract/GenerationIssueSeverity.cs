@@ -20,6 +20,9 @@
 #endregion
 namespace ConfigGen.Api.Contract
 {
+    /// <summary>
+    /// Indicates the severity of a reported issue
+    /// </summary>
     public enum GenerationIssueSeverity
     {
         Error = 1,

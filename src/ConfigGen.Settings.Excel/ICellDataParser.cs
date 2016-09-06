@@ -25,24 +25,6 @@ namespace ConfigGen.Settings.Excel
     /// </summary>
     public interface ICellDataParser
     {
-        /// <summary>
-        /// Sets the placeholders that represent empty strings and null values. This must be called before the first call to 
-        /// <see cref="GetCellValue"/>
-        /// </summary>
-        /// <param name="emptyStringValue">The placeholder representing an empty string in the spreadsheet.</param>
-        /// <param name="nullValue">The placholder representing a null (missing) value in the spreadsheet.</param>
-        void SetParsingPreferences(string emptyStringValue, string nullValue);
-
         object GetCellValue(object cellData);
-
-        /// <summary>
-        /// Gets the placeholder value used to denote no value in the spreadsheet (as opposed to the value of an empty string).
-        /// </summary>
-        string NullValue { get; }
-
-        /// <summary>
-        /// Gets the placeholder value used to denote an empty string in the spreadsheet (as opposed to the null value indicating no value for the token).
-        /// </summary>
-        string EmptyStringValue { get; }
     }
 }

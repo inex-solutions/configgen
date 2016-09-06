@@ -18,19 +18,23 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Settings.Excel
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ConfigGen.Domain.Contract;
+
+namespace ConfigGen.Tests.Common
 {
-    public class SpreadsheetPreferences
+    public class TestSetupException : Exception
     {
-        public SpreadsheetPreferences()
+        public TestSetupException(string message) : base(message)
         {
-            NullPlaceholder = null;
-            EmptyStringPlaceholder = "[EmptyString]";
-            NumColumnsToSkip = 0;
         }
 
-        public string EmptyStringPlaceholder { get; set; }
-        public string NullPlaceholder { get; set; }
-        public int NumColumnsToSkip { get; set; }
+        public TestSetupException(string message, IEnumerable<Error> errors)
+            : this  (message + ": " + string.Join(",\n", errors.Select(e => e.ToString())))
+        {
+        }
     }
 }

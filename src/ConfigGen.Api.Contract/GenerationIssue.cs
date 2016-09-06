@@ -41,14 +41,26 @@ namespace ConfigGen.Api.Contract
             Detail = detail;
         }
 
+        /// <summary>
+        /// Gets the severity of the issue.
+        /// </summary>
         public GenerationIssueSeverity Severity { get; }
 
+        /// <summary>
+        /// Gets the code for the issue.
+        /// </summary>
         [NotNull]
         public string Code { get; }
 
+        /// <summary>
+        /// Gets the source of the issue (i.e. the component in which the issue occurred).
+        /// </summary>
         [NotNull]
         public string Source { get; }
 
+        /// <summary>
+        /// Gets detail on the issue, if any, otherwise null.
+        /// </summary>
         [CanBeNull]
         public string Detail { get; }
 

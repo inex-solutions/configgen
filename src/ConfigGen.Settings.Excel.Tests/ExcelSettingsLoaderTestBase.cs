@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Tests.Common;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Extensions;
@@ -31,19 +32,23 @@ using Machine.Specifications;
 
 namespace ConfigGen.Settings.Excel.Tests
 {
+    [Subject(typeof(ExcelSettingsLoader))]
     public abstract class ExcelSettingsLoaderTestBase 
-        : MachineSpecificationTestBase<ExcelSettingsLoader, IResult<IEnumerable<IDictionary<string, object>>, Error>>
+        : MachineSpecificationTestBase<ExcelSettingsLoader, IResult<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>>>
     {
         private static Lazy<string> lazySettingsFileFullPath;
         private static IDisposable disposableFile;
 
+        protected static PreferencesManager PreferencesManager;
         protected static string SourceTestFileName;
         protected static string TargetTestFileName;
 
         Establish context = () =>
         {
+            PreferencesManager = new PreferencesManager(new ExcelSettingsPreferenceGroup());
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<ExcelSettingsLoaderModule>();
+            containerBuilder.RegisterInstance(PreferencesManager).As<IPreferencesManager>();
             var container = containerBuilder.Build();
             Subject = container.Resolve<ExcelSettingsLoader>();
 

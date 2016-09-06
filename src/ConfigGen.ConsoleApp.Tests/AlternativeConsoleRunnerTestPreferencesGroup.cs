@@ -30,7 +30,7 @@ namespace ConfigGen.ConsoleApp.Tests
             IntParameterPreference = new PreferenceInfo(
                 name: "IntParameter",
                 shortName: "Int",
-                description: "specifies the int parameter",
+                helpText: "specifies the int parameter",
                 argumentHelpText: null);
         }
 

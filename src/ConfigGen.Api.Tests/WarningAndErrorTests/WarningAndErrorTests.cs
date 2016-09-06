@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ConfigGen.Api.Contract;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
 using ConfigGen.Utilities.Extensions;
@@ -78,7 +79,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
         It one_overall_generation_errors_is_reported = () => Result.Errors.Count().ShouldEqual(1);
 
         It the_single_error_indicates_the_template_file_was_not_found =
-            () => Result.Errors.ShouldContainAnItemWithCode(GenerationServiceTestBase.ErrorCodes.TemplateFileNotFound);
+            () => Result.Errors.ShouldContainAnItemWithCode(ErrorCodes.TemplateFileNotFound);
 
         It no_individual_file_generation_errors_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Errors).ShouldBeEmpty();
 
@@ -109,7 +110,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
         It one_overall_generation_errors_is_reported = () => Result.Errors.Count().ShouldEqual(1);
 
         It the_single_error_indicates_the_template_file_was_not_found =
-            () => Result.Errors.ShouldContainAnItemWithCode(GenerationServiceTestBase.ErrorCodes.SettingsFileNotFound);
+            () => Result.Errors.ShouldContainAnItemWithCode(ErrorCodes.SettingsFileNotFound);
 
         It no_individual_file_generation_errors_are_reported = () => Result.GeneratedFiles.SelectMany(f => f.Errors).ShouldBeEmpty();
 
@@ -127,10 +128,10 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             string template =
 @"<root>
 
-@Model.Value1
-@Model.Value2
+@Model.Settings.Value1
+@Model.Settings.Value2
 
-@if (Model.MachineName == ""Configuration2"")
+@if (Model.Settings.MachineName == ""Configuration2"")
 {
     throw new InvalidOperationException();
 }
@@ -145,7 +146,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
 
-        It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+        It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It no_overall_generation_errors_are_reported = () => Result.Errors.ShouldBeEmpty();
 
@@ -168,11 +169,11 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             // this razor template will not use TokenTwo for Configuration2
             string template =
 @"<root>
-@if (Model.MachineName == ""Configuration1"")
+@if (Model.Settings.MachineName == ""Configuration1"")
 {
-    @Model.Value2
+    @Model.Settings.Value2
 }
-@Model.Value1
+@Model.Settings.Value1
 
 </root>";
             File.WriteAllText("App.Config.Template.razor", template);
@@ -211,12 +212,12 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             // this razor template will use an unregocnised token for Configuration2
             string template =
 @"<root>
-@if (Model.MachineName == ""Configuration2"")
+@if (Model.Settings.MachineName == ""Configuration2"")
 {
-    @Model.AnUnrecognisedToken
+    @Model.Settings.AnUnrecognisedToken
 }
-@Model.Value1
-@Model.Value2
+@Model.Settings.Value1
+@Model.Settings.Value2
 </root>";
             File.WriteAllText("App.Config.Template.razor", template);
 
@@ -254,12 +255,12 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
             // this razor template will use an unregocnised token for Configuration2
             string template =
 @"<root>
-@if (Model.MachineName == ""Configuration2"")
+@if (Model.Settings.MachineName == ""Configuration2"")
 {
-    @Model.AnUnrecognisedToken
+    @Model.Settings.AnUnrecognisedToken
 }
-@Model.Value1
-@Model.Value2
+@Model.Settings.Value1
+@Model.Settings.Value2
 </root>";
             File.WriteAllText("App.Config.Template.razor", template);
 
@@ -272,7 +273,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
 
-        It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+        It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It no_overall_generation_errors_are_reported = () => Result.Errors.ShouldBeEmpty();
 

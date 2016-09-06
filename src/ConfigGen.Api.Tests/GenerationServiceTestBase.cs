@@ -32,42 +32,12 @@ namespace ConfigGen.Api.Tests
     [Subject(typeof(GenerationService))]
     internal abstract class GenerationServiceTestBase : ContainerAwareMachineSpecificationTestBase<IGenerationService, GenerateResult>
     {
-        internal class PreferenceNames
-        {
-            public const string TemplateFilePath = "TemplateFile";
-            public const string TemplateFileType = "TemplateFileType";
-            public const string SettingsFilePath = "SettingsFile";
-            public const string SettingsFileType = "SettingsFileType";
-            public const string ErrorOnWarnings = "ErrorOnWarnings";
-            public const string ConfigurationNameSetting = "ConfigurationNameSetting";
-
-            public const string GenerateSpecifiedOnly = "GenerateSpecifiedOnly";
-            public const string FilterMachinesRegexp = "FilterMachinesRegexp";
-            public const string LocalOnly = "LocalOnly";
-
-            public const string XmlPrettyPrintPreferenceName = "XmlPrettyPrint";
-            public const string XmlPrettyPrintLineLengthPreferenceName = "XmlPrettyPrintLineLength";
-            public const string XmlPrettyPrintTabSizePreferenceName = "XmlPrettyPrintTabSize";
-
-            public const string FilenameSetting = "FilenameSetting";
-            public const string ForceName = "ForceName";
-            public const string OutputDirectory = "OutputDirectory";
-        }
-
-        public class ErrorCodes
-        {
-            public const string SettingsFileNotFound = "SettingsFileNotFound";
-            public const string TemplateFileNotFound = "TemplateFileNotFound";
-            public const string UnknownConfigurationNameSetting = "UnknownConfigurationNameSetting";
-            public const string TemplateTypeResolutionFailure = "TemplateTypeResolutionFailure";
-            public const string UnknownTemplateType = "UnknownTemplateType";
-        }
-
         private static Lazy<IEnumerable<PreferenceGroupInfo>> lazyPreferenceGroups;
 
         [NotNull]
         protected static IDictionary<string, string> PreferencesToSupplyToGenerator;
 
+        protected static string ExpectedResult;
 
         Establish context = () =>
         {
@@ -76,6 +46,7 @@ namespace ConfigGen.Api.Tests
             lazyPreferenceGroups = new Lazy<IEnumerable<PreferenceGroupInfo>>(() =>  Subject.GetPreferences());
             PreferencesToSupplyToGenerator = new Dictionary<string, string>();
             Result = null;
+            ExpectedResult = null;
         };
 
         Cleanup cleanup = () =>

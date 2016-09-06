@@ -38,6 +38,7 @@ namespace ConfigGen.Templating.Xml
             builder.RegisterType<XmlDeclarationParser>();
             builder.RegisterType<ConfigGenNodeProcessorFactory>().As<IConfigGenNodeProcessorFactory>();
             builder.RegisterModule<PreferencesManagementModule>();
+            builder.RegisterType<TemplatePreferencesLoader>();
         }
     }
 }

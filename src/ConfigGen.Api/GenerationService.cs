@@ -85,8 +85,7 @@ namespace ConfigGen.Api
             }
 
             //TODO: doesn't belong here
-            var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
-            _loggerController.SetLoggingVerbosity(configGenerationPreferences.Verbosity);
+            _loggerController.SetLoggingVerbosity(configuration.Verbosity);
             _logger.Debug("Verbose logging enabled");
 
             var result = _generator.GenerateConfigurations();

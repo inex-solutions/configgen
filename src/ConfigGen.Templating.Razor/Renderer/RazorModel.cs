@@ -25,11 +25,13 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Razor.Renderer
 {
-    [Serializable]
-    public class DictionaryBackedDynamicModel : DynamicModel
+    public class RazorModel
     {
         [NotNull]
-        private readonly Dictionary<string, object> _dictionary;
+        private readonly IDictionary<string, object> _settingsValues;
+
+        [NotNull]
+        private readonly IDictionary<string, string> _appliedPreferences;
 
         [NotNull]
         private readonly HashSet<string> _accessedTokens;
@@ -37,39 +39,59 @@ namespace ConfigGen.Templating.Razor.Renderer
         [NotNull]
         private readonly HashSet<string> _unrecognisedTokens;
 
-        public DictionaryBackedDynamicModel([NotNull] IDictionary<string, object> values)
+        public RazorModel([NotNull] IDictionary<string, object> settings)
         {
-            if (values == null) throw new ArgumentNullException(nameof(values));
-            _dictionary = new Dictionary<string, object>(values);
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+            _settingsValues = settings;
+            Settings = new CallbackDynamicModel(onGet: GetSettingsValue);
+            Preferences = new CallbackDynamicModel(onSet: SetPreference);
             _accessedTokens = new HashSet<string>();
             _unrecognisedTokens = new HashSet<string>();
+            _appliedPreferences = new Dictionary<string, string>();
         }
 
-        protected override bool TryGetValue([NotNull] string key, out object value)
+        private void SetPreference(string key, object value)
+        {
+            _appliedPreferences[key] = value?.ToString();
+        }
+
+        private object GetSettingsValue([NotNull] string key)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 
-            bool found = _dictionary.TryGetValue(key, out value);
+            object value;
+
+            bool found = _settingsValues.TryGetValue(key, out value);
 
             if (found
-                && !_accessedTokens.Contains(key))
+                && !_accessedTokens.Contains(key)
+                && value != null)
             {
                 _accessedTokens.Add(key);
             }
-
-            if (!found
-                && !_unrecognisedTokens.Contains(key))
+            else if (!_unrecognisedTokens.Contains(key))
             {
                 _unrecognisedTokens.Add(key);
             }
 
-            return found;
+            return value;
         }
+
+        [NotNull]
+        [UsedImplicitly]
+        public CallbackDynamicModel Settings { get; }
+
+        [NotNull]
+        [UsedImplicitly]
+        public CallbackDynamicModel Preferences { get; }
 
         [NotNull]
         public HashSet<string> AccessedTokens => new HashSet<string>(_accessedTokens);
 
         [NotNull]
         public HashSet<string> UnrecognisedTokens => new HashSet<string>(_unrecognisedTokens);
+
+        [NotNull]
+        public IDictionary<string, string> AppliedPreferences => new Dictionary<string, string>(_appliedPreferences);
     }
 }

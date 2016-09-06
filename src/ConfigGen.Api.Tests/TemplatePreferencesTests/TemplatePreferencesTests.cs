@@ -122,8 +122,7 @@ namespace ConfigGen.Api.Tests.TemplatePreferencesTests
 
             It the_result_indicates_failure = () => Result.ShouldIndicateFailure();
 
-            //It asd = () => Result.Errors .GeneratedFiles.Errors.ShouldContainSingleItemWithCode(ErrorCodes.SettingsFileNotFound);
-            //TODO: add more assertions
+            It the_error_code_indicates_an_unrecognised_preference = () => Result.AllErrors.ShouldContainSingleItemWithCode(ErrorCodes.UnrecognisedPreference);
         }
     }
 
@@ -218,7 +217,7 @@ namespace ConfigGen.Api.Tests.TemplatePreferencesTests
 
             It the_result_indicates_failure = () => Result.ShouldIndicateFailure();
 
-            //TODO: add more assertions
+            It the_error_code_indicates_an_unrecognised_preference = () => Result.AllErrors.ShouldContainSingleItemWithCode(ErrorCodes.UnrecognisedPreference);
         }
     }
 }

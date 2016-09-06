@@ -24,12 +24,23 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Api.Contract
 {
+    /// <summary>
+    /// Interface implemented by the generation service.
+    /// </summary>
     public interface IGenerationService
     {
+        /// <summary>
+        /// Returns a collection of all preferences recognised by the services. This can be used to display help and validate user
+        /// supplied preferences.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         IEnumerable<PreferenceGroupInfo> GetPreferences();
 
+        /// <summary>
+        /// Generates files according to the supplied preferences, if any, and returns a result detailing the files generated.
+        /// </summary>
+        /// <param name="preferences">Preference name/preference value pairs, specifying preferences.</param>
         [NotNull]
         GenerateResult Generate([NotNull] IDictionary<string, string> preferences);
     }

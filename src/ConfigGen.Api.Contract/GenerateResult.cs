@@ -26,8 +26,14 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Api.Contract
 {
+    /// <summary>
+    /// Represents the result of a call to <see cref="IGenerationService.Generate"/>.
+    /// </summary>
     public class GenerateResult
     {
+        /// <summary>
+        /// Creates a new instance of the <see cref="GenerateResult"/> class.
+        /// </summary>
         public GenerateResult([NotNull] IEnumerable<GeneratedFile> generatedFiles, [NotNull] IEnumerable<GenerationIssue> errors)
         {
             if (generatedFiles == null) throw new ArgumentNullException(nameof(generatedFiles));
@@ -35,14 +41,33 @@ namespace ConfigGen.Api.Contract
 
             GeneratedFiles = generatedFiles;
             Errors = errors;
-            Success = !Errors.Any();
+            AllErrors = Errors.Concat(GeneratedFiles.SelectMany(f => f.Errors));
+            Success = !AllErrors.Any();
         }
 
+        /// <summary>
+        /// Gets a value indicating if the generation request was successful.
+        /// </summary>
         public bool Success { get; }
 
+        /// <summary>
+        /// Get a collection of overall errors, if any, that occurred during generation. Note this only includes overall errors in the
+        /// generation process. For errors limited to individual files, the individual <see cref="GeneratedFile.Errors"/> collection should be checked
+        /// for each item in <see cref="GeneratedFiles"/>.
+        /// </summary>
         [NotNull]
         public IEnumerable<GenerationIssue> Errors { get; }
 
+        /// <summary>
+        /// Gets a collection of all errors that occurred during generation; i.e. any items in <see cref="Errors"/> plus any items in <see cref="GeneratedFile.Errors"/>
+        /// for each item in <see cref="GeneratedFiles"/>.
+        /// </summary>
+        [NotNull]
+        public IEnumerable<GenerationIssue> AllErrors { get; }
+
+        /// <summary>
+        /// Gets a collection of <see cref="GeneratedFile"/> instances, each one representing an individual file for which generation was attempted.
+        /// </summary>
         [NotNull]
         public IEnumerable<GeneratedFile> GeneratedFiles { get; }
     }

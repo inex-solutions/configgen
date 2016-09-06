@@ -43,12 +43,6 @@ namespace ConfigGen.Settings.Excel.Tests
         protected static string SourceTestFileName;
         protected static string TargetTestFileName;
 
-        public class ErrorCodes
-        {
-            public const string UnrecognisedPreference = "UnrecognisedPreference";
-            public const string PreferenceLoadError = "PreferenceLoadError";
-        }
-
         Establish context = () =>
         {
             PreferencesManager = new PreferencesManager(new ExcelSettingsPreferenceGroup());

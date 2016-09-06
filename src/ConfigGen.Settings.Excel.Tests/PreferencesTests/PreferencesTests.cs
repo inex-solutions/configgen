@@ -21,6 +21,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.Error;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.ResultExtensions;

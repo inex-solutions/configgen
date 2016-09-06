@@ -18,7 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 namespace ConfigGen.Tests.Common
 {
     public class ErrorCodes
@@ -28,5 +27,6 @@ namespace ConfigGen.Tests.Common
         public const string UnknownConfigurationNameSetting = "UnknownConfigurationNameSetting";
         public const string TemplateTypeResolutionFailure = "TemplateTypeResolutionFailure";
         public const string UnknownTemplateType = "UnknownTemplateType";
+        public const string UnrecognisedPreference = "UnrecognisedPreference";
     }
 }

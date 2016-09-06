@@ -146,7 +146,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
 
-        It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+        It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It no_overall_generation_errors_are_reported = () => Result.Errors.ShouldBeEmpty();
 
@@ -273,7 +273,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
 
-        It the_result_indicates_success = () => Result.Success.ShouldBeTrue();
+        It the_result_indicates_failure = () => Result.Success.ShouldBeFalse();
 
         It no_overall_generation_errors_are_reported = () => Result.Errors.ShouldBeEmpty();
 

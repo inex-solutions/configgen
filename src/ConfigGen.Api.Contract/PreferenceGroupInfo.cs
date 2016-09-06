@@ -25,8 +25,15 @@ using JetBrains.Annotations;
 
 namespace ConfigGen.Api.Contract
 {
+    /// <summary>
+    /// Represents a group of preferences such as "xml template preferences", or "file output preferences".
+    /// </summary>
     public class PreferenceGroupInfo
     {
+        /// <summary>
+        /// Creates a new instance of the <see cref="PreferenceGroupInfo"/> class, with the specified group name and containing
+        /// the supplied preferences.
+        /// </summary>
         public PreferenceGroupInfo([NotNull] string name, [NotNull][ItemNotNull]IEnumerable<PreferenceInfo> preferences)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
@@ -36,9 +43,15 @@ namespace ConfigGen.Api.Contract
             Preferences = preferences;
         }
 
+        /// <summary>
+        /// Gets the name of the preference group.
+        /// </summary>
         [NotNull]
         public string Name { get; }
 
+        /// <summary>
+        /// Gets a collection of the preferences in this group.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<PreferenceInfo> Preferences { get; }

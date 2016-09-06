@@ -87,7 +87,7 @@ namespace ConfigGen.Settings.Excel
         /// A result containing a collection of loaded configuration settings, or an error.
         /// </returns>
         [NotNull]
-        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFilePath)
+        public IResult<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>> LoadSettings([NotNull] string settingsFilePath)
         {
             if (settingsFilePath == null) throw new ArgumentNullException(nameof(settingsFilePath));
 
@@ -99,8 +99,8 @@ namespace ConfigGen.Settings.Excel
 
             if (!settingsFile.Exists)
             {
-                return Result<IEnumerable<IDictionary<string, object>>, Error>
-                    .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.FileNotFound, $"Specified excel spreadsheet not found: {settingsFile.FullName}"));
+                return Result<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>>
+                    .CreateFailureResult(new[] {new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.FileNotFound, $"Specified excel spreadsheet not found: {settingsFile.FullName}")});
             }
 
             DataSet settingsDataSet = _excelFileLoader.GetSettingsDataSet(settingsFile.FullName);
@@ -108,16 +108,17 @@ namespace ConfigGen.Settings.Excel
             var preferenceLoadErrors = _preferencesLoader.LoadPreferences(settingsDataSet);
             if (preferenceLoadErrors.Any())
             {
-                var error = new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.PreferenceLoadError, $"One or more errors occurred during loading of preferences", preferenceLoadErrors);
-                return Result<IEnumerable<IDictionary<string, object>>, Error>.CreateFailureResult(error);
+                // re-write errors to have the ExcelSettingsLoader as the source.
+                var errors = preferenceLoadErrors.Select(error => new ExcelSettingsLoadError(error.Code, error.Detail));
+                return Result<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>>.CreateFailureResult(errors);
             }
 
             DataTable worksheet = settingsDataSet.Tables[worksheetName];
 
             if (worksheet == null)
             {
-                return Result<IEnumerable<IDictionary<string, object>>, Error>
-                    .CreateFailureResult(new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.WorksheetNotFound, $"Specified worksheet not found in settings file: {worksheetName}"));
+                return Result<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>>
+                    .CreateFailureResult(new [] {new ExcelSettingsLoadError(ExcelSettingsLoadErrorCodes.WorksheetNotFound, $"Specified worksheet not found in settings file: {worksheetName}")});
             }
 
             var rows = (from DataRow row in worksheet.Rows select row.ItemArray);
@@ -130,7 +131,7 @@ namespace ConfigGen.Settings.Excel
 
             var machineSettings = _dataProcessor.ProcessDataRows(rowsQueue, columnList, spreadsheetPreferences);
 
-            return Result<IEnumerable<IDictionary<string, object>>, Error>.CreateSuccessResult(machineSettings);
+            return Result<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>>.CreateSuccessResult(machineSettings);
         }
 
         public string LoaderType => "excel";

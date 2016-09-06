@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ConfigGen.Tests.Common.Extensions;
+using ConfigGen.Tests.Common.MSpecShouldExtensions.Error;
 using Machine.Specifications;
 
 namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
@@ -184,6 +185,6 @@ namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests
 
         It no_exception_is_thrown = () => CaughtException.ShouldBeNull();
 
-        It the_result_indicates_a_file_not_found_error = () => Result.Error.Code.ShouldEqual(ExcelSettingsLoadErrorCodes.FileNotFound);
+        It the_result_indicates_a_file_not_found_error = () => Result.Error.ShouldContainSingleErrorWithCode(ExcelSettingsLoadErrorCodes.FileNotFound);
     }
 }

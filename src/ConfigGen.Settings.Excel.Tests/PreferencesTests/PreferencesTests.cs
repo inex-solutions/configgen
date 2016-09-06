@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Tests.Common.Extensions;
+using ConfigGen.Tests.Common.MSpecShouldExtensions.Error;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.ResultExtensions;
 using Machine.Specifications;
 
@@ -42,7 +43,7 @@ namespace ConfigGen.Settings.Excel.Tests.PreferencesTests
         It the_result_should_indicate_an_error = () => Result.Error.ShouldNotBeNull();
 
         It the_error_should_indicate_a_missing_settings_worksheet = 
-            () => Result.Error.Code.ShouldEqual(ExcelSettingsLoadErrorCodes.WorksheetNotFound);
+            () => Result.Error.ShouldContainSingleErrorWithCode(ExcelSettingsLoadErrorCodes.WorksheetNotFound);
 
         It the_result_should_contain_no_configurations = () => Result.Value.ShouldBeNull();
     }
@@ -114,8 +115,6 @@ namespace ConfigGen.Settings.Excel.Tests.PreferencesTests
 
         It the_result_indicates_failure = () => Result.ShouldIndicateFailure();
 
-        It the_result_reports_a_preference_load_error = () => Result.Error.Code.ShouldEqual(ErrorCodes.PreferenceLoadError);
-
-        It the_subError_indicates_an_unknown_preference = () => Result.Error.SubErrors.Single().Code.ShouldEqual(ErrorCodes.UnrecognisedPreference);
+        It the_result_reports_an_unrecognised_preference_error = () => Result.Error.ShouldContainSingleErrorWithCode(ErrorCodes.UnrecognisedPreference);
     }
 }

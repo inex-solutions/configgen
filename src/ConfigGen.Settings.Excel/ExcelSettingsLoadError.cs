@@ -29,8 +29,8 @@ namespace ConfigGen.Settings.Excel
     {
         public static readonly string ExcelSettingsLoadErrorSource = "ExcelSettingsLoader";
 
-        public ExcelSettingsLoadError([NotNull] string code, [CanBeNull] string detail, [CanBeNull] IEnumerable<Error> subErrors = null) 
-            : base(ExcelSettingsLoadErrorSource, code, detail, subErrors)
+        public ExcelSettingsLoadError([NotNull] string code, [CanBeNull] string detail) 
+            : base(ExcelSettingsLoadErrorSource, code, detail)
         {
         }
     }

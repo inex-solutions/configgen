@@ -34,7 +34,7 @@ namespace ConfigGen.Settings.Excel.Tests
 {
     [Subject(typeof(ExcelSettingsLoader))]
     public abstract class ExcelSettingsLoaderTestBase 
-        : MachineSpecificationTestBase<ExcelSettingsLoader, IResult<IEnumerable<IDictionary<string, object>>, Error>>
+        : MachineSpecificationTestBase<ExcelSettingsLoader, IResult<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>>>
     {
         private static Lazy<string> lazySettingsFileFullPath;
         private static IDisposable disposableFile;

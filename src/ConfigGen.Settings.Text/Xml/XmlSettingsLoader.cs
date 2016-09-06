@@ -38,7 +38,7 @@ namespace ConfigGen.Settings.Text.Xml
     /// </summary>
     public class XmlSettingsLoader : ISettingsLoader
     {
-        public IResult<IEnumerable<IDictionary<string, object>>, Error> LoadSettings([NotNull] string settingsFile)
+        public IResult<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>> LoadSettings([NotNull] string settingsFile)
         {
             if (settingsFile == null) throw new ArgumentNullException(nameof(settingsFile));
 
@@ -76,7 +76,7 @@ namespace ConfigGen.Settings.Text.Xml
             var machineConfigurations = new List<Dictionary<string,object>>();
             ProcessConfigurationContainerRecursive(new Dictionary<string, object>(), settingGroups, machineConfigurations, settings.ConfigFileName, settings);
 
-            return Result<IEnumerable<IDictionary<string, object>>, Error>.CreateSuccessResult(machineConfigurations);
+            return Result<IEnumerable<IDictionary<string, object>>, IEnumerable<Error>>.CreateSuccessResult(machineConfigurations);
         }
 
         public string LoaderType => "xml";

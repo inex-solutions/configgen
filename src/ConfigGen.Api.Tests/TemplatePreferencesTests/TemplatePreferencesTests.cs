@@ -25,6 +25,7 @@ using System.Reflection;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
+using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
@@ -121,6 +122,7 @@ namespace ConfigGen.Api.Tests.TemplatePreferencesTests
 
             It the_result_indicates_failure = () => Result.ShouldIndicateFailure();
 
+            //It asd = () => Result.Errors .GeneratedFiles.Errors.ShouldContainSingleItemWithCode(ErrorCodes.SettingsFileNotFound);
             //TODO: add more assertions
         }
     }

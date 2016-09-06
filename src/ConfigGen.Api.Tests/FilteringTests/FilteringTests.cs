@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpecShouldExtensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Utilities;

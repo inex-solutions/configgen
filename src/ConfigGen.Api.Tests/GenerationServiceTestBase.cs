@@ -56,36 +56,5 @@ namespace ConfigGen.Api.Tests
 
         [NotNull]
         protected static IEnumerable<PreferenceGroupInfo> PreferenceGroups => lazyPreferenceGroups.Value;
-
-        internal class PreferenceNames
-        {
-            public const string TemplateFilePath = "TemplateFile";
-            public const string TemplateFileType = "TemplateFileType";
-            public const string SettingsFilePath = "SettingsFile";
-            public const string SettingsFileType = "SettingsFileType";
-            public const string ErrorOnWarnings = "ErrorOnWarnings";
-            public const string ConfigurationNameSetting = "ConfigurationNameSetting";
-
-            public const string GenerateSpecifiedOnly = "GenerateSpecifiedOnly";
-            public const string FilterMachinesRegexp = "FilterMachinesRegexp";
-            public const string LocalOnly = "LocalOnly";
-
-            public const string XmlPrettyPrint = "XmlPrettyPrint";
-            public const string XmlPrettyPrintLineLength = "XmlPrettyPrintLineLength";
-            public const string XmlPrettyPrintTabSize = "XmlPrettyPrintTabSize";
-
-            public const string FilenameSetting = "FilenameSetting";
-            public const string ForceName = "ForceName";
-            public const string OutputDirectory = "OutputDirectory";
-        }
-
-        public class ErrorCodes
-        {
-            public const string SettingsFileNotFound = "SettingsFileNotFound";
-            public const string TemplateFileNotFound = "TemplateFileNotFound";
-            public const string UnknownConfigurationNameSetting = "UnknownConfigurationNameSetting";
-            public const string TemplateTypeResolutionFailure = "TemplateTypeResolutionFailure";
-            public const string UnknownTemplateType = "UnknownTemplateType";
-        }
     }
 }

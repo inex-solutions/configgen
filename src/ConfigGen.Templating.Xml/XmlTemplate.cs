@@ -104,7 +104,7 @@ namespace ConfigGen.Templating.Xml
 
                 if (preferencesLoadErrors.Any())
                 {
-                    //TODO: what should we do - error, or warn?    
+                    return LoadResult.CreateFailResult(preferencesLoadErrors);
                 }
             }
 

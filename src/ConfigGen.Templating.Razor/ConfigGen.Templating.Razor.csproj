@@ -67,9 +67,8 @@
     <Compile Include="RazorTemplateError.cs" />
     <Compile Include="RazorTemplateModule.cs" />
     <Compile Include="Renderer\AppDomainIsolatedHost.cs" />
+    <Compile Include="Renderer\CallbackDynamicModel.cs" />
     <Compile Include="Renderer\CrossAppDomainAssemblyResolver.cs" />
-    <Compile Include="Renderer\DictionaryBackedDynamicModel.cs" />
-    <Compile Include="Renderer\DynamicModel.cs" />
     <Compile Include="Renderer\IRazorEngineRenderer.cs" />
     <Compile Include="Renderer\RazorEngineRenderer.cs" />
     <Compile Include="Renderer\RazorModel.cs" />

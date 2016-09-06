@@ -36,7 +36,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
         //HACK: Not at all happy that this references ConfigGen.Templating.Razor
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
@@ -71,7 +71,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
 
         internal class when_a_settings_file_contains_a_null_for_one_value : GenerationServiceTestBase
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.OneValueOneNull.xls", "App.Config.Settings.xls");
 
@@ -111,7 +111,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
         //HACK: Not at all happy that this references ConfigGen.Templating.Xml
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
@@ -145,7 +145,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
 
         internal class when_a_settings_file_contains_a_null_for_one_value : GenerationServiceTestBase
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.OneValueOneNull.xls", "App.Config.Settings.xls");
 

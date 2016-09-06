@@ -21,23 +21,36 @@
 
 using System;
 using System.Dynamic;
+using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Razor.Renderer
 {
-    [Serializable]
-    public abstract class DynamicModel : DynamicObject
+    public class CallbackDynamicModel : DynamicObject
     {
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        [NotNull]
+        private readonly Func<string, object> _onGet;
+
+        [NotNull]
+        private readonly Action<string, object> _onSet;
+
+        public CallbackDynamicModel(
+            [CanBeNull] Func<string, object> onGet = null,
+            [CanBeNull] Action<string, object> onSet = null)
         {
-            TryGetValue(binder.Name, out result);
-            return true;
+            _onGet = onGet ?? (propertyName => null);
+            _onSet = onSet ?? ((propertyName, propertyValue) => { });
         }
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-            throw new NotSupportedException("DynamicDictionary does not support setting of members");
+            _onSet(binder.Name, value);
+            return true;
         }
 
-        protected abstract bool TryGetValue(string name, out object result);
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        {
+            result = _onGet(binder.Name);
+            return true;
+        }
     }
 }

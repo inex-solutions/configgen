@@ -32,6 +32,31 @@ namespace ConfigGen.Api.Tests
     [Subject(typeof(GenerationService))]
     internal abstract class GenerationServiceTestBase : ContainerAwareMachineSpecificationTestBase<IGenerationService, GenerateResult>
     {
+        private static Lazy<IEnumerable<PreferenceGroupInfo>> lazyPreferenceGroups;
+
+        [NotNull]
+        protected static IDictionary<string, string> PreferencesToSupplyToGenerator;
+
+        protected static string ExpectedResult;
+
+        Establish context = () =>
+        {
+            ContainerBuilder.RegisterModule<GenerationServiceModule>();
+
+            lazyPreferenceGroups = new Lazy<IEnumerable<PreferenceGroupInfo>>(() =>  Subject.GetPreferences());
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>();
+            Result = null;
+            ExpectedResult = null;
+        };
+
+        Cleanup cleanup = () =>
+        {
+
+        };
+
+        [NotNull]
+        protected static IEnumerable<PreferenceGroupInfo> PreferenceGroups => lazyPreferenceGroups.Value;
+
         internal class PreferenceNames
         {
             public const string TemplateFilePath = "TemplateFile";
@@ -45,9 +70,9 @@ namespace ConfigGen.Api.Tests
             public const string FilterMachinesRegexp = "FilterMachinesRegexp";
             public const string LocalOnly = "LocalOnly";
 
-            public const string XmlPrettyPrintPreferenceName = "XmlPrettyPrint";
-            public const string XmlPrettyPrintLineLengthPreferenceName = "XmlPrettyPrintLineLength";
-            public const string XmlPrettyPrintTabSizePreferenceName = "XmlPrettyPrintTabSize";
+            public const string XmlPrettyPrint = "XmlPrettyPrint";
+            public const string XmlPrettyPrintLineLength = "XmlPrettyPrintLineLength";
+            public const string XmlPrettyPrintTabSize = "XmlPrettyPrintTabSize";
 
             public const string FilenameSetting = "FilenameSetting";
             public const string ForceName = "ForceName";
@@ -62,28 +87,5 @@ namespace ConfigGen.Api.Tests
             public const string TemplateTypeResolutionFailure = "TemplateTypeResolutionFailure";
             public const string UnknownTemplateType = "UnknownTemplateType";
         }
-
-        private static Lazy<IEnumerable<PreferenceGroupInfo>> lazyPreferenceGroups;
-
-        [NotNull]
-        protected static IDictionary<string, string> PreferencesToSupplyToGenerator;
-
-
-        Establish context = () =>
-        {
-            ContainerBuilder.RegisterModule<GenerationServiceModule>();
-
-            lazyPreferenceGroups = new Lazy<IEnumerable<PreferenceGroupInfo>>(() =>  Subject.GetPreferences());
-            PreferencesToSupplyToGenerator = new Dictionary<string, string>();
-            Result = null;
-        };
-
-        Cleanup cleanup = () =>
-        {
-
-        };
-
-        [NotNull]
-        protected static IEnumerable<PreferenceGroupInfo> PreferenceGroups => lazyPreferenceGroups.Value;
     }
 }

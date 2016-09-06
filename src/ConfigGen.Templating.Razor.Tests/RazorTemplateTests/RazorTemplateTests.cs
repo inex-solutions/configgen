@@ -377,4 +377,25 @@ namespace ConfigGen.Templating.Razor.Tests.RazorTemplateTests
 
         It the_resulting_should_indicate_a_unicode_encoding = () => RenderResult.Encoding.ShouldBeOfExactType<UTF8Encoding>();
     }
+
+    public class when_rendering_a_template_which_sets_a_default_preference : RazorTemplateTestBase
+    {
+        Establish context = () =>
+        {
+            TemplateContents = "@{Model.Preferences.MyKnownPreference=true;}<root>hello</root>";
+            Configuration = new Configuration("Configuration1", new Dictionary<string, object>());
+            ExpectedOutput = "<root>hello</root>";
+            Subject.Load(TemplateContents.ToStream(Encoding.UTF8));
+        };
+
+        Because of = () => RenderResult = Subject.Render(Configuration);
+
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
+
+        It the_preference_should_have_been_applied_as_a_default =
+            () => MockPreferencesManager.Verify(manager =>
+                manager.ApplyDefaultPreferences(new[] {new KeyValuePair<string, string>("MyKnownPreference", true.ToString())}));
+    }
 }

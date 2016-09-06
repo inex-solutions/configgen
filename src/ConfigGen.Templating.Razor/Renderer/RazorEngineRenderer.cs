@@ -81,16 +81,16 @@ namespace ConfigGen.Templating.Razor.Renderer
 
         public RazorTemplateRenderResult Render([NotNull] IDictionary<string,object> settings)
         {
-            var settingsModel = new DictionaryBackedDynamicModel(settings);
-
             try
             {
-                var result = _razorEngineService.Run(_templateKey, null, new RazorModel(settingsModel));
+                var razorModel = new RazorModel(settings);
+                var result = _razorEngineService.Run(_templateKey, null, razorModel);
 
                 return new RazorTemplateRenderResult(
                     renderedResult: result,
-                    usedTokens: settingsModel.AccessedTokens,
-                    unrecognisedTokens: settingsModel.UnrecognisedTokens);
+                    usedTokens: razorModel.AccessedTokens,
+                    unrecognisedTokens: razorModel.UnrecognisedTokens,
+                    appliedPreferences: razorModel.AppliedPreferences);
             }
             catch (Exception ex)
             {

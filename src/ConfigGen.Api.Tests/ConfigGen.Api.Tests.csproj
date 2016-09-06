@@ -66,6 +66,7 @@
     <Compile Include="PreferenceHandlingTests\PreferenceHandlingTests.cs" />
     <Compile Include="PrettyPrintTests\PrettyPrintTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplatePreferencesTests\TemplatePreferencesTests.cs" />
     <Compile Include="TemplateTypeSelectionTests\TemplateTypeSelectionTests.cs" />
     <Compile Include="TokenUsageTests\TokenUsageTests.cs" />
     <Compile Include="WarningAndErrorTests\WarningAndErrorTests.cs" />

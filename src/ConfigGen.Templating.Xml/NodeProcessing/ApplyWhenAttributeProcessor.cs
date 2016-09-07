@@ -24,8 +24,8 @@ using System.Xml.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {

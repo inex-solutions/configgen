@@ -22,7 +22,7 @@
 using System;
 using System.Collections.Generic;
 using ConfigGen.Api.Contract;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {

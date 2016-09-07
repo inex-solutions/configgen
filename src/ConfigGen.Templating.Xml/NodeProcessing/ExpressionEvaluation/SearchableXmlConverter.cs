@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using System.Xml;
 using ConfigGen.Domain.Contract.Settings;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing.ExpressionEvaluation
 {

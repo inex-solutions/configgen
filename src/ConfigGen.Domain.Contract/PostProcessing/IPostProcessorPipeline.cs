@@ -20,7 +20,7 @@
 #endregion
 
 using ConfigGen.Domain.Contract.Template;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain.Contract.PostProcessing
 {

@@ -22,7 +22,7 @@
 using System;
 using System.IO;
 using ConfigGen.Domain.Contract.Settings;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain.Contract.Template
 {

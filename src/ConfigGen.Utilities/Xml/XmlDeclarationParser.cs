@@ -23,8 +23,8 @@ using System;
 using System.IO;
 using System.Text;
 using System.Xml;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Xml
 {

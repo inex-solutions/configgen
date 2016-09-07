@@ -22,8 +22,8 @@
 using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract.Settings;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Filtering
 {

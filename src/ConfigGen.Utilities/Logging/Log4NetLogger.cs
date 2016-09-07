@@ -20,7 +20,7 @@
 #endregion
 
 using System;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 using log4net;
 
 namespace ConfigGen.Utilities.Logging

@@ -20,7 +20,7 @@
 #endregion
 
 using Autofac;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {

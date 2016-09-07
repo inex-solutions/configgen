@@ -25,8 +25,8 @@ using System.IO;
 using System.Security;
 using System.Text;
 using System.Xml;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.IO;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.Xml
 {

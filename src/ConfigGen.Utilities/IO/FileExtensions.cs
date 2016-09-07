@@ -20,8 +20,8 @@
 #endregion
 
 using System.IO;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Utilities.IO
 {

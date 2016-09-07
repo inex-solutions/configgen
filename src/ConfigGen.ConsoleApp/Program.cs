@@ -21,7 +21,7 @@
 
 using System;
 using System.Diagnostics;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {

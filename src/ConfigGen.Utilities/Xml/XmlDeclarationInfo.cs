@@ -21,7 +21,7 @@
 
 using System.Text;
 using System.Xml;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Utilities.Xml
 {

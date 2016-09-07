@@ -29,7 +29,7 @@ using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Templating.Razor.Renderer;
 using ConfigGen.Utilities;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 using RazorEngine.Templating;
 using ITemplate = ConfigGen.Domain.Contract.Template.ITemplate;
 

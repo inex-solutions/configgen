@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using System.Data;
 using ConfigGen.Domain.Contract;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Settings.Excel
 {

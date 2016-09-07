@@ -28,7 +28,7 @@ using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 using Machine.Specifications;
 using Moq;
 

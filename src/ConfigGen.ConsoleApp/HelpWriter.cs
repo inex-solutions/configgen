@@ -23,9 +23,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ConfigGen.Api.Contract;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Logging;
-using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {

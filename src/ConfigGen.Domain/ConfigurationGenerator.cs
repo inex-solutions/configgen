@@ -31,8 +31,8 @@ using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.IO;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
 {

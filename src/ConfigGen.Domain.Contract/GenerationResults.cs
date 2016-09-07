@@ -21,7 +21,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain.Contract
 {

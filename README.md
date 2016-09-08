@@ -1,3 +1,5 @@
+_The full ConfigGen wiki can be found [here] (https://github.com/inex-solutions/configgen/wiki)_
+
 **NOTE: ConfigGen v2 is still in beta.**
 
 This version of ConfigGen is a re-write of the original [ConfigGen](https://configgen.codeplex.com/).

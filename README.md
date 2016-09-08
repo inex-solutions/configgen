@@ -1,4 +1,4 @@
-_The full ConfigGen wiki can be found [here] (https://github.com/inex-solutions/configgen/wiki)_
+_The full ConfigGen wiki can be found [here] (https://github.com/inex-solutions/configgen/wiki)._
 
 **NOTE: ConfigGen v2 is still in beta.**
 

@@ -12,9 +12,9 @@ Welcome to ConfigGen - primarily a configuration file generator, but also a gene
 
 ##Overview (or "why do I need ConfigGen?")
 
-ConfigGen's main aim is to relieve you from the tyranny of managing configurations files for all your environments and machines. 
+ConfigGen's main aim is to relieve you from the tyranny of managing configuration files for all your environments and machines. 
 
-Rather than having to manually maintain copies of files for each workstation, server, or environment, ConfigGen reduces the problem to a single template (the core of your configuration file) together with a configuration spreadsheet that contains the individual settings for each machine or environment.
+Rather than having to manually maintain configuration files for each workstation, server, or environment, ConfigGen reduces the problem to a single template (the core of your configuration file) together with a configuration spreadsheet that contains the individual settings for each machine or environment.
 
 ### A simple example
 

@@ -5,7 +5,7 @@
         <version>2.0.13-beta</version>
         <authors>Rob Levine</authors>
         <owners>Rob Levine</owners>
-        <licenseUrl>https://github.com/inex-solutions/configgen</licenseUrl>
+        <licenseUrl>https://github.com/inex-solutions/configgen/wiki/licensing</licenseUrl>
         <projectUrl>https://github.com/inex-solutions/configgen</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>.Net Configuration File Generator</description>

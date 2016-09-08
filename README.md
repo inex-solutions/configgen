@@ -14,24 +14,9 @@ ConfigGen's main aim is to relieve you from the tyranny of managing configuratio
 
 Rather than having to manually maintain copies of files for each workstation, server, or environment, ConfigGen reduces the problem to a single template (the core of your configuration file) together with a configuration spreadsheet that contains the individual settings for each machine or environment.
 
-At it simplest, the template file is your existing configuration file where the values that vary between machines are replaced with tokens, and the spreadsheet is a tabulated view of the value of these tokens for each machine. ConfigGen also allows the structure of the configuration file to vary between environments. 
+### A simple example
 
-So why do you need it? Here are a few reasons:
-
-* You can see all the different configuration settings for all your environments and machines tabulated in a single spreadsheet
-* When your configuration file is changed, it only needs to be changed in one place.
-* The tabulated view makes it easy to spot missing configuration data for certain machines: no more deploying to UAT, only to find your app fails due to a config change that was applied to your dev boxes only.
-ConfigGen warns if any inconsistencies are found between the template file and the settings spreadsheet.
-
-## How it works
-To generate a configuration file, you simply execute ConfigGen, supplying both a template file and a configuration settings file. ConfigGen then generates configuration files for all the specified environments or machines.
-
-### Template file
-The template file forms the basis of the files to be generated.
-
-Template files can be written as either xml, or razor. More information can be found [here](https://github.com/inex-solutions/configgen/wiki/template-files).
-
-Below is a simple example of an xml template file:
+Here is a simple example of an xml template file (mytemplatefile.xml):
 
     <?xml version="1.0" encoding="utf-8"?>
     <configuration>
@@ -41,13 +26,7 @@ Below is a simple example of an xml template file:
       </appSettings>
     </configuration>
 
-
-### Settings spreadsheet 
-The configuration settings file contains the values for any tokens specified in the template. This is typically a spreadsheet or csv file, although a more sophisticated hierarchical xml format is also supported. 
-
-For more information on settings file formats, see [here](https://github.com/inex-solutions/configgen/wiki/settings-files).
-
-Below is a simple example of a settings spreadsheet file:
+and here is a simple example of a settings spreadsheet file (mysettingsfile.xls):
 
 | MachineName   | Environment | LogLevel |
 | ---           | ---         | ---      |
@@ -59,14 +38,22 @@ Below is a simple example of a settings spreadsheet file:
 | | |
 | Default       | DEV         | DEBUG    |
 
-### Running ConfigGen
-By saving the sample template file as an xml file, and configuration settings file above as an excel spreadsheet, you can invoke ConfigGen with
+These can be run through ConfigGen with the following command line:
 
     cfg.exe --template-file mytemplatefile.xml --settings-file mysettingsfile.xls
 
-This will generate 5 configuration files (one for each environment specified in the spreadsheet), each in their own sub-directory within a top-level directory named `Configs`.
+which results in 5 files being generated (one for each environment specified in the spreadsheet), each in its own sub-directory within a top-level directory named `Configs`:
 
-For example, the ProdServer configuration file will contain:
+    Configs
+      +- DevServer.xml
+      +- UatServer.xml
+      +- ProdServer.xml
+      +- MyWorkstation.xml
+      +- Default.xml
+
+Each file will have had its tokens (`[%Environment%]` and `[%LogLevel%]` in the example above) replaced with the relevant value from the settings spreadsheet.
+
+For example, the ProdServer.xml file will contain:
 
     <?xml version="1.0" encoding="utf-8"?>
     <configuration>
@@ -76,10 +63,20 @@ For example, the ProdServer configuration file will contain:
       </appSettings>
     </configuration>
 
-## More Information
-ConfigGen allows templates to be authored in [several different file formats] (https://github.com/inex-solutions/configgen/wiki/template-files). More advanced examples of these support changes to the structure of your configuration files depending on the values in the configuration settings spreadsheet.
+So why do you need it? Here are a few reasons:
 
-Configuration settings files can also be supplied [in several different file formats] (inex-solutions/configgen/wiki/configuration-settings-files).
+* You can see all the different configuration settings for all your environments and machines tabulated in a single spreadsheet
+* When your configuration file is changed, it only needs to be changed in one place.
+* The tabulated view makes it easy to spot missing configuration data for certain machines: no more deploying to UAT, only to find your app fails due to a config change that was applied to your dev boxes only.
+ConfigGen warns if any inconsistencies are found between the template file and the settings spreadsheet.
+
+## Further reading
+Template files, such as the example above, can be written as either xml, or razor. 
+More advanced examples of these support changes to the structure of your configuration files depending on the values in the configuration settings spreadsheet.
+More information can be found [here](https://github.com/inex-solutions/configgen/wiki/template-files).
+
+Settings files, such as the example above, are typically a spreadsheet or csv file, although a more sophisticated hierarchical xml format is also supported. 
+For more information on settings file formats, see [here](https://github.com/inex-solutions/configgen/wiki/settings-files).
 
 There are also [filtering options] (https://github.com/inex-solutions/configgen/wiki/filtering-options) to control which configurations are generated from a spreadsheet, [output options] (https://github.com/inex-solutions/configgen/wiki/file-output-options) to control how files are written out, and a variety of other options too.
 

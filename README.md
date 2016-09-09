@@ -47,11 +47,16 @@ These can be run through ConfigGen with the following command line:
 which results in 5 files being generated (one for each environment specified in the spreadsheet), each in its own sub-directory within a top-level directory named `Configs`:
 
     Configs
-      +- DevServer.xml
-      +- UatServer.xml
-      +- ProdServer.xml
-      +- MyWorkstation.xml
-      +- Default.xml
+      +- DevServer
+         +- DevServer.xml
+      +- UatServer
+         +- UatServer.xml
+      +- ProdServer
+         +- ProdServer.xml
+      +- MyWorkstation
+         +- MyWorkstation.xml
+      +- Default
+         +- Default.xml
 
 Each file will have had its tokens (`[%Environment%]` and `[%LogLevel%]` in the example above) replaced with the relevant value from the settings spreadsheet.
 

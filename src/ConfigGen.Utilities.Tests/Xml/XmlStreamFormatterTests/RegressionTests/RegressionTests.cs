@@ -77,7 +77,7 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
         Establish context = () =>
         {
             xml =
-@"<configuration xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+@"<configuration xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <configSections>
     <section name=""MyCustomConfigSection"" type=""MyAssembly.ConfigSections.MyCustomConfigSection, MyAssembly"" />
   </configSections>
@@ -91,7 +91,7 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
             XmlStreamFormatterOptions.MaxElementLineLength = 18;
 
             ExpectedResult = @"<configuration
-   xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+   xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
    <configSections>
       <section
          name=""MyCustomConfigSection""

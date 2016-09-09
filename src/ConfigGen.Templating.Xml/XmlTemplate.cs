@@ -36,7 +36,10 @@ namespace ConfigGen.Templating.Xml
     public class XmlTemplate : ITemplate
     {
         [NotNull]
-        public const string ConfigGenXmlNamespace = "http://roblevine.co.uk/Namespaces/ConfigGen/1/0/";
+        public const string LegacyConfigGenXmlNamespace = "http://roblevine.co.uk/Namespaces/ConfigGen/1/0/";
+
+        [NotNull]
+        public const string ConfigGenXmlNamespace = "http://inex-solutions.com/Namespaces/ConfigGen/1/1/";
 
         [NotNull]
         public const string XmlTemplateErrorSource = nameof(XmlTemplate);

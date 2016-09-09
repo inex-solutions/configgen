@@ -63,7 +63,7 @@ namespace ConfigGen.Templating.Xml.Tests.ConfigGenMarkupTests
     {
         Establish context = () =>
         {
-            TemplateContents = @"<root xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+            TemplateContents = @"<root xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <child key=""value"" />
 </root>";
             ExpectedOutput = @"<root>
@@ -110,7 +110,7 @@ namespace ConfigGen.Templating.Xml.Tests.ConfigGenMarkupTests
     {
         Establish context = () =>
         {
-            TemplateContents = @"<root xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+            TemplateContents = @"<root xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <child key=""value"" cg:unknownAttribute=""what??""/>
 </root>";
 
@@ -134,7 +134,7 @@ namespace ConfigGen.Templating.Xml.Tests.ConfigGenMarkupTests
     {
         Establish context = () =>
         {
-            TemplateContents = @"<root xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+            TemplateContents = @"<root xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <child key=""value"" />
   <cg:unknownElement>what??</cg:unknownElement>
 </root>";

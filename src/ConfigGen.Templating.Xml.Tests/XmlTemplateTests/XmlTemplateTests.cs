@@ -26,6 +26,7 @@ using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpecShouldExtensions;
+using ConfigGen.Tests.Common.MSpecShouldExtensions.Error;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.LoadResultExtensions;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
@@ -68,6 +69,35 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
         Because of = () => LoadResult = Subject.Load(TemplateContents.ToStream());
 
         It the_load_passes = () => LoadResult.ShouldIndicateSuccess();
+    }
+
+    [Subject(typeof(XmlTemplate))]
+    public class when_loading_a_template_which_contains_a_node_in_the_current_configgen_namespace : TemplateTestBase<XmlTemplate, XmlTemplateModule>
+    {
+        Establish context = () =>
+        {
+            TemplateContents = @"<root xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/""><cg:child /></root>";
+        };
+
+        Because of = () => LoadResult = Subject.Load(TemplateContents.ToStream());
+
+        It the_load_passes = () => LoadResult.ShouldIndicateSuccess();
+    }
+
+    [Subject(typeof(XmlTemplate))]
+    public class when_loading_a_template_which_contains_a_node_in_the_legacy_configgen_namespace : TemplateTestBase<XmlTemplate, XmlTemplateModule>
+    {
+        Establish context = () =>
+        {
+            TemplateContents = @"<root xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/""><cg:child /></root>";
+        };
+
+        Because of = () => LoadResult = Subject.Load(TemplateContents.ToStream());
+
+        It the_load_fails = () => LoadResult.Success.ShouldBeFalse();
+
+        It the_error_indicates_a_node_in_the_legacy_namespace_was_present =
+            () => LoadResult.TemplateLoadErrors.ShouldContainSingleErrorWithCode(XmlTemplateErrorCodes.LegacyXmlTemplateNamespace);
     }
 
     [Subject(typeof(XmlTemplate))]
@@ -275,7 +305,7 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
         {
             TemplateContents =
                 @"<?xml version=""1.0"" encoding=""utf-8""?>
-<xmlRoot xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+<xmlRoot xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <cg:Preferences>
     <XmlPrettyPrint>True</XmlPrettyPrint>
   </cg:Preferences>

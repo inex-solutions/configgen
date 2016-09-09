@@ -36,5 +36,8 @@ namespace ConfigGen.Templating.Xml
 
         [NotNull]
         public static readonly string ApplyWhenElseFormatError = "ApplyWhenElseFormatError";
+
+        [NotNull]
+        public static readonly string LegacyXmlTemplateNamespace = "LegacyXmlTemplateNamespace";
     }
 }

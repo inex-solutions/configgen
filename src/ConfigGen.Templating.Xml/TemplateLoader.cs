@@ -21,6 +21,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using ConfigGen.Utilities.Annotations;
 
@@ -37,6 +38,16 @@ namespace ConfigGen.Templating.Xml
             try
             {
                 var template = XElement.Load(templateStream, LoadOptions.PreserveWhitespace);
+                XNamespace legacyConfigGenXmlNamespace = XmlTemplate.LegacyConfigGenXmlNamespace;
+                var elements = template.Descendants().Where(n => n.Name.Namespace == legacyConfigGenXmlNamespace);
+                if (elements.Any())
+                {
+                    var templateLoadError = new XmlTemplateError(
+                        XmlTemplateErrorCodes.LegacyXmlTemplateNamespace, 
+                        $"The supplied template had one or more nodes in the legacy ConfigGen xml template namespace: {XmlTemplate.LegacyConfigGenXmlNamespace}. This is not supported in this version of ConfigGen.");
+                    return new XmlTemplateLoadResults(templateLoadError, NullXmlTemplate);
+                }
+
                 return new XmlTemplateLoadResults(template);
             }
             catch (Exception ex)

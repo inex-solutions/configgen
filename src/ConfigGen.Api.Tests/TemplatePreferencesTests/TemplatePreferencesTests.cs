@@ -135,7 +135,7 @@ namespace ConfigGen.Api.Tests.TemplatePreferencesTests
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
                 string template =
-@"<xmlRoot xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+@"<xmlRoot xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <cg:Preferences>
     <XmlPrettyPrint>True</XmlPrettyPrint>
   </cg:Preferences>
@@ -164,7 +164,7 @@ namespace ConfigGen.Api.Tests.TemplatePreferencesTests
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
                 string template =
-@"<xmlRoot xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+@"<xmlRoot xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <cg:Preferences>
     <XmlPrettyPrint>True</XmlPrettyPrint>
   </cg:Preferences>
@@ -198,7 +198,7 @@ namespace ConfigGen.Api.Tests.TemplatePreferencesTests
 
                 string template =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
-<xmlRoot xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+<xmlRoot xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <cg:Preferences>
     <UnknownPreference>true</UnknownPreference>
   </cg:Preferences>

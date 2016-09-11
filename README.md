@@ -6,13 +6,13 @@ This version of ConfigGen is a re-write of the original [ConfigGen](https://conf
 
 For the support status of ConfigGen v1 features, please see [Supported v1 features](https://github.com/inex-solutions/configgen/wiki/configgen-v1-compatibility).
 
-##ConfigGen 
+## ConfigGen
 
 Welcome to ConfigGen - primarily a configuration file generator, but also a general templating engine.
 
-##Overview (or "why do I need ConfigGen?")
+## Overview (or "why do I need ConfigGen?")
 
-ConfigGen's main aim is to relieve you from the tyranny of managing configuration files for all your environments and machines. 
+ConfigGen's main aim is to relieve you from the tyranny of managing configuration files for all your environments and machines.
 
 Rather than having to manually maintain configuration files for each workstation, server, or environment, ConfigGen reduces the problem to a single template (the core of your configuration file) together with a configuration spreadsheet that contains the individual settings for each machine or environment.
 
@@ -73,12 +73,11 @@ So why do you need it? Here are a few reasons:
 ConfigGen warns if any inconsistencies are found between the template file and the settings spreadsheet.
 
 ## Further reading
-Template files, such as the example above, can be written as either xml, or razor. 
+Template files, such as the example above, can be written as either xml, or razor.
 More advanced examples of these support changes to the structure of your configuration files depending on the values in the configuration settings spreadsheet.
 More information can be found [here](https://github.com/inex-solutions/configgen/wiki/template-files).
 
-Settings files, such as the example above, are typically a spreadsheet or csv file, although a more sophisticated hierarchical xml format is also supported. 
+Settings files, such as the example above, are typically a spreadsheet or csv file, although a more sophisticated hierarchical xml format is also supported.
 For more information on settings file formats, see [here](https://github.com/inex-solutions/configgen/wiki/settings-files).
 
 There are also [filtering options] (https://github.com/inex-solutions/configgen/wiki/filtering-options) to control which configurations are generated from a spreadsheet, [output options] (https://github.com/inex-solutions/configgen/wiki/file-output-options) to control how files are written out, and a variety of other options too.
-

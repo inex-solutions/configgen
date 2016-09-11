@@ -41,8 +41,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleFiles", "SampleFiles", "{D0A46783-A6F0-4D79-9247-811E35B48CF3}"
 	ProjectSection(SolutionItems) = preProject
 		SampleFiles\App.Config.Settings.xml = SampleFiles\App.Config.Settings.xml
+		SampleFiles\Settings.NoSettingsWorksheet.xls = SampleFiles\Settings.NoSettingsWorksheet.xls
+		SampleFiles\SettingsWithNumColsToSkipPreference.OneConfiguration.TwoValues.xls = SampleFiles\SettingsWithNumColsToSkipPreference.OneConfiguration.TwoValues.xls
+		SampleFiles\SettingsWithUnknownPreference.OneConfiguration.TwoValues.xls = SampleFiles\SettingsWithUnknownPreference.OneConfiguration.TwoValues.xls
 		SampleFiles\SimpleSettings.FiveConfigurations.TwoValues.xls = SampleFiles\SimpleSettings.FiveConfigurations.TwoValues.xls
 		SampleFiles\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls = SampleFiles\SimpleSettings.FiveConfigurationsPlusDefault.TwoValues.xls
+		SampleFiles\SimpleSettings.OneConfiguration.DifferentWorksheetName.TwoValues.xls = SampleFiles\SimpleSettings.OneConfiguration.DifferentWorksheetName.TwoValues.xls
+		SampleFiles\SimpleSettings.OneConfiguration.OneValueOneNull.xls = SampleFiles\SimpleSettings.OneConfiguration.OneValueOneNull.xls
 		SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls = SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls
 		SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.csv = SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.csv
 		SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls = SampleFiles\SimpleSettings.TwoConfigurations.TwoValues.xls

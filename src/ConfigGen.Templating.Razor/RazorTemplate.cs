@@ -24,11 +24,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Templating.Razor.Renderer;
 using ConfigGen.Utilities;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 using RazorEngine.Templating;
 using ITemplate = ConfigGen.Domain.Contract.Template.ITemplate;
 
@@ -46,13 +47,19 @@ namespace ConfigGen.Templating.Razor
         [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
 
+        [NotNull]
+        private readonly IPreferencesManager _preferencesManager;
+
         private bool _loadCalled;
 
         public RazorTemplate(
-            [NotNull] ITokenUsageTracker tokenUsageTracker)
+            [NotNull] ITokenUsageTracker tokenUsageTracker,
+            [NotNull] IPreferencesManager preferencesManager)
         {
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             _tokenUsageTracker = tokenUsageTracker;
+            _preferencesManager = preferencesManager;
         }
 
         [NotNull]
@@ -86,7 +93,6 @@ namespace ConfigGen.Templating.Razor
             try
             {
                 _razorEngineRenderer = _razorEngineRendererHost.CreateHostedInstance();
-
                 razorTemplateLoadResult = _razorEngineRenderer.LoadTemplate(_loadedTemplate);
             }
             catch (TemplateParsingException ex)
@@ -131,11 +137,23 @@ namespace ConfigGen.Templating.Razor
                 if (!renderResult.Success)
                 {
                     return new SingleTemplateRenderResults(
-                    configuration: configuration,
-                    status: TemplateRenderResultStatus.Failure,
-                    renderedResult: null,
-                    encoding: _encoding,
-                    errors: new[] { new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, renderResult.Error) });
+                        configuration: configuration,
+                        status: TemplateRenderResultStatus.Failure,
+                        renderedResult: null,
+                        encoding: _encoding,
+                        errors: new[] {new RazorTemplateError(RazorTemplateErrorCodes.GeneralRazorTemplateError, renderResult.Error)});
+                }
+
+                var preferenceFailures = _preferencesManager.ApplyDefaultPreferences(renderResult.AppliedPreferences);
+
+                if (preferenceFailures.Any())
+                {
+                    return new SingleTemplateRenderResults(
+                        configuration: configuration,
+                        status: TemplateRenderResultStatus.Failure,
+                        renderedResult: null,
+                        encoding: _encoding,
+                        errors: preferenceFailures);
                 }
 
                 foreach (var settingName in settings)

@@ -22,7 +22,7 @@
 using System;
 using System.Xml.Linq;
 using ConfigGen.Utilities;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {

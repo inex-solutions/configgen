@@ -22,8 +22,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.Contract.Preferences
 {

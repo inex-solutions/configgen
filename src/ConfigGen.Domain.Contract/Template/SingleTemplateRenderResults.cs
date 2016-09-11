@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConfigGen.Domain.Contract.Settings;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain.Contract.Template
 {

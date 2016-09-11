@@ -20,7 +20,7 @@
 #endregion
 
 using ConfigGen.Domain.Contract;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Settings.Excel
 {
@@ -28,7 +28,8 @@ namespace ConfigGen.Settings.Excel
     {
         public static readonly string ExcelSettingsLoadErrorSource = "ExcelSettingsLoader";
 
-        public ExcelSettingsLoadError([NotNull] string code, [CanBeNull] string detail) : base(ExcelSettingsLoadErrorSource, code, detail)
+        public ExcelSettingsLoadError([NotNull] string code, [CanBeNull] string detail) 
+            : base(ExcelSettingsLoadErrorSource, code, detail)
         {
         }
     }

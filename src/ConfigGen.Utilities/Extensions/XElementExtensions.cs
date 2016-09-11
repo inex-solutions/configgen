@@ -23,7 +23,7 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Utilities.Extensions
 {

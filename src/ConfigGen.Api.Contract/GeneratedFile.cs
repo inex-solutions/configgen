@@ -21,12 +21,18 @@
 
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Api.Contract
 {
+    /// <summary>
+    /// Represents the result of a generation attempt for a single file.
+    /// </summary>
     public class GeneratedFile
     {
+        /// <summary>
+        /// Creates a new instance of the <see cref="GeneratedFile"/> class.
+        /// </summary>
         public GeneratedFile(
             [NotNull] string configurationName,
             [CanBeNull] string fullPath,
@@ -54,30 +60,56 @@ namespace ConfigGen.Api.Contract
             HasChanged = hasChanged;
         }
 
+        /// <summary>
+        /// Gets the name of the configuration of this file.
+        /// </summary>
         [NotNull]
         public string ConfigurationName { get; }
 
+        /// <summary>
+        /// Gets the full path to the generated file, if any, otherwise null.
+        /// </summary>
         [CanBeNull]
         public string FullPath { get; }
 
+        /// <summary>
+        /// True if the generated file has changed, otherwise false.
+        /// </summary>
         public bool HasChanged { get; }
 
+        /// <summary>
+        /// Get a collection of errors, if any, that occurred during the generation of this file.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<GenerationIssue> Errors { get; }
 
+        /// <summary>
+        /// Get a collection of warnings, if any, that occurred during the generation of this file.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<GenerationIssue> Warnings { get; }
 
+        /// <summary>
+        /// Gets a collection of tokens which were used during the generation of this file.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<string> UsedTokens { get; }
 
+
+        /// <summary>
+        /// Gets a collection of tokens which were not used during the generation of this file.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<string> UnusedTokens { get; }
 
+
+        /// <summary>
+        /// Gets a collection of tokens which were specified in the template, but not in the configuration.
+        /// </summary>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<string> UnrecognisedTokens { get; }

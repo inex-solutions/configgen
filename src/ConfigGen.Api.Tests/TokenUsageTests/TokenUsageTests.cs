@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Utilities.Extensions;
@@ -36,11 +37,11 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
         //HACK: Not at all happy that this references ConfigGen.Templating.Razor
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
-                string template = @"Razor Template Token1: @Model.Value1, Unrecognised Token: @Model.UnknownToken";
+                string template = @"Razor Template Token1: @Model.Settings.Value1, Unrecognised Token: @Model.Settings.UnknownToken";
                 File.WriteAllText("App.Config.Template.razor", template);
 
                 PreferencesToSupplyToGenerator = new Dictionary<string, string>
@@ -68,6 +69,40 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
             It the_result_lists_the_unsed_token_as_unused =
                 () => Result.Configuration("Configuration1").UnusedTokens.ShouldContainOnly("Value2");
         }
+
+        internal class when_a_settings_file_contains_a_null_for_one_value : GenerationServiceTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.OneValueOneNull.xls", "App.Config.Settings.xls");
+
+                string template = @"Razor Template Token1: @Model.Settings.Value1, Null Token: @Model.Settings.Value2";
+                File.WriteAllText("App.Config.Template.razor", template);
+
+                PreferencesToSupplyToGenerator = new Dictionary<string, string>
+                {
+                    {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
+                };
+            };
+
+            Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It no_errors_were_raised =
+                () => Result.Configuration("Configuration1").Errors.ShouldBeEmpty();
+
+            It the_result_indicates_the_supplied_token_and_the_configuration_name_token_were_used =
+                () => Result.Configuration("Configuration1").UsedTokens.ShouldContainOnly("Value1", "MachineName");
+
+            It the_null_token_is_listed_as_unrecognised =
+                () => Result.Configuration("Configuration1").UnrecognisedTokens.ShouldContainOnly("Value2");
+
+            It no_tokens_are_listed_as_unused =
+             () => Result.Configuration("Configuration1").UnusedTokens.ShouldBeEmpty();
+        }
     }
 
     namespace XmlTemplate
@@ -77,7 +112,7 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
         //HACK: Not at all happy that this references ConfigGen.Templating.Xml
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {
-            private Establish context = () =>
+            Establish context = () =>
             {
                 Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
 
@@ -107,6 +142,40 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
 
             It the_result_lists_the_unsed_token_as_unused =
                 () => Result.Configuration("Configuration1").UnusedTokens.ShouldContainOnly("Value2");
+        }
+
+        internal class when_a_settings_file_contains_a_null_for_one_value : GenerationServiceTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.OneValueOneNull.xls", "App.Config.Settings.xls");
+
+                string template = @"<root><first>[%Value1%]</first><second>[%Value2%]</second></root>";
+                File.WriteAllText("App.Config.Template.xml", template);
+
+                PreferencesToSupplyToGenerator = new Dictionary<string, string>
+                {
+                    { PreferenceNames.TemplateFilePath, "App.Config.Template.xml" }
+                };
+            };
+
+            Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It no_errors_were_raised =
+                () => Result.Configuration("Configuration1").Errors.ShouldBeEmpty();
+
+            It the_result_indicates_the_supplied_token_and_the_configuration_name_token_were_used =
+                () => Result.Configuration("Configuration1").UsedTokens.ShouldContainOnly("Value1", "MachineName");
+
+            It the_null_token_is_listed_as_unrecognised =
+                () => Result.Configuration("Configuration1").UnrecognisedTokens.ShouldContainOnly("Value2");
+
+            It no_tokens_are_listed_as_unused =
+             () => Result.Configuration("Configuration1").UnusedTokens.ShouldBeEmpty();
         }
     }
 }

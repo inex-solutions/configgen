@@ -21,7 +21,7 @@
 
 using System.Xml.Linq;
 using ConfigGen.Domain.Contract.Settings;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {

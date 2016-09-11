@@ -57,11 +57,10 @@ namespace ConfigGen.Settings.Excel
         public IEnumerable<IDictionary<string, object>> ProcessDataRows(
             IEnumerable<object[]> dataRows, 
             IList<ExcelColumnInfo> columnList,
-            SpreadsheetPreferences spreadsheetPreferences)
+            ExcelSettingsPreferences spreadsheetPreferences)
         {
             if (dataRows == null) throw new ArgumentNullException(nameof(dataRows));
             if (columnList == null) throw new ArgumentNullException(nameof(columnList));
-            _cellDataParser.SetParsingPreferences(spreadsheetPreferences.EmptyStringPlaceholder, spreadsheetPreferences.NullPlaceholder);
 
             int dataRowCount = 0;
             int columnsPerRow = 0;

@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain
 {

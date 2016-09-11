@@ -22,7 +22,7 @@
 using System;
 using System.IO;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {

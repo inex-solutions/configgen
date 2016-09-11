@@ -35,7 +35,7 @@ namespace ConfigGen.Settings.Excel
             builder.RegisterType<SpreadsheetDataProcessor>().As<ISpreadsheetDataProcessor>();
             builder.RegisterType<ExcelSettingsLoader>().As<ISettingsLoader>().As<ExcelSettingsLoader>();
             builder.RegisterType<ExcelSettingsPreferenceGroup>().As<IPreferenceGroup>();
-
+            builder.RegisterType<SpreadsheetPreferencesLoader>().As<ISpreadsheetPreferencesLoader>();
         }
     }
 }

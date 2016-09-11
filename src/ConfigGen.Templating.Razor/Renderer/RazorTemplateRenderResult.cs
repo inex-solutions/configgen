@@ -22,23 +22,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Razor.Renderer
 {
     [Serializable]
     public class RazorTemplateRenderResult
     {
+        private IDictionary<string, object> appliedPreferences;
+
         public RazorTemplateRenderResult(string error)
         {
             Error = error;
             UsedTokens = Enumerable.Empty<string>();
             UnrecognisedTokens = Enumerable.Empty<string>();
+            AppliedPreferences = new Dictionary<string, string>();
         }
 
-        public RazorTemplateRenderResult(string renderedResult, IEnumerable<string> usedTokens, IEnumerable<string> unrecognisedTokens)
+        public RazorTemplateRenderResult(string renderedResult, IEnumerable<string> usedTokens, IEnumerable<string> unrecognisedTokens, IDictionary<string, string> appliedPreferences)
         {
             RenderedResult = renderedResult;
+            AppliedPreferences = appliedPreferences ?? new Dictionary<string, string>();
             UsedTokens = usedTokens ?? Enumerable.Empty<string>();
             UnrecognisedTokens = unrecognisedTokens ?? Enumerable.Empty<string>();
             Success = true;
@@ -55,5 +59,8 @@ namespace ConfigGen.Templating.Razor.Renderer
         public IEnumerable<string> UsedTokens { get; }
 
         public string RenderedResult { get; }
+
+        [NotNull]
+        public IDictionary<string, string> AppliedPreferences { get; set; }
     }
 }

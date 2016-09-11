@@ -20,7 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {

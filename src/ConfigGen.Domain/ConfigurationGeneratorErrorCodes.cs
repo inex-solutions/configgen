@@ -19,7 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain
 {

@@ -1,1 +1,3 @@
-Add option to supply preferences in settings spreadsheet / templates.
+Possibly convert token usage stuff to an event bus, and use to wire in warnings, such as preference not found (e.g. in template preferences loader).
+Consider moving tests to csv settings for readability (rather than embedded spreadsheets).
+Logging.

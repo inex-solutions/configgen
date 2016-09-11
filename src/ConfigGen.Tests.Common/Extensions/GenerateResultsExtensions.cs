@@ -27,7 +27,7 @@ using System.Text;
 using ConfigGen.Api.Contract;
 using ConfigGen.Tests.Common.MSpecShouldExtensions;
 using ConfigGen.Utilities;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common.Extensions

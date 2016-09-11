@@ -22,7 +22,7 @@
 using System;
 using System.IO;
 using System.Text;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Utilities
 {

@@ -20,24 +20,27 @@
 #endregion
 
 using System;
-using System.Dynamic;
+using System.Collections.Generic;
+using System.Linq;
+using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Annotations;
 
-namespace ConfigGen.Templating.Razor.Renderer
+namespace ConfigGen.Tests.Common.Extensions
 {
-    [Serializable]
-    public abstract class DynamicModel : DynamicObject
+    public static class PreferencesManagerExtensions
     {
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
+        [NotNull]
+        public static IPreferencesManager ApplyPreference([NotNull] this IPreferencesManager preferencesManager, string preferenceName, string preferenceValue)
         {
-            TryGetValue(binder.Name, out result);
-            return true;
-        }
+            if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+            var errors = preferencesManager.ApplyPreferences(new[] {new KeyValuePair<string, string>(preferenceName, preferenceValue)}).ToArray();
 
-        public override bool TrySetMember(SetMemberBinder binder, object value)
-        {
-            throw new NotSupportedException("DynamicDictionary does not support setting of members");
-        }
+            if (errors.Any())
+            {
+                throw new TestSetupException("One or more errors occurred during test setup while applying preferences", errors);
+            }
 
-        protected abstract bool TryGetValue(string name, out object result);
+            return preferencesManager;
+        }
     }
 }

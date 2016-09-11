@@ -22,7 +22,7 @@
 using System;
 using System.Linq;
 using ConfigGen.Api.Contract;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions
@@ -55,7 +55,8 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions
         {
             if (results == null) throw new ArgumentNullException(nameof(results));
 
-            if (results.Errors.Any())
+            if (results.Errors.Any()
+                || results.GeneratedFiles.Any(f => f.Errors.Any()))
             {
                 return results;
             }

@@ -23,7 +23,7 @@ using System;
 using ConfigGen.Domain.Contract.PostProcessing;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Template;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain.PostProcessing
 {

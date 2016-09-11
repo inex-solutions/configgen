@@ -23,8 +23,8 @@ using System;
 using System.IO;
 using ConfigGen.Domain.Contract.PostProcessing;
 using ConfigGen.Domain.Contract.Preferences;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Xml;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.PostProcessing
 {

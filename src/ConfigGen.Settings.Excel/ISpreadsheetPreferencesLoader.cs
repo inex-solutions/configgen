@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -18,19 +18,25 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System.Collections.Generic;
+using System.Data;
+using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.Annotations;
+
 namespace ConfigGen.Settings.Excel
 {
-    public class SpreadsheetPreferences
+    /// <summary>
+    /// Interface implemented by <see cref="SpreadsheetPreferencesLoader"/>.
+    /// </summary>
+    public interface ISpreadsheetPreferencesLoader
     {
-        public SpreadsheetPreferences()
-        {
-            NullPlaceholder = null;
-            EmptyStringPlaceholder = "[EmptyString]";
-            NumColumnsToSkip = 0;
-        }
-
-        public string EmptyStringPlaceholder { get; set; }
-        public string NullPlaceholder { get; set; }
-        public int NumColumnsToSkip { get; set; }
+        /// <summary>
+        /// Loads the spreadsheet preferences from the spreadsheet, if any, into the preferences manager.
+        /// Returns an errors that occurred during preference loading.
+        /// </summary>
+        /// <param name="spreadsheetPreferences">Dataset containing the preferences worksheet, if any.</param>
+        [NotNull]
+        IEnumerable<Error> LoadPreferences(DataSet spreadsheetPreferences);
     }
 }

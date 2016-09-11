@@ -25,10 +25,12 @@ using Autofac;
 using Autofac.Core;
 using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Domain.Contract.Template;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 using Machine.Specifications;
+using Moq;
 
 namespace ConfigGen.Tests.Common
 {
@@ -41,6 +43,8 @@ namespace ConfigGen.Tests.Common
         protected static SingleTemplateRenderResults RenderResult;
         protected static Configuration Configuration;
         protected static string ExpectedOutput;
+        protected static Mock<IPreferencesManager> MockPreferencesManager;
+
         private static IEnumerable<Configuration> configurations;
 
         Establish context = () =>
@@ -53,8 +57,10 @@ namespace ConfigGen.Tests.Common
             ExpectedOutput = null;
             TokenUsageTracker = new TokenUsageTracker();
             var containerBuilder = new ContainerBuilder();
+            MockPreferencesManager = new Mock<IPreferencesManager>();
             containerBuilder.RegisterModule<TContainerModule>();
             containerBuilder.RegisterInstance(TokenUsageTracker).As<ITokenUsageTracker>();
+            containerBuilder.RegisterInstance(MockPreferencesManager.Object).As<IPreferencesManager>();
             var container = containerBuilder.Build();
             Subject = container.Resolve<TTemplate>();
         };

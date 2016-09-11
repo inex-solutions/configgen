@@ -29,81 +29,19 @@ namespace ConfigGen.Settings.Excel
     /// </summary>
     public class CellDataParser : ICellDataParser
     {
-        private string _emptyStringValue;
-        private string _nullValue;
        // private static readonly ILog Log = LogManager.GetLogger(typeof(CellDataParser));
-
-        /// <summary>
-        /// Sets the placeholders that represent empty strings and null values. This must be called before the first call to
-        /// <see cref="GetCellValue"/>
-        /// </summary>
-        /// <param name="emptyStringValue">The placeholder representing an empty string in the spreadsheet.</param>
-        /// <param name="nullValue">The placholder representing a null (missing) value in the spreadsheet.</param>
-        public void SetParsingPreferences(string emptyStringValue, string nullValue)
-        {
-            if (emptyStringValue == nullValue)
-            {
-                throw new InvalidOperationException("Cannot initialise cellDataParser with the same value to represent empty string and null");    
-            }
-
-            _emptyStringValue = emptyStringValue;
-            _nullValue = nullValue;
-
-            if (!emptyStringValue.IsNullOrEmpty()
-                && !nullValue.IsNullOrEmpty())
-            {
-          //      Log.WarnFormat("No behaviour was specified for an empty cell in the spreadsheet. If an empty cell is encountered for a token in the spreadsheet, an error will be generated.");
-            }
-        }
 
         public object GetCellValue(object cellData)
         {
-            if (_emptyStringValue == null && _nullValue == null)
-            {
-                throw new InvalidOperationException("SetParsingPreferences must be called before the first call to this method.");
-            }
-
             bool isEmptyCell = IsCellEmpty(cellData);
             
             if (isEmptyCell)
             {
-                if (_nullValue.IsNullOrEmpty())
-                {
-                    return null;
-                }
-
-                if (_emptyStringValue.IsNullOrEmpty())
-                {
-                    return string.Empty;
-                }
-                
-                throw new SpreadsheetDataException("An empty cell for a token was encountered, but no behaviour was specified for an empty cell.");
-            }
-
-            string cellDataAsString = cellData.ToString();
-
-            if (cellDataAsString == _nullValue)
-            {
                 return null;
-            }
-           
-            if (cellDataAsString == _emptyStringValue)
-            {
-                return string.Empty;
             }
 
             return cellData;
         }
-
-        /// <summary>
-        /// Gets the placeholder value used to denote no value in the spreadsheet (as opposed to the value of an empty string)
-        /// </summary>
-        public string NullValue => _nullValue;
-
-        /// <summary>
-        /// Gets the placeholder value used to denote an empty string in the spreadsheet (as opposed to the null value indicating no value for the token.)
-        /// </summary>
-        public string EmptyStringValue => _emptyStringValue;
 
         /// <summary>
         /// Returns true if the supplied object represents a cell with no data, otherwise false.

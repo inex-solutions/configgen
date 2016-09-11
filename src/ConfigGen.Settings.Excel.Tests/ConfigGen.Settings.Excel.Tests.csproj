@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.0.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.0.0\lib\net451\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=4.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.1.0\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Machine.Specifications, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="ExcelSettingsLoaderTestBase.cs" />
     <Compile Include="ExcelSettingsLoaderTests\ExcelSettingsLoaderTests.cs" />
+    <Compile Include="PreferencesTests\PreferencesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +96,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\SampleFiles\Settings.NoSettingsWorksheet.xls">
+      <Link>SampleFiles\Settings.NoSettingsWorksheet.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.OneConfiguration.DifferentWorksheetName.TwoValues.xls">
+      <Link>SampleFiles\SimpleSettings.OneConfiguration.DifferentWorksheetName.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls">
+      <Link>SampleFiles\SimpleSettings.OneConfiguration.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SettingsWithNumColsToSkipPreference.OneConfiguration.TwoValues.xls">
+      <Link>SampleFiles\SettingsWithNumColsToSkipPreference.OneConfiguration.TwoValues.xls</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\SampleFiles\SettingsWithUnknownPreference.OneConfiguration.TwoValues.xls">
+      <Link>SampleFiles\SettingsWithUnknownPreference.OneConfiguration.TwoValues.xls</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -21,7 +21,7 @@
 
 using System;
 using System.Xml.Linq;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Xml.NodeProcessing
 {

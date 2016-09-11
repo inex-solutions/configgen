@@ -26,5 +26,6 @@ namespace ConfigGen.Settings.Excel
 
         public static readonly string WorksheetNotFound = "WorksheetNotFound";
 
+        public static readonly string PreferenceLoadError = "PreferenceLoadError";
     }
 }

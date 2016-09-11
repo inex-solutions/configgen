@@ -267,4 +267,46 @@ namespace ConfigGen.Templating.Xml.Tests.XmlTemplateTests
 
         It no_tokens_should_be_listed_as_unrecognised = () => TokenStatsFor(Configuration).UnrecognisedTokens.ShouldBeEmpty();
     }
+
+    [Subject(typeof(XmlTemplate))]
+    public class when_rendering_a_template_which_enables_the_pretty_print_preference : TemplateTestBase<XmlTemplate, XmlTemplateModule>
+    {
+        Establish context = () =>
+        {
+            TemplateContents =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+<xmlRoot xmlns:cg=""http://roblevine.co.uk/Namespaces/ConfigGen/1/0/"">
+  <cg:Preferences>
+    <XmlPrettyPrint>True</XmlPrettyPrint>
+  </cg:Preferences>
+  <Value1 attr1=""one_long_attribute"">[%ValueOne%]</Value1>
+</xmlRoot>";
+
+            ExpectedOutput =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>
+<xmlRoot>
+   <Value1
+      attr1=""one_long_attribute"">Config1-Value1</Value1>
+</xmlRoot>";
+
+            Configuration = new Configuration("Configuration1", new Dictionary<string, object> {{"ValueOne", "Config1-Value1"}});
+        };
+
+        Because of = () =>
+        {
+            Subject.Load(TemplateContents.ToStream());
+            RenderResult = Subject.Render(Configuration);
+        };
+
+        It the_resulting_status_should_indicate_success = () => RenderResult.Status.ShouldEqual(TemplateRenderResultStatus.Success);
+
+        It the_resulting_status_should_contain_no_errors = () => RenderResult.Errors.ShouldBeEmpty();
+
+        It the_resulting_output_should_have_had_the_preferences_section_removed = 
+            () => RenderResult.RenderedResult.ShouldNotContain("Preferences");
+
+        It the_xml_pretty_print_preference_should_have_been_applied_as_a_default =
+            () => MockPreferencesManager.Verify(manager =>
+                manager.ApplyDefaultPreferences(new[] {new KeyValuePair<string, string>("XmlPrettyPrint", true.ToString())}));
+    }
 }

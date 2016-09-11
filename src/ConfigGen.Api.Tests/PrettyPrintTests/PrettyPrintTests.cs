@@ -22,6 +22,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Utilities.Extensions;
@@ -84,8 +85,8 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PreferenceNames.XmlPrettyPrintPreferenceName, true.ToString()},
-                {PreferenceNames.XmlPrettyPrintLineLengthPreferenceName, 500.ToString()}
+                {PreferenceNames.XmlPrettyPrint, true.ToString()},
+                {PreferenceNames.XmlPrettyPrintLineLength, 500.ToString()}
             };
         };
 
@@ -117,8 +118,8 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PreferenceNames.XmlPrettyPrintPreferenceName, true.ToString()},
-                {PreferenceNames.XmlPrettyPrintLineLengthPreferenceName, 40.ToString()}
+                {PreferenceNames.XmlPrettyPrint, true.ToString()},
+                {PreferenceNames.XmlPrettyPrintLineLength, 40.ToString()}
             };
         };
 
@@ -148,9 +149,9 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
 
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PreferenceNames.XmlPrettyPrintPreferenceName, true.ToString()},
-                {PreferenceNames.XmlPrettyPrintLineLengthPreferenceName, 500.ToString()},
-                {PreferenceNames.XmlPrettyPrintTabSizePreferenceName, 20.ToString()},
+                {PreferenceNames.XmlPrettyPrint, true.ToString()},
+                {PreferenceNames.XmlPrettyPrintLineLength, 500.ToString()},
+                {PreferenceNames.XmlPrettyPrintTabSize, 20.ToString()},
             };
         };
 

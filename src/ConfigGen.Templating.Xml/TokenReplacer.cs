@@ -23,7 +23,7 @@ using System;
 using System.Text.RegularExpressions;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
-using JetBrains.Annotations;
+using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Templating.Xml
 {

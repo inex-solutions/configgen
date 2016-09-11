@@ -20,8 +20,8 @@
 #endregion
 
 using System.Xml.Linq;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using JetBrains.Annotations;
 using Machine.Specifications;
 using Machine.Specifications.Utility.Internal;
 

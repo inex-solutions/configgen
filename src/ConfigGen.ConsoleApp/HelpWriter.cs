@@ -23,9 +23,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ConfigGen.Api.Contract;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Logging;
-using JetBrains.Annotations;
 
 namespace ConfigGen.ConsoleApp
 {
@@ -92,7 +92,7 @@ namespace ConfigGen.ConsoleApp
             var sb = new StringBuilder();
             sb.AppendFormat("{0} {1}\n", _consoleInputToPreferenceConverter.GetShortConsoleCommandWithArgumentText(preference), preference.ArgumentHelpText);
             sb.AppendFormat(" or {0} {1}\n", _consoleInputToPreferenceConverter.GetLongConsoleCommandWithArgumentText(preference), preference.ArgumentHelpText);
-            foreach (var line in preference.Description.WordWrap(_width))
+            foreach (var line in preference.HelpText.WordWrap(_width))
             {
                 sb.AppendFormat("    {0}\n", line);
             }

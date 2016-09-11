@@ -25,8 +25,8 @@ using System.Linq;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Settings;
 using ConfigGen.Utilities;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Domain
 {
@@ -68,10 +68,14 @@ namespace ConfigGen.Domain
             if (configurationName == null) throw new ArgumentNullException(nameof(configurationName));
             if (settingNamesForConfiguration == null) throw new ArgumentNullException(nameof(settingNamesForConfiguration));
 
+            var usedTokens = GetTokenList(configurationName, _usedTokens).ToReadOnlyCollection();
+            var unrecognisedTokens = GetTokenList(configurationName, _unrecognisedTokens).ToReadOnlyCollection();
+            var unusedTokens = settingNamesForConfiguration.Except(usedTokens.Union(unrecognisedTokens)).ToReadOnlyCollection();
+
             return new TokenUsageStatistics(
-                usedTokens: GetTokenList(configurationName, _usedTokens).ToReadOnlyCollection(),
-                unrecognisedTokens: GetTokenList(configurationName, _unrecognisedTokens).ToReadOnlyCollection(),
-                unusedTokens: settingNamesForConfiguration.Except(GetTokenList(configurationName, _usedTokens)).ToReadOnlyCollection());
+                usedTokens: usedTokens,
+                unrecognisedTokens: unrecognisedTokens,
+                unusedTokens: unusedTokens);
         }
 
         [NotNull]

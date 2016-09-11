@@ -24,9 +24,9 @@ using System.IO;
 using System.Text;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Template;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.IO;
-using JetBrains.Annotations;
 
 namespace ConfigGen.Domain.FileOutput
 {

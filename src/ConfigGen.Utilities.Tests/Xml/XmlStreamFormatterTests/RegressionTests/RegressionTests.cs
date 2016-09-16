@@ -19,31 +19,32 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using ConfigGen.Tests.Common.Framework;
 using ConfigGen.Utilities.Xml;
-using Machine.Specifications;
+using Shouldly;
 
 namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
 {
     /// <summary>
     /// Regression test: escaped entities should be written out as-is, not "unescaped"
-    /// Issue http://configgen.codeplex.com/workitem/9 - "PrettyPrint xml formatter is erroneously unescaping escaped entities."
+    /// Issue http://configgen.codeplex.com/workitem/9 - "PrettyPrint Xml formatter is erroneously unescaping escaped entities."
     /// </summary>
     public class when_formatting_xml_where_an_attribute_contains_escaped_entities : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root attribute1=""&lt;triangular braces&gt;"" />";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_entities_should_be_written_out_verbatim_in_the_output = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root attribute1=""&lt;triangular braces&gt;"" />";
+        public override void When() => RunFormatterTest(input: Xml);
+        [Then] public void the_entities_should_be_written_out_verbatim_in_the_output() => Result.ShouldBe(Xml);
     }
 
     /// <summary>
     /// Regression test: escaped entities should be written out as-is, not "unescaped"
-    /// Issue http://configgen.codeplex.com/workitem/9 - "PrettyPrint xml formatter is erroneously unescaping escaped entities."
+    /// Issue http://configgen.codeplex.com/workitem/9 - "PrettyPrint Xml formatter is erroneously unescaping escaped entities."
     /// </summary>
     public class when_formatting_xml_where_an_text_contains_escaped_entities : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root>&lt;triangular braces&gt;</root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_entities_should_be_written_out_verbatim_in_the_output = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root>&lt;triangular braces&gt;</root>";
+        public override void When() => RunFormatterTest(input: Xml);
+        [Then] public void the_entities_should_be_written_out_verbatim_in_the_output() => Result.ShouldBe(Xml);
     }
 
     /// <summary>
@@ -51,9 +52,9 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
     /// </summary>
     public class given_xml_with_multiple_attributes_which_exceeds_the_wrap_threshold : XmlReaderToWriterCopierTests
     {
-        Establish context = () =>
+        public override void Given()
         {
-            xml = @"<MyService endpoint=""http://somebigdomainname.com/SomeEndpoint"" authentication=""integrated"" data=""datavalue"" data2=""datavalue2"" />";
+            Xml = @"<MyService endpoint=""http://somebigdomainname.com/SomeEndpoint"" authentication=""integrated"" data=""datavalue"" data2=""datavalue2"" />";
 
             XmlStreamFormatterOptions = XmlStreamFormatterOptions.Default;
             XmlStreamFormatterOptions.WrapLongElementLines = true;
@@ -62,11 +63,11 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
             ExpectedResult =
 @"<MyService endpoint=""http://somebigdomainname.com/SomeEndpoint""
    authentication=""integrated"" data=""datavalue"" data2=""datavalue2"" />";
-        };
+        }
 
-        Because of = () => RunFormatterTest(input: xml, formatterOptions: XmlStreamFormatterOptions);
+        public override void When() => RunFormatterTest(input: Xml, formatterOptions: XmlStreamFormatterOptions);
 
-        It the_spaces_between_attributes_are_preserved = () => Result.ShouldEqual(ExpectedResult);
+        [Then] public void the_spaces_between_attributes_are_preserved() => Result.ShouldBe(ExpectedResult);
     }
 
     /// <summary>
@@ -74,9 +75,9 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
     /// </summary>
     public class given_xml_with_elements_that_cross_the_wrap_threshold : XmlReaderToWriterCopierTests
     {
-        Establish context = () =>
+        public override void Given()
         {
-            xml =
+            Xml =
 @"<configuration xmlns:cg=""http://inex-solutions.com/Namespaces/ConfigGen/1/1/"">
   <configSections>
     <section name=""MyCustomConfigSection"" type=""MyAssembly.ConfigSections.MyCustomConfigSection, MyAssembly"" />
@@ -103,22 +104,22 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
          value=""[%Environment%]"" />
    </appSettings>
 </configuration>";
-        };
+        }
 
-        Because of = () => RunFormatterTest(input: xml, formatterOptions: XmlStreamFormatterOptions);
+        public override void When() => RunFormatterTest(input: Xml, formatterOptions: XmlStreamFormatterOptions);
 
-        It the_element_closing_braces_are_not_wrapped = () => Result.ShouldEqual(ExpectedResult);
+        [Then] public void the_element_closing_braces_are_not_wrapped() => Result.ShouldBe(ExpectedResult);
     }
 
     /// <summary>
-    /// Regression test: The indentation was being corrupted as the reader part of the xml stream formatter was not
+    /// Regression test: The indentation was being corrupted as the reader part of the Xml stream formatter was not
     /// ignoring insigificant whitespace, so this was being carried over to the output.
     /// </summary>
     public class given_xml_which_exceeds_the_threshold : XmlReaderToWriterCopierTests
     {
-        Establish context = () =>
+        public override void Given()
         {
-            xml =
+            Xml =
 @"<configuration>
   <system.web>
     <compilation debug=""true"">
@@ -149,10 +150,10 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests.RegressionTests
    </system.web>
 </configuration>";
 
-        };
+        }
 
-        Because of = () => RunFormatterTest(input: xml, formatterOptions: XmlStreamFormatterOptions);
+        public override void When() => RunFormatterTest(input: Xml, formatterOptions: XmlStreamFormatterOptions);
 
-        It the_element_closing_braces_are_not_wrapped = () => Result.ShouldEqual(ExpectedResult);
+        [Then] public void the_element_closing_braces_are_not_wrapped() => Result.ShouldBe(ExpectedResult);
     }
 }

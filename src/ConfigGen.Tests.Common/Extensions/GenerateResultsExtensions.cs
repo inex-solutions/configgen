@@ -28,7 +28,7 @@ using ConfigGen.Api.Contract;
 using ConfigGen.Tests.Common.MSpecShouldExtensions;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Annotations;
-using Machine.Specifications;
+using Shouldly;
 
 namespace ConfigGen.Tests.Common.Extensions
 {
@@ -188,7 +188,7 @@ namespace ConfigGen.Tests.Common.Extensions
 
             var text = File.ReadAllText(result.FullPath);
             
-            text.ShouldEqual(expectedText);
+            text.ShouldBe(expectedText);
 
             return result;
         }

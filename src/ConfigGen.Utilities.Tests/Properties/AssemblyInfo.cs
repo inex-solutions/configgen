@@ -24,11 +24,11 @@ using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("ConfigGen.Utilities.Tests")]
+// associated w[Then]public void h an assembly.
+[assembly: AssemblyTitle("ConfigGen.Util[Then]public void ies.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("ConfigGen.Utilities.Tests")]
+[assembly: AssemblyProduct("ConfigGen.Util[Then]public void ies.Tests")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -38,3 +38,12 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("26ff5d9e-0fa0-4b37-80e1-e5907a6db2a5")]
+
+// This assembly needs to directly reference NUnit - hence this attribute.
+// See NUnit 3 breaking changes for more info: https://github.com/nunit/docs/wiki/Breaking-Changes
+//
+// "A key change is that the NUnit Test Engine will not recognize a test assembly that does not reference the NUnit framework directly. 
+// ...
+// In such a case, NUnit will indicate that the assembly either contains no tests or the proper driver could not be found. 
+// To resolve this situation, simply add one NUnit attribute or other reference."
+[assembly: NUnit.Framework.Description("Utilities Tests")]

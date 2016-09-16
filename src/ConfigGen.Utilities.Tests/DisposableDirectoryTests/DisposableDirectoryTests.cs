@@ -21,63 +21,61 @@
 
 using System;
 using System.IO;
-using Machine.Specifications;
+using ConfigGen.Tests.Common.Framework;
+using Shouldly;
+
+// ReSharper disable PossibleNullReferenceException
 
 namespace ConfigGen.Utilities.Tests.DisposableDirectoryTests
 {
-    [Subject(typeof(DisposableDirectory))]
-    class when_disposing_a_directory_containing_normal_files
+    public abstract class DisposableDirectoryTestBase : SpecificationTestBase<DisposableDirectory>
     {
-        private static DisposableDirectory DisposableDirectory;
+        protected DisposableDirectory DisposableDirectory;
 
-        private static FileInfo TestFile;
+        protected FileInfo TestFile;
 
-        Establish context = () =>
+        protected Stream FileStream;
+
+        protected Exception CaughtException;
+    }
+
+    public class when_disposing_a_directory_containing_normal_files : DisposableDirectoryTestBase
+    {
+        public override void Given()
         {
             DisposableDirectory = new DisposableDirectory();
 
             TestFile = new FileInfo(Path.Combine(DisposableDirectory.FullName, "testfile.txt"));
             File.WriteAllText(TestFile.FullName, "testfile");
-        };
+        }
 
-        Because of = () => DisposableDirectory.Dispose();
+        public override void When() => DisposableDirectory.Dispose();
 
-        It the_directory_is_deleted = () => Directory.Exists(DisposableDirectory.FullName).ShouldBeFalse();
+        [Then]
+        public void the_directory_is_deleted() => Directory.Exists(DisposableDirectory.FullName).ShouldBeFalse();
     }
-
-    [Subject(typeof(DisposableDirectory))]
-    class when_disposing_a_directory_containing_readonly_files
+    
+    public class when_disposing_a_directory_containing_readonly_files : DisposableDirectoryTestBase
     {
-        private static DisposableDirectory DisposableDirectory;
-
-        private static FileInfo TestFile;
-
-        Establish context = () =>
+        public override void Given()
         {
             DisposableDirectory = new DisposableDirectory();
 
             TestFile = new FileInfo(Path.Combine(DisposableDirectory.FullName, "testfile.txt"));
             File.WriteAllText(TestFile.FullName, "testfile");
             File.SetAttributes(TestFile.FullName, FileAttributes.ReadOnly);
-        };
+        }
 
-        Because of = () => DisposableDirectory.Dispose();
+        public override void When() => DisposableDirectory.Dispose();
 
-        It the_directory_is_deleted = () => Directory.Exists(DisposableDirectory.FullName).ShouldBeFalse();
+        [Then]
+        public void the_directory_is_deleted() => Directory.Exists(DisposableDirectory.FullName).ShouldBeFalse();
     }
 
-    [Subject(typeof(DisposableDirectory))]
-    class when_disposing_a_directory_containing_a_locked_file
+    
+    public class when_disposing_a_directory_containing_a_locked_file : DisposableDirectoryTestBase
     {
-        private static DisposableDirectory DisposableDirectory;
-
-        private static FileInfo TestFile;
-
-        private static Stream FileStream;
-
-        private static Exception CaughtException;
-
-        Establish context = () =>
+        public override void Given()
         {
             DisposableDirectory = new DisposableDirectory();
             CaughtException = null;
@@ -86,29 +84,24 @@ namespace ConfigGen.Utilities.Tests.DisposableDirectoryTests
             File.WriteAllText(TestFile.FullName, "testfile");
 
             FileStream = new FileStream(TestFile.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
-        };
+        }
 
-        Cleanup cleanup = () =>
+        public override void Cleanup()
         {
             FileStream.Dispose();
             Directory.Delete(DisposableDirectory.FullName, true);
-        };
+        }
 
-        Because of = () => CaughtException = Catch.Exception(() => DisposableDirectory.Dispose());
+        public override void When() => CaughtException = Catch.Exception(() => DisposableDirectory.Dispose());
 
-        It an_io_exception_is_thrown = () => CaughtException.ShouldBeOfExactType<IOException>();
+        [Then]
+        public void an_io_exception_is_thrown() => CaughtException.ShouldBeOfType<IOException>();
     }
 
-    [Subject(typeof(DisposableDirectory))]
-    class when_disposing_a_directory_containing_a_locked_file_with_throwOnFailedCleanup_disabled
+    
+    public class when_disposing_a_directory_containing_a_locked_file_with_throwOnFailedCleanup_disabled : DisposableDirectoryTestBase
     {
-        private static DisposableDirectory DisposableDirectory;
-
-        private static FileInfo TestFile;
-
-        private static Stream FileStream;
-
-        Establish context = () =>
+        public override void Given()
         {
             DisposableDirectory = new DisposableDirectory(false);
 
@@ -116,16 +109,17 @@ namespace ConfigGen.Utilities.Tests.DisposableDirectoryTests
             File.WriteAllText(TestFile.FullName, "testfile");
 
             FileStream = new FileStream(TestFile.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
-        };
+        }
 
-        Cleanup cleanup = () =>
+        public override void Cleanup()
         {
             FileStream.Dispose();
             Directory.Delete(DisposableDirectory.FullName, true);
-        };
+        }
 
-        Because of = () => DisposableDirectory.Dispose();
+        public override void When() => DisposableDirectory.Dispose();
 
-        It the_directory_is_not_deleted = () => Directory.Exists(DisposableDirectory.FullName).ShouldBeTrue();
+        [Then]
+        public void the_directory_is_not_deleted() => Directory.Exists(DisposableDirectory.FullName).ShouldBeTrue();
     }
 }

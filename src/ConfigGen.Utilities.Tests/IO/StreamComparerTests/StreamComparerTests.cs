@@ -21,98 +21,99 @@
 
 using System.IO;
 using System.Text;
-using ConfigGen.Tests.Common;
+using ConfigGen.Tests.Common.Framework;
 using ConfigGen.Utilities.IO;
-using Machine.Specifications;
+using Shouldly;
+
+// ReSharper disable PossibleNullReferenceException
 
 namespace ConfigGen.Utilities.Tests.IO.StreamComparerTests
 {
-    [Subject(typeof(StreamComparer))]
-    class StreamComparerTestBase : MachineSpecificationTestBase<StreamComparer, bool>
+    class StreamComparerTestBase : SpecificationTestBase<StreamComparer, bool>
     {
-        protected static string TestFilePath;
+        protected string TestFilePath;
 
-        Establish context = () =>
+        public override void Setup()
         {
+            base.Setup();
             Subject = new StreamComparer();
-            TestFilePath = null;
-        };
+        }
     }
 
     class two_empty_streams : StreamComparerTestBase
     {
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(), new MemoryStream());
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(), new MemoryStream());
 
-        It are_equal = () => Result.ShouldBeTrue();
+        [Then] public void are_equal() => Result.ShouldBeTrue();
     }
 
     class two_streams_with_the_same_contents : StreamComparerTestBase
     {
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")));
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")));
 
-        It are_equal = () => Result.ShouldBeTrue();
+        [Then] public void are_equal() => Result.ShouldBeTrue();
     }
 
     class two_streams_of_differing_lengths : StreamComparerTestBase
     {
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), new MemoryStream());
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), new MemoryStream());
 
-        It are_not_equal = () => Result.ShouldBeFalse();
+        [Then] public void are_not_equal() => Result.ShouldBeFalse();
     }
 
     class two_streams_of_the_same_length_but_differing_contents : StreamComparerTestBase
     {
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 2")));
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 2")));
 
-        It are_not_equal = () => Result.ShouldBeFalse();
+        [Then] public void are_not_equal() => Result.ShouldBeFalse();
     }
 
     class one_stream_compared_to_a_non_existent_file : StreamComparerTestBase
     {
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(new byte[] {1}), "non-existent-file-name");
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(new byte[] {1}), "non-existent-file-name");
 
-        It are_not_equal = () => Result.ShouldBeFalse();
+        [Then] public void are_not_equal() => Result.ShouldBeFalse();
     }
 
     class one_stream_compared_to_an_existing_file_with_the_same_contents : StreamComparerTestBase
     {
-        Establish context = () =>
+        public override void Given()
         {
             TestDirectory = new DisposableDirectory();
             TestFilePath = Path.Combine(TestDirectory.FullName, "test-file");
             File.WriteAllBytes(TestFilePath, Encoding.UTF8.GetBytes("TEST STRING 1"));
-        };
+        }
 
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), TestFilePath);
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), TestFilePath);
 
-        It are_equal = () => Result.ShouldBeTrue();
+        [Then] public void are_equal() => Result.ShouldBeTrue();
     }
 
     class one_stream_compared_to_an_existing_file_with_the_same_contents_but_a_different_encoding : StreamComparerTestBase
     {
-        Establish context = () =>
+        public override void Given()
         {
             TestDirectory = new DisposableDirectory();
             TestFilePath = Path.Combine(TestDirectory.FullName, "test-file");
             File.WriteAllBytes(TestFilePath, Encoding.Unicode.GetBytes("TEST STRING 1"));
-        };
+        }
 
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), TestFilePath);
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 1")), TestFilePath);
 
-        It are_not_equal = () => Result.ShouldBeFalse();
+        [Then] public void are_not_equal() => Result.ShouldBeFalse();
     }
 
     class one_stream_compared_to_an_existing_file_with_the_differing_contents : StreamComparerTestBase
     {
-        Establish context = () =>
+        public override void Given()
         {
             TestDirectory = new DisposableDirectory();
             TestFilePath = Path.Combine(TestDirectory.FullName, "test-file");
             File.WriteAllBytes(TestFilePath, Encoding.UTF8.GetBytes("TEST STRING 1"));
-        };
+        }
 
-        Because of = () => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 2")), TestFilePath);
+        public override void When() => Result = Subject.AreEqual(new MemoryStream(Encoding.UTF8.GetBytes("TEST STRING 2")), TestFilePath);
 
-        It are_not_equal = () => Result.ShouldBeFalse();
+        [Then] public void are_not_equal() => Result.ShouldBeFalse();
     }
 }

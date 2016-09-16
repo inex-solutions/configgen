@@ -22,37 +22,29 @@
 using System;
 using System.IO;
 using System.Text;
+using ConfigGen.Tests.Common.Framework;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
-using Machine.Specifications;
-using Machine.Specifications.Annotations;
+using Shouldly;
 
 namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
 {
-    [Subject(typeof(XmlStreamFormatter))]
-    public abstract class XmlReaderToWriterCopierTests
+
+    public abstract class XmlReaderToWriterCopierTests : SpecificationTestBase<string>
     {
-        protected static string xml;
-        protected static string Result;
-        protected static string ExpectedResult;
-        protected static XmlStreamFormatterOptions XmlStreamFormatterOptions;
+        protected string Xml;
+        protected string Result;
+        protected string ExpectedResult;
+        protected XmlStreamFormatterOptions XmlStreamFormatterOptions;
 
-        private Establish context = () =>
-        {
-            xml = null;
-            Result = null;
-            ExpectedResult = null;
-            XmlStreamFormatterOptions = null;
-        };
-
-        protected static void RunFormatterTest([NotNull] string input)
+        protected void RunFormatterTest(string input)
         {
             var copierOptions = XmlStreamFormatterOptions.Default;
             copierOptions.Indent = false;
             RunFormatterTest(input, copierOptions);
         }
 
-        protected static void RunFormatterTest([NotNull] string input, [NotNull] XmlStreamFormatterOptions formatterOptions)
+        protected void RunFormatterTest(string input, XmlStreamFormatterOptions formatterOptions)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
             if (formatterOptions == null) throw new ArgumentNullException(nameof(formatterOptions));
@@ -74,116 +66,156 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
 
     public class when_formatting_xml_containing_a_single_child_element : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root><child /></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root><child /></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_text_contents : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root>SomeText</root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root>SomeText</root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_attributes : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root attribute1=""value1"" attribute2=""value2"" />";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root attribute1=""value1"" attribute2=""value2"" />";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_attributes_and_a_child_element : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root attribute1=""value1"" attribute2=""value2""><child /></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root attribute1=""value1"" attribute2=""value2""><child /></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_a_utf8_encoding: XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<?xml version=""1.0"" encoding=""utf-8""?><root><child /></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<?xml version=""1.0"" encoding=""utf-8""?><root><child /></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_a_windows1252_encoding : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<?xml version=""1.0"" encoding=""Windows-1252""?><root><child /></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<?xml version=""1.0"" encoding=""Windows-1252""?><root><child /></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_a_CDATA : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root><![CDATA[SomeText]]></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root><![CDATA[SomeText]]></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_comments : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root><!-- This is my comment --></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root><!-- This is my comment --></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_a_processing_instruction : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root><?processing instruction?></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root><?processing instruction?></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_unimportant_whitespace_between_open_and_close_elements : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root>  </root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_open_and_close_elements_are_collapsed_to_a_self_closing_element = () => Result.ShouldEqual(@"<root />");
+        public override void Given() => Xml = @"<root>  </root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_open_and_close_elements_are_collapsed_to_a_self_closing_element() => Result.ShouldBe(@"<root />");
     }
 
     public class when_formatting_xml_containing_unimportant_whitespace_between_different_elements : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root>  <child />  </root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_whitespace_is_removed = () => Result.ShouldEqual(@"<root><child /></root>");
+        public override void Given() => Xml = @"<root>  <child />  </root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_whitespace_is_removed() => Result.ShouldBe(@"<root><child /></root>");
     }
 
     public class when_formatting_xml_containing_an_element_with_a_namespace : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root xmlns:ns=""http://test/""><ns:child /></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root xmlns:ns=""http://test/""><ns:child /></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class when_formatting_xml_containing_an_attribute_with_a_namespace : XmlReaderToWriterCopierTests
     {
-        Establish context = () => xml = @"<root xmlns:ns=""http://test/""><child ns:attr1=""value1"" /></root>";
-        Because of = () => RunFormatterTest(input: xml);
-        It the_input_and_output_are_identical = () => Result.ShouldEqual(xml);
+        public override void Given() => Xml = @"<root xmlns:ns=""http://test/""><child ns:attr1=""value1"" /></root>";
+
+        public override void When() => RunFormatterTest(input: Xml);
+
+        [Then]
+        public void the_input_and_output_are_identical() => Result.ShouldBe(Xml);
     }
 
     public class given_xml_with_a_single_attribute_where_the_line_length_is_below_the_wrap_threshold : XmlReaderToWriterCopierTests
     {
-        Establish context = () =>
+        public override void Given()
         {
-            xml = @"<root attribute=""1"" />";  // length=19 to end of attribute
+            Xml = @"<root attribute=""1"" />";  // length=19 to end of attribute
 
             XmlStreamFormatterOptions = XmlStreamFormatterOptions.Default;
             XmlStreamFormatterOptions.WrapLongElementLines = true;
             XmlStreamFormatterOptions.MaxElementLineLength = 19;
-        };
+        }
 
-        Because of = () => RunFormatterTest(input: xml, formatterOptions: XmlStreamFormatterOptions);
+        public override void When() => RunFormatterTest(input: Xml, formatterOptions: XmlStreamFormatterOptions);
 
-        It the_line_is_not_wrapped = () => Result.ShouldEqual(xml);
+        [Then]
+        public void the_line_is_not_wrapped() => Result.ShouldBe(Xml);
     }
 
     public class given_xml_with_a_single_attribute_where_the_line_length_is_above_the_wrap_threshold : XmlReaderToWriterCopierTests
     {
-        Establish context = () =>
+        public override void Given()
         {
-            xml = @"<root attribute=""1"" />";  // length=19 to end of attribute
+            Xml = @"<root attribute=""1"" />";  // length=19 to end of attribute
 
             XmlStreamFormatterOptions = XmlStreamFormatterOptions.Default;
             XmlStreamFormatterOptions.WrapLongElementLines = true;
@@ -192,18 +224,19 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
             ExpectedResult =
 @"<root
    attribute=""1"" />";
-        };
+        }
 
-        Because of = () => RunFormatterTest(input: xml, formatterOptions: XmlStreamFormatterOptions);
+        public override void When() => RunFormatterTest(input: Xml, formatterOptions: XmlStreamFormatterOptions);
 
-        It the_line_is_wrapped_safely_without_breaking_the_attributes = () => Result.ShouldEqual(ExpectedResult);
+        [Then]
+        public void the_line_is_wrapped_safely_without_breaking_the_attributes() => Result.ShouldBe(ExpectedResult);
     }
 
     public class given_xml_with_multiple_attributes_where_the_line_length_is_several_times_above_the_wrap_threshold : XmlReaderToWriterCopierTests
     {
-        Establish context = () =>
+        public override void Given()
         {
-            xml = @"<root a=""1"" b=""2"" longerattribute=""3"" d=""4"" e=""5""/>";
+            Xml = @"<root a=""1"" b=""2"" longerattribute=""3"" d=""4"" e=""5""/>";
 
             XmlStreamFormatterOptions = XmlStreamFormatterOptions.Default;
             XmlStreamFormatterOptions.WrapLongElementLines = true;
@@ -213,18 +246,19 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
 @"<root a=""1"" b=""2""
    longerattribute=""3""
    d=""4"" e=""5"" />";
-        };
+        }
 
-        Because of = () => RunFormatterTest(input: xml, formatterOptions: XmlStreamFormatterOptions);
+        public override void When() => RunFormatterTest(input: Xml, formatterOptions: XmlStreamFormatterOptions);
 
-        It the_line_is_wrapped_several_times_safely_without_breaking_the_attributes = () => Result.ShouldEqual(ExpectedResult);
+        [Then]
+        public void the_line_is_wrapped_several_times_safely_without_breaking_the_attributes() => Result.ShouldBe(ExpectedResult);
     }
 
     public class given_xml_with_multiple_elements_where_the_line_length_is_several_times_above_the_wrap_threshold : XmlReaderToWriterCopierTests
     {
-        Establish context = () =>
+        public override void Given()
         {
-            xml = @"<root xmlns:ns=""http://test/""><child attr1=""value1"" attr2=""value2""/></root>";
+            Xml = @"<root xmlns:ns=""http://test/""><child attr1=""value1"" attr2=""value2""/></root>";
 
             XmlStreamFormatterOptions = XmlStreamFormatterOptions.Default;
             XmlStreamFormatterOptions.WrapLongElementLines = true;
@@ -235,10 +269,11 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlStreamFormatterTests
    <child attr1=""value1""
       attr2=""value2"" />
 </root>";
-        };
+        }
 
-        Because of = () => RunFormatterTest(input: xml, formatterOptions: XmlStreamFormatterOptions);
+        public override void When() => RunFormatterTest(input: Xml, formatterOptions: XmlStreamFormatterOptions);
 
-        It the_line_is_wrapped_several_times_without_breaking_elements_or_attributes = () => Result.ShouldEqual(ExpectedResult);
+        [Then]
+        public void the_line_is_wrapped_several_times_without_breaking_elements_or_attributes() => Result.ShouldBe(ExpectedResult);
     }
 }

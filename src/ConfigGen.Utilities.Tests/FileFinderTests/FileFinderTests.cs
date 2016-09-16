@@ -21,17 +21,19 @@
 
 using System.Collections.Generic;
 using System.IO;
-using Machine.Specifications;
+using ConfigGen.Tests.Common.Framework;
+using ConfigGen.Tests.Common.MSpecShouldExtensions;
+
+// ReSharper disable PossibleNullReferenceException
 
 namespace ConfigGen.Utilities.Tests.FileFinderTests
 {
-    [Subject(typeof(FileFinder))]
-    public abstract class FileFinderTestBase
+    public abstract class FileFinderTestBase : NUnitSpecification
     {
-        protected static DisposableDirectory TestDirectory;
-        protected static List<string> foundFiles;
+        protected DisposableDirectory TestDirectory;
+        protected List<string> FoundFiles;
 
-        Establish context = () =>
+        public override void Given()
         {
             /*
               * TestDir
@@ -50,47 +52,52 @@ namespace ConfigGen.Utilities.Tests.FileFinderTests
             File.WriteAllText(Path.Combine(subDir.FullName, "file3.txt"), "hello again");
             File.WriteAllText(Path.Combine(subDir.FullName, "file4.xml"), "<root>hello again</root>");
 
-            foundFiles = new List<string>();
-        };
+            FoundFiles = new List<string>();
+        }
     }
 
     public class when_invoked_with_no_search_pattern_and_the_recurse_option : FileFinderTestBase
     {
-        Because of = () => FileFinder.FindFile(TestDirectory.FullName, true, file => foundFiles.Add(file.Name));
+        public override void When() => FileFinder.FindFile(TestDirectory.FullName, true, file => FoundFiles.Add(file.Name));
 
-        It all_files_in_both_directories_were_found =
-            () => foundFiles.ShouldContainOnly("file1.txt", "file2.xml", "file3.txt", "file4.xml");
+        [Then]
+        public void all_files_in_both_directories_were_found() 
+            => FoundFiles.ShouldContainOnlyItems("file1.txt", "file2.xml", "file3.txt", "file4.xml");
     }
 
     public class when_invoked_with_an_all_files_wildcard_search_pattern_and_the_recurse_option : FileFinderTestBase
     {
-        Because of = () => FileFinder.FindFile("*", TestDirectory.FullName, true, file => foundFiles.Add(file.Name));
+        public override void When() => FileFinder.FindFile("*", TestDirectory.FullName, true, file => FoundFiles.Add(file.Name));
 
-        It all_files_in_both_directories_were_found =
-            () => foundFiles.ShouldContainOnly("file1.txt", "file2.xml", "file3.txt", "file4.xml");
+        [Then]
+        public void all_files_in_both_directories_were_found() 
+            => FoundFiles.ShouldContainOnlyItems("file1.txt", "file2.xml", "file3.txt", "file4.xml");
     }
 
     public class when_invoked_with_an_all_files_wildcard_search_pattern_and_no_recurse_option : FileFinderTestBase
     {
-        Because of = () => FileFinder.FindFile("*", TestDirectory.FullName, false, file => foundFiles.Add(file.Name));
+        public override void When() => FileFinder.FindFile("*", TestDirectory.FullName, false, file => FoundFiles.Add(file.Name));
 
-        It only_files_in_the_parent_directory_were_found =
-            () => foundFiles.ShouldContainOnly("file1.txt", "file2.xml");
+        [Then]
+        public void only_files_in_the_parent_directory_were_found() 
+            => FoundFiles.ShouldContainOnlyItems("file1.txt", "file2.xml");
     }
 
     public class when_invoked_with_an_extension_specific_search_pattern_and_the_recurse_option : FileFinderTestBase
     {
-        Because of = () => FileFinder.FindFile("*.txt", TestDirectory.FullName, true, file => foundFiles.Add(file.Name));
+        public override void When() => FileFinder.FindFile("*.txt", TestDirectory.FullName, true, file => FoundFiles.Add(file.Name));
 
-        It all_matching_files_in_both_directories_were_found =
-            () => foundFiles.ShouldContainOnly("file1.txt", "file3.txt");
+        [Then]
+        public void all_matching_files_in_both_directories_were_found() 
+            => FoundFiles.ShouldContainOnlyItems("file1.txt", "file3.txt");
     }
 
     public class when_invoked_with_an_extension_specific_search_pattern_and_the_no_recurse_option : FileFinderTestBase
     {
-        Because of = () => FileFinder.FindFile("*.txt", TestDirectory.FullName, false, file => foundFiles.Add(file.Name));
+        public override void When() => FileFinder.FindFile("*.txt", TestDirectory.FullName, false, file => FoundFiles.Add(file.Name));
 
-        It only_matching_files_in_the_parent_directory_was_found =
-            () => foundFiles.ShouldContainOnly("file1.txt");
+        [Then]
+        public void only_matching_files_in_the_parent_directory_was_found() 
+            => FoundFiles.ShouldContainOnlyItems("file1.txt");
     }
 }

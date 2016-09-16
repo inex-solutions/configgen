@@ -20,57 +20,69 @@
 #endregion
 
 using System;
-using ConfigGen.Tests.Common;
+using ConfigGen.Tests.Common.Framework;
 using ConfigGen.Utilities.Extensions;
-using Machine.Specifications;
+using Shouldly;
 
 namespace ConfigGen.Utilities.Tests.Extensions.EnumerableExtensionsTests
 {
-    [Subject(typeof(EnumerableExtensions))]
-    public class when_IsCollectionOfNullOrEmpty_is_called_on_a_null_array : MachineSpecificationTestBase<object[], bool>
+    public class when_IsCollectionOfNullOrEmpty_is_called_on_a_null_array : SpecificationTestBase<object[], bool>
     {
-        Establish context = () => Subject = null;
-        Because of = () => Result = Subject.IsCollectionOfNullOrEmpty();
-        It then_the_result_is_true = () => Result.ShouldBeTrue();
+        public override void Given() => Subject = null;
+
+        public override void When() => Result = Subject.IsCollectionOfNullOrEmpty();
+
+        [Then]
+        public void then_the_result_is_true() => Result.ShouldBeTrue();
     }
 
-    [Subject(typeof(EnumerableExtensions))]
-    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_empty_array : MachineSpecificationTestBase<object[], bool>
+    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_empty_array : SpecificationTestBase<object[], bool>
     {
-        Establish context = () => Subject = new object[0];
-        Because of = () => Result = Subject.IsCollectionOfNullOrEmpty();
-        It then_the_result_is_true = () => Result.ShouldBeTrue();
+        public override void Given() => Subject = new object[0];
+
+        public override void When () => Result = Subject.IsCollectionOfNullOrEmpty();
+
+        [Then]
+        public void then_the_result_is_true () => Result.ShouldBeTrue();
     }
 
-    [Subject(typeof(EnumerableExtensions))]
-    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_of_nulls : MachineSpecificationTestBase<object[], bool>
+    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_of_nulls : SpecificationTestBase<object[], bool>
     {
-        Establish context = () => Subject = new object[] {null, null, null};
-        Because of = () => Result = Subject.IsCollectionOfNullOrEmpty();
-        It then_the_result_is_true = () => Result.ShouldBeTrue();
+        public override void Given() => Subject = new object[] {null, null, null};
+
+        public override void When () => Result = Subject.IsCollectionOfNullOrEmpty();
+
+        [Then]
+        public void then_the_result_is_true() => Result.ShouldBeTrue();
     }
 
-    [Subject(typeof(EnumerableExtensions))]
-    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_of_empty_strings : MachineSpecificationTestBase<object[], bool>
+    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_of_empty_strings : SpecificationTestBase<object[], bool>
     {
-        Establish context = () => Subject = new object[] {string.Empty, string.Empty, string.Empty};
-        Because of = () => Result = Subject.IsCollectionOfNullOrEmpty();
-        It then_the_result_is_true = () => Result.ShouldBeTrue();
+        public override void Given() => Subject = new object[] {string.Empty, string.Empty, string.Empty};
+
+        public override void When () => Result = Subject.IsCollectionOfNullOrEmpty();
+
+        [Then]
+        public void then_the_result_is_true() => Result.ShouldBeTrue();
     }
 
-    [Subject(typeof(EnumerableExtensions))]
-    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_of_DBNulls : MachineSpecificationTestBase<object[], bool>
+    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_of_DBNulls : SpecificationTestBase<object[], bool>
     {
-        Establish context = () => Subject = new object[] {DBNull.Value, DBNull.Value, DBNull.Value};
-        Because of = () => Result = Subject.IsCollectionOfNullOrEmpty();
-        It then_the_result_is_true = () => Result.ShouldBeTrue();
+        public override void Given() => Subject = new object[] {DBNull.Value, DBNull.Value, DBNull.Value};
+
+        public override void When () => Result = Subject.IsCollectionOfNullOrEmpty();
+
+        [Then]
+        public void then_the_result_is_true() => Result.ShouldBeTrue();
     }
 
-    [Subject(typeof(EnumerableExtensions))]
-    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_containing_a_non_empty_string : MachineSpecificationTestBase<object[], bool>
+    public class when_IsCollectionOfNullOrEmpty_is_called_on_an_array_containing_a_non_empty_string : SpecificationTestBase<object[], bool>
     {
-        Establish context = () => Subject = new object[] {DBNull.Value, "hello", DBNull.Value};
-        Because of = () => Result = Subject.IsCollectionOfNullOrEmpty();
-        It then_the_result_is_false = () => Result.ShouldBeFalse();
+        public override void Given() => Subject = new object[] {DBNull.Value, "hello", DBNull.Value};
+
+        public override void When () => Result = Subject.IsCollectionOfNullOrEmpty();
+
+        [Then]
+        public void then_the_result_is_false() => Result.ShouldBeFalse();
     }
 }

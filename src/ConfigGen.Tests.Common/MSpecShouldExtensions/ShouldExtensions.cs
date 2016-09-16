@@ -19,11 +19,13 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using Machine.Specifications;
-using Machine.Specifications.Utility.Internal;
+using Shouldly;
 
 namespace ConfigGen.Tests.Common.MSpecShouldExtensions
 {
@@ -42,7 +44,7 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions
 
             if (ReferenceEquals(actualXml, null) || ReferenceEquals(expectedXml, null))
             {
-                throw new SpecificationException(PrettyPrintingExtensions.FormatErrorMessage(actualXml, expectedXml));
+                actualXml.ShouldBe(expectedXml);
             }
 
             if (actualXml == expectedXml)
@@ -55,10 +57,47 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions
 
             if (!XNode.DeepEquals(actual, expected))
             {
-                throw new SpecificationException(PrettyPrintingExtensions.FormatErrorMessage(actual.InnerXml(), expected.InnerXml()));
+                actual.InnerXml().ShouldBe(expected.InnerXml());
             }
 
             return actualXml;
+        }
+
+        public static void ShouldContainOnlyItems<T>(this IEnumerable<T> actualItems, params T[] expectedItems)
+        {
+            actualItems.ShouldContainOnlyItems((IEnumerable<T>)expectedItems);
+        }
+
+        public static void ShouldContainOnlyItems<T>(this IEnumerable<T> actualItems, IEnumerable<T> expectedItems)
+        {
+            var expectedItemsList = new List<T>(expectedItems);
+            var actualItemsList = new List<T>(actualItems);
+            var unexpectedItems = new List<T>(actualItemsList);
+            var missingItems = new List<T>();
+
+            foreach (var expectedItem in expectedItemsList)
+            {
+                if (unexpectedItems.Contains(expectedItem))
+                {
+                    unexpectedItems.Remove(expectedItem);
+                }
+                else
+                {
+                    missingItems.Add(expectedItem);
+                }
+            }
+
+            if (missingItems.Any()
+                || unexpectedItems.Any())
+            {
+                var errorMessage = new StringBuilder("Incorrect list contents:");
+                errorMessage.AppendFormat("\nExpected contents of list:\n  {0}", string.Join("\n  ", expectedItemsList));
+                errorMessage.AppendFormat("\nActual contents of list:\n  {0}", string.Join("\n  ", actualItemsList));
+                errorMessage.AppendFormat("\nlist did not contain (but should have):\n  {0}", string.Join("\n  ", missingItems));
+                errorMessage.AppendFormat("\nlist did contain (but should not have):\n  {0}", string.Join("\n  ", unexpectedItems));
+
+                throw new SpecificationException(errorMessage.ToString());
+            }
         }
     }
 }

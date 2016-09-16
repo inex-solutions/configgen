@@ -20,47 +20,50 @@
 #endregion
 
 using System.IO;
-using Machine.Specifications;
+using ConfigGen.Tests.Common.Framework;
+using Shouldly;
+
+// ReSharper disable PossibleNullReferenceException
 
 namespace ConfigGen.Utilities.Tests.DisposableFileTests
 {
-    [Subject(typeof(DisposableFile))]
-    class when_disposing_a_normal_file
+    public class when_disposing_a_normal_file : SpecificationTestBase<DisposableDirectory>
     {
-        private static DisposableFile DisposableFile;
+        private DisposableFile _disposableFile;
 
-        private static FileInfo TestFile;
+        private FileInfo _testFile;
 
-        Establish context = () =>
+        public override void Given()
         {
-            TestFile = new FileInfo("testfile.txt");
-            File.WriteAllText(TestFile.FullName, "testfile");
-            DisposableFile = new DisposableFile(TestFile);
-        };
+            _testFile = new FileInfo("testfile.txt");
+            File.WriteAllText(_testFile.FullName, "testfile");
+            _disposableFile = new DisposableFile(_testFile);
+        }
 
-        Because of = () => DisposableFile.Dispose();
+        public override void When() => _disposableFile.Dispose();
 
-        It the_file_is_deleted = () => File.Exists(TestFile.FullName).ShouldBeFalse();
+        [Then]
+        public void the_file_is_deleted() => File.Exists(_testFile.FullName).ShouldBeFalse();
     }
 
-    [Subject(typeof(DisposableFile))]
-    class when_disposing_a_readonly_file
+    public class when_disposing_a_readonly_file : SpecificationTestBase<DisposableDirectory>
     {
-        private static DisposableFile DisposableFile;
+        private DisposableFile _disposableFile;
 
-        private static FileInfo TestFile;
+        private FileInfo _testFile;
 
-        Establish context = () =>
+        public override void Given()
         {
-            TestFile = new FileInfo("testfile.txt");
-            File.WriteAllText(TestFile.FullName, "testfile");
-            File.SetAttributes(TestFile.FullName, FileAttributes.ReadOnly);
+            _testFile = new FileInfo("testfile.txt");
+            File.WriteAllText(_testFile.FullName, "testfile");
+            File.SetAttributes(_testFile.FullName, FileAttributes.ReadOnly);
 
-            DisposableFile = new DisposableFile(TestFile);
-        };
+            _disposableFile = new DisposableFile(_testFile);
+        }
 
-        Because of = () => DisposableFile.Dispose();
+        public override void When() => _disposableFile.Dispose();
 
-        It the_file_is_deleted = () => File.Exists(TestFile.FullName).ShouldBeFalse();
+        [Then]
+        public void the_file_is_deleted() => File.Exists(_testFile.FullName).ShouldBeFalse();
     }
 }

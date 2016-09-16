@@ -1,4 +1,4 @@
-#region Copyright and License Notice
+﻿#region Copyright and License Notice
 // Copyright (C)2010-2016 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
@@ -20,29 +20,22 @@
 #endregion
 
 using System;
-using System.Linq;
-using ConfigGen.Domain.Contract.Template;
-using ConfigGen.Utilities.Annotations;
 
-namespace ConfigGen.Tests.Common.MSpecShouldExtensions.LoadResultExtensions
+namespace ConfigGen.Tests.Common.Framework
 {
-    public static class LoadResultExtensions
+    public static class Catch
     {
-        /// <summary>
-        /// Asserts the supplied result indicates success.
-        /// </summary>
-        [NotNull]
-        public static LoadResult ShouldIndicateSuccess([NotNull] this LoadResult result)
+        public static Exception Exception(Action action)
         {
-            if (result == null) throw new ArgumentNullException(nameof(result));
-
-            if (result.Success
-                && !result.TemplateLoadErrors.Any())
+            try
             {
-                return result;
+                action();
+                return null;
             }
-
-            throw new SpecificationException($"Should indicate success, but indicates failure with the following errors {string.Join("\n- ", result.TemplateLoadErrors.Select(e => e.ToString()))}");
+            catch (Exception ex)
+            {
+                return ex;
+            }
         }
     }
 }

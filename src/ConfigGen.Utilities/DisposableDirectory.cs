@@ -76,6 +76,7 @@ namespace ConfigGen.Utilities
         /// <summary>
         /// Gets the full path of the directory 
         /// </summary>
+        [NotNull]
         public string FullName => _wrappedDirectory.FullName;
 
         /// <summary>

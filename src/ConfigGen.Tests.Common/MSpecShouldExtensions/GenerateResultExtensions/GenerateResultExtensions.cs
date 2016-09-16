@@ -23,7 +23,6 @@ using System;
 using System.Linq;
 using ConfigGen.Api.Contract;
 using ConfigGen.Utilities.Annotations;
-using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions
 {

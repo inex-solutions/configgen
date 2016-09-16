@@ -19,20 +19,20 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using Machine.Specifications;
+using ConfigGen.Tests.Common.Framework;
+using Shouldly;
 
 namespace ConfigGen.Utilities.Tests.Xml.XmlReaderToWriterCopierTests.RegressionTests
 {
-
     /// <summary>
     /// Regression test: escaped entities should be written out as-is, not "unescaped". 
     /// Issue http://configgen.codeplex.com/workitem/9 - "PrettyPrint xml formatter is erroneously unescaping escaped entities."
     /// </summary>
     public class when_copying_xml_where_an_attribute_contains_escaped_entities : XmlReaderToWriterCopierTests
     {
-        Establish context = () => Xml = @"<root attribute1=""&lt;triangular braces&gt;"" />";
-        Because of = () => RunCopyTest(input: Xml, onCopyCallback: (nodeType, reader, writer) => true);
-        It the_entities_should_be_written_out_verbatim_in_the_output = () => Result.ShouldEqual(Xml);
+        public override void Given() => Xml = @"<root attribute1=""&lt;triangular braces&gt;"" />";
+        public override void When() => RunCopyTest(input: Xml, onCopyCallback: (nodeType, reader, writer) => true);
+        [Then] public void the_entities_should_be_written_out_verbatim_in_the_output() => Result.ShouldBe(Xml);
     }
 
     /// <summary>
@@ -41,8 +41,8 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlReaderToWriterCopierTests.RegressionT
     /// </summary>
     public class when_copying_xml_where_an_text_contains_escaped_entities : XmlReaderToWriterCopierTests
     {
-        Establish context = () => Xml = @"<root>&lt;triangular braces&gt;</root>";
-        Because of = () => RunCopyTest(input: Xml, onCopyCallback: (nodeType, reader, writer) => true);
-        It the_entities_should_be_written_out_verbatim_in_the_output = () => Result.ShouldEqual(Xml);
+        public override void Given() => Xml = @"<root>&lt;triangular braces&gt;</root>";
+        public override void When() => RunCopyTest(input: Xml, onCopyCallback: (nodeType, reader, writer) => true);
+        [Then] public void the_entities_should_be_written_out_verbatim_in_the_output() => Result.ShouldBe(Xml);
     }
 }

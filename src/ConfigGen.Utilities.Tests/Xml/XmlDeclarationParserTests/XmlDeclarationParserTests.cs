@@ -22,9 +22,10 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using ConfigGen.Tests.Common.Framework;
 using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.Xml;
-using Machine.Specifications;
+using Shouldly;
 
 // ReSharper disable AssignNullToNotNullAttribute
 // ReSharper disable PossibleNullReferenceException
@@ -36,100 +37,95 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlDeclarationParserTests
     /// Tests to assert correct behaviour of XmlDeclarationParser. DeveloperNote: a lot of the actual encoding detection being tested is more of a test of XmlTextReader 
     /// than the code XmlDeclarationParser. For the time being it is here to assert *to me* that I understand how this behaves!
     /// </summary>
-    [Subject(typeof(XmlDeclarationParser))]
-    public abstract class XmlDeclarationParserTestsBase
+    public abstract class XmlDeclarationParserTestsBase : SpecificationTestBase<XmlDeclarationParser, XmlDeclarationInfo>
     {
-        protected static XmlDeclarationParser Subject;
-        protected static XmlDeclarationInfo Result;
-        protected static Stream SourceStream;
+        protected Stream SourceStream;
 
         protected const int UTF8Codepage = 65001;
         protected const int UnicodeLittleEndianCodepage = 1200;
         protected const int Windows1252Encoding = 1252;
 
-        Establish context = () =>
+        public override void Setup()
         {
-            SourceStream = null;
-            Result = null;
             Subject = new XmlDeclarationParser();
-        };
+        }
     }
 
     public class when_a_UTF8_document_with_a_UTF8_xml_declaration_is_parsed : XmlDeclarationParserTestsBase
     {
-        Establish context = () => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-UTF8.xml");
+        public override void Given() => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-UTF8.xml");
 
-        Because of = () => Result = Subject.Parse(SourceStream);
+        public override void When() => Result = Subject.Parse(SourceStream);
 
-        It the_result_should_indicate_the_declaration_was_present = () => Result.XmlDeclarationPresent.ShouldBeTrue();
+        [Then] public void the_result_should_indicate_the_declaration_was_present() => Result.XmlDeclarationPresent.ShouldBeTrue();
 
-        It the_stated_encoding_type_should_be_UTF8 = () => Result.StatedEncoding.ShouldBeOfExactType<UTF8Encoding>();
+        [Then] public void the_stated_encoding_type_should_be_UTF8() => Result.StatedEncoding.ShouldBeOfType<UTF8Encoding>();
 
-        It the_stated_encodings_codepage_should_be_UTF8 = () => Result.StatedEncoding.CodePage.ShouldEqual(UTF8Codepage);
+        [Then] public void the_stated_encodings_codepage_should_be_UTF8() => Result.StatedEncoding.CodePage.ShouldBe(UTF8Codepage);
 
-        It the_actual_encoding_type_should_be_UTF8 = () => Result.ActualEncoding.ShouldBeOfExactType<UTF8Encoding>();
+        [Then] public void the_actual_encoding_type_should_be_UTF8() => Result.ActualEncoding.ShouldBeOfType<UTF8Encoding>();
 
-        It the_actual_encodings_codepage_should_be_UTF8 = () => Result.ActualEncoding.CodePage.ShouldEqual(UTF8Codepage);
+        [Then] public void the_actual_encodings_codepage_should_be_UTF8() => Result.ActualEncoding.CodePage.ShouldBe(UTF8Codepage);
     }
 
     public class when_a_UTF16_document_with_a_UTF16_xml_declaration_is_parsed : XmlDeclarationParserTestsBase
     {
-        Establish context = () => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-UTF16.xml");
+        public override void Given() => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-UTF16.xml");
 
-        Because of = () => Result = Subject.Parse(SourceStream);
+        public override void When() => Result = Subject.Parse(SourceStream);
 
-        It the_result_should_indicate_the_declaration_was_present = () => Result.XmlDeclarationPresent.ShouldBeTrue();
+        [Then] public void the_result_should_indicate_the_declaration_was_present() => Result.XmlDeclarationPresent.ShouldBeTrue();
 
-        It the_stated_encoding_type_should_be_Unicode = () => Result.StatedEncoding.ShouldBeOfExactType<UnicodeEncoding>();
+        [Then] public void the_stated_encoding_type_should_be_Unicode() => Result.StatedEncoding.ShouldBeOfType<UnicodeEncoding>();
 
-        It the_stated_encodings_codepage_should_be_UnicodeLittleEndian = () => Result.StatedEncoding.CodePage.ShouldEqual(UnicodeLittleEndianCodepage);
+        [Then] public void the_stated_encodings_codepage_should_be_UnicodeLittleEndian() => Result.StatedEncoding.CodePage.ShouldBe(UnicodeLittleEndianCodepage);
 
-        It the_actual_encoding_type_should_be_Unicode = () => Result.ActualEncoding.ShouldBeOfExactType<UnicodeEncoding>();
+        [Then] public void the_actual_encoding_type_should_be_Unicode() => Result.ActualEncoding.ShouldBeOfType<UnicodeEncoding>();
 
-        It the_actual_encodings_codepage_should_be_UnicodeLittleEndian = () => Result.ActualEncoding.CodePage.ShouldEqual(UnicodeLittleEndianCodepage);
+        [Then] public void the_actual_encodings_codepage_should_be_UnicodeLittleEndian() => Result.ActualEncoding.CodePage.ShouldBe(UnicodeLittleEndianCodepage);
     }
 
     public class when_an_ANSI_document_with_an_xml_declaration_with_no_encoding_is_parsed : XmlDeclarationParserTestsBase
     {
-        Establish context = () => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-ANSI.xml");
+        public override void Given() => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-ANSI.xml");
 
-        Because of = () => Result = Subject.Parse(SourceStream);
+        public override void When() => Result = Subject.Parse(SourceStream);
 
-        It the_result_should_indicate_the_declaration_was_present = () => Result.XmlDeclarationPresent.ShouldBeTrue();
+        [Then] public void the_result_should_indicate_the_declaration_was_present() => Result.XmlDeclarationPresent.ShouldBeTrue();
 
-        It the_stated_encoding_should_be_null = () => Result.StatedEncoding.ShouldBeNull();
+        [Then] public void the_stated_encoding_should_be_null() => Result.StatedEncoding.ShouldBeNull();
 
-        It the_actual_encoding_type_should_be_UTF8 = () => Result.ActualEncoding.ShouldBeOfExactType<UTF8Encoding>();
+        [Then] public void the_actual_encoding_type_should_be_UTF8() => Result.ActualEncoding.ShouldBeOfType<UTF8Encoding>();
 
-        It the_actual_encodings_codepage_should_be_Windows1252 = () => Result.ActualEncoding.CodePage.ShouldEqual(UTF8Codepage);
+        [Then] public void the_actual_encodings_codepage_should_be_Windows1252() => Result.ActualEncoding.CodePage.ShouldBe(UTF8Codepage);
     }
 
     public class when_an_ANSI_document_with_a_Windows1252_xml_declaration_is_parsed : XmlDeclarationParserTestsBase
     {
-        Establish context = () => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-ANSI-Windows1252.xml");
+        public override void Given() => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-WithDeclaration-ANSI-Windows1252.xml");
 
-        Because of = () => Result = Subject.Parse(SourceStream);
+        public override void When() => Result = Subject.Parse(SourceStream);
 
-        It the_result_should_indicate_the_declaration_was_present = () => Result.XmlDeclarationPresent.ShouldBeTrue();
+        [Then] public void the_result_should_indicate_the_declaration_was_present() => Result.XmlDeclarationPresent.ShouldBeTrue();
 
-        It the_stated_encodings_codepage_should_be_Windows1252 = () => Result.StatedEncoding.CodePage.ShouldEqual(Windows1252Encoding);
+        [Then] public void the_stated_encodings_codepage_should_be_Windows1252() => Result.StatedEncoding.CodePage.ShouldBe(Windows1252Encoding);
 
-        It the_actual_encodings_codepage_should_be_Windows1252 = () => Result.ActualEncoding.CodePage.ShouldEqual(Windows1252Encoding);
+        [Then] public void the_actual_encodings_codepage_should_be_Windows1252() => Result.ActualEncoding.CodePage.ShouldBe(Windows1252Encoding);
     }
 
     public class when_a_UTF16_document_with_no_xml_declaration_is_parsed : XmlDeclarationParserTestsBase
     {
-        Establish context = () => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-NoDeclaration-UTF16.xml");
+        public override void Given() => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-NoDeclaration-UTF16.xml");
 
-        Because of = () => Result = Subject.Parse(SourceStream);
+        public override void When() => Result = Subject.Parse(SourceStream);
 
-        It the_result_should_indicate_the_declaration_was_not_present = () => Result.XmlDeclarationPresent.ShouldBeFalse();
+        [Then] public void the_result_should_indicate_the_declaration_was_not_present() => Result.XmlDeclarationPresent.ShouldBeFalse();
 
-        It the_stated_encoding_should_be_null = () => Result.StatedEncoding.ShouldBeNull();
+        [Then] public void the_stated_encoding_should_be_null() => Result.StatedEncoding.ShouldBeNull();
 
-        It the_actual_encoding_type_should_be_Unicode = () => Result.ActualEncoding.ShouldBeOfExactType<UnicodeEncoding>();
+        [Then] public void the_actual_encoding_type_should_be_Unicode() => Result.ActualEncoding.ShouldBeOfType<UnicodeEncoding>();
 
-        It the_actual_encodings_codepage_should_be_UnicodeLittleEndian = () => Result.ActualEncoding.CodePage.ShouldEqual(UnicodeLittleEndianCodepage);
+        [Then] public void the_actual_encodings_codepage_should_be_UnicodeLittleEndian() => Result.ActualEncoding.CodePage.ShouldBe(UnicodeLittleEndianCodepage);
     }
 
     /// <summary>
@@ -137,18 +133,18 @@ namespace ConfigGen.Utilities.Tests.Xml.XmlDeclarationParserTests
     /// </summary>
     public class when_a_UTF8_document_with_an_incorrect_UTF16_xml_declaration_is_parsed : XmlDeclarationParserTestsBase
     {
-        Establish context = () => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-UTF8-File-With-UTF16-Declaration.xml");
+        public override void Given() => SourceStream = Assembly.GetExecutingAssembly().GetEmbeddedResourceFileStream("TestResources.Simple-UTF8-File-With-UTF16-Declaration.xml");
 
-        Because of = () => Result = Subject.Parse(SourceStream);
+        public override void When() => Result = Subject.Parse(SourceStream);
 
-        It the_result_should_indicate_the_declaration_was_present = () => Result.XmlDeclarationPresent.ShouldBeTrue();
+        [Then] public void the_result_should_indicate_the_declaration_was_present() => Result.XmlDeclarationPresent.ShouldBeTrue();
 
-        It the_stated_encoding_should_be_UTF8 = () => Result.StatedEncoding.ShouldBeOfExactType<UnicodeEncoding>();
+        [Then] public void the_stated_encoding_should_be_UTF8() => Result.StatedEncoding.ShouldBeOfType<UnicodeEncoding>();
 
-        It the_stated_encodings_codepage_should_be_UnicodeLittleEndian = () => Result.StatedEncoding.CodePage.ShouldEqual(UnicodeLittleEndianCodepage);
+        [Then] public void the_stated_encodings_codepage_should_be_UnicodeLittleEndian() => Result.StatedEncoding.CodePage.ShouldBe(UnicodeLittleEndianCodepage);
 
-        It the_actual_encoding_type_should_be_Unicode = () => Result.ActualEncoding.ShouldBeOfExactType<UTF8Encoding>();
+        [Then] public void the_actual_encoding_type_should_be_Unicode() => Result.ActualEncoding.ShouldBeOfType<UTF8Encoding>();
 
-        It the_actual_encodings_codepage_should_be_UTF8 = () => Result.ActualEncoding.CodePage.ShouldEqual(UTF8Codepage);
+        [Then] public void the_actual_encodings_codepage_should_be_UTF8() => Result.ActualEncoding.CodePage.ShouldBe(UTF8Codepage);
     }
 }

@@ -19,12 +19,14 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using NUnit.Framework;
+using System;
 
-namespace ConfigGen.Tests.Common.Framework
+namespace ConfigGen.Tests.Common
 {
-    public class ThenAttribute : TestAttribute
+    public class SpecificationException : Exception
     {
-
+        public SpecificationException(string message) : base(message)
+        {
+        }
     }
 }

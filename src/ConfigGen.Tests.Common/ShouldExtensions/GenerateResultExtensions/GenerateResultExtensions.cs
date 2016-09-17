@@ -24,7 +24,7 @@ using System.Linq;
 using ConfigGen.Api.Contract;
 using ConfigGen.Utilities.Annotations;
 
-namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions
+namespace ConfigGen.Tests.Common.ShouldExtensions.GenerateResultExtensions
 {
     public static class GenerateResultExtensions
     {

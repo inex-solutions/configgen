@@ -23,7 +23,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using ConfigGen.Tests.Common;
-using ConfigGen.Tests.Common.MSpecShouldExtensions;
+using ConfigGen.Tests.Common.ShouldExtensions;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 

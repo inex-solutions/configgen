@@ -24,8 +24,8 @@ using System.IO;
 using System.Reflection;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
-using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions;
-using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
+using ConfigGen.Tests.Common.ShouldExtensions.GenerateResultExtensions;
+using ConfigGen.Tests.Common.ShouldExtensions.GenerationError;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 

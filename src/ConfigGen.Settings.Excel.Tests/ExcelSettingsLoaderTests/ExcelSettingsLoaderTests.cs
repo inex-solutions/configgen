@@ -24,7 +24,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ConfigGen.Tests.Common.Extensions;
-using ConfigGen.Tests.Common.MSpecShouldExtensions.Error;
+using ConfigGen.Tests.Common.ShouldExtensions.Error;
 using Machine.Specifications;
 
 namespace ConfigGen.Settings.Excel.Tests.ExcelSettingsLoaderTests

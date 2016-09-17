@@ -23,8 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
-using ConfigGen.Tests.Common.MSpecShouldExtensions.Error;
-using ConfigGen.Tests.Common.MSpecShouldExtensions.ResultExtensions;
+using ConfigGen.Tests.Common.ShouldExtensions.Error;
+using ConfigGen.Tests.Common.ShouldExtensions.ResultExtensions;
 using Machine.Specifications;
 
 namespace ConfigGen.Settings.Excel.Tests.PreferencesTests

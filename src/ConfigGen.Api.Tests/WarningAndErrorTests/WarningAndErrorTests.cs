@@ -26,7 +26,7 @@ using System.Reflection;
 using ConfigGen.Api.Contract;
 using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.Extensions;
-using ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError;
+using ConfigGen.Tests.Common.ShouldExtensions.GenerationError;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 

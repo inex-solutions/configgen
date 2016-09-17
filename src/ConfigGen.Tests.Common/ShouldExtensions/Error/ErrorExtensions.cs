@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConfigGen.Tests.Common.MSpecShouldExtensions.Error
+namespace ConfigGen.Tests.Common.ShouldExtensions.Error
 {
     public static class ErrorExtensions
     {

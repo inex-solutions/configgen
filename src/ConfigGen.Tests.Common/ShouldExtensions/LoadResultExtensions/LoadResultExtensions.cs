@@ -24,7 +24,7 @@ using System.Linq;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Annotations;
 
-namespace ConfigGen.Tests.Common.MSpecShouldExtensions.LoadResultExtensions
+namespace ConfigGen.Tests.Common.ShouldExtensions.LoadResultExtensions
 {
     public static class LoadResultExtensions
     {

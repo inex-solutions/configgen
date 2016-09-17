@@ -25,7 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ConfigGen.Api.Contract;
-using ConfigGen.Tests.Common.MSpecShouldExtensions;
+using ConfigGen.Tests.Common.ShouldExtensions;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Annotations;
 using Shouldly;

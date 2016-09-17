@@ -26,7 +26,7 @@ using ConfigGen.Api.Contract;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Annotations;
 
-namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError
+namespace ConfigGen.Tests.Common.ShouldExtensions.GenerationError
 {
     public static class GenerationErrorExtensions
     {

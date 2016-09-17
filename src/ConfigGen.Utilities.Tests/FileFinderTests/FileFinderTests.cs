@@ -22,7 +22,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ConfigGen.Tests.Common.Framework;
-using ConfigGen.Tests.Common.MSpecShouldExtensions;
+using ConfigGen.Tests.Common.ShouldExtensions;
 
 // ReSharper disable PossibleNullReferenceException
 

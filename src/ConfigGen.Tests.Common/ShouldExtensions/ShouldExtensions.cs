@@ -27,7 +27,7 @@ using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
 using Shouldly;
 
-namespace ConfigGen.Tests.Common.MSpecShouldExtensions
+namespace ConfigGen.Tests.Common.ShouldExtensions
 {
     public static class ShouldExtensions
     {

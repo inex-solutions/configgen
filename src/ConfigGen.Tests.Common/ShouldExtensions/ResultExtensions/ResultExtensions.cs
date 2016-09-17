@@ -25,7 +25,7 @@ using System.Linq;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Annotations;
 
-namespace ConfigGen.Tests.Common.MSpecShouldExtensions.ResultExtensions
+namespace ConfigGen.Tests.Common.ShouldExtensions.ResultExtensions
 {
     public static class ResultExtensions
     {

@@ -29,3 +29,12 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyProduct("ConfigGen.Api.Tests")]
 [assembly: AssemblyCulture("")]
+
+// This assembly needs to directly reference NUnit - hence this attribute.
+// See NUnit 3 breaking changes for more info: https://github.com/nunit/docs/wiki/Breaking-Changes
+//
+// "A key change is that the NUnit Test Engine will not recognize a test assembly that does not reference the NUnit framework directly. 
+// ...
+// In such a case, NUnit will indicate that the assembly either contains no tests or the proper driver could not be found. 
+// To resolve this situation, simply add one NUnit attribute or other reference."
+[assembly: NUnit.Framework.Description("Utilities Tests")]

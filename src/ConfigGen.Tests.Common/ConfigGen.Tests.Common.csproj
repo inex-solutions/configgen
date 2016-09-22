@@ -79,6 +79,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CommonTests\TemplateTestsBase.cs" />
     <Compile Include="ConfigurationNotFoundException.cs" />
     <Compile Include="ErrorCodes.cs" />
     <Compile Include="Extensions\ConfigurationExtensions.cs" />

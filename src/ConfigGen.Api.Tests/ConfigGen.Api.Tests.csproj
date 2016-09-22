@@ -42,6 +42,7 @@
       <HintPath>..\packages\Machine.Specifications.Should.0.11.0\lib\net45\Machine.Specifications.Should.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Remoting" />
@@ -58,6 +59,8 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CsvSettingsLoaderTests\CsvSettingsLoaderTests.cs" />
+    <Compile Include="Experimental.cs" />
+    <Compile Include="Experimental2.cs" />
     <Compile Include="GenerationServiceTestBase.cs" />
     <Compile Include="ConfigurationNameSettingTests\ConfigurationNameSettingTests.cs" />
     <Compile Include="FakeLocalEnvironment.cs" />

@@ -45,13 +45,10 @@ namespace ConfigGen.Tests.Common
         protected static string ExpectedOutput;
         protected static Mock<IPreferencesManager> MockPreferencesManager;
 
-        private static IEnumerable<Configuration> configurations;
-
         Establish context = () =>
         {
             Configuration = null;
             TemplateContents = null;
-            configurations = null;
             LoadResult = null;
             RenderResult = null;
             ExpectedOutput = null;

@@ -29,8 +29,6 @@ namespace ConfigGen.Templating.Razor.Renderer
     [Serializable]
     public class RazorTemplateRenderResult
     {
-        private IDictionary<string, object> appliedPreferences;
-
         public RazorTemplateRenderResult(string error)
         {
             Error = error;

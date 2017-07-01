@@ -366,8 +366,6 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
 
     public class when_an_invalid_value_for_a_preference_is_applied: PreferenceManagerApplyTestBase
     {
-        private static PersonPreferences Result;
-
         Because of = () =>
         {
             ApplyErrors = Subject.ApplyPreferences(new Dictionary<string, string> { { "Age", "Not a number" } });
@@ -526,8 +524,6 @@ namespace ConfigGen.Domain.Contract.Tests.PreferenceManagerTests
 
     public class when_an_invalid_value_for_a_preference_is_applied_as_a_default : PreferenceManagerApplyTestBase
     {
-        private static PersonPreferences Result;
-
         Because of = () =>
         {
             ApplyDefaultErrors = Subject.ApplyDefaultPreferences(new Dictionary<string, string> { { "Age", "Not a number" } });

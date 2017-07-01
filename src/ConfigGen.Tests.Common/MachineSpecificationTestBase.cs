@@ -21,6 +21,7 @@
 
 using System.IO;
 using ConfigGen.Utilities;
+using ConfigGen.Utilities.Annotations;
 using Machine.Specifications;
 
 namespace ConfigGen.Tests.Common
@@ -28,9 +29,9 @@ namespace ConfigGen.Tests.Common
     public abstract class MachineSpecificationTestBase<TSubject>
     {
         protected static TSubject Subject;
-
+        [NotNull]
         protected static DisposableDirectory TestDirectory;
-
+        [NotNull]
         private static string InitialDirectory;
 
         Establish context = () =>

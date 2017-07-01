@@ -22,6 +22,7 @@
 using System;
 using ConfigGen.Api.Contract;
 using ConfigGen.Tests.Common;
+using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
@@ -31,11 +32,15 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.UnitTests
     public abstract class ConsoleRunnerUnitTestBase : MachineSpecificationTestBase<ConsoleApp.ConsoleRunner>
     {
         protected const string HelpText = "USAGE: cfg.exe [options]";
-
+        [NotNull]
         protected static TestLogger Logger;
+        [NotNull]
         protected static GenerationServiceMock GenerationServiceMock;
+        [NotNull]
         protected static PreferenceInfo StringParameterPreference;
+        [NotNull]
         protected static PreferenceInfo BooleanSwitchPreference;
+        [NotNull]
         protected static PreferenceInfo IntParameterPreference;
 
         Establish context = () =>

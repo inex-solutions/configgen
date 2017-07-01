@@ -53,7 +53,7 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
 </xmlRoot>";
         };
 
-        protected static ExitCodes ExitCode => (ExitCodes)Environment.ExitCode;
+        protected static ExitCodes ExitCode => (ExitCodes) Environment.ExitCode;
     }
 
     public class when_invoked_with_no_preferences_with_default_named_settings_and_template_files_present : ConsoleRunnerEndToEndTestBase
@@ -68,16 +68,16 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
 
         It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
 
-        It a_configuration_named_Configuration1_was_generated_in_its_own_folder = 
+        It a_configuration_named_Configuration1_was_generated_in_its_own_folder =
             () => File.Exists("Configs\\Configuration1\\Configuration1.xml");
 
-        It configuration1_contains_the_correct_contents = 
+        It configuration1_contains_the_correct_contents =
             () => File.ReadAllText("Configs\\Configuration1\\Configuration1.xml").ShouldContainXml(Configuration1ExpectedContents);
 
-        It a_configuration_named_Configuration2_was_generated_in_its_own_folder = 
+        It a_configuration_named_Configuration2_was_generated_in_its_own_folder =
             () => File.Exists("Configs\\Configuration2\\Configuration2.xml");
 
-        It configuration2_contains_the_correct_contents = 
+        It configuration2_contains_the_correct_contents =
             () => File.ReadAllText("Configs\\Configuration2\\Configuration2.xml").ShouldContainXml(Configuration2ExpectedContents);
     }
 
@@ -85,7 +85,8 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
     {
         Establish context = () =>
         {
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "SimpleSettings.TwoConfigurations.TwoValues.xls");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls",
+                "SimpleSettings.TwoConfigurations.TwoValues.xls");
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "SimpleTemplate.TwoTokens.xml");
         };
 
@@ -93,16 +94,76 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
 
         It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
 
-        It a_configuration_named_Configuration1_was_generated_in_its_own_folder = 
+        It a_configuration_named_Configuration1_was_generated_in_its_own_folder =
             () => File.Exists("Configs\\Configuration1\\Configuration1.xml");
 
-        It configuration1_contains_the_correct_contents = 
+        It configuration1_contains_the_correct_contents =
             () => File.ReadAllText("Configs\\Configuration1\\Configuration1.xml").ShouldContainXml(Configuration1ExpectedContents);
 
-        It a_configuration_named_Configuration2_was_generated_in_its_own_folder = 
+        It a_configuration_named_Configuration2_was_generated_in_its_own_folder =
             () => File.Exists("Configs\\Configuration2\\Configuration2.xml");
 
-        It configuration2_contains_the_correct_contents = 
+        It configuration2_contains_the_correct_contents =
             () => File.ReadAllText("Configs\\Configuration2\\Configuration2.xml").ShouldContainXml(Configuration2ExpectedContents);
+    }
+
+    public class when_a_generation_issue_is_returned_without_the_error_on_warnings_preference_having_been_set : ConsoleRunnerEndToEndTestBase
+    {
+        private const string TemplateFileName = "App.Config.Template.xml";
+        private const string TemplateFileContents = "<Value1>[%Value1%]</Value1>";
+        private const string SettingsFileName = "App.Config.Settings.csv";
+        private const string SettingsFileContents = @"
+MachineName, Value1
+Configuration1,
+";
+        Establish context = () =>
+        {
+            File.WriteAllText(TemplateFileName, TemplateFileContents);
+            File.WriteAllText(SettingsFileName, SettingsFileContents);
+        };
+
+        Because of = () => Subject.Run($"--settings-file {SettingsFileName} --template-file {TemplateFileName}".ToConsoleArgs());
+
+        It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
+    }
+
+    public class when_no_generation_issues_are_returned_and_the_error_on_warnings_preference_was_set : ConsoleRunnerEndToEndTestBase
+    {
+        private const string TemplateFileName = "App.Config.Template.xml";
+        private const string TemplateFileContents = "<Value1>[%Value1%]</Value1>";
+        private const string SettingsFileName = "App.Config.Settings.csv";
+        private const string SettingsFileContents = @"
+MachineName, Value1
+Configuration1, this-is-value-1
+";
+        Establish context = () =>
+        {
+            File.WriteAllText(TemplateFileName, TemplateFileContents);
+            File.WriteAllText(SettingsFileName, SettingsFileContents);
+        };
+
+        Because of = () => Subject.Run($"--settings-file {SettingsFileName} --template-file {TemplateFileName} --error-on-warnings".ToConsoleArgs());
+
+        It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
+    }
+
+    public class when_a_generation_issue_is_returned_with_the_error_on_warnings_preference_having_been_set : ConsoleRunnerEndToEndTestBase
+    {
+        private const string TemplateFileName = "App.Config.Template.xml";
+        private const string TemplateFileContents = "<Value1>[%Value1%]</Value1>";
+        private const string SettingsFileName = "App.Config.Settings.csv";
+        private const string SettingsFileContents = @"
+MachineName, Value1
+Configuration1,
+";
+        Establish context = () =>
+        {
+            File.WriteAllText(TemplateFileName, TemplateFileContents);
+            File.WriteAllText(SettingsFileName, SettingsFileContents);
+        };
+
+        Because of = () => Subject.Run($"--settings-file {SettingsFileName} --template-file {TemplateFileName} --error-on-warnings".ToConsoleArgs());
+
+        It the_exit_code_indicates_generation_failure = () => ExitCode.ShouldEqual(ExitCodes.GenerationFailed);
     }
 }

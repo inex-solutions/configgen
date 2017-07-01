@@ -24,6 +24,7 @@ namespace ConfigGen.ConsoleApp
     {
         Success = 0,
         HelpShown = 1,
-        ConsoleInputParseError = 2
+        ConsoleInputParseError = 2,
+        GenerationFailed = 3
     }
 }

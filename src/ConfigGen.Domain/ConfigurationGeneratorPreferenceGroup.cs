@@ -20,7 +20,6 @@
 #endregion
 
 using ConfigGen.Domain.Contract.Preferences;
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.Domain
 {
@@ -70,7 +69,7 @@ namespace ConfigGen.Domain
                     description: "write verbose logging to the console during execution",
                     argumentHelpText: "[true | false]",
                     parseAction: bool.Parse,
-                    setAction: (verbosity, preferences) => preferences.Verbosity = verbosity ? LoggingVerbosity.Verbose : LoggingVerbosity.Normal),
+                    setAction: (verbose, preferences) => preferences.Verbose = verbose),
 
                 new Preference<ConfigurationGeneratorPreferences, bool>(
                     name: "ErrorOnWarnings",

@@ -22,30 +22,30 @@
 using System;
 using System.Linq;
 using ConfigGen.Api.Contract;
+using ConfigGen.ConsoleApp.ConsoleOutput;
 using ConfigGen.Utilities.Annotations;
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.ConsoleApp
 {
     public class ResultWriter : IResultWriter
     {
         [NotNull]
-        private readonly ILogger _logger;
+        private readonly IConsoleWriter _consoleWriter;
 
-        public ResultWriter([NotNull] ILogger logger)
+        public ResultWriter([NotNull] IConsoleWriter consoleWriter)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            _logger = logger;
+            if (consoleWriter == null) throw new ArgumentNullException(nameof(consoleWriter));
+            _consoleWriter = consoleWriter;
         }
 
         public void Report(GenerateResult results)
         {
             if (results.Errors.Any())
             {
-                _logger.Error("Generation process failed: ");
+                _consoleWriter.Error("Generation process failed: ");
                 foreach (GenerationIssue error in results.Errors)
                 {
-                    _logger.Error(error.ToDisplayText());
+                    _consoleWriter.Error(error.ToDisplayText());
                 }
 
                 return;
@@ -60,21 +60,21 @@ namespace ConfigGen.ConsoleApp
                                         : result.UnusedTokens.Any() ? "WITH WARNINGS"
                                         : "WITHOUT WARNINGS";
 
-                _logger.Info($"{configurationName} - {changedMessage} - {warningsMessage}");
+                _consoleWriter.Info($"{configurationName} - {changedMessage} - {warningsMessage}");
 
                 foreach (var error in result.Errors)
                 {
-                    _logger.Error($" - {error.ToDisplayText()}");
+                    _consoleWriter.Error($" - {error.ToDisplayText()}");
                 }
 
                 foreach (var unusedToken in result.UnusedTokens)
                 {
-                    _logger.Warn($" - Unused token: {unusedToken}");
+                    _consoleWriter.Warn($" - Unused token: {unusedToken}");
                 }
 
                 foreach (var unrecognisedToken in result.UnrecognisedTokens)
                 {
-                    _logger.Warn($" - Unrecognised token: {unrecognisedToken}");
+                    _consoleWriter.Warn($" - Unrecognised token: {unrecognisedToken}");
                 }
             }
         }

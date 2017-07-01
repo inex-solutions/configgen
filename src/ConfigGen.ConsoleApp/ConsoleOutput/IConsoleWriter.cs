@@ -18,11 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Utilities.Logging
+namespace ConfigGen.ConsoleApp.ConsoleOutput
 {
-    public enum LoggingVerbosity
+    public interface IConsoleWriter
     {
-        Normal,
-        Verbose,
+        void Error(string message = null);
+        void Warn(string message = null);
+        void Info(string message = null);
     }
 }

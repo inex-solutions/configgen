@@ -26,7 +26,6 @@ using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Domain.PostProcessing;
 using ConfigGen.Utilities.IO;
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.Domain
 {
@@ -34,8 +33,6 @@ namespace ConfigGen.Domain
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule<Log4NetLoggerModule>();
-
             builder.RegisterModule<FileOutputModule>();
             builder.RegisterModule<ConfigurationFilteringModule>();
             builder.RegisterModule<PostProcessingModule>();

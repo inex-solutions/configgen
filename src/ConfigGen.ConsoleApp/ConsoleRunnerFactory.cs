@@ -31,6 +31,7 @@ namespace ConfigGen.ConsoleApp
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterModule<ConsoleAppModule>();
+
             var container = containerBuilder.Build();
 
             return container.Resolve<ConsoleRunner>();

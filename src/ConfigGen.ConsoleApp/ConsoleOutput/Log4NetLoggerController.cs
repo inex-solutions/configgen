@@ -19,7 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using log4net;
 using log4net.Appender;
 using log4net.Config;
@@ -27,25 +26,12 @@ using log4net.Core;
 using log4net.Filter;
 using log4net.Layout;
 
-namespace ConfigGen.Utilities.Logging
+namespace ConfigGen.ConsoleApp.ConsoleOutput
 {
-    public class Log4NetLoggerControler : ILoggerControler
+    public class Log4NetLoggerController
     {
-        public void SetLoggingVerbosity(LoggingVerbosity verbosity)
-        {
-            Level newLevel = verbosity == LoggingVerbosity.Normal 
-                ? Level.Info : verbosity == LoggingVerbosity.Verbose 
-                ? Level.Debug : Level.All;
-
-            var repository = (log4net.Repository.Hierarchy.Hierarchy)LogManager.GetRepository();
-            repository.Root.Level = newLevel;
-            repository.Threshold = newLevel;
-            repository.RaiseConfigurationChanged(EventArgs.Empty);
-        }
-
         public void InitialiseLogging()
         {
-
             const string layout = @"%message%newline";
 
             var consoleOutAppender = new ColoredConsoleAppender();

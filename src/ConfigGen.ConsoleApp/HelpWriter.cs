@@ -23,26 +23,26 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ConfigGen.Api.Contract;
+using ConfigGen.ConsoleApp.ConsoleOutput;
 using ConfigGen.Utilities.Annotations;
 using ConfigGen.Utilities.Extensions;
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.ConsoleApp
 {
     public class HelpWriter : IHelpWriter
     {
         [NotNull]
-        private readonly ILogger _logger;
+        private readonly IConsoleWriter _consoleWriter;
 
         [NotNull]
         private readonly ConsoleInputToPreferenceConverter _consoleInputToPreferenceConverter;
 
         private readonly int _width;
 
-        public HelpWriter([NotNull] ILogger logger)
+        public HelpWriter([NotNull] IConsoleWriter consoleWriter)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            _logger = logger;
+            if (consoleWriter == null) throw new ArgumentNullException(nameof(consoleWriter));
+            _consoleWriter = consoleWriter;
             _consoleInputToPreferenceConverter = new ConsoleInputToPreferenceConverter();
 
             try
@@ -65,26 +65,26 @@ namespace ConfigGen.ConsoleApp
         {
             if (preferenceGroups == null) throw new ArgumentNullException(nameof(preferenceGroups));
 
-            _logger.Info("USAGE: cfg.exe [options]");
-            _logger.Info(String.Empty);
-            _logger.Info("WHERE OPTIONS: ");
-            _logger.Info(String.Empty);
+            _consoleWriter.Info("USAGE: cfg.exe [options]");
+            _consoleWriter.Info(String.Empty);
+            _consoleWriter.Info("WHERE OPTIONS: ");
+            _consoleWriter.Info(String.Empty);
 
             foreach (var preferenceGroup in preferenceGroups)
             {
-                _logger.Info($"******** {preferenceGroup.Name} ********");
-                _logger.Info(String.Empty);
+                _consoleWriter.Info($"******** {preferenceGroup.Name} ********");
+                _consoleWriter.Info(String.Empty);
                 foreach (var preference in preferenceGroup.Preferences)
                 {
-                    _logger.Info(GetHelpTextForCommand(preference));
+                    _consoleWriter.Info(GetHelpTextForCommand(preference));
                 }
-                _logger.Info(String.Empty);
+                _consoleWriter.Info(String.Empty);
             }
 
-            _logger.Info(String.Empty);
-            _logger.Info("cfg.exe with no options is equivalent to:");
-            _logger.Info(String.Empty);
-            _logger.Info("cfg.exe -s App.Config.Settings.xls -t App.Config.Template.xml -o Configs");
+            _consoleWriter.Info(String.Empty);
+            _consoleWriter.Info("cfg.exe with no options is equivalent to:");
+            _consoleWriter.Info(String.Empty);
+            _consoleWriter.Info("cfg.exe -s App.Config.Settings.xls -t App.Config.Template.xml -o Configs");
         }
 
         private string GetHelpTextForCommand(PreferenceInfo preference)

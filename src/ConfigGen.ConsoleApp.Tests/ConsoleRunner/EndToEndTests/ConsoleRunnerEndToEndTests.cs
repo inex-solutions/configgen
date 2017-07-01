@@ -19,43 +19,14 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System;
 using System.IO;
 using System.Reflection;
-using ConfigGen.Tests.Common;
 using ConfigGen.Tests.Common.MSpecShouldExtensions;
 using ConfigGen.Utilities.Extensions;
 using Machine.Specifications;
 
 namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
 {
-    [Subject(typeof(ConsoleApp.ConsoleRunner))]
-    public abstract class ConsoleRunnerEndToEndTestBase : MachineSpecificationTestBase<ConsoleApp.ConsoleRunner>
-    {
-        protected static string Configuration1ExpectedContents;
-
-        protected static string Configuration2ExpectedContents;
-
-        Establish context = () =>
-        {
-            Subject = ConsoleRunnerFactory.GetConsoleRunner();
-
-            Configuration1ExpectedContents = @"<?xml version=""1.0"" encoding=""utf-8""?>
-<xmlRoot>
-  <Value1>Config1-Value1</Value1>
-  <Value2>Config1-Value2</Value2>
-</xmlRoot>";
-
-            Configuration2ExpectedContents = @"<?xml version=""1.0"" encoding=""utf-8""?>
-<xmlRoot>
-  <Value1>Config2-Value1</Value1>
-  <Value2>Config2-Value2</Value2>
-</xmlRoot>";
-        };
-
-        protected static ExitCodes ExitCode => (ExitCodes) Environment.ExitCode;
-    }
-
     public class when_invoked_with_no_preferences_with_default_named_settings_and_template_files_present : ConsoleRunnerEndToEndTestBase
     {
         Establish context = () =>
@@ -105,65 +76,5 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.EndToEndTests
 
         It configuration2_contains_the_correct_contents =
             () => File.ReadAllText("Configs\\Configuration2\\Configuration2.xml").ShouldContainXml(Configuration2ExpectedContents);
-    }
-
-    public class when_a_generation_issue_is_returned_without_the_error_on_warnings_preference_having_been_set : ConsoleRunnerEndToEndTestBase
-    {
-        private const string TemplateFileName = "App.Config.Template.xml";
-        private const string TemplateFileContents = "<Value1>[%Value1%]</Value1>";
-        private const string SettingsFileName = "App.Config.Settings.csv";
-        private const string SettingsFileContents = @"
-MachineName, Value1
-Configuration1,
-";
-        Establish context = () =>
-        {
-            File.WriteAllText(TemplateFileName, TemplateFileContents);
-            File.WriteAllText(SettingsFileName, SettingsFileContents);
-        };
-
-        Because of = () => Subject.Run($"--settings-file {SettingsFileName} --template-file {TemplateFileName}".ToConsoleArgs());
-
-        It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
-    }
-
-    public class when_no_generation_issues_are_returned_and_the_error_on_warnings_preference_was_set : ConsoleRunnerEndToEndTestBase
-    {
-        private const string TemplateFileName = "App.Config.Template.xml";
-        private const string TemplateFileContents = "<Value1>[%Value1%]</Value1>";
-        private const string SettingsFileName = "App.Config.Settings.csv";
-        private const string SettingsFileContents = @"
-MachineName, Value1
-Configuration1, this-is-value-1
-";
-        Establish context = () =>
-        {
-            File.WriteAllText(TemplateFileName, TemplateFileContents);
-            File.WriteAllText(SettingsFileName, SettingsFileContents);
-        };
-
-        Because of = () => Subject.Run($"--settings-file {SettingsFileName} --template-file {TemplateFileName} --error-on-warnings".ToConsoleArgs());
-
-        It the_exit_code_indicates_success = () => ExitCode.ShouldEqual(ExitCodes.Success);
-    }
-
-    public class when_a_generation_issue_is_returned_with_the_error_on_warnings_preference_having_been_set : ConsoleRunnerEndToEndTestBase
-    {
-        private const string TemplateFileName = "App.Config.Template.xml";
-        private const string TemplateFileContents = "<Value1>[%Value1%]</Value1>";
-        private const string SettingsFileName = "App.Config.Settings.csv";
-        private const string SettingsFileContents = @"
-MachineName, Value1
-Configuration1,
-";
-        Establish context = () =>
-        {
-            File.WriteAllText(TemplateFileName, TemplateFileContents);
-            File.WriteAllText(SettingsFileName, SettingsFileContents);
-        };
-
-        Because of = () => Subject.Run($"--settings-file {SettingsFileName} --template-file {TemplateFileName} --error-on-warnings".ToConsoleArgs());
-
-        It the_exit_code_indicates_generation_failure = () => ExitCode.ShouldEqual(ExitCodes.GenerationFailed);
     }
 }

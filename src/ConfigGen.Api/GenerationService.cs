@@ -27,7 +27,6 @@ using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Annotations;
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.Api
 {
@@ -39,29 +38,19 @@ namespace ConfigGen.Api
         private readonly IPreferencesManager _preferencesManager;
         [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
-        [NotNull]
-        private readonly ILogger _logger;
-        [NotNull]
-        private readonly ILoggerControler _loggerController;
 
         public GenerationService(
             [NotNull] IConfigurationGenerator generator,
             [NotNull] IPreferencesManager preferencesManager,
-            [NotNull] ITokenUsageTracker tokenUsageTracker,
-            [NotNull] ILogger logger,
-            [NotNull] ILoggerControler loggerController)
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (generator == null) throw new ArgumentNullException(nameof(generator));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
 
             _generator = generator;
             _preferencesManager = preferencesManager;
             _tokenUsageTracker = tokenUsageTracker;
-            _logger = logger;
-            _loggerController = loggerController;
         }
 
         [NotNull]
@@ -83,10 +72,6 @@ namespace ConfigGen.Api
                 generatedFiles: Enumerable.Empty<GeneratedFile>(),
                 errors: applyErrors.Select(p => new GenerationIssue(GenerationIssueSeverity.Error, p.Code, "GenerationService", p.Detail)));
             }
-
-            //TODO: doesn't belong here
-            _loggerController.SetLoggingVerbosity(configuration.Verbosity);
-            _logger.Debug("Verbose logging enabled");
 
             var result = _generator.GenerateConfigurations();
 

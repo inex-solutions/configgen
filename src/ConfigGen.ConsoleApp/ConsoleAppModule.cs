@@ -21,6 +21,7 @@
 
 using Autofac;
 using ConfigGen.Api;
+using ConfigGen.ConsoleApp.ConsoleOutput;
 
 namespace ConfigGen.ConsoleApp
 {
@@ -31,6 +32,7 @@ namespace ConfigGen.ConsoleApp
             builder.RegisterType<HelpWriter>().As<IHelpWriter>();
             builder.RegisterType<ResultWriter>().As<IResultWriter>();
             builder.RegisterModule<GenerationServiceModule>();
+            builder.RegisterModule<Log4NetLoggerModule>();
             builder.RegisterType<ConsoleRunner>();
         }
     }

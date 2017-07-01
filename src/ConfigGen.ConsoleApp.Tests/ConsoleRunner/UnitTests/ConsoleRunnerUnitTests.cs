@@ -33,7 +33,7 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.UnitTests
     {
         protected const string HelpText = "USAGE: cfg.exe [options]";
         [NotNull]
-        protected static TestLogger Logger;
+        protected static TestConsoleWriter ConsoleWriter;
         [NotNull]
         protected static GenerationServiceMock GenerationServiceMock;
         [NotNull]
@@ -51,8 +51,8 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.UnitTests
             BooleanSwitchPreference = ConsoleRunnerTestPreferencesGroup.BooleanSwitchPreference;
             IntParameterPreference = AlternativeConsoleRunnerTestPreferencesGroup.IntParameterPreference;
             GenerationServiceMock = new GenerationServiceMock(new PreferenceGroupInfo[] { consoleRunnerTestPreferencesGroup, alternativeConsoleRunnerTestPreferencesGroup });
-            Logger = new TestLogger();
-            Subject = new ConsoleApp.ConsoleRunner(GenerationServiceMock, Logger, new HelpWriter(Logger), new ResultWriter(Logger));
+            ConsoleWriter = new TestConsoleWriter();
+            Subject = new ConsoleApp.ConsoleRunner(GenerationServiceMock, ConsoleWriter, new HelpWriter(ConsoleWriter), new ResultWriter(ConsoleWriter));
         };
 
         protected static ExitCodes ExitCode => (ExitCodes) Environment.ExitCode;
@@ -62,7 +62,7 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.UnitTests
     {
         Because of = () => Subject.Run("--help".ToConsoleArgs());
 
-        It help_is_displayed = () => Logger.ShouldContainMessage(HelpText);
+        It help_is_displayed = () => ConsoleWriter.ShouldContainMessage(HelpText);
 
         It the_exit_code_indicates_help_was_displayed = () => ExitCode.ShouldEqual(ExitCodes.HelpShown);
 
@@ -166,7 +166,7 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.UnitTests
             () => GenerationServiceMock.GeneratorShouldNotHaveBeenInvoked();
 
         It the_correct_error_should_be_logged_to_the_console =
-            () => Logger.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnrecognisedParameterErrorText("--unknown-parameter"));
+            () => ConsoleWriter.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnrecognisedParameterErrorText("--unknown-parameter"));
     }
 
     public class when_run_with_an_unexpected_input_on_the_console : ConsoleRunnerUnitTestBase
@@ -179,7 +179,7 @@ namespace ConfigGen.ConsoleApp.Tests.ConsoleRunner.UnitTests
             () => GenerationServiceMock.GeneratorShouldNotHaveBeenInvoked();
 
         It the_correct_error_should_be_logged_to_the_console =
-            () => Logger.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnexpectedInputErrorText("unexpectedInput"));
+            () => ConsoleWriter.ShouldContainMessage(ConsoleInputToPreferenceConverter.GetUnexpectedInputErrorText("unexpectedInput"));
     }
 
     public class when_run_with_multiple_parameters_from_the_same_preferences_group : ConsoleRunnerUnitTestBase

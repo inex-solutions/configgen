@@ -19,8 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Utilities.Logging;
-
 namespace ConfigGen.Domain
 {
     public class ConfigurationGeneratorPreferences
@@ -40,7 +38,7 @@ namespace ConfigGen.Domain
 
         public string TemplateFileType { get; set; }
 
-        public LoggingVerbosity Verbosity { get; set; }
+        public bool Verbose { get; set; }
 
         public string ConfigurationNameSetting { get; set; }
 

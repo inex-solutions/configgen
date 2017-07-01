@@ -22,8 +22,8 @@
 using System.Reflection;
 
 [assembly: AssemblyCompany("Rob Levine")]
-[assembly: AssemblyCopyright("Copyright © Rob Levine 2010-2016 and other contributors")]
+[assembly: AssemblyCopyright("Copyright © Rob Levine 2010-2017 and other contributors")]
 [assembly: AssemblyTrademark("")]
 
-[assembly: AssemblyVersion("2.0.13.0")]
-[assembly: AssemblyFileVersion("2.0.13.0")]
+[assembly: AssemblyVersion("2.0.15.0")]
+[assembly: AssemblyFileVersion("2.0.15.0")]

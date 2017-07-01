@@ -18,12 +18,35 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Utilities.Logging
-{
-    public interface ILoggerControler
-    {
-        void InitialiseLogging();
 
-        void SetLoggingVerbosity(LoggingVerbosity verbosity);
+using ConfigGen.Utilities.Annotations;
+using log4net;
+
+namespace ConfigGen.ConsoleApp.ConsoleOutput
+{
+    public class Log4NetConsoleWriter : IConsoleWriter
+    {
+        [NotNull]
+        private readonly ILog _log4NetLogger;
+
+        public Log4NetConsoleWriter()
+        {
+            _log4NetLogger = LogManager.GetLogger(typeof(Log4NetConsoleWriter));
+        }
+
+        public void Error(string message = null)
+        {
+            _log4NetLogger.Error(message);
+        }
+
+        public void Warn(string message = null)
+        {
+            _log4NetLogger.Warn(message);
+        }
+
+        public void Info(string message = null)
+        {
+            _log4NetLogger.Info(message);
+        }
     }
 }

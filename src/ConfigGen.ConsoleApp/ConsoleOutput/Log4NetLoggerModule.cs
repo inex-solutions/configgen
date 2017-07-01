@@ -18,17 +18,27 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Utilities.Logging
+
+using System;
+using System.Linq;
+using System.Reflection;
+using Autofac;
+using Autofac.Core;
+using log4net;
+
+namespace ConfigGen.ConsoleApp.ConsoleOutput
 {
-    public interface ILogger
+    /// <summary>
+    /// Registers the <see cref="Log4NetConsoleWriter"/> as the <see cref="IConsoleWriter"/> implementation. 
+    /// Code taken from <see href="http://docs.autofac.org/en/latest/examples/log4net.html">Autofac documentation</see>.
+    /// </summary>
+    public class Log4NetLoggerModule : Autofac.Module
     {
-        void Error(string message = null);
-        void Error(string formatString, params object[] args);
-        void Warn(string message = null);
-        void Warn(string formatString, params object[] args);
-        void Info(string message = null);
-        void Info(string formatString, params object[] args);
-        void Debug(string message = null);
-        void Debug(string formatString, params object[] args);
+        protected override void Load(ContainerBuilder builder)
+        {
+            var loggerController = new Log4NetLoggerController();
+            loggerController.InitialiseLogging();
+            builder.RegisterType<Log4NetConsoleWriter>().As<IConsoleWriter>().SingleInstance();
+        }
     }
 }

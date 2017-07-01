@@ -9,6 +9,7 @@ using ConfigGen.Tests.Common.Extensions;
 using ConfigGen.Tests.Common.Framework;
 using ConfigGen.Tests.Common.ShouldExtensions.GenerateResultExtensions;
 using ConfigGen.Utilities.Extensions;
+using NUnit.Framework;
 
 namespace ConfigGen.Api.Tests
 {
@@ -42,8 +43,16 @@ namespace ConfigGen.Api.Tests
 
         protected static IContainer Container => LazyContainer.Value;
     }
+
+    [TestFixture("XmlTemplate")]
+    [TestFixture("RazorTemplate")]
     internal class when_the_XmlPrettyPrint_preference_is_enabled_in_the_template2 : ContainerAwareSpecificationTestBase<IGenerationService, GenerateResult>
     {
+        public when_the_XmlPrettyPrint_preference_is_enabled_in_the_template2(string templateType)
+        {
+            Console.WriteLine(templateType);
+        }
+
         public override void Setup()
         {
             base.Setup();

@@ -1,5 +1,5 @@
 ﻿#region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -18,12 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Utilities.Logging
+namespace ConfigGen.ConsoleApp.ConsoleOutput
 {
-    public interface ILoggerControler
+    public interface IConsoleWriter
     {
-        void InitialiseLogging();
-
-        void SetLoggingVerbosity(LoggingVerbosity verbosity);
+        void Error(string message = null);
+        void Warn(string message = null);
+        void Info(string message = null);
     }
 }

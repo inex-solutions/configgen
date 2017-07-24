@@ -1,5 +1,5 @@
 ﻿#region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -29,22 +29,16 @@ namespace ConfigGen.Api.Contract
     /// </summary>
     public class GenerationIssue
     {
-        public GenerationIssue(GenerationIssueSeverity severity, [NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
+        public GenerationIssue([NotNull] string code, [NotNull] string source, [CanBeNull] string detail)
         {
             if (code == null) throw new ArgumentNullException(nameof(code));
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (detail == null) throw new ArgumentNullException(nameof(detail));
 
-            Severity = severity;
             Code = code;
             Source = source;
             Detail = detail;
         }
-
-        /// <summary>
-        /// Gets the severity of the issue.
-        /// </summary>
-        public GenerationIssueSeverity Severity { get; }
 
         /// <summary>
         /// Gets the code for the issue.
@@ -65,11 +59,6 @@ namespace ConfigGen.Api.Contract
         public string Detail { get; }
 
         public override string ToString()
-        {
-            return $"{Severity.ToString().ToUpper()}: {ToDisplayText()}";
-        }
-
-        public string ToDisplayText()
         {
             return $"{Detail} ('{Code}' in '{Source}')";
         }

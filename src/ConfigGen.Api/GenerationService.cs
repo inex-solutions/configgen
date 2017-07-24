@@ -1,5 +1,5 @@
 ﻿#region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -27,7 +27,6 @@ using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Annotations;
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.Api
 {
@@ -39,29 +38,19 @@ namespace ConfigGen.Api
         private readonly IPreferencesManager _preferencesManager;
         [NotNull]
         private readonly ITokenUsageTracker _tokenUsageTracker;
-        [NotNull]
-        private readonly ILogger _logger;
-        [NotNull]
-        private readonly ILoggerControler _loggerController;
 
         public GenerationService(
             [NotNull] IConfigurationGenerator generator,
             [NotNull] IPreferencesManager preferencesManager,
-            [NotNull] ITokenUsageTracker tokenUsageTracker,
-            [NotNull] ILogger logger,
-            [NotNull] ILoggerControler loggerController)
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (generator == null) throw new ArgumentNullException(nameof(generator));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
             if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
-            if (loggerController == null) throw new ArgumentNullException(nameof(loggerController));
 
             _generator = generator;
             _preferencesManager = preferencesManager;
             _tokenUsageTracker = tokenUsageTracker;
-            _logger = logger;
-            _loggerController = loggerController;
         }
 
         [NotNull]
@@ -81,12 +70,8 @@ namespace ConfigGen.Api
             {
                 return new GenerateResult(
                 generatedFiles: Enumerable.Empty<GeneratedFile>(),
-                errors: applyErrors.Select(p => new GenerationIssue(GenerationIssueSeverity.Error, p.Code, "GenerationService", p.Detail)));
+                errors: applyErrors.Select(p => new GenerationIssue(p.Code, "GenerationService", p.Detail)));
             }
-
-            //TODO: doesn't belong here
-            _loggerController.SetLoggingVerbosity(configuration.Verbosity);
-            _logger.Debug("Verbose logging enabled");
 
             var result = _generator.GenerateConfigurations();
 
@@ -100,7 +85,7 @@ namespace ConfigGen.Api
 
             return new GenerateResult(
                 generatedFiles: generatedFiles,
-                errors: result.Errors.Select(e => e.ToGenerationError()));
+                errors: result.Errors.Select(e => e.ToGenerationIssue()));
         }
 
         [NotNull]
@@ -112,26 +97,28 @@ namespace ConfigGen.Api
             if (result == null) throw new ArgumentNullException(nameof(result));
             if (tokenUsageStatistics == null) throw new ArgumentNullException(nameof(tokenUsageStatistics));
 
-            var errors = result.Errors.Select(e => e.ToGenerationError());
+            var errors = result.Errors.Select(e => e.ToGenerationIssue());
 
             IEnumerable<GenerationIssue> warnings = Enumerable.Empty<GenerationIssue>();
+
             if (!errors.Any())
             {
-                var severity = configuration.ErrorOnWarnings ? GenerationIssueSeverity.Error : GenerationIssueSeverity.Warning;
-                warnings = tokenUsageStatistics.UnusedTokens.Select(t =>
-                    new GenerationIssue(severity, GenerationServiceErrorCodes.UnusedTokenErrorCode, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unused token: {t}"))
-                    .Concat(tokenUsageStatistics.UnrecognisedTokens.Select(t =>
-                        new GenerationIssue(severity, GenerationServiceErrorCodes.UnrecognisedToken, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unrecognised token: {t}")));
+                var unusedTokenWarnings = tokenUsageStatistics.UnusedTokens.Select(t =>
+                    new GenerationIssue(GenerationServiceErrorCodes.UnusedTokenErrorCode, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unused token: {t}"));
+
+                var unrecognisedTokenWarnings = tokenUsageStatistics.UnrecognisedTokens.Select(t =>
+                    new GenerationIssue(GenerationServiceErrorCodes.UnrecognisedToken, GenerationServiceErrorCodes.GenerationServiceErrorSource, $"Unrecognised token: {t}"));
+
+                if (configuration.ErrorOnWarnings)
+                {
+                    errors = errors.Concat(unusedTokenWarnings).Concat(unrecognisedTokenWarnings);
+                }
+                else
+                {
+                    warnings = warnings.Concat(unusedTokenWarnings).Concat(unrecognisedTokenWarnings);
+                }
             }
 
-
-            //TODO: Not convinced reporting errors as warnings belongs inside the api boundary.
-            if (configuration.ErrorOnWarnings)
-            {
-                errors = errors.Concat(warnings);
-                warnings = Enumerable.Empty<GenerationIssue>();
-            }
-            
             return new GeneratedFile(
                 result.ConfigurationName,
                 result.FullPath,

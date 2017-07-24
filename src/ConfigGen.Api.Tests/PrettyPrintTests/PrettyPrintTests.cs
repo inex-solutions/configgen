@@ -1,5 +1,5 @@
 ﻿#region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -32,8 +32,6 @@ namespace ConfigGen.Api.Tests.PrettyPrintTests
 {
     internal abstract class PrettyPrintTestBase : GenerationServiceTestBase
     {
-        protected static string ExpectedResult;
-
         Establish context = () =>
         {
             Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");

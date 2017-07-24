@@ -1,5 +1,5 @@
 ﻿#region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -18,8 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.Domain
 {
@@ -40,7 +38,7 @@ namespace ConfigGen.Domain
 
         public string TemplateFileType { get; set; }
 
-        public LoggingVerbosity Verbosity { get; set; }
+        public bool Verbose { get; set; }
 
         public string ConfigurationNameSetting { get; set; }
 

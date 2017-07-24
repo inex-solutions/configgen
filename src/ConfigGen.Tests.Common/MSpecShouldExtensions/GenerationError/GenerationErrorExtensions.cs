@@ -1,5 +1,5 @@
 #region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -70,7 +70,7 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError
 
             if (!matches.Any())
             {
-                var allItemsMessage = actualList.Any() ? string.Join(",", actualList.Select(e => e.ToDisplayText())) : "(empty list)";
+                var allItemsMessage = actualList.Any() ? string.Join(",", actualList.Select(e => e.ToString())) : "(empty list)";
                 throw new SpecificationException($"Expected an error with code {code}, but had: {allItemsMessage}");
             }
 
@@ -108,7 +108,7 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerationError
 
                 if (!matches.Any())
                 {
-                    var allItemsMessage = _allItems.Any() ? string.Join(",", _allItems.Select(e => e.ToDisplayText())) : "(empty list)";
+                    var allItemsMessage = _allItems.Any() ? string.Join(",", _allItems.Select(e => e.ToString())) : "(empty list)";
                     throw new SpecificationException(
                         $"Expected an error with {_partialMatchDescription}, Description containing '{partialDescription}', but got: {allItemsMessage}");
                 }

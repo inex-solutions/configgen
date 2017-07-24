@@ -1,5 +1,5 @@
 #region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -23,8 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Api.Contract;
+using ConfigGen.ConsoleApp.ConsoleOutput;
 using ConfigGen.Utilities.Annotations;
-using ConfigGen.Utilities.Logging;
 
 namespace ConfigGen.ConsoleApp
 {
@@ -34,7 +34,7 @@ namespace ConfigGen.ConsoleApp
         private readonly IGenerationService _generationService;
 
         [NotNull]
-        private readonly ILogger _logger;
+        private readonly IConsoleWriter _consoleWriter;
 
         [NotNull]
         private readonly IHelpWriter _helpWriter;
@@ -44,17 +44,17 @@ namespace ConfigGen.ConsoleApp
 
         public ConsoleRunner(
             [NotNull] IGenerationService generationService, 
-            [NotNull] ILogger logger,
+            [NotNull] IConsoleWriter consoleWriter,
             [NotNull] IHelpWriter helpWriter,
             [NotNull] IResultWriter resultWriter)
         {
             if (generationService == null) throw new ArgumentNullException(nameof(generationService));
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (consoleWriter == null) throw new ArgumentNullException(nameof(consoleWriter));
             if (resultWriter == null) throw new ArgumentNullException(nameof(resultWriter));
             if (helpWriter == null) throw new ArgumentNullException(nameof(helpWriter));
 
             _generationService = generationService;
-            _logger = logger;
+            _consoleWriter = consoleWriter;
             _helpWriter = helpWriter;
             _resultWriter = resultWriter;
         }
@@ -84,7 +84,7 @@ namespace ConfigGen.ConsoleApp
             {
                 foreach (var parseError in preferences.ParseErrors)
                 {
-                    _logger.Info(parseError);
+                    _consoleWriter.Info(parseError);
                 }
 
                 Environment.ExitCode = (int) ExitCodes.ConsoleInputParseError;
@@ -94,17 +94,17 @@ namespace ConfigGen.ConsoleApp
             GenerateResult results = _generationService.Generate(preferences.ParsedPreferences.ToDictionary(kvp => kvp.Key.Name, kvp => kvp.Value)); //TODO: cleanup
             _resultWriter.Report(results);
 
-            Environment.ExitCode = (int) ExitCodes.Success;
+            Environment.ExitCode = results.AllErrors.Any() ? (int)ExitCodes.GenerationFailed : (int)ExitCodes.Success;
         }
 
         private void ShowTitle()
         {
             var version = typeof(IGenerationService).Assembly.GetName().Version;
-            _logger.Info();
-            _logger.Info($"ConfigGen v{version} - Configuration file generation tool");
-            _logger.Info("(c)2010-2016 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
-            _logger.Info("--");
-            _logger.Info();
+            _consoleWriter.Info();
+            _consoleWriter.Info($"ConfigGen v{version} - Configuration file generation tool");
+            _consoleWriter.Info("(c)2010-2017 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
+            _consoleWriter.Info("--");
+            _consoleWriter.Info();
         }
     }
 }

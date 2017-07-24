@@ -1,5 +1,5 @@
 #region Copyright and License Notice
-// Copyright (C)2010-2016 - INEX Solutions Ltd
+// Copyright (C)2010-2017 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -24,6 +24,7 @@ namespace ConfigGen.ConsoleApp
     {
         Success = 0,
         HelpShown = 1,
-        ConsoleInputParseError = 2
+        ConsoleInputParseError = 2,
+        GenerationFailed = 3
     }
 }

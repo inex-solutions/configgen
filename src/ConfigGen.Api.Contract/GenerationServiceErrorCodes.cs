@@ -18,6 +18,9 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using ConfigGen.Utilities.Annotations;
+
 namespace ConfigGen.Api.Contract
 {
     /// <summary>
@@ -28,16 +31,19 @@ namespace ConfigGen.Api.Contract
         /// <summary>
         /// Error source for all errors originating in the service layer.
         /// </summary>
+        [NotNull]
         public static readonly string GenerationServiceErrorSource = "GenerationService";
 
         /// <summary>
         /// Code indicating a supplied token was unused.
         /// </summary>
+        [NotNull]
         public static readonly string UnusedTokenErrorCode = "UnusedToken";
 
         /// <summary>
         /// Code indicating a supplied token was not recognised.
         /// </summary>
+        [NotNull]
         public static readonly string UnrecognisedToken = "UnrecognisedToken";
     }
 }

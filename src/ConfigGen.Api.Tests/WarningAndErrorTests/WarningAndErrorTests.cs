@@ -241,7 +241,7 @@ namespace ConfigGen.Api.Tests.WarningAndErrorTests
         It no_individual_file_generation_warnings_are_reported_for_the_generation_that_used_all_tokens =
             () => Result.Configuration("Configuration1").Warnings.ShouldBeEmpty();
 
-        It a_single_file_generation_warning_is_reported_for_the_failed_generation_that_did_not_use_all_tokens =
+        It a_single_file_generation_warning_is_reported_for_the_failed_generation_with_the_unrecognised_token =
             () => Result.Configuration("Configuration2").Warnings.ShouldContainSingleItemWithCode(GenerationServiceErrorCodes.UnrecognisedToken);
     }
 

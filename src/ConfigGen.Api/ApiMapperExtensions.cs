@@ -31,10 +31,10 @@ namespace ConfigGen.Api
     public static class ApiMapperExtensions
     {
         [NotNull]
-        public static GenerationIssue ToGenerationError([NotNull] this Error error)
+        public static GenerationIssue ToGenerationIssue([NotNull] this Error error)
         {
             if (error == null) throw new ArgumentNullException(nameof(error));
-            return new GenerationIssue(severity:GenerationIssueSeverity.Error,  code: error.Code, source: error.Source, detail: error.Detail);
+            return new GenerationIssue(code: error.Code, source: error.Source, detail: error.Detail);
         }
 
         [NotNull]

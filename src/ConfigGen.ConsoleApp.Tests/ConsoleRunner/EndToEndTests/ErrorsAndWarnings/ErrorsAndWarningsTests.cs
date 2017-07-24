@@ -141,6 +141,5 @@ Configuration1, Config1_Value1, Config1_Value2
         It no_warnings_were_logged = () => TestConsoleWriter.ShouldNotHaveLoggedAnyWarnings();
 
         It an_error_was_logged_for_the_unused_token = () => TestConsoleWriter.ShouldHaveLoggedOneSingleErrorWithText("Unused token: Value2");
-
     }
 }

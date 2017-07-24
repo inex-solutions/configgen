@@ -45,7 +45,7 @@ namespace ConfigGen.ConsoleApp
                 _consoleWriter.Error("Generation process failed: ");
                 foreach (GenerationIssue error in results.Errors)
                 {
-                    _consoleWriter.Error(error.ToDisplayText());
+                    _consoleWriter.Error(error.ToString());
                 }
 
                 return;
@@ -64,17 +64,12 @@ namespace ConfigGen.ConsoleApp
 
                 foreach (var error in result.Errors)
                 {
-                    _consoleWriter.Error($" - {error.ToDisplayText()}");
+                    _consoleWriter.Error($" - {error}");
                 }
 
-                foreach (var unusedToken in result.UnusedTokens)
+                foreach (var warning in result.Warnings)
                 {
-                    _consoleWriter.Warn($" - Unused token: {unusedToken}");
-                }
-
-                foreach (var unrecognisedToken in result.UnrecognisedTokens)
-                {
-                    _consoleWriter.Warn($" - Unrecognised token: {unrecognisedToken}");
+                    _consoleWriter.Warn($" - {warning}");
                 }
             }
         }

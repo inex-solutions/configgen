@@ -57,19 +57,19 @@ namespace ConfigGen.ConsoleApp
                 string configurationName = result.ConfigurationName.PadRight(20);
                 string changedMessage = result.HasChanged ? "[FILE CHANGED]  " : "[FILE UNCHANGED]";
                 string warningsMessage = result.Errors.Any() ? "WITH ERRORS"
-                                        : result.UnusedTokens.Any() ? "WITH WARNINGS"
+                                        : result.Warnings.Any() ? "WITH WARNINGS"
                                         : "WITHOUT WARNINGS";
 
                 _consoleWriter.Info($"{configurationName} - {changedMessage} - {warningsMessage}");
 
                 foreach (var error in result.Errors)
                 {
-                    _consoleWriter.Error($" - {error}");
+                    _consoleWriter.Error($" - {error.Detail}");
                 }
 
                 foreach (var warning in result.Warnings)
                 {
-                    _consoleWriter.Warn($" - {warning}");
+                    _consoleWriter.Warn($" - {warning.Detail}");
                 }
             }
         }

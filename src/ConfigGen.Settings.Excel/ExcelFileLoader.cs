@@ -24,7 +24,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using ConfigGen.Utilities;
-using Excel;
+using ExcelDataReader;
 
 namespace ConfigGen.Settings.Excel
 {

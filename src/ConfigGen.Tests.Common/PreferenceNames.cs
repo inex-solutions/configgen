@@ -41,5 +41,6 @@ namespace ConfigGen.Tests.Common
         public const string FilenameSetting = "FilenameSetting";
         public const string ForceName = "ForceName";
         public const string OutputDirectory = "OutputDirectory";
+        public const string InhibitWrite = "InhibitWrite";
     }
 }

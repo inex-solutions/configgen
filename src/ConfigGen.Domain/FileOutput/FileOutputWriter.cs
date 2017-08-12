@@ -84,10 +84,7 @@ namespace ConfigGen.Domain.FileOutput
             }
 
             var fullPath = new FileInfo(outputFilename);
-            if (!fullPath.Directory.Exists)
-            {
-                fullPath.Directory.Create();
-            }
+
 
             Encoding encoding = result.Encoding ?? Encoding.UTF8;
             using (var stream = new MemoryStream())
@@ -99,8 +96,13 @@ namespace ConfigGen.Domain.FileOutput
 
                 bool hasChanged = !_streamComparer.AreEqual(stream, fullPath.FullName);
 
-                if (hasChanged)
+                if (hasChanged && !fileOutputPreferences.InhibitWrite)
                 {
+                    if (!fullPath.Directory.Exists)
+                    {
+                        fullPath.Directory.Create();
+                    }
+
                     stream.Position = 0;
                     File.WriteAllBytes(fullPath.FullName, stream.ToArray());
                 }

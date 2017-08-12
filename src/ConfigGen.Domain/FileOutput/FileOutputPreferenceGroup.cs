@@ -27,7 +27,7 @@ namespace ConfigGen.Domain.FileOutput
     {
         public FileOutputPreferenceGroup() : base(
             name: "File Output Preferences",
-            preferences: new[]
+            preferences: new IPreference<FileOutputPreferences>[]
             {
                 new Preference<FileOutputPreferences, string>(
                     name: "FilenameSetting",
@@ -51,7 +51,15 @@ namespace ConfigGen.Domain.FileOutput
                     description: "specifies the output directory into which to write the generated config files. If this directory does not exist, it will be created.",
                     argumentHelpText: "<output directory>",
                     parseAction: stringValue => stringValue,
-                    setAction: (stringValue, preferences) => preferences.OutputDirectory = stringValue)
+                    setAction: (stringValue, preferences) => preferences.OutputDirectory = stringValue),
+
+                new Preference<FileOutputPreferences, bool>(
+                    name: "InhibitWrite",
+                    shortName: "Inhibit",
+                    description: "Inhibits the actual writing of the generated config files, allowing a 'preview' of the process without overwriting exisitng files.",
+                    argumentHelpText: "[true | false]",
+                    parseAction: bool.Parse,
+                    setAction: (flag, preferences) => preferences.InhibitWrite = flag),
             })
         {
         }

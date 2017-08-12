@@ -273,4 +273,28 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
         It the_file_is_writen_as_ascii = () => Result.Configuration("Configuration1").ShouldHaveEncoding(Encoding.ASCII);
     }
+
+    internal class when_invoked_with_the_inhibit_write_preference : GenerationServiceTestBase
+    {
+        Establish context = () =>
+        {
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+
+            PreferencesToSupplyToGenerator = new Dictionary<string, string>
+            {
+                {PreferenceNames.InhibitWrite, "true"}
+            };
+        };
+
+        Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+        It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+        It one_file_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+        It the_generated_file_should_not_have_been_written_to_disk = () => File.Exists(Result.GeneratedFiles.First().FullPath).ShouldBeFalse();
+
+        It the_output_directory_should_not_have_been_created = () => new FileInfo(Result.GeneratedFiles.First().FullPath).Directory.Exists.ShouldBeFalse();
+    }
 }

@@ -41,5 +41,10 @@ namespace ConfigGen.Domain.FileOutput
         /// Gets or sets the output directory into which to write the generated files.
         /// </summary>
         public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// Gets or sets a flag that inhibits the writing of generated files.
+        /// </summary>
+        public bool InhibitWrite { get; set; }
     }
 }

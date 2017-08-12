@@ -84,7 +84,7 @@ namespace ConfigGen.ConsoleApp
             _consoleWriter.Info(String.Empty);
             _consoleWriter.Info("cfg.exe with no options is equivalent to:");
             _consoleWriter.Info(String.Empty);
-            _consoleWriter.Info("cfg.exe -s App.Config.Settings.xls -t App.Config.Template.xml -o Configs");
+            _consoleWriter.Info("cfg.exe -s App.Config.Settings.xls -cns MachineName -t App.Config.Template.xml -o Configs");
         }
 
         private string GetHelpTextForCommand(PreferenceInfo preference)

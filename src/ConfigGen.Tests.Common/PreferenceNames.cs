@@ -27,6 +27,7 @@ namespace ConfigGen.Tests.Common
         public const string SettingsFilePath = "SettingsFile";
         public const string SettingsFileType = "SettingsFileType";
         public const string ErrorOnWarnings = "ErrorOnWarnings";
+        public const string ErrorOnFileChanged = "ErrorOnFileChanged";
         public const string ConfigurationNameSetting = "ConfigurationNameSetting";
 
         public const string GenerateSpecifiedOnly = "GenerateSpecifiedOnly";

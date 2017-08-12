@@ -45,5 +45,11 @@ namespace ConfigGen.Api.Contract
         /// </summary>
         [NotNull]
         public static readonly string UnrecognisedToken = "UnrecognisedToken";
+
+        /// <summary>
+        /// Code indicating a file changed and the ErrorOnFileChanged preference was supplied.
+        /// </summary>
+        [NotNull]
+        public static readonly string FileChangedErrorCode = "FileChangedErrorCode"; 
     }
 }

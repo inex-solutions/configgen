@@ -27,6 +27,7 @@ using ConfigGen.Domain;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Utilities.Annotations;
+using ConfigGen.Utilities.Extensions;
 
 namespace ConfigGen.Api
 {
@@ -117,6 +118,16 @@ namespace ConfigGen.Api
                 {
                     warnings = warnings.Concat(unusedTokenWarnings).Concat(unrecognisedTokenWarnings);
                 }
+
+                if (configuration.ErrorOnFileChanged && result.HasChanged)
+                {
+                    var error = new GenerationIssue(
+                        GenerationServiceErrorCodes.FileChangedErrorCode, 
+                        GenerationServiceErrorCodes.GenerationServiceErrorSource, 
+                        $"File changed and preference 'ErrorOnFileChanged' was supplied.");
+                    errors = errors.Concat(error.ToSingleEnumerable());
+                }
+
             }
 
             return new GeneratedFile(

@@ -43,5 +43,7 @@ namespace ConfigGen.Domain
         public string ConfigurationNameSetting { get; set; }
 
         public bool ErrorOnWarnings { get; set; }
+
+        public bool ErrorOnFileChanged { get; set; }
     }
 }

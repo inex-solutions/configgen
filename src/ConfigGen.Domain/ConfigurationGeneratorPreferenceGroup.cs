@@ -79,6 +79,14 @@ namespace ConfigGen.Domain
                     parseAction: bool.Parse,
                     setAction: (flag, preferences) => preferences.ErrorOnWarnings = flag),
 
+                new Preference<ConfigurationGeneratorPreferences, bool>(
+                    name: "ErrorOnFileChanged",
+                    shortName: "ErrorChange",
+                    description: "Causes the program to report an error if any files were changed during configuration generation. Useful for verifying that settings and templates have not changed.",
+                    argumentHelpText: "[true | false]",
+                    parseAction: bool.Parse,
+                    setAction: (flag, preferences) => preferences.ErrorOnFileChanged = flag),
+
                 new Preference<ConfigurationGeneratorPreferences, string>(
                     name: "ConfigurationNameSetting",
                     shortName: null,

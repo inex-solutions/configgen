@@ -56,5 +56,10 @@ namespace ConfigGen.Api.Tests
 
         [NotNull]
         protected static IEnumerable<PreferenceGroupInfo> PreferenceGroups => lazyPreferenceGroups.Value;
+
+        protected static void SetPreference(string name, object value)
+        {
+            PreferencesToSupplyToGenerator.Add(name, value.ToString());
+        }
     }
 }

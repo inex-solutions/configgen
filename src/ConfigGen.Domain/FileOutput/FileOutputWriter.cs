@@ -22,6 +22,7 @@
 using System;
 using System.IO;
 using System.Text;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Domain.Contract.Preferences;
 using ConfigGen.Domain.Contract.Template;
 using ConfigGen.Utilities.Annotations;
@@ -41,15 +42,20 @@ namespace ConfigGen.Domain.FileOutput
         [NotNull]
         private readonly IPreferencesManager _preferencesManager;
 
+        [NotNull] private readonly ITokenUsageTracker _tokenUsageTracker;
+
         public FileOutputWriter(
             [NotNull] IStreamComparer streamComparer,
-            [NotNull] IPreferencesManager preferencesManager)
+            [NotNull] IPreferencesManager preferencesManager,
+            [NotNull] ITokenUsageTracker tokenUsageTracker)
         {
             if (streamComparer == null) throw new ArgumentNullException(nameof(streamComparer));
             if (preferencesManager == null) throw new ArgumentNullException(nameof(preferencesManager));
+            if (tokenUsageTracker == null) throw new ArgumentNullException(nameof(tokenUsageTracker));
 
             _streamComparer = streamComparer;
             _preferencesManager = preferencesManager;
+            _tokenUsageTracker = tokenUsageTracker;
         }
 
         /// <summary>
@@ -69,6 +75,7 @@ namespace ConfigGen.Domain.FileOutput
                 && val != null)
             {
                 outputFilename = val.ToString();
+                _tokenUsageTracker.OnTokenUsed(result.Configuration.ConfigurationName, fileOutputPreferences.FilenameSetting);
             }
 
             if (outputFilename.IsNullOrEmpty())

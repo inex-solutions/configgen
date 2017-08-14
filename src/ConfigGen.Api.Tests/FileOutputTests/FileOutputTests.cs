@@ -53,16 +53,26 @@ namespace ConfigGen.Api.Tests.FileOutputTests
             Result.EachConfiguration().ShouldBeInDirectory((configName, currentDirectory) => $"{Path.Combine(currentDirectory + "\\Configs", configName)}");
     }
 
-    internal class when_invoked_specifying_the_FilenameSetting_preference : GenerationServiceTestBase
+    internal class when_invoked_specifying_the_FilenameSetting_preference_of_a_token_which_is_not_otherwise_used : GenerationServiceTestBase
     {
         Establish context = () =>
         {
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.TwoConfigurations.TwoValues.xls", "App.Config.Settings.xls");
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+            string settings =
+                @"<ConfigGenSettings xmlns=""http://roblevine.co.uk/Namespaces/ConfigGen/Settings/1/0/"">
+    <Configuration Name=""Configuration1"">
+        <Setting Token=""Value1"">Config1-Value1</Setting>
+        <Setting Token=""Value2"">Config1-Value2</Setting>
+    </Configuration>
+</ConfigGenSettings>";
+            File.WriteAllText("App.Config.Settings.xml", settings);
 
+            string template = @"<xmlRoot>[%Value2%]</xmlRoot>";
+
+            File.WriteAllText("App.Config.Template.xml", template);
             PreferencesToSupplyToGenerator = new Dictionary<string, string>
             {
-                {PreferenceNames.FilenameSetting, "Value1"}
+                {PreferenceNames.SettingsFilePath, "App.Config.Settings.xml"},
+                {PreferenceNames.FilenameSetting, "Value1"},
             };
         };
 
@@ -70,13 +80,12 @@ namespace ConfigGen.Api.Tests.FileOutputTests
 
         It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
 
-        It two_files_are_generated = () => Result.GeneratedFiles.Count().ShouldEqual(2);
+        It the_result_indicates_no_warnings_were_raised = () => Result.ShouldIndicateNoWarnings();
+
+        It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
 
         It the_file_for_the_first_row_defaults_to_using_the_configuration_for_the_filename = () =>
             Result.Configuration("Configuration1").ShouldHaveFilename(configName => "Config1-Value1");
-
-        It the_file_for_the_second_row_defaults_to_using_the_configuration_for_the_filename = () =>
-            Result.Configuration("Configuration2").ShouldHaveFilename(configName => "Config2-Value1");
     }
 
     internal class when_invoked_specifying_the_OutputDirectory_preference : GenerationServiceTestBase

@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using ConfigGen.Tests.Common;
@@ -32,10 +33,19 @@ namespace ConfigGen.Api.Tests.ConfigurationNameSettingTests
 {
     internal class when_invoked_without_specifying_the_configuration_name_token : GenerationServiceTestBase
     {
-        Establish context = () =>
+        private Establish context = () =>
         {
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+            string settings = @"
+MachineName     , Value1
+Configuration1  , Config1-Value1";
+
+            string template = @"
+<xmlRoot>[%Value1%]</xmlRoot>";
+
+            File.WriteAllText("App.Config.Settings.csv", settings);
+            File.WriteAllText("App.Config.Template.xml", template);
+
+            SetPreference(PreferenceNames.SettingsFilePath, "App.Config.Settings.csv");
         };
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
@@ -54,13 +64,18 @@ namespace ConfigGen.Api.Tests.ConfigurationNameSettingTests
     {
         Establish context = () =>
         {
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+            string settings = @"
+MachineName     , Value1,       Value2
+Configuration1  , Config1-Value1, Config1-Value2";
 
-            PreferencesToSupplyToGenerator = new Dictionary<string, string>
-            {
-                {PreferenceNames.ConfigurationNameSetting, "Value1"}
-            };
+            string template = @"
+<xmlRoot>[%Value2%]</xmlRoot>";
+
+            File.WriteAllText("App.Config.Settings.csv", settings);
+            File.WriteAllText("App.Config.Template.xml", template);
+
+            SetPreference(PreferenceNames.SettingsFilePath, "App.Config.Settings.csv");
+            SetPreference(PreferenceNames.ConfigurationNameSetting, "Value1");
         };
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
@@ -73,19 +88,26 @@ namespace ConfigGen.Api.Tests.ConfigurationNameSettingTests
             () => Result.GeneratedFiles.Select(c => c.ConfigurationName).ShouldContainOnly("Config1-Value1");
 
         It the_MachineName_token_should_be_listed_as_unused = () => Result.Configuration("Config1-Value1").UnusedTokens.ShouldContain("MachineName");
+
+        It the_Value1_token_should_be_listed_as_used = () => Result.Configuration("Config1-Value1").UsedTokens.ShouldContain("Value1");
     }
 
     internal class when_invoked_with_the_the_configuration_name_setting_specified_as_a_non_existent_token : GenerationServiceTestBase
     {
         Establish context = () =>
         {
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
-            Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleTemplate.TwoTokens.xml", "App.Config.Template.xml");
+            string settings = @"
+MachineName     , Value1
+Configuration1  , Config1-Value1";
 
-            PreferencesToSupplyToGenerator = new Dictionary<string, string>
-            {
-                {PreferenceNames.ConfigurationNameSetting, "ValueXXX"}
-            };
+            string template = @"
+<xmlRoot>[%Value1%]</xmlRoot>";
+
+            File.WriteAllText("App.Config.Settings.csv", settings);
+            File.WriteAllText("App.Config.Template.xml", template);
+
+            SetPreference(PreferenceNames.SettingsFilePath, "App.Config.Settings.csv");
+            SetPreference(PreferenceNames.ConfigurationNameSetting, "ValueXXX");
         };
 
         Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);

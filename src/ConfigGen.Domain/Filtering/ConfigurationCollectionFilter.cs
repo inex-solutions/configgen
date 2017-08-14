@@ -56,12 +56,10 @@ namespace ConfigGen.Domain.Filtering
         [ItemNotNull]
         public IEnumerable<IConfiguration> Filter(
             [NotNull] ConfigurationCollectionFilterPreferences preferences, 
-            [NotNull] IEnumerable<IConfiguration> configurations,
-            [CanBeNull] Action<string> onTokenUsed)
+            [NotNull] IEnumerable<IConfiguration> configurations)
         {
             if (preferences == null) throw new ArgumentNullException(nameof(preferences));
             if (configurations == null) throw new ArgumentNullException(nameof(configurations));
-            if (onTokenUsed == null) onTokenUsed = token => { };
              
             if (!preferences.GenerateSpecifiedOnly.IsNullOrEmpty())
             {

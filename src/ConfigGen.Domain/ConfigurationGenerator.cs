@@ -32,6 +32,7 @@ using ConfigGen.Domain.FileOutput;
 using ConfigGen.Domain.Filtering;
 using ConfigGen.Utilities;
 using ConfigGen.Utilities.Annotations;
+using ConfigGen.Utilities.Extensions;
 using ConfigGen.Utilities.IO;
 
 namespace ConfigGen.Domain
@@ -89,7 +90,6 @@ namespace ConfigGen.Domain
         {
             var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
 
-            //TODO - To API: Template Load stuff?
             ITemplate template;
             TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType, out template);
 
@@ -113,7 +113,6 @@ namespace ConfigGen.Domain
                             $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
                 }
 
-                //TODO - To API: Settings Load stuff?
                 ISettingsLoader settingsLoader;
                 TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(configGenerationPreferences.SettingsFilePath,
                     configGenerationPreferences.SettingsFileType, out settingsLoader);
@@ -146,6 +145,7 @@ namespace ConfigGen.Domain
                 IEnumerable<IDictionary<string, object>> loadedSettings = result.Value;
 
                 var configurationCreationResult = _configurationFactory.CreateConfigurations(configGenerationPreferences, loadedSettings);
+
                 if (!configurationCreationResult.Success)
                 {
                     return GenerationResults.CreateFail(configurationCreationResult.Error);
@@ -155,12 +155,9 @@ namespace ConfigGen.Domain
 
                 var configurationCollectionFilterPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationCollectionFilterPreferences>();
 
-                var globallyUsedTokens = new HashSet<string>();
-
                 configurations = _configurationCollectionFilter.Filter(
                     configurationCollectionFilterPreferences,
-                    configurations,
-                    token => globallyUsedTokens.Add(token)); //NOPUSH - duplicate will throw error?
+                    configurations);
 
 
                 //TODO: make this pipeline async and parallelised

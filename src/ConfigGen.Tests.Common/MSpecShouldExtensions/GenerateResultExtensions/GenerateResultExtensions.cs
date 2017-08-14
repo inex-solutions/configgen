@@ -48,6 +48,24 @@ namespace ConfigGen.Tests.Common.MSpecShouldExtensions.GenerateResultExtensions
         }
 
         /// <summary>
+        /// Asserts the supplied result indicates no warnings were raised.
+        /// </summary>
+        [NotNull]
+        public static GenerateResult ShouldIndicateNoWarnings([NotNull] this GenerateResult results)
+        {
+            if (results == null) throw new ArgumentNullException(nameof(results));
+
+            var combinedWarnings = results.GeneratedFiles.SelectMany(f => f.Warnings).ToArray();
+
+            if (!combinedWarnings.Any())
+            {
+                return results;
+            }
+
+            throw new SpecificationException($"Should indicate success, but indicates failure with the following warnings {string.Join("\n- ", combinedWarnings.Select(e => e.ToString()))}");
+        }
+
+        /// <summary>
         /// Asserts the supplied result indicates success.
         /// </summary>
         [NotNull]

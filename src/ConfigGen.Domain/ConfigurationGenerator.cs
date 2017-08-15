@@ -86,12 +86,13 @@ namespace ConfigGen.Domain
              _preferencesManager = preferencesManager;
         }
 
+        [NotNull]
+        private ConfigurationGeneratorPreferences ConfigurationGeneratorPreferences => _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
+
         public GenerationResults GenerateConfigurations()
         {
-            var configGenerationPreferences = _preferencesManager.GetPreferenceInstance<ConfigurationGeneratorPreferences>();
-
             ITemplate template;
-            TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(configGenerationPreferences.TemplateFilePath, configGenerationPreferences.TemplateFileType, out template);
+            TryCreateResult templateCreationResult = _templateFactory.TryCreateItem(ConfigurationGeneratorPreferences.TemplateFilePath, ConfigurationGeneratorPreferences.TemplateFileType, out template);
 
             using (template)
             {
@@ -100,42 +101,44 @@ namespace ConfigGen.Domain
                     case TryCreateResult.FileNotFound:
                         return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.TemplateFileNotFound,
-                            $"Specified template file not found: {configGenerationPreferences.TemplateFilePath}"));
+                            $"Specified template file not found: {ConfigurationGeneratorPreferences.TemplateFilePath}"));
 
                     case TryCreateResult.FailedByExtension:
                         return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.TemplateTypeResolutionFailure,
-                            $"Failed to resolve template type from file extension: {configGenerationPreferences.TemplateFilePath.GetFileExtension()}"));
+                            $"Failed to resolve template type from file extension: {ConfigurationGeneratorPreferences.TemplateFilePath.GetFileExtension()}"));
 
                     case TryCreateResult.FailedByType:
                         return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.UnknownTemplateType,
-                            $"Unknown template type: {configGenerationPreferences.TemplateFileType}"));
+                            $"Unknown template type: {ConfigurationGeneratorPreferences.TemplateFileType}"));
                 }
 
                 ISettingsLoader settingsLoader;
-                TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(configGenerationPreferences.SettingsFilePath,
-                    configGenerationPreferences.SettingsFileType, out settingsLoader);
+                TryCreateResult settingsLoaderCreationResult = _configurationCollectionLoaderFactory.TryCreateItem(
+                    ConfigurationGeneratorPreferences.SettingsFilePath,
+                    ConfigurationGeneratorPreferences.SettingsFileType, 
+                    out settingsLoader);
 
                 switch (settingsLoaderCreationResult)
                 {
                     case TryCreateResult.FileNotFound:
                         return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.SettingsFileNotFound,
-                            $"Specified settings file not found: {configGenerationPreferences.SettingsFilePath}"));
+                            $"Specified settings file not found: {ConfigurationGeneratorPreferences.SettingsFilePath}"));
 
                     case TryCreateResult.FailedByExtension:
                         return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.SettingsLoaderTypeResolutionFailure,
-                            $"Failed to resolve settings loader type from file extension: {configGenerationPreferences.SettingsFilePath.GetFileExtension()}"));
+                            $"Failed to resolve settings loader type from file extension: {ConfigurationGeneratorPreferences.SettingsFilePath.GetFileExtension()}"));
 
                     case TryCreateResult.FailedByType:
                         return GenerationResults.CreateFail(new ConfigurationGeneratorError(
                             ConfigurationGeneratorErrorCodes.UnknownSettingsLoaderType,
-                            $"Unknown settings loader type: {configGenerationPreferences.SettingsFileType}"));
+                            $"Unknown settings loader type: {ConfigurationGeneratorPreferences.SettingsFileType}"));
                 }
 
-                var result = settingsLoader.LoadSettings(configGenerationPreferences.SettingsFilePath);
+                var result = settingsLoader.LoadSettings(ConfigurationGeneratorPreferences.SettingsFilePath);
 
                 if (!result.Success)
                 {
@@ -144,7 +147,7 @@ namespace ConfigGen.Domain
 
                 IEnumerable<IDictionary<string, object>> loadedSettings = result.Value;
 
-                var configurationCreationResult = _configurationFactory.CreateConfigurations(configGenerationPreferences, loadedSettings);
+                var configurationCreationResult = _configurationFactory.CreateConfigurations(ConfigurationGeneratorPreferences, loadedSettings);
 
                 if (!configurationCreationResult.Success)
                 {
@@ -162,7 +165,7 @@ namespace ConfigGen.Domain
 
                 //TODO: make this pipeline async and parallelised
                 //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
-                using (var templateStream = File.OpenRead(configGenerationPreferences.TemplateFilePath))
+                using (var templateStream = File.OpenRead(ConfigurationGeneratorPreferences.TemplateFilePath))
                 {
                     var loadResults = template.Load(templateStream);
 

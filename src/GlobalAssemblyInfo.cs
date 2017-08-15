@@ -25,5 +25,5 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Copyright © Rob Levine 2010-2017 and other contributors")]
 [assembly: AssemblyTrademark("")]
 
-[assembly: AssemblyVersion("2.0.19.0")]
-[assembly: AssemblyFileVersion("2.0.20.0")]
+[assembly: AssemblyVersion("2.0.21.0")]
+[assembly: AssemblyFileVersion("2.0.21.0")]

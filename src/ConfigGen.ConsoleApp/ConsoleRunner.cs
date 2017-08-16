@@ -91,7 +91,7 @@ namespace ConfigGen.ConsoleApp
                 return;
             }
 
-            GenerateResult results = _generationService.Generate(preferences.ParsedPreferences.ToDictionary(kvp => kvp.Key.Name, kvp => kvp.Value)); //TODO: cleanup
+            GenerateResult results = _generationService.Generate(preferences.ParsedPreferences);
             _resultWriter.Report(results);
 
             Environment.ExitCode = results.AllErrors.Any() ? (int)ExitCodes.GenerationFailed : (int)ExitCodes.Success;

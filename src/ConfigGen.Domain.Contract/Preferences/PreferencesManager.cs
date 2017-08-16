@@ -49,14 +49,13 @@ namespace ConfigGen.Domain.Contract.Preferences
 
             _preferenceGroups = preferenceGroups;
 
+            var preferences = preferenceGroups
+                .SelectMany(p => p.Preferences);
 
-            //TODO: cleanup - too much repetition...
-            var names = preferenceGroups
-                .SelectMany(p => p.Preferences)
+            var names = preferences
                 .Select(p => p.Name);
 
-            var shortNames = preferenceGroups
-                .SelectMany(p => p.Preferences)
+            var shortNames = preferences
                 .Select(p => p.ShortName)
                 .Where(n => n != null);
 
@@ -64,7 +63,7 @@ namespace ConfigGen.Domain.Contract.Preferences
 
             IEnumerable<string> tooMany = allNames
                 .GroupBy(p => p, p => p)
-                .Select(p => new { Key = p.Key, Count = p.Count() })
+                .Select(p => new {p.Key, Count = p.Count() })
                 .Where(p => p.Count > 1)
                 .Select(p => p.Key)
                 .ToList();

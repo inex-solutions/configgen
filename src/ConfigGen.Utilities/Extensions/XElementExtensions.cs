@@ -29,7 +29,6 @@ namespace ConfigGen.Utilities.Extensions
 {
     public static class XElementExtensions
     {
-        //TODO: investigate a better way of cloning an XElement
         [NotNull]
         public static XElement DeepClone([NotNull] this XElement element)
         {

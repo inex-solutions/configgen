@@ -69,6 +69,4 @@ namespace ConfigGen.Api.Tests.XmlTemplateTests
 
         It the_resulting_output_should_be_pretty_printed = () => Result.Configuration("Configuration1").ShouldContainText(ExpectedOutput);
     }
-
-    //TODO: what about unrecognised preferences? should result in errors?
 }

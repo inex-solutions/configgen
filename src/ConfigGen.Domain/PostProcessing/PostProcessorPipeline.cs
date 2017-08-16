@@ -48,8 +48,6 @@ namespace ConfigGen.Domain.PostProcessing
 
         public SingleTemplateRenderResults PostProcessResult(SingleTemplateRenderResults renderResult)
         {
-            //TODO: Improve on using SingleTemplateRenderResults at each step of the pipeline?
-
             var postProcesingPreferences = _preferencesManager.GetPreferenceInstance<PostProcessingPreferences>();
 
             string renderedResult = renderResult.RenderedResult;

@@ -79,7 +79,7 @@ namespace ConfigGen.ConsoleApp
 
             IList<PreferenceInfo> preferenceInfos = preferenceGroups.SelectMany(pg => pg.Preferences).ToList();
 
-            var parsedPreferences = new Dictionary<PreferenceInfo, string>();
+            var parsedPreferences = new Dictionary<string, string>();
             var parseErrors = new List<string>();
 
             var argsQueue = new Queue<string>(args);
@@ -106,7 +106,7 @@ namespace ConfigGen.ConsoleApp
                         value = argsQueue.Dequeue();
                     }
 
-                    parsedPreferences.Add(preference, value);
+                    parsedPreferences.Add(preference.Name, value);
                 }
             }
 

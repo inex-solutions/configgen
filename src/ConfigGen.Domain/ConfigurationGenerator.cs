@@ -37,7 +37,6 @@ using ConfigGen.Utilities.IO;
 
 namespace ConfigGen.Domain
 {
-    //TODO: Documentation
     public class ConfigurationGenerator : IConfigurationGenerator
     {
         [NotNull]
@@ -162,9 +161,6 @@ namespace ConfigGen.Domain
                     configurationCollectionFilterPreferences,
                     configurations);
 
-
-                //TODO: make this pipeline async and parallelised
-                //TODO: need to extract this out - or maybe move into the template itself (after all, this does represent a real template with its data)
                 using (var templateStream = File.OpenRead(ConfigurationGeneratorPreferences.TemplateFilePath))
                 {
                     var loadResults = template.Load(templateStream);

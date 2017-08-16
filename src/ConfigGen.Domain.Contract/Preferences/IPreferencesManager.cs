@@ -24,7 +24,6 @@ using ConfigGen.Utilities.Annotations;
 
 namespace ConfigGen.Domain.Contract.Preferences
 {
-    //TODO: document
     public interface IPreferencesManager
     {
         [NotNull]

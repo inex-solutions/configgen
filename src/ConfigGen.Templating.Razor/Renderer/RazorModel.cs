@@ -69,7 +69,8 @@ namespace ConfigGen.Templating.Razor.Renderer
             {
                 _accessedTokens.Add(key);
             }
-            else if (!_unrecognisedTokens.Contains(key))
+            else if (!_accessedTokens.Contains(key)
+                && !_unrecognisedTokens.Contains(key))
             {
                 _unrecognisedTokens.Add(key);
             }

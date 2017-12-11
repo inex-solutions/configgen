@@ -34,6 +34,41 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
     namespace RazorTemplate
     {
         //TODO: Move to domain tests?
+
+        internal class when_a_template_contains_the_same_token_used_twice : GenerationServiceTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+
+                string template = @"Razor Template Token1: @Model.Settings.Value1, Token2: @Model.Settings.Value2, Token1 Again: @Model.Settings.Value1";
+                File.WriteAllText("App.Config.Template.razor", template);
+
+                PreferencesToSupplyToGenerator = new Dictionary<string, string>
+                {
+                    {PreferenceNames.TemplateFilePath, "App.Config.Template.razor"}
+                };
+            };
+
+            Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It no_errors_were_raised =
+                () => Result.Configuration("Configuration1").Errors.ShouldBeEmpty();
+
+            It the_result_indicates_the_supplied_tokens_and_the_configuration_name_token_were_used =
+                () => Result.Configuration("Configuration1").UsedTokens.ShouldContainOnly("Value1", "Value2", "MachineName");
+
+            It the_result_indicates_there_were_no_unrecognised_tokens =
+                () => Result.Configuration("Configuration1").UnrecognisedTokens.ShouldBeEmpty();
+
+            It the_result_indicates_there_were_no_unused_tokens =
+                () => Result.Configuration("Configuration1").UnusedTokens.ShouldBeEmpty();
+        }
+
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {
             Establish context = () =>
@@ -107,6 +142,41 @@ namespace ConfigGen.Api.Tests.TokenUsageTests
     namespace XmlTemplate
     {
         //TODO: Move to domain tests?
+
+        internal class when_a_template_contains_the_same_token_used_twice : GenerationServiceTestBase
+        {
+            Establish context = () =>
+            {
+                Assembly.GetExecutingAssembly().CopyEmbeddedResourceFileTo("TestResources.SimpleSettings.OneConfiguration.TwoValues.xls", "App.Config.Settings.xls");
+
+                string template = @"<root><first>[%Value1%]</first><second>[%Value2%]</second><firstAgain>[%Value1%]</firstAgain></root>";
+                File.WriteAllText("App.Config.Template.xml", template);
+
+                PreferencesToSupplyToGenerator = new Dictionary<string, string>
+                {
+                    {PreferenceNames.TemplateFilePath, "App.Config.Template.xml"}
+                };
+            };
+
+            Because of = () => Result = Subject.Generate(PreferencesToSupplyToGenerator);
+
+            It the_result_indicates_success = () => Result.ShouldIndicateSuccess();
+
+            It one_file_is_generated = () => Result.GeneratedFiles.Count().ShouldEqual(1);
+
+            It no_errors_were_raised =
+                () => Result.Configuration("Configuration1").Errors.ShouldBeEmpty();
+
+            It the_result_indicates_the_supplied_tokens_and_the_configuration_name_token_were_used =
+                () => Result.Configuration("Configuration1").UsedTokens.ShouldContainOnly("Value1", "Value2", "MachineName");
+
+            It the_result_indicates_there_were_no_unrecognised_tokens =
+                () => Result.Configuration("Configuration1").UnrecognisedTokens.ShouldBeEmpty();
+
+            It the_result_indicates_there_were_no_unused_tokens =
+                () => Result.Configuration("Configuration1").UnusedTokens.ShouldBeEmpty();
+        }
+
         internal class when_a_template_contains_one_supplied_token_one_unknown_token_and_does_not_contain_further_supplied_token : GenerationServiceTestBase
         {
             Establish context = () =>

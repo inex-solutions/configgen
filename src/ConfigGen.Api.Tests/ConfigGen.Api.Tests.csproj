@@ -41,6 +41,9 @@
       <HintPath>..\packages\Machine.Specifications.Should.0.11.0\lib\net45\Machine.Specifications.Should.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Remoting" />
@@ -67,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplatePreferencesTests\TemplatePreferencesTests.cs" />
     <Compile Include="TemplateTypeSelectionTests\TemplateTypeSelectionTests.cs" />
+    <Compile Include="TokenUsageTests\Rework.cs" />
     <Compile Include="TokenUsageTests\TokenUsageTests.cs" />
     <Compile Include="WarningAndErrorTests\WarningAndErrorTests.cs" />
     <Compile Include="XmlSettingsLoaderTests\XmlSettingsLoaderTests.cs" />

@@ -29,8 +29,14 @@ namespace ConfigGen.Tests.Common.SpecificationTests
     {
         protected abstract void Given();
         protected abstract void When();
-        protected abstract void Setup();
-        protected abstract void Cleanup();
+
+        protected virtual void Setup()
+        {
+        }
+
+        protected virtual void Cleanup()
+        {
+        }
 
         [OneTimeSetUp]
         private void OneTimeSetUp()

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace ConfigGen.Application.Test.Common.Specification
 {
@@ -6,7 +7,7 @@ namespace ConfigGen.Application.Test.Common.Specification
     public abstract class SpecificationBase
     {
         [OneTimeSetUp]
-        private void OneTimeSetUp()
+        public void OneTimeSetUp()
         {
             Setup();
             Given();
@@ -14,7 +15,7 @@ namespace ConfigGen.Application.Test.Common.Specification
         }
 
         [OneTimeTearDown]
-        private void OneTimeTearDown()
+        public void OneTimeTearDown()
         {
             Cleanup();
         }
@@ -37,6 +38,45 @@ namespace ConfigGen.Application.Test.Common.Specification
         protected virtual void Cleanup()
         {
 
+        }
+    }
+
+
+    [TestFixture]
+    public abstract class SpecificationBaseAsync
+    {
+        [OneTimeSetUp]
+        public async Task OneTimeSetUp()
+        {
+            await Setup();
+            await Given();
+            await When();
+        }
+
+        [OneTimeTearDown]
+        public async Task OneTimeTearDown()
+        {
+            await Cleanup();
+        }
+
+        protected virtual async Task Setup()
+        {
+            await Task.FromResult(0);
+        }
+
+        protected virtual async Task Given()
+        {
+            await Task.FromResult(0);
+        }
+
+        protected virtual async Task When()
+        {
+            await Task.FromResult(0);
+        }
+
+        protected virtual async Task Cleanup()
+        {
+            await Task.FromResult(0);
         }
     }
 }

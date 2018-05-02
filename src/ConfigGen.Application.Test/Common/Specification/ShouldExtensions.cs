@@ -1,4 +1,4 @@
-﻿#region Copyright and License Notice
+﻿#region Copyright and Licence Notice
 // Copyright (C)2010-2018 - INEX Solutions Ltd
 // https://github.com/inex-solutions/configgen
 // 

@@ -19,7 +19,9 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System;
 using System.Threading.Tasks;
+using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
 using ConfigGen.Utilities;
 
@@ -27,17 +29,27 @@ namespace ConfigGen.Application.Test.Common
 {
     public abstract class ApplicationTestBase : SpecificationBaseAsync
     {
-       protected DisposableDirectory DisposableDirectory;
+        protected DisposableDirectory TestDirectory { get; private set; }
+        protected IConfigurationGenerationService ConfigGenService { get; private set; }
+        protected IConfigurationGenerationResult Result { get; set; }
+        protected Exception CaughtException { get; set; }
+        protected ConfigurationGenerationOptions Options { get; private set; }
 
         protected override async Task Setup()
         {
-            DisposableDirectory = new DisposableDirectory();
+            TestDirectory = new DisposableDirectory();
+            ConfigGenService = new ConfigurationGenerationService();
+            Options = new ConfigurationGenerationOptions
+            {
+                OutputDirectory = TestDirectory.FullName
+            };
+
             await base.Setup();
         }
 
         protected override async Task Cleanup()
         {
-            DisposableDirectory.Dispose();
+            TestDirectory.Dispose();
             await base.Cleanup();
         }
     }

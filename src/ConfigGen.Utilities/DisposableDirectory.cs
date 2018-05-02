@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace ConfigGen.Utilities
@@ -27,6 +28,7 @@ namespace ConfigGen.Utilities
     /// <summary>
     /// The disposable directory is a directory that is automatically deleted on disposable.
     /// </summary>
+    [DebuggerDisplay("{" + nameof(FullName) + "}")]
     public class DisposableDirectory : IDisposable
     {
         private readonly bool _throwOnFailedCleanup;

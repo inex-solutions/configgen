@@ -18,9 +18,20 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
+using System.Collections.Generic;
+using System.Linq;
+
 namespace ConfigGen.Application.Contract
 {
     public class ConfigurationGenerationResult : IConfigurationGenerationResult
     {
+        public ConfigurationGenerationResult(IEnumerable<GeneratedFileResult> generatedFiles)
+        {
+            GeneratedFiles = generatedFiles.ToArray();
+        }
+
+        public GeneratedFileResult[] GeneratedFiles { get; }
+
     }
 }

@@ -19,23 +19,15 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Threading.Tasks;
-using ConfigGen.Application.Test.Common;
-using ConfigGen.Application.Test.Common.Specification;
-using ConfigGen.Utilities;
-using Shouldly;
+using System.IO;
 
-namespace ConfigGen.Application.Test.SimpleTests
+namespace ConfigGen.Utilities
 {
-    public class when_cfg_is_run : ApplicationTestBase
+    public static class DisposableDirectoryExtensions
     {
-        protected override async Task When() => Result = await ConfigGenService.GenerateConfigurations(Options);
-
-        [Then]
-        public void the_result_shows_a_single_file_named_App_Config_was_generated() => Result.ShouldHaveGenerated(1).File.Named("App.Config");
-
-        [Then]
-        public void the_single_file_named_App_Config_exisis() => TestDirectory.File("App.Config").Exists.ShouldBeTrue();
+        public static FileInfo File(this DisposableDirectory disposableDirectory, string filePath)
+        {
+            return new FileInfo(Path.Combine(disposableDirectory.FullName, filePath));
+        }
     }
 }
- 

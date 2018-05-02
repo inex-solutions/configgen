@@ -19,6 +19,8 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
 
@@ -28,7 +30,13 @@ namespace ConfigGen.Application
     {
         public async Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options)
         {
-            return await Task.FromResult(new ConfigurationGenerationResult());
+            await File.WriteAllTextAsync(Path.Combine(options.OutputDirectory, "App.Config"), "test file");
+            return await Task.FromResult(
+                new ConfigurationGenerationResult(
+                    new List<GeneratedFileResult>
+                    {
+                        new GeneratedFileResult("App.Config")
+                    }));
         }
     }
 }

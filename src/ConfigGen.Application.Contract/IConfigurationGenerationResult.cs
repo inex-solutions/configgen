@@ -18,9 +18,13 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 namespace ConfigGen.Application.Contract
 {
     public interface IConfigurationGenerationResult
     {
+        GeneratedFileResult[] GeneratedFiles { get; }
     }
+
+
 }

@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Application.Contr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Application.Test", "ConfigGen.Application.Test\ConfigGen.Application.Test.csproj", "{8CF6DB4E-405C-452B-A2AC-3634650242B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Utilities", "ConfigGen.Utilities\ConfigGen.Utilities.csproj", "{BAE83580-C012-44CD-9EF7-A8E3A7DE9336}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Utilities", "ConfigGen.Utilities\ConfigGen.Utilities.csproj", "{BAE83580-C012-44CD-9EF7-A8E3A7DE9336}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Utilities.Test", "ConfigGen.Utilities.Test\ConfigGen.Utilities.Test.csproj", "{A1094D67-44E9-4BE7-B7B7-711FF654D3BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Utilities.Test", "ConfigGen.Utilities.Test\ConfigGen.Utilities.Test.csproj", "{A1094D67-44E9-4BE7-B7B7-711FF654D3BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Application", "ConfigGen.Application\ConfigGen.Application.csproj", "{C4F5E86F-6B03-435F-BB8A-E2704505AED3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A1094D67-44E9-4BE7-B7B7-711FF654D3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1094D67-44E9-4BE7-B7B7-711FF654D3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1094D67-44E9-4BE7-B7B7-711FF654D3BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F5E86F-6B03-435F-BB8A-E2704505AED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F5E86F-6B03-435F-BB8A-E2704505AED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F5E86F-6B03-435F-BB8A-E2704505AED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F5E86F-6B03-435F-BB8A-E2704505AED3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

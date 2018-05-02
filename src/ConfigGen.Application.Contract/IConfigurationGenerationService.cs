@@ -20,25 +20,11 @@
 #endregion
 
 using System.Threading.Tasks;
-using ConfigGen.Application.Test.Common.Specification;
-using ConfigGen.Utilities;
 
-namespace ConfigGen.Application.Test.Common
+namespace ConfigGen.Application.Contract
 {
-    public abstract class ApplicationTestBase : SpecificationBaseAsync
+    public interface IConfigurationGenerationService
     {
-       protected DisposableDirectory DisposableDirectory;
-
-        protected override async Task Setup()
-        {
-            DisposableDirectory = new DisposableDirectory();
-            await base.Setup();
-        }
-
-        protected override async Task Cleanup()
-        {
-            DisposableDirectory.Dispose();
-            await base.Cleanup();
-        }
+        Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options);
     }
 }

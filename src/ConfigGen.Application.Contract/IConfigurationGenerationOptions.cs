@@ -18,27 +18,9 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.Threading.Tasks;
-using ConfigGen.Application.Test.Common.Specification;
-using ConfigGen.Utilities;
-
-namespace ConfigGen.Application.Test.Common
+namespace ConfigGen.Application.Contract
 {
-    public abstract class ApplicationTestBase : SpecificationBaseAsync
+    public interface IConfigurationGenerationOptions
     {
-       protected DisposableDirectory DisposableDirectory;
-
-        protected override async Task Setup()
-        {
-            DisposableDirectory = new DisposableDirectory();
-            await base.Setup();
-        }
-
-        protected override async Task Cleanup()
-        {
-            DisposableDirectory.Dispose();
-            await base.Cleanup();
-        }
     }
 }

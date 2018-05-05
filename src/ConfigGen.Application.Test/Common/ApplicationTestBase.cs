@@ -39,10 +39,7 @@ namespace ConfigGen.Application.Test.Common
         {
             TestDirectory = new DisposableDirectory();
             ConfigGenService = new ConfigurationGenerationService();
-            Options = new ConfigurationGenerationOptions
-            {
-                OutputDirectory = TestDirectory.FullName
-            };
+            Options = new ConfigurationGenerationOptions();
 
             await base.Setup();
         }
@@ -51,6 +48,18 @@ namespace ConfigGen.Application.Test.Common
         {
             TestDirectory.Dispose();
             await base.Cleanup();
+        }
+
+        protected async Task SettingsFileContains(string contents)
+        {
+            await SpreadsheetWriter.CreateXlsxAsync(
+                file: TestDirectory.File("App.Config.Settings.xlsx"),
+                contents: contents);
+        }
+
+        protected void SetOutputDirectory(string outputDirectory)
+        {
+            Options.OutputDirectory = outputDirectory;
         }
     }
 }

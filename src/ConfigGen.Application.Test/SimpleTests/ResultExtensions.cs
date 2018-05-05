@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
@@ -43,7 +44,7 @@ namespace ConfigGen.Application.Test.SimpleTests
                 _num = num;
             }
 
-            public SingleGeneratedFileAssertions File
+            public GeneratedFileAssertions File
             {
                 get
                 {
@@ -52,30 +53,32 @@ namespace ConfigGen.Application.Test.SimpleTests
                         throw new SpecificationException($"Expected exactly 1 file to be generated, but there were {_result.GeneratedFiles.Length}");
                     }
 
-                    var file = _result.GeneratedFiles.First();
-                    return new SingleGeneratedFileAssertions(file);
+                    return new GeneratedFileAssertions(_result.GeneratedFiles);
                 }
             }
 
-            public class SingleGeneratedFileAssertions
+            public GeneratedFileAssertions Files
             {
-                private readonly GeneratedFileResult _file;
-
-                public SingleGeneratedFileAssertions(GeneratedFileResult file)
+                get
                 {
-                    _file = file;
-                }
-
-                public void Named(string expectedName)
-                {
-                    if (expectedName != _file.Name)
-                    {
-                        throw new SpecificationException($"Incorrect name on generated file. Expected '{expectedName}', but was '{_file.Name}'");
-                    }
+                    return new GeneratedFileAssertions(_result.GeneratedFiles);
                 }
             }
         }
 
+        public class GeneratedFileAssertions
+        {
+            private readonly IEnumerable<GeneratedFileResult> _files;
 
+            public GeneratedFileAssertions(IEnumerable<GeneratedFileResult> files)
+            {
+                _files = files;
+            }
+
+            public void Named(params string[] expectedNames)
+            {
+                _files.Select(f => f.Name).ShouldContainOnly(expectedNames);
+            }
+        }
     }
 }

@@ -27,15 +27,29 @@ using Shouldly;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {
-    public class when_cfg_is_run : ApplicationTestBase
+    public class given_a_spreadsheet_with_two_entries : ApplicationTestBase
     {
+        protected override async Task Given()
+        {
+            await SettingsFileContains(@"
+Filename    | Col1   | Col2
+            |        |
+App1.Config | Val1-1 | Val1-2
+App2.Config | Val2-1 | Val2-2");
+
+            SetOutputDirectory(TestDirectory.FullName);
+        }
+
         protected override async Task When() => Result = await ConfigGenService.GenerateConfigurations(Options);
 
         [Then]
-        public void the_result_shows_a_single_file_named_App_Config_was_generated() => Result.ShouldHaveGenerated(1).File.Named("App.Config");
+        public void the_result_reports_two_files_were_generated_with_the_names_specified() => Result.ShouldHaveGenerated(2).Files.Named("App1.Config","App2.Config");
 
         [Then]
-        public void the_single_file_named_App_Config_exisis() => TestDirectory.File("App.Config").Exists.ShouldBeTrue();
+        public void the_first_specified_config_file_exists() => TestDirectory.File("App1.Config").Exists.ShouldBeTrue();
+
+        [Then]
+        public void the_second_specified_config_file_exists() => TestDirectory.File("App2.Config").Exists.ShouldBeTrue();
     }
 }
  

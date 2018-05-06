@@ -20,7 +20,7 @@
 #endregion
 namespace ConfigGen.Application.Contract
 {
-    public interface IConfigurationGenerationOptions : IFileOutputOptions
+    public interface IConfigurationGenerationOptions : IFileOutputOptions, ISettingsLoaderOptions
     {
     }
 }

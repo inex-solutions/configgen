@@ -8,4 +8,10 @@
     <ProjectReference Include="..\ConfigGen.Application.Contract\ConfigGen.Application.Contract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="EPPlus">
+      <HintPath>C:\Users\robdev\.nuget\packages\epplus\4.5.1\lib\netstandard2.0\EPPlus.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

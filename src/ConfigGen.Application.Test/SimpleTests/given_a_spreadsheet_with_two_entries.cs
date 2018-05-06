@@ -38,6 +38,7 @@ App1.Config | Val1-1 | Val1-2
 App2.Config | Val2-1 | Val2-2");
 
             SetOutputDirectory(TestDirectory.FullName);
+            SetSettingsFilePath(TestDirectory.File("App.Config.Settings.xlsx"));
         }
 
         protected override async Task When() => Result = await ConfigGenService.GenerateConfigurations(Options);

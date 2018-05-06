@@ -20,6 +20,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
@@ -60,6 +61,16 @@ namespace ConfigGen.Application.Test.Common
         protected void SetOutputDirectory(string outputDirectory)
         {
             Options.OutputDirectory = outputDirectory;
+        }
+
+        protected void SetSettingsFilePath(FileInfo settingsFile)
+        {
+            SetSettingsFilePath(settingsFile.FullName);
+        }
+
+        protected void SetSettingsFilePath(string settingsFilePath)
+        {
+            Options.SettingsFilePath = settingsFilePath;
         }
     }
 }

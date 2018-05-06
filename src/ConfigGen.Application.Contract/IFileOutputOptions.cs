@@ -23,5 +23,6 @@ namespace ConfigGen.Application.Contract
     public interface IFileOutputOptions
     {
         string OutputDirectory { get; set; }
+
     }
 }

@@ -19,13 +19,10 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
-using ConfigGen.Utilities.Extensions;
-using OfficeOpenXml;
 
 namespace ConfigGen.Application
 {
@@ -33,46 +30,19 @@ namespace ConfigGen.Application
     {
         public async Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options)
         {
-            FileInfo templateFile = new FileInfo(options.TemplateFilePath);
-            string templateFileContents = await templateFile.ReadAllTextAsync();
-            FileInfo settingsFile = new FileInfo(options.SettingsFilePath);
-            ExcelPackage excl = new ExcelPackage(settingsFile);
-            var worksheet = excl.Workbook.Worksheets["Settings"];
+            var template = new Template();
+            await template.Load(options.TemplateFilePath);
 
-            var columnHeadings = new List<string>();
-            for (var col = worksheet.Dimension.Start.Column; col < worksheet.Dimension.End.Column; col++)
+            var configurationLoader = new ConfigurationLoader();
+            var configurations = await configurationLoader.Load(options.SettingsFilePath);
+
+            foreach (var configuration in configurations)
             {
-                columnHeadings.Add(worksheet.Cells[worksheet.Dimension.Start.Row, col].Value.ToString());
-            }
-
-            var rows = new List<Dictionary<string, string>>();
-
-            for (int row = worksheet.Dimension.Start.Row + 1;
-                row <= worksheet.Dimension.End.Row;
-                row++)
-            {
-                bool rowHasData = false;
-                var settings = new Dictionary<string, string>();
-                for (var col = worksheet.Dimension.Start.Column; col < worksheet.Dimension.End.Column; col++)
-                {
-                    var value = worksheet.Cells[row, col].Value.ToString();
-                    rowHasData |= (value != "");
-                    settings.Add(columnHeadings[col - 1], value);
-                }
-
-                if (rowHasData)
-                {
-                    rows.Add(settings);
-                }
-            }
-
-            foreach (var configuration in rows)
-            {
-                await File.WriteAllTextAsync(Path.Combine(options.OutputDirectory, configuration["Filename"]), templateFileContents);
+                await File.WriteAllTextAsync(Path.Combine(options.OutputDirectory, configuration["Filename"]), template.Contents);
             }
 
             return await Task.FromResult(
-                new ConfigurationGenerationResult(rows.Select(row => new GeneratedFileResult(row["Filename"])).ToList()));
+                new ConfigurationGenerationResult(configurations.Select(row => new GeneratedFileResult(row["Filename"])).ToList()));
         }
     }
 }

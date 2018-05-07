@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using ConfigGen.Application.Test.Common;
 using ConfigGen.Application.Test.Common.Specification;
 using ConfigGen.Utilities;
-using Shouldly;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {

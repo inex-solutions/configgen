@@ -18,12 +18,20 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Application.Contract
+
+using System.IO;
+using System.Threading.Tasks;
+
+namespace ConfigGen.Utilities.Extensions
 {
-    public class ConfigurationGenerationOptions : IConfigurationGenerationOptions
+    public static class FileInfoExtensions
     {
-        public string OutputDirectory { get; set; }
-        public string SettingsFilePath { get; set; }
-        public string TemplateFilePath { get; set; }
+        public static async Task<string> ReadAllTextAsync(this FileInfo fileInfo)
+        {
+            using (StreamReader sr = fileInfo.OpenText())
+            {
+                return await sr.ReadToEndAsync();
+            }
+        }
     }
 }

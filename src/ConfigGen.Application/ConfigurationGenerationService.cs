@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
+using ConfigGen.Utilities.Extensions;
 using OfficeOpenXml;
 
 namespace ConfigGen.Application
@@ -32,8 +33,10 @@ namespace ConfigGen.Application
     {
         public async Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options)
         {
-            FileInfo fileInfo = new FileInfo(options.SettingsFilePath);
-            ExcelPackage excl = new ExcelPackage(fileInfo);
+            FileInfo templateFile = new FileInfo(options.TemplateFilePath);
+            string templateFileContents = await templateFile.ReadAllTextAsync();
+            FileInfo settingsFile = new FileInfo(options.SettingsFilePath);
+            ExcelPackage excl = new ExcelPackage(settingsFile);
             var worksheet = excl.Workbook.Worksheets["Settings"];
 
             var columnHeadings = new List<string>();
@@ -65,7 +68,7 @@ namespace ConfigGen.Application
 
             foreach (var configuration in rows)
             {
-                await File.WriteAllTextAsync(Path.Combine(options.OutputDirectory, configuration["Filename"]), "test file");
+                await File.WriteAllTextAsync(Path.Combine(options.OutputDirectory, configuration["Filename"]), templateFileContents);
             }
 
             return await Task.FromResult(

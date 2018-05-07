@@ -58,6 +58,13 @@ namespace ConfigGen.Application.Test.Common
                 contents: contents);
         }
 
+        protected async Task TemplateFileContains(string contents)
+        {
+            await File.WriteAllTextAsync(
+                path: TestDirectory.File("App.Config.Template.razor").FullName,
+                contents: contents);
+        }
+
         protected void SetOutputDirectory(string outputDirectory)
         {
             Options.OutputDirectory = outputDirectory;
@@ -71,6 +78,16 @@ namespace ConfigGen.Application.Test.Common
         protected void SetSettingsFilePath(string settingsFilePath)
         {
             Options.SettingsFilePath = settingsFilePath;
+        }
+
+        protected void SetTemplateFilePath(FileInfo templateFile)
+        {
+            SetTemplateFilePath(templateFile.FullName);
+        }
+
+        protected void SetTemplateFilePath(string templateFilePath)
+        {
+            Options.TemplateFilePath = templateFilePath;
         }
     }
 }

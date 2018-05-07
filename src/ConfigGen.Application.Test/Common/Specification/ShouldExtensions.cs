@@ -20,7 +20,9 @@
 #endregion
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Shouldly;
 
 namespace ConfigGen.Application.Test.Common.Specification
 {
@@ -56,6 +58,18 @@ namespace ConfigGen.Application.Test.Common.Specification
 
                 throw new SpecificationException(message);
             }
+        }
+
+        public static void ShouldHaveContents(this FileInfo fileInfo, string expectedContents)
+        {
+            if (!fileInfo.Exists)
+            {
+                throw new SpecificationException($"Expected file to have specified contents, but file did not exist: {fileInfo.FullName}");
+            }
+
+            var actualContents = File.ReadAllText(fileInfo.FullName);
+
+            actualContents.ShouldBe(expectedContents);
         }
     }
 }

@@ -20,10 +20,8 @@
 #endregion
 namespace ConfigGen.Application.Contract
 {
-    public class ConfigurationGenerationOptions : IConfigurationGenerationOptions
+    public interface ITemplateLoaderOptions
     {
-        public string OutputDirectory { get; set; }
-        public string SettingsFilePath { get; set; }
-        public string TemplateFilePath { get; set; }
+        string TemplateFilePath { get; set; }
     }
 }

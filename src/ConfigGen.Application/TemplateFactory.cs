@@ -19,26 +19,18 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using ConfigGen.Utilities.Extensions;
+using ConfigGen.Application.Contract;
 
 namespace ConfigGen.Application
 {
-    public class Template
+    public class TemplateFactory
     {
-        private string _contents;
-
-        internal async Task Load(string templateFilePath)
+        public async Task<Template> Create(ITemplateLoaderOptions options)
         {
-            FileInfo templateFile = new FileInfo(templateFilePath);
-            _contents = await templateFile.ReadAllTextAsync();
-        }
-
-        public async Task Render(Dictionary<string, string> configuration, OutputWriter writer)
-        {
-            await writer.Write(configuration, _contents);
+            var template = new Template();
+            await template.Load(options.TemplateFilePath);
+            return template;
         }
     }
 }

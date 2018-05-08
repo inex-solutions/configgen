@@ -22,23 +22,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using ConfigGen.Utilities.Extensions;
+using ConfigGen.Application.Contract;
 
 namespace ConfigGen.Application
 {
-    public class Template
+    public class OutputWriter
     {
-        private string _contents;
+        private readonly IFileOutputOptions _options;
 
-        internal async Task Load(string templateFilePath)
+        public OutputWriter(IFileOutputOptions options)
         {
-            FileInfo templateFile = new FileInfo(templateFilePath);
-            _contents = await templateFile.ReadAllTextAsync();
+            _options = options;
         }
 
-        public async Task Render(Dictionary<string, string> configuration, OutputWriter writer)
+        public async Task Write(IDictionary<string, string> configuration, string contents)
         {
-            await writer.Write(configuration, _contents);
+            await File.WriteAllTextAsync(Path.Combine(_options.OutputDirectory, configuration["Filename"]), contents);
         }
     }
 }

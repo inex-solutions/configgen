@@ -19,7 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
@@ -28,17 +27,26 @@ namespace ConfigGen.Application
 {
     public class ConfigurationGenerationService : IConfigurationGenerationService
     {
+        private TemplateFactory _templateFactory;
+        private ConfigurationLoader _configurationLoader;
+
+        public ConfigurationGenerationService()
+        {
+            _templateFactory = new TemplateFactory();
+            _configurationLoader = new ConfigurationLoader();
+        }
+
         public async Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options)
         {
-            var template = new Template();
-            await template.Load(options.TemplateFilePath);
+            var template = await _templateFactory.Create(options);
 
-            var configurationLoader = new ConfigurationLoader();
-            var configurations = await configurationLoader.Load(options.SettingsFilePath);
+            var configurations = await _configurationLoader.Load(options.SettingsFilePath);
 
+            var outputWriter = new OutputWriter(options);
+            
             foreach (var configuration in configurations)
             {
-                await File.WriteAllTextAsync(Path.Combine(options.OutputDirectory, configuration["Filename"]), template.Contents);
+                await template.Render(configuration, outputWriter);
             }
 
             return await Task.FromResult(

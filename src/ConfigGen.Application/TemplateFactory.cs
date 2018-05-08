@@ -21,6 +21,7 @@
 
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
+using ConfigGen.Templating.Razor;
 
 namespace ConfigGen.Application
 {

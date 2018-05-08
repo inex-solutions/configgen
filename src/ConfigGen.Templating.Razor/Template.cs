@@ -21,21 +21,23 @@
 
 using System.IO;
 using System.Threading.Tasks;
+using ConfigGen.Application;
+using ConfigGen.Application.Contract.Domain;
 using ConfigGen.Utilities.Extensions;
 
-namespace ConfigGen.Application
+namespace ConfigGen.Templating.Razor
 {
     public class Template
     {
         private string _contents;
 
-        internal async Task Load(string templateFilePath)
+        public async Task Load(string templateFilePath)
         {
             FileInfo templateFile = new FileInfo(templateFilePath);
             _contents = await templateFile.ReadAllTextAsync();
         }
 
-        public async Task Render(Configuration configuration, OutputWriter writer)
+        public async Task Render(Configuration configuration, IOutputWriter writer)
         {
             await writer.Write(configuration, _contents);
         }

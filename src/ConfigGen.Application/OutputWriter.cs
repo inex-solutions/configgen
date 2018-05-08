@@ -22,10 +22,11 @@
 using System.IO;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
+using ConfigGen.Application.Contract.Domain;
 
 namespace ConfigGen.Application
 {
-    public class OutputWriter
+    public class OutputWriter : IOutputWriter
     {
         private readonly IFileOutputOptions _options;
 

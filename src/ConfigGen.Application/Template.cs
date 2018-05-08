@@ -19,7 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ConfigGen.Utilities.Extensions;
@@ -36,7 +35,7 @@ namespace ConfigGen.Application
             _contents = await templateFile.ReadAllTextAsync();
         }
 
-        public async Task Render(Dictionary<string, string> configuration, OutputWriter writer)
+        public async Task Render(Configuration configuration, OutputWriter writer)
         {
             await writer.Write(configuration, _contents);
         }

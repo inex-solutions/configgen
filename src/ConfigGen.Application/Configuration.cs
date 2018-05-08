@@ -19,24 +19,19 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.IO;
-using System.Threading.Tasks;
-using ConfigGen.Application.Contract;
+using System.Collections.Generic;
 
 namespace ConfigGen.Application
 {
-    public class OutputWriter
+    public class Configuration
     {
-        private readonly IFileOutputOptions _options;
+        private readonly Dictionary<string, string> _dictionary;
 
-        public OutputWriter(IFileOutputOptions options)
+        public Configuration(Dictionary<string, string> dictionary)
         {
-            _options = options;
+            _dictionary = dictionary;
         }
 
-        public async Task Write(Configuration configuration, string contents)
-        {
-            await File.WriteAllTextAsync(Path.Combine(_options.OutputDirectory, configuration["Filename"]), contents);
-        }
+        public string this[string key] => _dictionary[key];
     }
 }

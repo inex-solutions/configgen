@@ -21,6 +21,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 
@@ -28,7 +29,7 @@ namespace ConfigGen.Application
 {
     public class ConfigurationLoader
     {
-        public async Task<IEnumerable<Dictionary<string, string>>> Load(string settingsFilePath)
+        public async Task<IEnumerable<Configuration>> Load(string settingsFilePath)
         {
             FileInfo settingsFile = new FileInfo(settingsFilePath);
             ExcelPackage excl = new ExcelPackage(settingsFile);
@@ -61,7 +62,7 @@ namespace ConfigGen.Application
                 }
             }
 
-            return rows;
+            return rows.Select(r => new Configuration(r));
         }
     }
 }

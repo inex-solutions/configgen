@@ -21,7 +21,7 @@
 
 using System.Collections.Generic;
 
-namespace ConfigGen.Application
+namespace ConfigGen.Application.Contract.Domain
 {
     public class Configuration
     {
@@ -32,6 +32,8 @@ namespace ConfigGen.Application
             _dictionary = dictionary;
         }
 
+        public bool TryGetValue(string key, out string token) => _dictionary.TryGetValue(key, out token);
+        
         public string this[string key] => _dictionary[key];
     }
 }

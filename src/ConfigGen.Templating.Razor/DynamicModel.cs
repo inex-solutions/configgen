@@ -19,19 +19,24 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Threading.Tasks;
-using ConfigGen.Application.Contract;
-using ConfigGen.Templating.Razor;
+using System;
+using System.Dynamic;
 
-namespace ConfigGen.Application
+namespace ConfigGen.Templating.Razor
 {
-    public class TemplateFactory
+    public abstract class DynamicModel : DynamicObject
     {
-        public async Task<RazorTemplate> Create(ITemplateLoaderOptions options)
+        public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            var template = new RazorTemplate();
-            await template.Load(options.TemplateFilePath);
-            return template;
+            TryGetValue(binder.Name, out result);
+            return true;
         }
+
+        public override bool TrySetMember(SetMemberBinder binder, object value)
+        {
+            throw new NotSupportedException("DynamicDictionary does not support setting of members");
+        }
+
+        protected abstract bool TryGetValue(string name, out object result);
     }
 }

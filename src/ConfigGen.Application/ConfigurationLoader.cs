@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ConfigGen.Application.Contract.Domain;
 using OfficeOpenXml;
 
 namespace ConfigGen.Application
@@ -36,7 +37,7 @@ namespace ConfigGen.Application
             var worksheet = excl.Workbook.Worksheets["Settings"];
 
             var columnHeadings = new List<string>();
-            for (var col = worksheet.Dimension.Start.Column; col < worksheet.Dimension.End.Column; col++)
+            for (var col = worksheet.Dimension.Start.Column; col <= worksheet.Dimension.End.Column; col++)
             {
                 columnHeadings.Add(worksheet.Cells[worksheet.Dimension.Start.Row, col].Value.ToString());
             }
@@ -49,7 +50,7 @@ namespace ConfigGen.Application
             {
                 bool rowHasData = false;
                 var settings = new Dictionary<string, string>();
-                for (var col = worksheet.Dimension.Start.Column; col < worksheet.Dimension.End.Column; col++)
+                for (var col = worksheet.Dimension.Start.Column; col <= worksheet.Dimension.End.Column; col++)
                 {
                     var value = worksheet.Cells[row, col].Value.ToString();
                     rowHasData |= (value != "");

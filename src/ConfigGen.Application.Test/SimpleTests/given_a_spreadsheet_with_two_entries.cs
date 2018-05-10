@@ -28,19 +28,19 @@ namespace ConfigGen.Application.Test.SimpleTests
 {
     public class given_a_spreadsheet_with_two_entries : ApplicationTestBase
     {
-        private string testFileContents;
+        private string _testFileContents;
 
         protected override async Task Given()
         {
-            testFileContents = @"Test File Contents";
+            _testFileContents = @"<root><name>@Model.Name</name></root>";
 
-            await TemplateFileContains(testFileContents);
+            await TemplateFileContains(_testFileContents);
 
             await SettingsFileContains(@"
-Filename    | Col1   | Col2
-            |        |
-App1.Config | Val1-1 | Val1-2
-App2.Config | Val2-1 | Val2-2");
+Filename    | Name
+            |      
+App1.Config | Name-1
+App2.Config | Name-2");
 
             SetOutputDirectory(TestDirectory.FullName);
             SetSettingsFilePath(TestDirectory.File("App.Config.Settings.xlsx"));
@@ -53,10 +53,10 @@ App2.Config | Val2-1 | Val2-2");
         public void the_result_reports_two_files_were_generated_with_the_names_specified() => Result.ShouldHaveGenerated(2).Files.Named("App1.Config","App2.Config");
 
         [Then]
-        public void the_first_generated_config_file_contains_the_template_contents() => TestDirectory.File("App1.Config").ShouldHaveContents(testFileContents);
+        public void the_first_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App1.Config").ShouldHaveContents("<root><name>Name-1</name></root>");
 
         [Then]
-        public void the_second_generated_config_file_contains_the_template_contents() => TestDirectory.File("App2.Config").ShouldHaveContents(testFileContents);
+        public void the_second_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App2.Config").ShouldHaveContents("<root><name>Name-2</name></root>");
     }
 }
  

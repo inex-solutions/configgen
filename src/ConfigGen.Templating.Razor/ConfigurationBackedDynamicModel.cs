@@ -19,19 +19,24 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Threading.Tasks;
-using ConfigGen.Application.Contract;
-using ConfigGen.Templating.Razor;
+using ConfigGen.Application.Contract.Domain;
 
-namespace ConfigGen.Application
+namespace ConfigGen.Templating.Razor
 {
-    public class TemplateFactory
+    public class ConfigurationBackedDynamicModel : DynamicModel
     {
-        public async Task<RazorTemplate> Create(ITemplateLoaderOptions options)
+        private readonly Configuration _configuration;
+
+        public ConfigurationBackedDynamicModel(Configuration configuration)
         {
-            var template = new RazorTemplate();
-            await template.Load(options.TemplateFilePath);
-            return template;
+            _configuration = configuration;
+        }
+
+        protected override bool TryGetValue(string name, out object result)
+        {
+            var success = _configuration.TryGetValue(name, out string resultString);
+            result = resultString;
+            return success;
         }
     }
 }

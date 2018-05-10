@@ -21,25 +21,35 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using ConfigGen.Application;
 using ConfigGen.Application.Contract.Domain;
 using ConfigGen.Utilities.Extensions;
+using RazorLight;
 
 namespace ConfigGen.Templating.Razor
 {
-    public class Template
+    public class RazorTemplate
     {
+        private RazorLightEngine _engine;
+        private string _templateName;
         private string _contents;
 
         public async Task Load(string templateFilePath)
         {
-            FileInfo templateFile = new FileInfo(templateFilePath);
+            var templateFile = new FileInfo(templateFilePath);
+            _templateName = templateFile.Name;
             _contents = await templateFile.ReadAllTextAsync();
+
+            _engine = new RazorLightEngineBuilder()
+                .UseMemoryCachingProvider()
+                .Build();
         }
 
         public async Task Render(Configuration configuration, IOutputWriter writer)
         {
-            await writer.Write(configuration, _contents);
+            var model = new ConfigurationBackedDynamicModel(configuration);
+
+            string s = await _engine.CompileRenderAsync(_templateName, _contents, model);
+            await writer.Write(configuration, s);
         }
     }
 }

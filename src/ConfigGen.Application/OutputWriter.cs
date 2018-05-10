@@ -22,7 +22,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
-using ConfigGen.Application.Contract.Domain;
+using ConfigGen.Domain.Contract;
 
 namespace ConfigGen.Application
 {

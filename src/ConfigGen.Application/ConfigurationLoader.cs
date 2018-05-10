@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ConfigGen.Application.Contract.Domain;
+using ConfigGen.Domain.Contract;
 using OfficeOpenXml;
 
 namespace ConfigGen.Application

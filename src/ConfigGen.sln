@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Utilities.Test", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Application", "ConfigGen.Application\ConfigGen.Application.csproj", "{C4F5E86F-6B03-435F-BB8A-E2704505AED3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Templating.Razor", "ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj", "{C2C7E2DA-0740-41E1-91B1-993F0100317E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Templating.Razor", "ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj", "{C2C7E2DA-0740-41E1-91B1-993F0100317E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain.Contract", "ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj", "{D69BC703-101D-4704-97F6-95888797852F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{C2C7E2DA-0740-41E1-91B1-993F0100317E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2C7E2DA-0740-41E1-91B1-993F0100317E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2C7E2DA-0740-41E1-91B1-993F0100317E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D69BC703-101D-4704-97F6-95888797852F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D69BC703-101D-4704-97F6-95888797852F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D69BC703-101D-4704-97F6-95888797852F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D69BC703-101D-4704-97F6-95888797852F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

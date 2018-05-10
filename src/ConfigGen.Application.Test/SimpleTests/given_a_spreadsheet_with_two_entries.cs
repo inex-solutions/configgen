@@ -26,7 +26,7 @@ using ConfigGen.Utilities;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {
-    public class given_a_spreadsheet_with_two_entries : ApplicationTestBase
+    public class given_a_spreadsheet_with_two_configurations : ApplicationTestBase
     {
         private string _testFileContents;
 

@@ -21,7 +21,7 @@
 
 using System.Threading.Tasks;
 
-namespace ConfigGen.Application.Contract.Domain
+namespace ConfigGen.Domain.Contract
 {
     public interface IOutputWriter
     {

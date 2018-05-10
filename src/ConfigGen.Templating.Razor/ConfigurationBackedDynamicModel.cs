@@ -19,7 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Application.Contract.Domain;
+using ConfigGen.Domain.Contract;
 
 namespace ConfigGen.Templating.Razor
 {

@@ -21,13 +21,13 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using ConfigGen.Application.Contract.Domain;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.Extensions;
 using RazorLight;
 
 namespace ConfigGen.Templating.Razor
 {
-    public class RazorTemplate
+    public class RazorTemplate : ITemplate
     {
         private RazorLightEngine _engine;
         private string _templateName;

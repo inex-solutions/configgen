@@ -65,7 +65,7 @@ namespace ConfigGen.Utilities
             {
                 foreach (var subDirectory in directory.GetDirectories())
                 {
-                    FindFile(searchPattern, subDirectory, recurse, onFileFoundCallback);
+                    FindFile(searchPattern, subDirectory, true, onFileFoundCallback);
                 }
             }
 

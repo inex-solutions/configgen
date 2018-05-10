@@ -63,7 +63,7 @@ namespace ConfigGen.Application
                 }
             }
 
-            return rows.Select(r => new Configuration(r));
+            return await Task.FromResult(rows.Select(r => new Configuration(r)));
         }
     }
 }

@@ -40,7 +40,7 @@ namespace ConfigGen.Application
         {
             var template = await _templateFactory.Create(options);
 
-            var configurations = await _configurationLoader.Load(options.SettingsFilePath);
+            var configurations = (await _configurationLoader.Load(options.SettingsFilePath)).ToList();
 
             var outputWriter = new OutputWriter(options);
             

@@ -61,6 +61,11 @@ namespace ConfigGen.Application.Test.SimpleTests
             {
                 get
                 {
+                    if (_result.GeneratedFiles.Length != _num)
+                    {
+                        throw new SpecificationException($"Expected exactly {_num} files to be generated, but there were {_result.GeneratedFiles.Length}");
+                    }
+
                     return new GeneratedFileAssertions(_result.GeneratedFiles);
                 }
             }

@@ -27,8 +27,8 @@ namespace ConfigGen.Application
 {
     public class ConfigurationGenerationService : IConfigurationGenerationService
     {
-        private TemplateFactory _templateFactory;
-        private ConfigurationLoader _configurationLoader;
+        private readonly TemplateFactory _templateFactory;
+        private readonly ConfigurationLoader _configurationLoader;
 
         public ConfigurationGenerationService()
         {

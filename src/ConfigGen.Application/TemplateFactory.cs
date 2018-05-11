@@ -21,15 +21,16 @@
 
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Templating.Razor;
 
 namespace ConfigGen.Application
 {
     public class TemplateFactory
     {
-        public async Task<RazorTemplate> Create(ITemplateLoaderOptions options)
+        public async Task<ITemplate> Create(ITemplateLoaderOptions options)
         {
-            var template = new RazorTemplate();
+            ITemplate template = new RazorTemplate();
             await template.Load(options.TemplateFilePath);
             return template;
         }

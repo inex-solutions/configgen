@@ -22,6 +22,6 @@ namespace ConfigGen.Application.Contract
 {
     public interface ITemplateLoaderOptions
     {
-        string TemplateFilePath { get; set; }
+        string TemplateFilePath { get; }
     }
 }

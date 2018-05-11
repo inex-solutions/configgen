@@ -22,6 +22,6 @@ namespace ConfigGen.Application.Contract
 {
     public interface ISettingsLoaderOptions
     {
-        string SettingsFilePath { get; set; }
+        string SettingsFilePath { get; }
     }
 }

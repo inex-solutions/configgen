@@ -24,7 +24,7 @@ using System.Diagnostics;
 
 namespace ConfigGen.ConsoleApp
 {
-    class Program
+    public class Program
     {
         static void Main()
         {

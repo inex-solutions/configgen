@@ -27,7 +27,7 @@ using OfficeOpenXml;
 
 namespace ConfigGen.Application.Test.Common
 {
-    public class SpreadsheetWriter
+    public static class SpreadsheetWriter
     {
         public static async Task CreateXlsxAsync(FileInfo file, string contents)
         {
@@ -54,11 +54,6 @@ namespace ConfigGen.Application.Test.Common
             }
 
             package.SaveAs(file);
-        }
-
-        public static async Task CreateXlsxAsync(string filename, string contents)
-        {
-            await CreateXlsxAsync(new FileInfo(filename), contents);
         }
     }
 }

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Application", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Templating.Razor", "ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj", "{C2C7E2DA-0740-41E1-91B1-993F0100317E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigGen.Domain.Contract", "ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj", "{D69BC703-101D-4704-97F6-95888797852F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConfigGen.Domain.Contract", "ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj", "{D69BC703-101D-4704-97F6-95888797852F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,5 +63,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56387412-0F1C-4268-8A91-09A47CB6E824}
+	EndGlobalSection
+	GlobalSection(NDepend) = preSolution
+		Project = ".\ConfigGen.ndproj"
 	EndGlobalSection
 EndGlobal

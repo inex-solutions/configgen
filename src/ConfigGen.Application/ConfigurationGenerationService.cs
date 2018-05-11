@@ -30,10 +30,12 @@ namespace ConfigGen.Application
         private readonly TemplateFactory _templateFactory;
         private readonly ConfigurationLoader _configurationLoader;
 
-        public ConfigurationGenerationService()
+        public ConfigurationGenerationService(
+            TemplateFactory templateFactory, 
+            ConfigurationLoader configurationLoader)
         {
-            _templateFactory = new TemplateFactory();
-            _configurationLoader = new ConfigurationLoader();
+            _templateFactory = templateFactory;
+            _configurationLoader = configurationLoader;
         }
 
         public async Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options)

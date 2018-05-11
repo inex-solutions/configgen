@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
 using ConfigGen.Utilities;
+using ConfigGen.Utilities.SimpleInjector;
+using SimpleInjector;
 
 namespace ConfigGen.Application.Test.Common
 {
@@ -35,12 +37,16 @@ namespace ConfigGen.Application.Test.Common
         protected IConfigurationGenerationResult Result { get; set; }
         protected Exception CaughtException { get; set; }
         protected ConfigurationGenerationOptions Options { get; private set; }
-
+        protected Container Container { get; private set; }
         protected override async Task Setup()
         {
+            Container = new Container();
+            Container.RegisterModule<ApplicationModule>();
+
             TestDirectory = new DisposableDirectory();
-            ConfigGenService = new ConfigurationGenerationService();
             Options = new ConfigurationGenerationOptions();
+
+            ConfigGenService = Container.GetInstance<ConfigurationGenerationService>();
 
             await base.Setup();
         }

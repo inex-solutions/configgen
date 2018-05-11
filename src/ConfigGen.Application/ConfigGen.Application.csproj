@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="4.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ConfigGen.Application.Contract\ConfigGen.Application.Contract.csproj" />
     <ProjectReference Include="..\ConfigGen.Templating.Razor\ConfigGen.Templating.Razor.csproj" />
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj" />

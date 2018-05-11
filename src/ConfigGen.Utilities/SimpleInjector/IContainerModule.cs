@@ -19,13 +19,12 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Threading.Tasks;
+using SimpleInjector;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Utilities.SimpleInjector
 {
-    public interface ITemplate
+    public interface IContainerModule
     {
-        Task Load(string templateFilePath);
-        Task Render(Configuration configuration, IOutputWriter writer);
+        void Register(Container container);
     }
 }

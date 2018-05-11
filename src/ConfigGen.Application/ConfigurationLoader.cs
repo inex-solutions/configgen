@@ -24,12 +24,20 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.EventLogging;
 using OfficeOpenXml;
 
 namespace ConfigGen.Application
 {
     public class ConfigurationLoader
     {
+        private IEventLogger EventLogger { get; }
+
+        public ConfigurationLoader(IEventLogger eventLogger)
+        {
+            EventLogger = eventLogger;
+        }
+
         public async Task<IEnumerable<Configuration>> Load(string settingsFilePath)
         {
             FileInfo settingsFile = new FileInfo(settingsFilePath);
@@ -62,6 +70,8 @@ namespace ConfigGen.Application
                     rows.Add(settings);
                 }
             }
+
+            EventLogger.Log(new ConfigurationsLoadedEvent(settingsFilePath, rows.Count));
 
             return await Task.FromResult(rows.Select(r => new Configuration(r)));
         }

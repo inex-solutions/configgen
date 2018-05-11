@@ -18,30 +18,10 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.Threading.Tasks;
-using ConfigGen.Application.Contract;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Templating.Razor;
-using ConfigGen.Utilities.EventLogging;
-
-namespace ConfigGen.Application
+namespace ConfigGen.Utilities.EventLogging
 {
-    public class TemplateFactory
+    public interface IEventLogger
     {
-        private IEventLogger EventLogger { get; }
-
-        public TemplateFactory(IEventLogger eventLogger)
-        {
-            EventLogger = eventLogger;
-        }
-
-        public async Task<ITemplate> Create(ITemplateLoaderOptions options)
-        {
-            ITemplate template = new RazorTemplate();
-            await template.Load(options.TemplateFilePath);
-            EventLogger.Log(new TemplateCreatedEvent(template, options));
-            return template;
-        }
+        void Log(IEvent @event);
     }
 }

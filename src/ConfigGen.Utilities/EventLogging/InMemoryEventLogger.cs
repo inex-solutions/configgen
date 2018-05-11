@@ -19,29 +19,17 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Threading.Tasks;
-using ConfigGen.Application.Contract;
-using ConfigGen.Domain.Contract;
-using ConfigGen.Templating.Razor;
-using ConfigGen.Utilities.EventLogging;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
-namespace ConfigGen.Application
+namespace ConfigGen.Utilities.EventLogging
 {
-    public class TemplateFactory
+    public class InMemoryEventLogger : IReadableEventLogger
     {
-        private IEventLogger EventLogger { get; }
+        private readonly ConcurrentQueue<IEvent> _events = new ConcurrentQueue<IEvent>();
 
-        public TemplateFactory(IEventLogger eventLogger)
-        {
-            EventLogger = eventLogger;
-        }
+        public void Log(IEvent @event) => _events.Enqueue(@event);
 
-        public async Task<ITemplate> Create(ITemplateLoaderOptions options)
-        {
-            ITemplate template = new RazorTemplate();
-            await template.Load(options.TemplateFilePath);
-            EventLogger.Log(new TemplateCreatedEvent(template, options));
-            return template;
-        }
+        IEnumerable<IEvent> IReadableEventLogger.LoggedEvents => _events;
     }
 }

@@ -21,10 +21,12 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
 using ConfigGen.Utilities;
+using ConfigGen.Utilities.EventLogging;
 using ConfigGen.Utilities.SimpleInjector;
 using SimpleInjector;
 
@@ -38,6 +40,9 @@ namespace ConfigGen.Application.Test.Common
         protected Exception CaughtException { get; set; }
         protected ConfigurationGenerationOptions Options { get; private set; }
         protected Container Container { get; private set; }
+
+        private IReadableEventLogger EventLogger { get; set; }
+
         protected override async Task Setup()
         {
             Container = new Container();
@@ -46,8 +51,9 @@ namespace ConfigGen.Application.Test.Common
             TestDirectory = new DisposableDirectory();
             Options = new ConfigurationGenerationOptions();
 
+            EventLogger = Container.GetInstance<IReadableEventLogger>();
             ConfigGenService = Container.GetInstance<ConfigurationGenerationService>();
-
+            
             await base.Setup();
         }
 
@@ -56,6 +62,8 @@ namespace ConfigGen.Application.Test.Common
             TestDirectory.Dispose();
             await base.Cleanup();
         }
+
+        protected IEvent[] LoggedEvents => EventLogger.LoggedEvents.ToArray();
 
         protected async Task SettingsFileContains(string contents)
         {

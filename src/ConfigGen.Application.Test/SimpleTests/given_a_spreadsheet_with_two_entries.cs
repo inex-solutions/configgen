@@ -50,6 +50,12 @@ App2.Config | Name-2");
         protected override async Task When() => Result = await ConfigGenService.GenerateConfigurations(Options);
 
         [Then]
+        public void an_event_indicates_the_razor_template_was_loaded() => LoggedEvents.ShouldIndicateRazorTemplateWasCreated();
+
+        [Then]
+        public void an_event_indicates_two_configurations_were_loaded() => LoggedEvents.ShouldIndicate(2).ConfigurationsWereLoaded();
+
+        [Then]
         public void the_result_reports_two_files_were_generated_with_the_names_specified() => Result.ShouldHaveGenerated(2).Files.Named("App1.Config","App2.Config");
 
         [Then]

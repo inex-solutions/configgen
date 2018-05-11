@@ -19,29 +19,28 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Threading.Tasks;
+using System;
+using System.Diagnostics.Tracing;
 using ConfigGen.Application.Contract;
 using ConfigGen.Domain.Contract;
-using ConfigGen.Templating.Razor;
 using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Application
 {
-    public class TemplateFactory
+    public class TemplateCreatedEvent : IEvent
     {
-        private IEventLogger EventLogger { get; }
+        public Type TemplateType { get; }
+        public string TemplatePath { get; }
 
-        public TemplateFactory(IEventLogger eventLogger)
+        public TemplateCreatedEvent(ITemplate template, ITemplateLoaderOptions options)
         {
-            EventLogger = eventLogger;
+            TemplateType = template.GetType();
+            TemplatePath = options.TemplateFilePath;
         }
 
-        public async Task<ITemplate> Create(ITemplateLoaderOptions options)
-        {
-            ITemplate template = new RazorTemplate();
-            await template.Load(options.TemplateFilePath);
-            EventLogger.Log(new TemplateCreatedEvent(template, options));
-            return template;
-        }
+        public EventLevel EventLevel => EventLevel.Verbose;
+
+        public override string ToString()
+            => $"{TemplateType.Name} created for template at path: {TemplatePath}";
     }
 }

@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using ConfigGen.Utilities.EventLogging;
 using ConfigGen.Utilities.SimpleInjector;
 using SimpleInjector;
 
@@ -30,6 +31,10 @@ namespace ConfigGen.Application
         {
             container.Register<TemplateFactory>();
             container.Register<ConfigurationLoader>();
+
+            container.Register<IEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
+            container.Register<IReadableEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
+            container.RegisterDecorator<IEventLogger, ConsoleOutputEventLoggerDecorator>(Lifestyle.Singleton);
         }
     }
 }

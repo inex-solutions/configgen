@@ -1,1 +1,0 @@
-This text file is part of a signed-commit test.

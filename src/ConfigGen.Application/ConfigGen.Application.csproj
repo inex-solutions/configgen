@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SimpleInjector" Version="4.2.2" />
+    <PackageReference Include="SimpleInjector" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <Reference Include="EPPlus">
-      <HintPath>C:\Users\robdev\.nuget\packages\epplus\4.5.1\lib\netstandard2.0\EPPlus.dll</HintPath>
+      <HintPath>C:\Users\Rob Levine\.nuget\packages\epplus\4.5.1\lib\netstandard2.0\EPPlus.dll</HintPath>
     </Reference>
   </ItemGroup>
 

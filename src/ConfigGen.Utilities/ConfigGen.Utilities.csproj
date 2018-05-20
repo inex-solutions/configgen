@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="SimpleInjector" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="SimpleInjector">
       <HintPath>C:\Users\robdev\.nuget\packages\simpleinjector\4.2.2\lib\netstandard1.3\SimpleInjector.dll</HintPath>
     </Reference>

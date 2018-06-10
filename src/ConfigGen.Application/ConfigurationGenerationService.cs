@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
@@ -45,11 +46,16 @@ namespace ConfigGen.Application
             var configurations = (await _configurationLoader.Load(options.SettingsFilePath)).ToList();
 
             var outputWriter = new OutputWriter(options);
-            
+
+            var awaitables = new List<Task>();
+
             foreach (var configuration in configurations)
             {
-                await template.Render(configuration, outputWriter);
+                var awaitable = template.Render(configuration, outputWriter);
+                awaitables.Add(awaitable);
             }
+
+            await Task.WhenAll(awaitables);
 
             return await Task.FromResult(
                 new ConfigurationGenerationResult(configurations.Select(row => new GeneratedFileResult(row["Filename"])).ToList()));

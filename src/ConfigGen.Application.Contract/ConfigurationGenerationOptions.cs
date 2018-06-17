@@ -24,6 +24,7 @@ namespace ConfigGen.Application.Contract
     {
         public string OutputDirectory { get; set; }
         public string SettingsFilePath { get; set; }
+        public string ConfigurationNameSetting { get; set; }
         public string TemplateFilePath { get; set; }
     }
 }

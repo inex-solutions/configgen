@@ -18,7 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 using ConfigGen.Utilities.EventLogging;
 using ConfigGen.Utilities.SimpleInjector;
 using SimpleInjector;
@@ -30,8 +29,8 @@ namespace ConfigGen.Application
         public void Register(Container container)
         {
             container.Register<TemplateFactory>();
-            container.Register<ConfigurationLoader>();
-
+            container.Register<SettingsLoader>();
+            container.Register<SettingsToConfigurationConverter>();
             container.Register<IEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
             container.Register<IReadableEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
             container.RegisterDecorator<IEventLogger, ConsoleOutputEventLoggerDecorator>(Lifestyle.Singleton);

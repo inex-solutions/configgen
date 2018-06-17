@@ -18,7 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 using System.Linq;
 using ConfigGen.Application.Test.Common.Specification;
 using ConfigGen.Templating.Razor;
@@ -54,13 +53,13 @@ namespace ConfigGen.Application.Test.SimpleTests
                 _num = num;
             }
 
-            public void ConfigurationsWereLoaded()
+            public void SettingsRowsWereLoaded()
             {
-                ConfigurationsLoadedEvent @event = _eventLogger.ShouldContainOneEventOfType<ConfigurationsLoadedEvent>();
+                SettingsLoadedEvent @event = _eventLogger.ShouldContainOneEventOfType<SettingsLoadedEvent>();
 
-                if (@event.NumConfigurations != _num)
+                if (@event.NumRowsLoaded != _num)
                 {
-                    throw new SpecificationException($"Expected ConfigurationsLoadedEvent to indicate {_num} configurations were loaded, but got {@event.NumConfigurations}");
+                    throw new SpecificationException($"Expected SettingsLoadedEvent to indicate {_num} rows were loaded, but got {@event.NumRowsLoaded}");
                 }
             }
         }

@@ -19,27 +19,32 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 using System.Collections.Generic;
+using System.Linq;
+using ConfigGen.Domain.Contract;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Application
 {
-    public class Configuration
+    public class SettingsToConfigurationConverter
     {
-        private readonly IDictionary<string, string> _settings;
+        private string ConfigurationNameSetting = "ConfigurationName";
 
-        public Configuration(string configurationName, IDictionary<string, string> settings)
+        private Configuration ToConfiguration(IDictionary<string, string> settings)
         {
-            ConfigurationName = configurationName;
-            _settings = settings;
+            if (!settings.TryGetValue(ConfigurationNameSetting, out string configurationName)
+                || configurationName == null)
+            {
+                return null;
+            }
+
+            return new Configuration(configurationName, settings);
         }
 
-        public string ConfigurationName { get; }
-
-
-        public bool TryGetValue(string key, out string value)
+        public List<Configuration> ToConfigurations(IEnumerable<IDictionary<string, string>> settings)
         {
-            return _settings.TryGetValue(key, out value);
+            return settings
+                .Select(ToConfiguration)
+                .Where(c => c != null)
+                .ToList();
         }
-
-        public string this[string key] => _settings[key];
     }
 }

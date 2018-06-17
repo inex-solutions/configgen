@@ -18,27 +18,27 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.EventLogging;
+using ConfigGen.Utilities.Extensions;
 using OfficeOpenXml;
 
 namespace ConfigGen.Application
 {
-    public class ConfigurationLoader
+    public class SettingsLoader
     {
         private IEventLogger EventLogger { get; }
 
-        public ConfigurationLoader(IEventLogger eventLogger)
+        public SettingsLoader(IEventLogger eventLogger)
         {
             EventLogger = eventLogger;
         }
 
-        public async Task<IEnumerable<Configuration>> Load(string settingsFilePath)
+        public async Task<IEnumerable<IDictionary<string,string>>> Load(string settingsFilePath)
         {
             FileInfo settingsFile = new FileInfo(settingsFilePath);
             ExcelPackage excl = new ExcelPackage(settingsFile);
@@ -60,8 +60,8 @@ namespace ConfigGen.Application
                 var settings = new Dictionary<string, string>();
                 for (var col = worksheet.Dimension.Start.Column; col <= worksheet.Dimension.End.Column; col++)
                 {
-                    var value = worksheet.Cells[row, col].Value.ToString();
-                    rowHasData |= (value != "");
+                    var value = worksheet.Cells[row, col].Value.ToString().EmptyStringToNull();
+                    rowHasData |= (value != null);
                     settings.Add(columnHeadings[col - 1], value);
                 }
 
@@ -71,9 +71,9 @@ namespace ConfigGen.Application
                 }
             }
 
-            EventLogger.Log(new ConfigurationsLoadedEvent(settingsFilePath, rows.Count));
+            EventLogger.Log(new SettingsLoadedEvent(settingsFilePath, rows.Count));
 
-            return await Task.FromResult(rows.Select(r => new Configuration(r)));
+            return await Task.FromResult(rows);
         }
     }
 }

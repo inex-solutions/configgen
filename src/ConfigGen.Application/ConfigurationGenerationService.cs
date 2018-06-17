@@ -18,7 +18,7 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,22 +29,26 @@ namespace ConfigGen.Application
     public class ConfigurationGenerationService : IConfigurationGenerationService
     {
         private readonly TemplateFactory _templateFactory;
-        private readonly ConfigurationLoader _configurationLoader;
+        private readonly SettingsLoader _settingsLoader;
+        private readonly SettingsToConfigurationConverter _settingsToConfigurationConverter;
 
         public ConfigurationGenerationService(
             TemplateFactory templateFactory, 
-            ConfigurationLoader configurationLoader)
+            SettingsLoader settingsLoader,
+            SettingsToConfigurationConverter settingsToConfigurationConverter)
         {
             _templateFactory = templateFactory;
-            _configurationLoader = configurationLoader;
+            _settingsLoader = settingsLoader;
+            _settingsToConfigurationConverter = settingsToConfigurationConverter;
         }
 
         public async Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options)
         {
             var template = await _templateFactory.Create(options);
 
-            var configurations = (await _configurationLoader.Load(options.SettingsFilePath)).ToList();
+            var settings = await _settingsLoader.Load(options.SettingsFilePath);
 
+            var configurations = _settingsToConfigurationConverter.ToConfigurations(settings);
             var outputWriter = new OutputWriter(options);
 
             var awaitables = new List<Task>();

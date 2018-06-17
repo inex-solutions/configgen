@@ -18,7 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 using System.Threading.Tasks;
 using ConfigGen.Application.Test.Common;
 using ConfigGen.Application.Test.Common.Specification;
@@ -26,7 +25,7 @@ using ConfigGen.Utilities;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {
-    public class given_a_spreadsheet_with_two_configurations : ApplicationTestBase
+    public class given_a_spreadsheet_with_two_settings_rows : ApplicationTestBase
     {
         private string _testFileContents;
 
@@ -37,10 +36,10 @@ namespace ConfigGen.Application.Test.SimpleTests
             await TemplateFileContains(_testFileContents);
 
             await SettingsFileContains(@"
-Filename    | Name
-            |      
-App1.Config | Name-1
-App2.Config | Name-2");
+ConfigurationName   | Filename      | Name
+                    |               |
+DEV                 | App1.Config   | Name-1
+TEST                | App2.Config   | Name-2");
 
             SetOutputDirectory(TestDirectory.FullName);
             SetSettingsFilePath(TestDirectory.File("App.Config.Settings.xlsx"));
@@ -53,7 +52,7 @@ App2.Config | Name-2");
         public void an_event_indicates_the_razor_template_was_loaded() => LoggedEvents.ShouldIndicateRazorTemplateWasCreated();
 
         [Then]
-        public void an_event_indicates_two_configurations_were_loaded() => LoggedEvents.ShouldIndicate(2).ConfigurationsWereLoaded();
+        public void an_event_indicates_two_rows_were_loaded_from_the_settings_file() => LoggedEvents.ShouldIndicate(2).SettingsRowsWereLoaded();
 
         [Then]
         public void the_result_reports_two_files_were_generated_with_the_names_specified() => Result.ShouldHaveGenerated(2).Files.Named("App1.Config","App2.Config");

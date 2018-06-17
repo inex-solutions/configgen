@@ -18,26 +18,18 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.Diagnostics.Tracing;
-using ConfigGen.Utilities.EventLogging;
-
-namespace ConfigGen.Application
+namespace ConfigGen.Utilities.Extensions
 {
-    public class ConfigurationsLoadedEvent : IEvent
+    public static class StringExtensions
     {
-        public string SettingsFilePath { get; }
-        public int NumConfigurations { get; }
-
-        public EventLevel EventLevel => EventLevel.Verbose;
-
-        public ConfigurationsLoadedEvent(string settingsFilePath, int numConfigurations)
+        public static string EmptyStringToNull(this string s)
         {
-            SettingsFilePath = settingsFilePath;
-            NumConfigurations = numConfigurations;
-        }
+            if (s == null)
+            {
+                return s;
+            }
 
-        public override string ToString()
-            => $"{NumConfigurations} configuration(s) loaded from file: {SettingsFilePath}";
+            return s.Trim().Length == 0 ? null : s;
+        }
     }
 }

@@ -18,28 +18,25 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-using System.Collections.Generic;
+using System.Diagnostics.Tracing;
+using ConfigGen.Utilities.EventLogging;
 
-namespace ConfigGen.Domain.Contract
+namespace ConfigGen.Application
 {
-    public class Configuration
+    public class SettingsLoadedEvent : IEvent
     {
-        private readonly IDictionary<string, string> _settings;
+        public string SettingsFilePath { get; }
+        public int NumRowsLoaded { get; }
 
-        public Configuration(string configurationName, IDictionary<string, string> settings)
+        public EventLevel EventLevel => EventLevel.Verbose;
+
+        public SettingsLoadedEvent(string settingsFilePath, int numRowsLoaded)
         {
-            ConfigurationName = configurationName;
-            _settings = settings;
+            SettingsFilePath = settingsFilePath;
+            NumRowsLoaded = numRowsLoaded;
         }
 
-        public string ConfigurationName { get; }
-
-
-        public bool TryGetValue(string key, out string value)
-        {
-            return _settings.TryGetValue(key, out value);
-        }
-
-        public string this[string key] => _settings[key];
+        public override string ToString()
+            => $"{NumRowsLoaded} row(s) loaded from file: {SettingsFilePath}";
     }
 }

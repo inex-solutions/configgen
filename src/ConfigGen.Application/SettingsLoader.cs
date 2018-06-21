@@ -20,9 +20,7 @@
 #endregion
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.EventLogging;
 using ConfigGen.Utilities.Extensions;
 using OfficeOpenXml;

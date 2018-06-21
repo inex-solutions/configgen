@@ -24,12 +24,13 @@ namespace ConfigGen.Utilities.Extensions
     {
         public static string EmptyStringToNull(this string s)
         {
-            if (s == null)
+            if (s == null
+                || s.Trim().Length == 0)
             {
-                return s;
+                return null;
             }
 
-            return s.Trim().Length == 0 ? null : s;
+            return s;
         }
     }
 }

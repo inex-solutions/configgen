@@ -18,6 +18,7 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.IO;
 using System.Threading.Tasks;
 using ConfigGen.Domain.Contract;
@@ -43,12 +44,13 @@ namespace ConfigGen.Templating.Razor
                 .Build();
         }
 
-        public async Task Render(Configuration configuration, IOutputWriter writer)
+        public async Task<RenderResult> Render(Configuration configuration, IOutputWriter writer)
         {
             var model = new ConfigurationBackedDynamicModel(configuration);
 
             string s = await _engine.CompileRenderAsync(_templateName, _contents, model);
-            await writer.Write(configuration, s);
+            var writeResult = await writer.Write(configuration, s);
+            return new RenderResult(configuration, writeResult);
         }
     }
 }

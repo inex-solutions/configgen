@@ -18,6 +18,7 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Collections.Generic;
 
 namespace ConfigGen.Domain.Contract
@@ -26,7 +27,9 @@ namespace ConfigGen.Domain.Contract
     {
         private readonly IDictionary<string, string> _settings;
 
-        public Configuration(string configurationName, IDictionary<string, string> settings)
+        public Configuration(
+            string configurationName, 
+            IDictionary<string, string> settings)
         {
             ConfigurationName = configurationName;
             _settings = settings;

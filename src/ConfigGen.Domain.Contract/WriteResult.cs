@@ -18,28 +18,17 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System.IO;
-using System.Threading.Tasks;
-using ConfigGen.Application.Contract;
-using ConfigGen.Domain.Contract;
-
-namespace ConfigGen.Application
+namespace ConfigGen.Domain.Contract
 {
-    public class OutputWriter : IOutputWriter
+    public class WriteResult
     {
-        private readonly IFileOutputOptions _options;
+        public string FileName { get; }
+        public string FullPath { get; }
 
-        public OutputWriter(IFileOutputOptions options)
+        public WriteResult(string fileName, string fullPath)
         {
-            _options = options;
-        }
-
-        public async Task<WriteResult> Write(Configuration configuration, string contents)
-        {
-            var target = new FileInfo(Path.Combine(_options.OutputDirectory, configuration["Filename"]));
-            await File.WriteAllTextAsync(target.FullName, contents);
-            return new WriteResult(target.Name, target.FullName);
+            FileName = fileName;
+            FullPath = fullPath;
         }
     }
 }

@@ -18,19 +18,21 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Collections.Generic;
 using System.Linq;
+using ConfigGen.Application.Contract;
 using ConfigGen.Domain.Contract;
 
 namespace ConfigGen.Application
 {
     public class SettingsToConfigurationConverter
     {
-        private string ConfigurationNameSetting = "ConfigurationName";
+        private string DefaultConfigurationNameSetting = "ConfigurationName";
 
-        private Configuration ToConfiguration(IDictionary<string, string> settings)
+        private Configuration ToConfiguration(ISettingsLoaderOptions options, IDictionary<string, string> settings)
         {
-            if (!settings.TryGetValue(ConfigurationNameSetting, out string configurationName)
+            if (!settings.TryGetValue(options.ConfigurationNameSetting ?? DefaultConfigurationNameSetting, out string configurationName)
                 || configurationName == null)
             {
                 return null;
@@ -39,10 +41,10 @@ namespace ConfigGen.Application
             return new Configuration(configurationName, settings);
         }
 
-        public List<Configuration> ToConfigurations(IEnumerable<IDictionary<string, string>> settings)
+        public List<Configuration> ToConfigurations(ISettingsLoaderOptions options, IEnumerable<IDictionary<string, string>> settings)
         {
             return settings
-                .Select(ToConfiguration)
+                .Select(c => ToConfiguration(options, c))
                 .Where(c => c != null)
                 .ToList();
         }

@@ -22,11 +22,14 @@ namespace ConfigGen.Application.Contract
 {
     public class GeneratedFileResult
     {
-        public string Name { get; }
+        public string ConfigurationName { get; }
 
-        public GeneratedFileResult(string name)
+        public string FileName { get; }
+
+        public GeneratedFileResult(string configurationName, string fileName)
         {
-            Name = name;
+            ConfigurationName = configurationName;
+            FileName = fileName;
         }
     }
 }

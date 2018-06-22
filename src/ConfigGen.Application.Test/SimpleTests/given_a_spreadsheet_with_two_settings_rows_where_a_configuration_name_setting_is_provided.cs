@@ -26,7 +26,7 @@ using ConfigGen.Utilities;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {
-    public class given_a_spreadsheet_where_a_row_is_missing_its_configuration_name : ApplicationTestBase
+    public class given_a_spreadsheet_with_two_settings_rows_where_a_configuration_name_setting_is_provided : ApplicationTestBase
     {
         private string _testFileContents;
 
@@ -40,11 +40,12 @@ namespace ConfigGen.Application.Test.SimpleTests
 ConfigurationName   | Filename      | Name
                     |               |
 DEV                 | App1.Config   | Name-1
-                    | App2.Config   | Name-2");
+TEST                | App2.Config   | Name-2");
 
             SetOutputDirectory(TestDirectory.FullName);
             SetSettingsFilePath(TestDirectory.File("App.Config.Settings.xlsx"));
             SetTemplateFilePath(TestDirectory.File("App.Config.Template.razor"));
+            SetConfigurationNameSetting("Name");
         }
 
         protected override async Task When() => Result = await ConfigGenService.GenerateConfigurations(Options);
@@ -56,12 +57,18 @@ DEV                 | App1.Config   | Name-1
         public void an_event_indicates_two_rows_were_loaded_from_the_settings_file() => LoggedEvents.ShouldIndicate(2).SettingsRowsWereLoaded();
 
         [Then]
-        public void the_result_reports_one_configuration_was_generated() => Result.ShouldHaveGenerated(1).Configurations();
+        public void the_result_reports_two_configurations_were_generated() => Result.ShouldHaveGenerated(2).Configurations();
 
         [Then]
-        public void the_configuration_was_generated_with_the_correct_name_and_filename() => Result.ShouldContainConfiguration(name: "DEV", file: "App1.Config");
+        public void the_first_configuration_was_generated_with_the_correct_filename() => Result.ShouldContainConfiguration(name: "Name-1", file: "App1.Config");
 
         [Then]
-        public void the_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App1.Config").ShouldHaveContents("<root><name>Name-1</name></root>");
+        public void the_second_configuration_was_generated_with_the_correct_filename() => Result.ShouldContainConfiguration(name: "Name-2", file: "App2.Config");
+
+        [Then]
+        public void the_first_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App1.Config").ShouldHaveContents("<root><name>Name-1</name></root>");
+
+        [Then]
+        public void the_second_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App2.Config").ShouldHaveContents("<root><name>Name-2</name></root>");
     }
 }

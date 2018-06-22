@@ -18,6 +18,7 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Threading.Tasks;
 using ConfigGen.Application.Test.Common;
 using ConfigGen.Application.Test.Common.Specification;
@@ -55,7 +56,13 @@ TEST                | App2.Config   | Name-2");
         public void an_event_indicates_two_rows_were_loaded_from_the_settings_file() => LoggedEvents.ShouldIndicate(2).SettingsRowsWereLoaded();
 
         [Then]
-        public void the_result_reports_two_files_were_generated_with_the_names_specified() => Result.ShouldHaveGenerated(2).Files.Named("App1.Config","App2.Config");
+        public void the_result_reports_two_configurations_were_generated() => Result.ShouldHaveGenerated(2).Configurations();
+
+        [Then]
+        public void the_first_configuration_was_generated_with_the_correct_filename() => Result.ShouldContainConfiguration(name: "DEV", file: "App1.Config");
+
+        [Then]
+        public void the_second_configuration_was_generated_with_the_correct_filename() => Result.ShouldContainConfiguration(name: "TEST", file: "App2.Config");
 
         [Then]
         public void the_first_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App1.Config").ShouldHaveContents("<root><name>Name-1</name></root>");

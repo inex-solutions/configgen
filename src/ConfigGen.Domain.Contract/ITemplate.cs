@@ -18,6 +18,7 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Threading.Tasks;
 
 namespace ConfigGen.Domain.Contract
@@ -25,6 +26,6 @@ namespace ConfigGen.Domain.Contract
     public interface ITemplate
     {
         Task Load(string templateFilePath);
-        Task Render(Configuration configuration, IOutputWriter writer);
+        Task<RenderResult> Render(Configuration configuration, IOutputWriter writer);
     }
 }

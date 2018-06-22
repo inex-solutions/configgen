@@ -18,10 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConfigGen.Application.Contract;
+using ConfigGen.Domain.Contract;
 
 namespace ConfigGen.Application
 {
@@ -47,10 +49,10 @@ namespace ConfigGen.Application
 
             var settings = await _settingsLoader.Load(options.SettingsFilePath);
 
-            var configurations = _settingsToConfigurationConverter.ToConfigurations(settings);
+            var configurations = _settingsToConfigurationConverter.ToConfigurations(options, settings);
             var outputWriter = new OutputWriter(options);
 
-            var awaitables = new List<Task>();
+            var awaitables = new List<Task<RenderResult>>();
 
             foreach (var configuration in configurations)
             {
@@ -58,10 +60,9 @@ namespace ConfigGen.Application
                 awaitables.Add(awaitable);
             }
 
-            await Task.WhenAll(awaitables);
+            var results = await Task.WhenAll(awaitables);
 
-            return await Task.FromResult(
-                new ConfigurationGenerationResult(configurations.Select(row => new GeneratedFileResult(row["Filename"])).ToList()));
+            return new ConfigurationGenerationResult(results.Select(row => new GeneratedFileResult(row.Configuration.ConfigurationName, row.WriteResult.FileName)));
         }
     }
 }

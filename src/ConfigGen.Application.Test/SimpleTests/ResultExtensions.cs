@@ -18,10 +18,12 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
+using Shouldly;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {
@@ -68,6 +70,14 @@ namespace ConfigGen.Application.Test.SimpleTests
                     return new GeneratedFileAssertions(_result.GeneratedFiles);
                 }
             }
+
+            public void Configurations()
+            {
+                if (_result.GeneratedFiles.Length != _num)
+                {
+                    throw new SpecificationException($"Expected exactly {_num} configurations to be generated, but there were {_result.GeneratedFiles.Length}");
+                }
+            }
         }
 
         public class GeneratedFileAssertions
@@ -79,10 +89,32 @@ namespace ConfigGen.Application.Test.SimpleTests
                 _files = files;
             }
 
-            public void Named(params string[] expectedNames)
+            //public void Named(params string[] expectedNames)
+            //{
+            //    _files.Select(f => f.Name).ShouldContainOnly(expectedNames);
+            //}
+        }
+
+        public static IConfigurationGenerationResult ShouldContainConfiguration(
+            this IConfigurationGenerationResult result,
+            string name, 
+            string file)
+        {
+            var matches = result.GeneratedFiles.Where(c => c.ConfigurationName == name).ToList();
+
+            if (matches.Count == 0)
             {
-                _files.Select(f => f.Name).ShouldContainOnly(expectedNames);
+                throw new SpecificationException($"Expected a single configuration with name '{name}', but there were none");
             }
+
+            if (matches.Count > 1)
+            {
+                throw new SpecificationException($"Expected a single configuration with name '{name}', but there were {matches.Count}");
+            }
+
+            matches[0].FileName.ShouldBe(file, $"Expected configuration '{name}' to have filename '{file}', but was '{matches[0].FileName}'");
+
+            return result;
         }
     }
 }

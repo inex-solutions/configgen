@@ -102,5 +102,10 @@ namespace ConfigGen.Application.Test.Common
         {
             Options.TemplateFilePath = templateFilePath;
         }
+
+        protected void SetConfigurationNameSetting(string configurationNameSetting)
+        {
+            Options.ConfigurationNameSetting = configurationNameSetting;
+        }
     }
 }

@@ -24,6 +24,4 @@ namespace ConfigGen.Application.Contract
     {
         GeneratedFileResult[] GeneratedFiles { get; }
     }
-
-
 }

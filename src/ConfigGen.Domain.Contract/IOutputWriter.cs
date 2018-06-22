@@ -18,12 +18,13 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Threading.Tasks;
 
 namespace ConfigGen.Domain.Contract
 {
     public interface IOutputWriter
     {
-        Task Write(Configuration configuration, string contents);
+        Task<WriteResult> Write(Configuration configuration, string contents);
     }
 }

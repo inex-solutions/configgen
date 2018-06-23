@@ -62,7 +62,11 @@ namespace ConfigGen.Application
 
             var results = await Task.WhenAll(awaitables);
 
-            return new ConfigurationGenerationResult(results.Select(row => new GeneratedFileResult(row.Configuration.ConfigurationName, row.WriteResult.FileName)));
+            return new ConfigurationGenerationResult(results.Select(row =>
+                new GeneratedFileResult(
+                    row.Configuration.Index,
+                    row.Configuration.ConfigurationName,
+                    row.WriteResult.FileName)));
         }
     }
 }

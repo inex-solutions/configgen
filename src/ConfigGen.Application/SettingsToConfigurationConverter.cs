@@ -30,7 +30,15 @@ namespace ConfigGen.Application
     {
         private string DefaultConfigurationNameSetting = "ConfigurationName";
 
-        private Configuration ToConfiguration(ISettingsLoaderOptions options, IDictionary<string, string> settings)
+        public List<Configuration> ToConfigurations(ISettingsLoaderOptions options, IEnumerable<IDictionary<string, string>> settings)
+        {
+            return settings
+                .Select((item, index) => ToConfiguration(index + 1, options, item))
+                .Where(cfg => cfg != null)
+                .ToList();
+        }
+
+        private Configuration ToConfiguration(int index, ISettingsLoaderOptions options, IDictionary<string, string> settings)
         {
             if (!settings.TryGetValue(options.ConfigurationNameSetting ?? DefaultConfigurationNameSetting, out string configurationName)
                 || configurationName == null)
@@ -38,15 +46,7 @@ namespace ConfigGen.Application
                 return null;
             }
 
-            return new Configuration(configurationName, settings);
-        }
-
-        public List<Configuration> ToConfigurations(ISettingsLoaderOptions options, IEnumerable<IDictionary<string, string>> settings)
-        {
-            return settings
-                .Select(c => ToConfiguration(options, c))
-                .Where(c => c != null)
-                .ToList();
+            return new Configuration(index, configurationName, settings);
         }
     }
 }

@@ -28,12 +28,16 @@ namespace ConfigGen.Domain.Contract
         private readonly IDictionary<string, string> _settings;
 
         public Configuration(
+            int index,
             string configurationName, 
             IDictionary<string, string> settings)
         {
+            Index = index;
             ConfigurationName = configurationName;
             _settings = settings;
         }
+
+        public int Index { get; }
 
         public string ConfigurationName { get; }
 

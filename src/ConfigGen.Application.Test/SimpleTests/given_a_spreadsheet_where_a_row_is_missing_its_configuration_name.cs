@@ -59,7 +59,7 @@ DEV                 | App1.Config   | Name-1
         public void the_result_reports_one_configuration_was_generated() => Result.ShouldHaveGenerated(1).Configurations();
 
         [Then]
-        public void the_configuration_was_generated_with_the_correct_name_and_filename() => Result.ShouldContainConfiguration(name: "DEV", file: "App1.Config");
+        public void the_one_generated_configuration_corresponds_to_the_row_which_had_a_configuration_name() => Result.ShouldContainConfiguration(index: 1, name: "DEV", file: "App1.Config");
 
         [Then]
         public void the_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App1.Config").ShouldHaveContents("<root><name>Name-1</name></root>");

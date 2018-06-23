@@ -27,8 +27,8 @@ namespace ConfigGen.Utilities.Test.FileFinderTests
 {
     public abstract class FileFinderTestBase : SpecificationBase
     {
-        protected DisposableDirectory TestDirectory;
-        protected List<string> FoundFiles;
+        protected DisposableDirectory TestDirectory { get; private set; }
+        protected List<string> FoundFiles { get; private set; }
 
         protected override void Setup()
         {

@@ -19,7 +19,6 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
@@ -45,32 +44,6 @@ namespace ConfigGen.Application.Test.SimpleTests
                 _num = num;
             }
 
-            public GeneratedFileAssertions File
-            {
-                get
-                {
-                    if (_result.GeneratedFiles.Length != 1)
-                    {
-                        throw new SpecificationException($"Expected exactly 1 file to be generated, but there were {_result.GeneratedFiles.Length}");
-                    }
-
-                    return new GeneratedFileAssertions(_result.GeneratedFiles);
-                }
-            }
-
-            public GeneratedFileAssertions Files
-            {
-                get
-                {
-                    if (_result.GeneratedFiles.Length != _num)
-                    {
-                        throw new SpecificationException($"Expected exactly {_num} files to be generated, but there were {_result.GeneratedFiles.Length}");
-                    }
-
-                    return new GeneratedFileAssertions(_result.GeneratedFiles);
-                }
-            }
-
             public void Configurations()
             {
                 if (_result.GeneratedFiles.Length != _num)
@@ -80,39 +53,22 @@ namespace ConfigGen.Application.Test.SimpleTests
             }
         }
 
-        public class GeneratedFileAssertions
-        {
-            private readonly IEnumerable<GeneratedFileResult> _files;
-
-            public GeneratedFileAssertions(IEnumerable<GeneratedFileResult> files)
-            {
-                _files = files;
-            }
-
-            //public void Named(params string[] expectedNames)
-            //{
-            //    _files.Select(f => f.Name).ShouldContainOnly(expectedNames);
-            //}
-        }
-
         public static IConfigurationGenerationResult ShouldContainConfiguration(
             this IConfigurationGenerationResult result,
+            int index,
             string name, 
             string file)
         {
-            var matches = result.GeneratedFiles.Where(c => c.ConfigurationName == name).ToList();
+            var matches = result.GeneratedFiles.Where(c => c.ConfigurationIndex == index).ToList();
 
-            if (matches.Count == 0)
+            if (matches.Count != 1)
             {
-                throw new SpecificationException($"Expected a single configuration with name '{name}', but there were none");
+                throw new SpecificationException($"Expected a single configuration with index '{index}', but there were {matches.Count}");
             }
 
-            if (matches.Count > 1)
-            {
-                throw new SpecificationException($"Expected a single configuration with name '{name}', but there were {matches.Count}");
-            }
+            matches[0].ConfigurationName.ShouldBe(name, $"Expected configuration '{index}' to have name '{name}', but was '{matches[0].ConfigurationName}'");
 
-            matches[0].FileName.ShouldBe(file, $"Expected configuration '{name}' to have filename '{file}', but was '{matches[0].FileName}'");
+            matches[0].FileName.ShouldBe(file, $"Expected configuration '{index}' to have filename '{file}', but was '{matches[0].FileName}'");
 
             return result;
         }

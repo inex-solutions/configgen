@@ -60,10 +60,12 @@ TEST                | App2.Config   | Name-2");
         public void the_result_reports_two_configurations_were_generated() => Result.ShouldHaveGenerated(2).Configurations();
 
         [Then]
-        public void the_first_configuration_was_generated_with_the_correct_filename() => Result.ShouldContainConfiguration(name: "Name-1", file: "App1.Config");
+        public void the_first_generated_configuration_takes_the_specified_setting_value_as_its_configuration_name_and_has_the_correct_filename() 
+            => Result.ShouldContainConfiguration(index: 1, name: "Name-1", file: "App1.Config");
 
         [Then]
-        public void the_second_configuration_was_generated_with_the_correct_filename() => Result.ShouldContainConfiguration(name: "Name-2", file: "App2.Config");
+        public void the_second_generated_configuration_takes_the_specified_setting_value_as_its_configuration_name_and_has_the_correct_filename()
+            => Result.ShouldContainConfiguration(index: 2, name: "Name-2", file: "App2.Config");
 
         [Then]
         public void the_first_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() => TestDirectory.File("App1.Config").ShouldHaveContents("<root><name>Name-1</name></root>");

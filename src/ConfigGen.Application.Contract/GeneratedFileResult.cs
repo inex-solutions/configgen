@@ -22,12 +22,15 @@ namespace ConfigGen.Application.Contract
 {
     public class GeneratedFileResult
     {
+        public int ConfigurationIndex { get; }
+
         public string ConfigurationName { get; }
 
         public string FileName { get; }
 
-        public GeneratedFileResult(string configurationName, string fileName)
+        public GeneratedFileResult(int configurationIndex, string configurationName, string fileName)
         {
+            ConfigurationIndex = configurationIndex;
             ConfigurationName = configurationName;
             FileName = fileName;
         }

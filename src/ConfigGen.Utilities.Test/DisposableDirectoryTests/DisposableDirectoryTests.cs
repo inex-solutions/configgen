@@ -26,7 +26,7 @@ using Shouldly;
 
 namespace ConfigGen.Utilities.Test.DisposableDirectoryTests
 {
-    class when_disposing_a_directory_containing_normal_files : SpecificationBase
+    public class when_disposing_a_directory_containing_normal_files : SpecificationBase
     {
         private DisposableDirectory _disposableDirectory;
 
@@ -46,7 +46,7 @@ namespace ConfigGen.Utilities.Test.DisposableDirectoryTests
         public void the_directory_is_deleted () => Directory.Exists(_disposableDirectory.FullName).ShouldBeFalse();
     }
 
-    class when_disposing_a_directory_containing_readonly_files : SpecificationBase
+    public class when_disposing_a_directory_containing_readonly_files : SpecificationBase
     {
         private DisposableDirectory _disposableDirectory;
 
@@ -67,7 +67,7 @@ namespace ConfigGen.Utilities.Test.DisposableDirectoryTests
         public void the_directory_is_deleted () => Directory.Exists(_disposableDirectory.FullName).ShouldBeFalse();
     }
 
-    class when_disposing_a_directory_containing_a_locked_file : SpecificationBase
+    public class when_disposing_a_directory_containing_a_locked_file : SpecificationBase
     {
         private DisposableDirectory _disposableDirectory;
 
@@ -100,7 +100,7 @@ namespace ConfigGen.Utilities.Test.DisposableDirectoryTests
         public void an_io_exception_is_thrown () => _caughtException.ShouldBeOfType<IOException>();
     }
 
-    class when_disposing_a_directory_containing_a_locked_file_with_throwOnFailedCleanup_disabled : SpecificationBase
+    public class when_disposing_a_directory_containing_a_locked_file_with_throwOnFailedCleanup_disabled : SpecificationBase
     {
         private DisposableDirectory _disposableDirectory;
 

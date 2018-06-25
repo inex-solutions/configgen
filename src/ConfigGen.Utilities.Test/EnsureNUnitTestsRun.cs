@@ -1,0 +1,2 @@
+﻿// Reference an item from the NUnit assembly to ensure tests are correctly detected during test discovery: https://github.com/nunit/docs/wiki/Breaking-Changes#nunit-30
+[assembly:NUnit.Framework.Parallelizable]

@@ -48,7 +48,7 @@ namespace ConfigGen.ConsoleApp.ConsoleOutput
             consoleOutAppender.ActivateOptions();
             BasicConfigurator.Configure(consoleOutAppender);
 
-            consoleErrorAppender.Target = "Console.Error";
+            consoleErrorAppender.Target = "Console.Out";
             consoleErrorAppender.Threshold = Level.Error;
             consoleErrorAppender.Layout = new PatternLayout(layout);
             consoleErrorAppender.AddMapping(new ColoredConsoleAppender.LevelColors

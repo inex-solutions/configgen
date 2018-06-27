@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>ConfigGen</id>
+        <version>2.0.24-beta</version>
+        <authors>Rob Levine</authors>
+        <owners>Rob Levine</owners>
+        <licenseUrl>https://github.com/inex-solutions/configgen/wiki/licensing</licenseUrl>
+        <projectUrl>https://github.com/inex-solutions/configgen</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>.Net Configuration File Generator</description>
+        <releaseNotes></releaseNotes>
+        <copyright>Copyright 2010-2018 INEX Solutions Ltd</copyright>
+    </metadata>
+    <files>
+        <file src="..\src\ConfigGen.ConsoleApp\bin\debug\*.exe" target="tools" />
+		<file src="..\src\ConfigGen.ConsoleApp\bin\debug\*.dll" target="tools" />
+    </files>
+</package>

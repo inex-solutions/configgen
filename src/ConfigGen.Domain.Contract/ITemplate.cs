@@ -26,6 +26,6 @@ namespace ConfigGen.Domain.Contract
     public interface ITemplate
     {
         Task Load(string templateFilePath);
-        Task<RenderResult> Render(Configuration configuration, IOutputWriter writer);
+        Task<RenderResult> Render(ConfigurationGenerationContext context, IOutputWriter writer);
     }
 }

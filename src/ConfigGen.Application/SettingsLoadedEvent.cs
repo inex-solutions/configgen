@@ -27,9 +27,8 @@ namespace ConfigGen.Application
     public class SettingsLoadedEvent : IEvent
     {
         public string SettingsFilePath { get; }
-        public int NumRowsLoaded { get; }
 
-        public EventLevel EventLevel => EventLevel.Verbose;
+        public int NumRowsLoaded { get; }
 
         public SettingsLoadedEvent(string settingsFilePath, int numRowsLoaded)
         {

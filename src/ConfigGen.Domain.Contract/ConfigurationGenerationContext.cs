@@ -18,21 +18,20 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-namespace ConfigGen.Application.Contract
+using ConfigGen.Utilities.EventLogging;
+
+namespace ConfigGen.Domain.Contract
 {
-    public class GeneratedFileResult
+    public class ConfigurationGenerationContext
     {
-        public int ConfigurationIndex { get; }
-
-        public string ConfigurationName { get; }
-
-        public string FileName { get; }
-
-        public GeneratedFileResult(int configurationIndex, string configurationName, string fileName)
+        public ConfigurationGenerationContext(Configuration configuration, IEventLogger eventLogger)
         {
-            ConfigurationIndex = configurationIndex;
-            ConfigurationName = configurationName;
-            FileName = fileName;
+            Configuration = configuration;
+            EventLogger = eventLogger;
         }
+
+        public Configuration Configuration { get; }
+
+        public IEventLogger EventLogger { get; }
     }
 }

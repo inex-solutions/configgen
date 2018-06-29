@@ -18,28 +18,23 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
-using System;
-using System.Diagnostics.Tracing;
-using ConfigGen.Application.Contract;
 using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Application
 {
-    public class TemplateCreatedEvent : IEvent
+    public class ConfigurationGenerationContextFactory
     {
-        public Type TemplateType { get; }
+        private readonly IEventLogger _eventLogger;
 
-        public string TemplatePath { get; }
-
-        public TemplateCreatedEvent(ITemplate template, ITemplateLoaderOptions options)
+        public ConfigurationGenerationContextFactory(IEventLogger eventLogger)
         {
-            TemplateType = template.GetType();
-            TemplatePath = options.TemplateFilePath;
+            _eventLogger = eventLogger;
         }
 
-        public override string ToString()
-            => $"{TemplateType.Name} created for template at path: {TemplatePath}";
+        public ConfigurationGenerationContext Create(Configuration configuration)
+        {
+            return new ConfigurationGenerationContext(configuration, _eventLogger);
+        }
     }
 }

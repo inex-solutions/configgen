@@ -44,13 +44,13 @@ namespace ConfigGen.Templating.Razor
                 .Build();
         }
 
-        public async Task<RenderResult> Render(Configuration configuration, IOutputWriter writer)
+        public async Task<RenderResult> Render(ConfigurationGenerationContext context, IOutputWriter writer)
         {
-            var model = new ConfigurationBackedDynamicModel(configuration);
+            var model = new ConfigurationBackedDynamicModel(context);
 
             string s = await _engine.CompileRenderAsync(_templateName, _contents, model);
-            var writeResult = await writer.Write(configuration, s);
-            return new RenderResult(configuration, writeResult);
+            var writeResult = await writer.Write(context.Configuration, s);
+            return new RenderResult(context.Configuration, writeResult);
         }
     }
 }

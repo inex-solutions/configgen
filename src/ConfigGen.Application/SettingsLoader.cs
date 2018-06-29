@@ -20,6 +20,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Threading.Tasks;
 using ConfigGen.Utilities.EventLogging;
@@ -37,7 +38,7 @@ namespace ConfigGen.Application
             EventLogger = eventLogger;
         }
 
-        public async Task<IEnumerable<IDictionary<string,string>>> Load(string settingsFilePath)
+        public async Task<IEnumerable<IImmutableDictionary<string,string>>> Load(string settingsFilePath)
         {
             FileInfo settingsFile = new FileInfo(settingsFilePath);
             ExcelPackage excl = new ExcelPackage(settingsFile);
@@ -49,7 +50,7 @@ namespace ConfigGen.Application
                 columnHeadings.Add(worksheet.Cells[worksheet.Dimension.Start.Row, col].Value.ToString());
             }
 
-            var rows = new List<Dictionary<string, string>>();
+            var rows = new List<IImmutableDictionary<string, string>>();
 
             for (int row = worksheet.Dimension.Start.Row + 1;
                 row <= worksheet.Dimension.End.Row;
@@ -66,7 +67,7 @@ namespace ConfigGen.Application
 
                 if (rowHasData)
                 {
-                    rows.Add(settings);
+                    rows.Add(settings.ToImmutableDictionary());
                 }
             }
 

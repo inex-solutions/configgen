@@ -32,15 +32,21 @@ namespace ConfigGen.Application
         private readonly TemplateFactory _templateFactory;
         private readonly SettingsLoader _settingsLoader;
         private readonly SettingsToConfigurationConverter _settingsToConfigurationConverter;
+        private readonly ConfigurationGenerationContextFactory _configurationGenerationContextFactory;
+        private readonly GenerationResultFactory _generationResultFactory;
 
         public ConfigurationGenerationService(
             TemplateFactory templateFactory, 
             SettingsLoader settingsLoader,
-            SettingsToConfigurationConverter settingsToConfigurationConverter)
+            SettingsToConfigurationConverter settingsToConfigurationConverter,
+            ConfigurationGenerationContextFactory configurationGenerationContextFactory,
+            GenerationResultFactory generationResultFactory)
         {
             _templateFactory = templateFactory;
             _settingsLoader = settingsLoader;
             _settingsToConfigurationConverter = settingsToConfigurationConverter;
+            _configurationGenerationContextFactory = configurationGenerationContextFactory;
+            _generationResultFactory = generationResultFactory;
         }
 
         public async Task<IConfigurationGenerationResult> GenerateConfigurations(IConfigurationGenerationOptions options)
@@ -56,17 +62,14 @@ namespace ConfigGen.Application
 
             foreach (var configuration in configurations)
             {
-                var awaitable = template.Render(configuration, outputWriter);
+                var context = _configurationGenerationContextFactory.Create(configuration);
+                var awaitable = template.Render(context, outputWriter);
                 awaitables.Add(awaitable);
             }
 
             var results = await Task.WhenAll(awaitables);
 
-            return new ConfigurationGenerationResult(results.Select(row =>
-                new GeneratedFileResult(
-                    row.Configuration.Index,
-                    row.Configuration.ConfigurationName,
-                    row.WriteResult.FileName)));
+            return new ConfigurationGenerationResult(results.Select(_generationResultFactory.CreateResult));
         }
     }
 }

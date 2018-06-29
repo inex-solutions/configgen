@@ -28,6 +28,11 @@ namespace ConfigGen.Application.Test.SimpleTests
 {
     public static class ResultExtensions
     {
+        public static SingleConfigurationGenerationResult Configuration(this IConfigurationGenerationResult result, int num)
+        {
+            return result.SingleConfigurationGenerations[num - 1];
+        }
+
         public static ShouldHaveGeneratedResult ShouldHaveGenerated(this IConfigurationGenerationResult result, int num)
         {
             return new ShouldHaveGeneratedResult(result, num);
@@ -46,9 +51,9 @@ namespace ConfigGen.Application.Test.SimpleTests
 
             public void Configurations()
             {
-                if (_result.GeneratedFiles.Length != _num)
+                if (_result.SingleConfigurationGenerations.Length != _num)
                 {
-                    throw new SpecificationException($"Expected exactly {_num} configurations to be generated, but there were {_result.GeneratedFiles.Length}");
+                    throw new SpecificationException($"Expected exactly {_num} configurations to be generated, but there were {_result.SingleConfigurationGenerations.Length}");
                 }
             }
         }
@@ -59,7 +64,7 @@ namespace ConfigGen.Application.Test.SimpleTests
             string name, 
             string file)
         {
-            var matches = result.GeneratedFiles.Where(c => c.ConfigurationIndex == index).ToList();
+            var matches = result.SingleConfigurationGenerations.Where(c => c.ConfigurationIndex == index).ToList();
 
             if (matches.Count != 1)
             {

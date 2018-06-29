@@ -22,6 +22,6 @@ namespace ConfigGen.Application.Contract
 {
     public interface IConfigurationGenerationResult
     {
-        GeneratedFileResult[] GeneratedFiles { get; }
+        SingleConfigurationGenerationResult[] SingleConfigurationGenerations { get; }
     }
 }

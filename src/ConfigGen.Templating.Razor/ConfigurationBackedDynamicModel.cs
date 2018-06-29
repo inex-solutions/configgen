@@ -18,24 +18,38 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
+using System.Diagnostics.Tracing;
+using ConfigGen.Application.Contract;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Templating.Razor
 {
     public class ConfigurationBackedDynamicModel : DynamicModel
     {
         private readonly Configuration _configuration;
+        private readonly IEventLogger _eventLogger;
 
-        public ConfigurationBackedDynamicModel(Configuration configuration)
+        public ConfigurationBackedDynamicModel(ConfigurationGenerationContext context)
         {
-            _configuration = configuration;
+            _configuration = context.Configuration;
+            _eventLogger = context.EventLogger;
         }
 
         protected override bool TryGetValue(string name, out object result)
         {
             var success = _configuration.TryGetValue(name, out string resultString);
             result = resultString;
+
+            if (success)
+            {
+                _eventLogger.Log(new TokenUsedEvent(_configuration.Index, name));
+            }
+            else
+            {
+                _eventLogger.Log(new UnrecognisedTokenEvent(_configuration.Index, name));
+            }
+
             return success;
         }
     }

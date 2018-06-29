@@ -26,12 +26,12 @@ namespace ConfigGen.Application.Contract
 {
     public class ConfigurationGenerationResult : IConfigurationGenerationResult
     {
-        public ConfigurationGenerationResult(IEnumerable<GeneratedFileResult> generatedFiles)
+        public ConfigurationGenerationResult(IEnumerable<SingleConfigurationGenerationResult> generatedFiles)
         {
-            GeneratedFiles = generatedFiles.ToArray();
+            SingleConfigurationGenerations = generatedFiles.ToArray();
         }
 
-        public GeneratedFileResult[] GeneratedFiles { get; }
+        public SingleConfigurationGenerationResult[] SingleConfigurationGenerations { get; }
 
     }
 }

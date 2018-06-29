@@ -20,17 +20,27 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using ConfigGen.Application.Contract;
 using ConfigGen.Domain.Contract;
+using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Application
 {
     public class SettingsToConfigurationConverter
     {
+        private readonly IEventLogger _eventLogger;
         private string DefaultConfigurationNameSetting = "ConfigurationName";
 
-        public List<Configuration> ToConfigurations(ISettingsLoaderOptions options, IEnumerable<IDictionary<string, string>> settings)
+        public SettingsToConfigurationConverter(IEventLogger eventLogger)
+        {
+            _eventLogger = eventLogger;
+        }
+
+        public List<Configuration> ToConfigurations(
+            ISettingsLoaderOptions options, 
+            IEnumerable<IImmutableDictionary<string, string>> settings)
         {
             return settings
                 .Select((item, index) => ToConfiguration(index + 1, options, item))
@@ -38,15 +48,19 @@ namespace ConfigGen.Application
                 .ToList();
         }
 
-        private Configuration ToConfiguration(int index, ISettingsLoaderOptions options, IDictionary<string, string> settings)
+        private Configuration ToConfiguration(int index, ISettingsLoaderOptions options, IImmutableDictionary<string, string> settings)
         {
-            if (!settings.TryGetValue(options.ConfigurationNameSetting ?? DefaultConfigurationNameSetting, out string configurationName)
+            var configurationNameSetting = options.ConfigurationNameSetting ?? DefaultConfigurationNameSetting;
+
+            if (!settings.TryGetValue(configurationNameSetting, out string configurationName)
                 || configurationName == null)
             {
+                _eventLogger.Log(new UnrecognisedTokenEvent(index, configurationNameSetting));
                 return null;
             }
 
-            return new Configuration(index, configurationName, settings);
+            _eventLogger.Log(new TokenUsedEvent(index, configurationNameSetting));
+            return new Configuration(index, configurationName, settings, _eventLogger);
         }
     }
 }

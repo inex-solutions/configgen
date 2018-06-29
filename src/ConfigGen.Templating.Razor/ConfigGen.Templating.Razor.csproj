@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Application.Contract\ConfigGen.Application.Contract.csproj" />
     <ProjectReference Include="..\ConfigGen.Domain.Contract\ConfigGen.Domain.Contract.csproj" />
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj" />
   </ItemGroup>

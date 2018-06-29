@@ -33,7 +33,7 @@ namespace ConfigGen.Application.Test.Common.Specification
             ShouldContainOnly(actual, (IEnumerable<T>)expected);
         }
 
-        public static void ShouldContainOnly<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
+        public static void ShouldContainOnly<T>(this IEnumerable<T> actual, IEnumerable<T> expected, string preamble = null)
         {
             var actualList = new List<T>(actual);
             var unexpectedItems = new List<T>(actualList);
@@ -50,7 +50,7 @@ namespace ConfigGen.Application.Test.Common.Specification
 
             if (unexpectedItems.Any() || missingItems.Any())
             {
-                var message = $"Expected two lists to contain the same items." +
+                var message = (preamble ?? "Expected two lists to contain the same items.") +
                               $"\nExpected:\n- {string.Join("\n- ", expectedList)}" +
                               $"\nActual:\n- {string.Join("\n- ", actualList)}" +
                               $"\nUnexpected:\n- {string.Join("\n- ", unexpectedItems)}" +

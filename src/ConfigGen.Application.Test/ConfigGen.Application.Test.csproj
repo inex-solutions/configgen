@@ -22,9 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConfigGen.Application.Contract\ConfigGen.Application.Contract.csproj" />
     <ProjectReference Include="..\ConfigGen.Application\ConfigGen.Application.csproj" />
     <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TokenUsageTests\" />
   </ItemGroup>
 
 </Project>

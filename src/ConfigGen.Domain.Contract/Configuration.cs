@@ -20,21 +20,26 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using ConfigGen.Application.Contract;
+using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Domain.Contract
 {
     public class Configuration
     {
-        private readonly IDictionary<string, string> _settings;
+        private readonly IImmutableDictionary<string, string> _settings;
+        private readonly IEventLogger _eventLogger;
 
-        public Configuration(
-            int index,
-            string configurationName, 
-            IDictionary<string, string> settings)
+        public Configuration(int index,
+            string configurationName,
+            IImmutableDictionary<string, string> settings, 
+            IEventLogger eventLogger)
         {
             Index = index;
             ConfigurationName = configurationName;
             _settings = settings;
+            _eventLogger = eventLogger;
         }
 
         public int Index { get; }
@@ -44,9 +49,29 @@ namespace ConfigGen.Domain.Contract
 
         public bool TryGetValue(string key, out string value)
         {
-            return _settings.TryGetValue(key, out value);
+            if (_settings.TryGetValue(key, out value))
+            {
+                _eventLogger.Log(new TokenUsedEvent(Index, key));
+                return true;
+            }
+
+            _eventLogger.Log(new UnrecognisedTokenEvent(Index, key));
+            return false;
         }
 
-        public string this[string key] => _settings[key];
+        public string this[string key]
+        {
+            get
+            {
+                if (TryGetValue(key, out string value))
+                {
+                    return value;
+                }
+
+                throw new KeyNotFoundException($"Key not found: {key}");
+            }
+        }
+
+        public IImmutableDictionary<string, string> Settings => _settings;
     }
 }

@@ -18,7 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 using System;
 
 namespace ConfigGen.Utilities.EventLogging
@@ -34,7 +33,7 @@ namespace ConfigGen.Utilities.EventLogging
 
         public void Log(IEvent @event)
         {
-            Console.WriteLine($"[{@event.EventLevel.ToString().PadRight(15)}] {@event}");
+            Console.WriteLine($"[Event] {@event}");
             _innerLogger.Log(@event);
         }
     }

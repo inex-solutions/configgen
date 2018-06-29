@@ -10,4 +10,9 @@
     <WarningsAsErrors />
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ConfigGen.Application.Contract\ConfigGen.Application.Contract.csproj" />
+    <ProjectReference Include="..\ConfigGen.Utilities\ConfigGen.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>

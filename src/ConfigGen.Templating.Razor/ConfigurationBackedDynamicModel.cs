@@ -40,16 +40,6 @@ namespace ConfigGen.Templating.Razor
         {
             var success = _configuration.TryGetValue(name, out string resultString);
             result = resultString;
-
-            if (success)
-            {
-                _eventLogger.Log(new TokenUsedEvent(_configuration.Index, name));
-            }
-            else
-            {
-                _eventLogger.Log(new UnrecognisedTokenEvent(_configuration.Index, name));
-            }
-
             return success;
         }
     }

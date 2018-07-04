@@ -18,7 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 using System.Collections.Generic;
 using System.IO;
 using ConfigGen.Application.Test.Common.Specification;

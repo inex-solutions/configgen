@@ -62,8 +62,20 @@ TEST                | App2.Config   | Name-2");
             => Result.ShouldContainConfiguration(index: 1, name: "DEV", file: "App1.Config");
 
         [Then]
-        public void the_first_generated_configuration_used_all_three_supplied_settings()
-            => Result.Configuration(1).UsedTokens("ConfigurationName", "Filename", "Name");
+        public void the_first_generated_configuration_used_three_tokens()
+            => Result.Configuration(1).Used(3).Tokens();
+
+        [Then]
+        public void the_first_generated_configuration_used_the_Name_token_which_appeared_in_the_template()
+            => Result.Configuration(1).UsedToken("Name");
+
+        [Then]
+        public void the_first_generated_configuration_used_the_ConfigurationName_token_which_is_the_default_token_to_use_for_configuration_naming()
+            => Result.Configuration(1).UsedToken("ConfigurationName");
+
+        [Then]
+        public void the_first_generated_configuration_used_the_Filename_token_which_is_the_default_token_to_use_for_the_output_filename()
+            => Result.Configuration(1).UsedToken("Filename");
 
         [Then]
         public void the_first_generated_configuration_reported_no_unused_tokens()
@@ -78,16 +90,20 @@ TEST                | App2.Config   | Name-2");
             => Result.ShouldContainConfiguration(index: 2, name: "TEST", file: "App2.Config");
 
         [Then]
-        public void the_second_generated_configuration_used_all_three_supplied_settings()
-            => Result.Configuration(2).UsedTokens("ConfigurationName", "Filename", "Name");
+        public void the_second_generated_configuration_used_three_tokens()
+            => Result.Configuration(2).Used(3).Tokens();
 
         [Then]
-        public void the_second_generated_configuration_reported_no_unused_tokens()
-            => Result.Configuration(2).HadNoUnusedTokens();
+        public void the_second_generated_configuration_used_the_Name_token_which_appeared_in_the_template()
+            => Result.Configuration(2).UsedToken("Name");
 
         [Then]
-        public void the_second_generated_configuration_reported_no_unrecognised_tokens()
-            => Result.Configuration(2).HadNoUnrecognisedTokens();
+        public void the_second_generated_configuration_used_the_ConfigurationName_token_which_is_the_default_token_to_use_for_configuration_naming()
+            => Result.Configuration(2).UsedToken("ConfigurationName");
+
+        [Then]
+        public void the_second_generated_configuration_used_the_Filename_token_which_is_the_default_token_to_use_for_the_output_filename()
+            => Result.Configuration(2).UsedToken("Filename");
 
         [Then]
         public void the_first_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() 

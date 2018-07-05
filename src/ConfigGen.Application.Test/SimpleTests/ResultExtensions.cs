@@ -32,6 +32,28 @@ namespace ConfigGen.Application.Test.SimpleTests
             return result.SingleConfigurationGenerations[num - 1];
         }
 
+        public static UsedAssertions Used(this SingleConfigurationGenerationResult result, int numTokensUsed)
+        {
+            return new UsedAssertions(result, numTokensUsed);
+        }
+
+        public class UsedAssertions
+        {
+            private readonly SingleConfigurationGenerationResult _result;
+            private readonly int _numTokensUsed;
+
+            public UsedAssertions(SingleConfigurationGenerationResult result, int numTokensUsed)
+            {
+                _result = result;
+                _numTokensUsed = numTokensUsed;
+            }
+
+            public void Tokens()
+            {
+                _result.UsedTokens.Count.ShouldBe(_numTokensUsed, "Incorrect number of tokens used");
+            }
+        }
+
         public static ShouldHaveGeneratedResult ShouldHaveGenerated(this IConfigurationGenerationResult result, int num)
         {
             return new ShouldHaveGeneratedResult(result, num);

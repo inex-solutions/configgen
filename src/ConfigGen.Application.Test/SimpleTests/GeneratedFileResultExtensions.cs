@@ -22,11 +22,18 @@ using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
+using Shouldly;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {
     public static class GeneratedFileResultExtensions
     {
+        public static SingleConfigurationGenerationResult UsedToken(this SingleConfigurationGenerationResult result, string tokenName)
+        {
+            result.UsedTokens.ShouldContain(tokenName, "Expected token not reported as used");
+            return result;
+        }
+
         public static SingleConfigurationGenerationResult UsedTokens(this SingleConfigurationGenerationResult result, params string[] tokenNames)
         {
             result.UsedTokens.ShouldContainOnly(tokenNames, "Incorrect used tokens reported");

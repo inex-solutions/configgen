@@ -22,19 +22,26 @@ using System.Collections.Generic;
 using System.Linq;
 using ConfigGen.Application.Contract;
 using ConfigGen.Application.Test.Common.Specification;
+using ConfigGen.Domain.Contract;
 using Shouldly;
 
 namespace ConfigGen.Application.Test.SimpleTests
 {
     public static class GeneratedFileResultExtensions
     {
-        public static SingleConfigurationGenerationResult UsedToken(this SingleConfigurationGenerationResult result, string tokenName)
+        public static SingleConfigurationGenerationResult UsedOnlyToken(this SingleConfigurationGenerationResult result, TokenName tokenName)
+        {
+            result.UsedTokens.ShouldContainOnly(new [] { tokenName }, "Incorrect used tokens reported");
+            return result;
+        }
+
+        public static SingleConfigurationGenerationResult UsedToken(this SingleConfigurationGenerationResult result, TokenName tokenName)
         {
             result.UsedTokens.ShouldContain(tokenName, "Expected token not reported as used");
             return result;
         }
 
-        public static SingleConfigurationGenerationResult UsedTokens(this SingleConfigurationGenerationResult result, params string[] tokenNames)
+        public static SingleConfigurationGenerationResult UsedTokens(this SingleConfigurationGenerationResult result, params TokenName[] tokenNames)
         {
             result.UsedTokens.ShouldContainOnly(tokenNames, "Incorrect used tokens reported");
             return result;
@@ -43,6 +50,12 @@ namespace ConfigGen.Application.Test.SimpleTests
         public static SingleConfigurationGenerationResult HadNoUnusedTokens(this SingleConfigurationGenerationResult result)
         {
             result.UnusedTokens.ShouldBeEmpty("Expected no unused tokens to be reported");
+            return result;
+        }
+
+        public static SingleConfigurationGenerationResult DidNotUseToken(this SingleConfigurationGenerationResult result, TokenName tokenName)
+        {
+            result.UnusedTokens.ShouldContain(tokenName, "Expected token reported as used when it was expected to be unused");
             return result;
         }
 

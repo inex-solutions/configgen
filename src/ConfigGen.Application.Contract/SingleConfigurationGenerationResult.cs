@@ -19,6 +19,7 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 using System.Collections.Immutable;
+using ConfigGen.Domain.Contract;
 
 namespace ConfigGen.Application.Contract
 {
@@ -28,10 +29,10 @@ namespace ConfigGen.Application.Contract
             int configurationIndex,
             string configurationName,
             string fileName,
-            IImmutableDictionary<string, string> settings,
-            ImmutableHashSet<string> usedTokens,
-            ImmutableHashSet<string> unusedTokens,
-            ImmutableHashSet<string> unrecognisedTokens)
+            IImmutableDictionary<TokenName, TokenValue> settings,
+            ImmutableHashSet<TokenName> usedTokens,
+            ImmutableHashSet<TokenName> unusedTokens,
+            ImmutableHashSet<TokenName> unrecognisedTokens)
         {
             ConfigurationIndex = configurationIndex;
             ConfigurationName = configurationName;
@@ -48,12 +49,12 @@ namespace ConfigGen.Application.Contract
 
         public string FileName { get; }
 
-        public IImmutableDictionary<string, string> Settings { get; }
+        public IImmutableDictionary<TokenName, TokenValue> Settings { get; }
 
-        public ImmutableHashSet<string> UsedTokens { get; }
+        public ImmutableHashSet<TokenName> UsedTokens { get; }
 
-        public ImmutableHashSet<string> UnusedTokens { get; }
+        public ImmutableHashSet<TokenName> UnusedTokens { get; }
 
-        public ImmutableHashSet<string> UnrecognisedTokens { get; }
+        public ImmutableHashSet<TokenName> UnrecognisedTokens { get; }
     }
 }

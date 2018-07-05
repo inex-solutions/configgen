@@ -18,14 +18,15 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System;
 using ConfigGen.Utilities.EventLogging;
 
-namespace ConfigGen.Application.Contract
+namespace ConfigGen.Domain.Contract
 {
     public class TokenUsedEvent : IConfigurationSpecificEvent, IEquatable<TokenUsedEvent>
     {
-        public TokenUsedEvent(int configurationIndex, string tokenName)
+        public TokenUsedEvent(int configurationIndex, TokenName tokenName)
         {
             ConfigurationIndex = configurationIndex;
             TokenName = tokenName;
@@ -33,7 +34,7 @@ namespace ConfigGen.Application.Contract
 
         public int ConfigurationIndex { get; }
 
-        public string TokenName { get; }
+        public TokenName TokenName { get; }
 
         public override string ToString()
             => $"Token '{TokenName}' was used in configuration {ConfigurationIndex}";
@@ -42,7 +43,7 @@ namespace ConfigGen.Application.Contract
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return ConfigurationIndex == other.ConfigurationIndex && string.Equals(TokenName, other.TokenName, StringComparison.OrdinalIgnoreCase);
+            return ConfigurationIndex == other.ConfigurationIndex && TokenName.Equals(TokenName);
         }
 
         public override bool Equals(object obj)
@@ -57,7 +58,7 @@ namespace ConfigGen.Application.Contract
         {
             unchecked
             {
-                return (ConfigurationIndex * 397) ^ (TokenName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(TokenName) : 0);
+                return (ConfigurationIndex * 397) ^ TokenName.GetHashCode();
             }
         }
     }

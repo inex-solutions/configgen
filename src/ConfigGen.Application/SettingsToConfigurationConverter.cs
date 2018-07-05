@@ -39,7 +39,7 @@ namespace ConfigGen.Application
 
         public List<Configuration> ToConfigurations(
             ISettingsLoaderOptions options, 
-            IEnumerable<IImmutableDictionary<string, string>> settings)
+            IEnumerable<IImmutableDictionary<TokenName, TokenValue>> settings)
         {
             return settings
                 .Select((item, index) => ToConfiguration(index + 1, options, item))
@@ -47,12 +47,12 @@ namespace ConfigGen.Application
                 .ToList();
         }
 
-        private Configuration ToConfiguration(int index, ISettingsLoaderOptions options, IImmutableDictionary<string, string> settings)
+        private Configuration ToConfiguration(int index, ISettingsLoaderOptions options, IImmutableDictionary<TokenName, TokenValue> settings)
         {
             var configurationNameSetting = options.ConfigurationNameSetting ?? DefaultConfigurationNameSetting;
 
-            if (!settings.TryGetValue(configurationNameSetting, out string configurationName)
-                || configurationName == null)
+            if (!settings.TryGetValue(configurationNameSetting, out TokenValue configurationName)
+                || configurationName.IsNull())
             {
                 _eventLogger.Log(new UnrecognisedTokenEvent(index, configurationNameSetting));
                 return null;

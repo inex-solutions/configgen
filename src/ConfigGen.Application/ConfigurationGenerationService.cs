@@ -55,6 +55,7 @@ namespace ConfigGen.Application
             var settings = await _settingsLoader.Load(options.SettingsFilePath);
 
             var configurations = _settingsToConfigurationConverter.ToConfigurations(options, settings);
+
             var outputWriter = new OutputWriter(options);
 
             var awaitables = new List<Task<RenderResult>>();

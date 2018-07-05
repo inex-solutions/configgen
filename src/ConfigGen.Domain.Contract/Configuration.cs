@@ -58,6 +58,8 @@ namespace ConfigGen.Domain.Contract
             return false;
         }
 
+        public TokenValue this[string key] => this[(TokenName) key];
+
         public TokenValue this[TokenName key]
         {
             get

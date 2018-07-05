@@ -57,19 +57,19 @@ namespace ConfigGen.Domain.Contract
             return string.Compare(_tokenValue, other._tokenValue, StringComparison.Ordinal);
         }
 
+        public bool IsNull()
+        {
+            return _tokenValue == null;
+        }
+
         public static implicit operator string(TokenValue tokenValue)
         {
             return tokenValue._tokenValue;
         }
 
-        public static implicit operator TokenValue(string tokenValue)
+        public static explicit operator TokenValue(string tokenValue)
         {
             return new TokenValue(tokenValue);
-        }
-
-        public bool IsNull()
-        {
-            return _tokenValue == null;
         }
 
         public override string ToString()

@@ -57,13 +57,12 @@ namespace ConfigGen.Domain.Contract
             return string.Compare(_tokenName, other._tokenName, StringComparison.OrdinalIgnoreCase);
         }
 
-
         public static implicit operator string(TokenName tokenName)
         {
             return tokenName._tokenName;
         }
 
-        public static implicit operator TokenName(string tokenName)
+        public static explicit operator TokenName(string tokenName)
         {
             return new TokenName(tokenName);
         }

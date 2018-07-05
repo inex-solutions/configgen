@@ -52,14 +52,14 @@ namespace ConfigGen.Application
         {
             var configurationNameSetting = options.ConfigurationNameSetting ?? DefaultConfigurationNameSetting;
 
-            if (!settings.TryGetValue(configurationNameSetting, out TokenValue configurationName)
+            if (!settings.TryGetValue((TokenName)configurationNameSetting, out TokenValue configurationName)
                 || configurationName.IsNull())
             {
-                _eventLogger.Log(new UnrecognisedTokenEvent(index, configurationNameSetting));
+                _eventLogger.Log(new UnrecognisedTokenEvent(index, (TokenName)configurationNameSetting));
                 return null;
             }
 
-            _eventLogger.Log(new TokenUsedEvent(index, configurationNameSetting));
+            _eventLogger.Log(new TokenUsedEvent(index, (TokenName)configurationNameSetting));
             return new Configuration(index, configurationName, settings, _eventLogger);
         }
     }

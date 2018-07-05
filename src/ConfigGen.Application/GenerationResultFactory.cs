@@ -18,6 +18,7 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
+
 using System.Collections.Immutable;
 using System.Linq;
 using ConfigGen.Application.Contract;

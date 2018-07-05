@@ -108,5 +108,10 @@ namespace ConfigGen.Application.Test.Common
         {
             Options.ConfigurationNameSetting = configurationNameSetting;
         }
+
+        protected void SetOutputFilenameSetting(string fileNameSetting)
+        {
+            Options.OutputFilenameSetting = fileNameSetting;
+        }
     }
 }

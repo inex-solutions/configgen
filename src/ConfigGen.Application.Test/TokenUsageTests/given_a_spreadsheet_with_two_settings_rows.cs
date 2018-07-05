@@ -51,7 +51,7 @@ DEV                 | App1.Config   | Name-1");
         protected override async Task When() => Result = await ConfigGenService.GenerateConfigurations(Options);
 
         [Then]
-        public void the_generated_configuration_defaults_to_using_the_ConfigurationName_setting_as_its_configurationname_and_has_the_correct_filename() 
+        public void the_generated_configuration_uses_the_setting_specified_in_the_ConfigurationName_preference_as_its_configurationname_and_has_the_correct_filename() 
             => Result.ShouldContainConfiguration(index: 1, name: "Name-1", file: "App1.Config");
 
         [Then]

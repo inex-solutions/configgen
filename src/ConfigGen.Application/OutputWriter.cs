@@ -28,6 +28,8 @@ namespace ConfigGen.Application
 {
     public class OutputWriter : IOutputWriter
     {
+        private static readonly string DefaultOutputFilenameSetting = "Filename";
+
         private readonly IFileOutputOptions _options;
 
         public OutputWriter(IFileOutputOptions options)
@@ -37,7 +39,7 @@ namespace ConfigGen.Application
 
         public async Task<WriteResult> Write(Configuration configuration, string contents)
         {
-            var target = new FileInfo(Path.Combine(_options.OutputDirectory, configuration["Filename"]));
+            var target = new FileInfo(Path.Combine(_options.OutputDirectory, configuration[_options.OutputFilenameSetting ?? DefaultOutputFilenameSetting]));
             await File.WriteAllTextAsync(target.FullName, contents);
             return new WriteResult(target.Name, target.FullName);
         }

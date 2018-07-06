@@ -42,6 +42,12 @@ namespace ConfigGen.Application.Test.SimpleTests
             return result;
         }
 
+        public static SingleConfigurationGenerationResult HadUnrecognisedToken(this SingleConfigurationGenerationResult result, string tokenName)
+        {
+            result.UnrecognisedTokens.ShouldContain((TokenName)tokenName, "Expected token to be reported as unrecognised");
+            return result;
+        }
+        
         public static SingleConfigurationGenerationResult UsedTokens(this SingleConfigurationGenerationResult result, params string[] tokenNames)
         {
             result.UsedTokens.ShouldContainOnly(tokenNames.Select(t => (TokenName)t), "Incorrect used tokens reported");

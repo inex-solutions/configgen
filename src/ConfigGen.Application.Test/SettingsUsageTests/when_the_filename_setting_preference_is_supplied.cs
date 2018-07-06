@@ -4,7 +4,7 @@ using ConfigGen.Application.Test.Common.Specification;
 using ConfigGen.Application.Test.SimpleTests;
 using ConfigGen.Utilities;
 
-namespace ConfigGen.Application.Test.TokenUsageTests
+namespace ConfigGen.Application.Test.SettingsUsageTests
 {
     public class when_the_filename_setting_preference_is_supplied : ApplicationTestBase
     {
@@ -34,24 +34,24 @@ DEV                 | App1.Config   | Name-1");
             => Result.ShouldContainConfiguration(index: 1, name: "DEV", file: "Name-1");
 
         [Then]
-        public void the_generated_configuration_used_two_tokens()
-            => Result.Configuration(1).Used(2).Tokens();
+        public void the_generated_configuration_used_two_settings()
+            => Result.Configuration(1).Used(2).Settings();
 
         [Then]
-        public void the_generated_configuration_used_the_Name_token_which_appeared_in_the_template_and_was_specified_as_the_filename()
-            => Result.Configuration(1).UsedToken("Name");
+        public void the_generated_configuration_used_the_Name_setting_which_appeared_in_the_template_and_was_specified_as_the_filename()
+            => Result.Configuration(1).UsedSetting("Name");
 
         [Then]
         public void the_generated_configuration_used_the_default_ConfigurationName_setting()
-            => Result.Configuration(1).UsedToken("ConfigurationName");
+            => Result.Configuration(1).UsedSetting("ConfigurationName");
 
         [Then]
         public void the_generated_configuration_did_not_use_the_default_Filename_setting_of_Filename_as_an_alternative_was_specified()
-            => Result.Configuration(1).DidNotUseToken("Filename");
+            => Result.Configuration(1).DidNotUseSetting("Filename");
 
         [Then]
-        public void the_generated_configuration_reported_no_unrecognised_tokens()
-            => Result.Configuration(1).HadNoUnrecognisedTokens();
+        public void the_generated_configuration_reported_no_unrecognised_settings()
+            => Result.Configuration(1).HadNoUnrecognisedSettings();
 
         [Then]
         public void the_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced()

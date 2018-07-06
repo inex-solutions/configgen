@@ -25,7 +25,7 @@ using ConfigGen.Application.Test.Common.Specification;
 using ConfigGen.Application.Test.SimpleTests;
 using ConfigGen.Utilities;
 
-namespace ConfigGen.Application.Test.TokenUsageTests
+namespace ConfigGen.Application.Test.SettingsUsageTests
 {
     public class when_the_configuration_name_setting_preference_is_supplied : ApplicationTestBase
     {
@@ -55,24 +55,24 @@ DEV                 | App1.Config   | Name-1");
             => Result.ShouldContainConfiguration(index: 1, name: "Name-1", file: "App1.Config");
 
         [Then]
-        public void the_generated_configuration_used_two_tokens()
-            => Result.Configuration(1).Used(2).Tokens();
+        public void the_generated_configuration_used_two_settings()
+            => Result.Configuration(1).Used(2).Settings();
 
         [Then]
-        public void the_generated_configuration_used_the_Name_token_which_appeared_in_the_template_and_was_specified_as_the_configuration_name()
-            => Result.Configuration(1).UsedToken("Name");
+        public void the_generated_configuration_used_the_Name_setting_which_appeared_in_the_template_and_was_specified_as_the_configuration_name()
+            => Result.Configuration(1).UsedSetting("Name");
 
         [Then]
-        public void the_generated_configuration_used_the_Filename_token_which_is_the_default_token_to_use_for_the_output_filename()
-            => Result.Configuration(1).UsedToken("Filename");
+        public void the_generated_configuration_used_the_Filename_setting_which_is_the_default_setting_to_use_for_the_output_filename()
+            => Result.Configuration(1).UsedSetting("Filename");
 
         [Then]
-        public void the_generated_configuration_did_not_use_the_ConfigurationName_token_as_an_alternative_preference_was_set()
-            => Result.Configuration(1).DidNotUseToken("ConfigurationName");
+        public void the_generated_configuration_did_not_use_the_ConfigurationName_setting_as_an_alternative_preference_was_set()
+            => Result.Configuration(1).DidNotUseSetting("ConfigurationName");
 
         [Then]
-        public void the_generated_configuration_reported_no_unrecognised_tokens()
-            => Result.Configuration(1).HadNoUnrecognisedTokens();
+        public void the_generated_configuration_reported_no_unrecognised_settings()
+            => Result.Configuration(1).HadNoUnrecognisedSettings();
 
         [Then]
         public void the_generated_config_file_contains_the_template_contents_with_the_single_setting_correctly_replaced() 

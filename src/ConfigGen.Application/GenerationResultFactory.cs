@@ -44,19 +44,19 @@ namespace ConfigGen.Application
                 .Distinct()
                 .ToList();
 
-            var alltokens = renderResult.Configuration.Settings.Keys.ToImmutableHashSet();
-            var usedTokens = events.OfType<TokenUsedEvent>().Select(t => t.TokenName).ToImmutableHashSet();
-            var unrecognisedTokens = events.OfType<UnrecognisedTokenEvent>().Select(t => t.TokenName).ToImmutableHashSet();
-            var unusedTokens = alltokens.Except(usedTokens);
+            var allSettings = renderResult.Configuration.Settings.Keys.ToImmutableHashSet();
+            var usedSettings = events.OfType<SettingUsedEvent>().Select(t => t.SettingName).ToImmutableHashSet();
+            var unrecognisedSettings = events.OfType<UnrecognisedSettingEvent>().Select(t => t.SettingName).ToImmutableHashSet();
+            var unusedSettings = allSettings.Except(usedSettings);
 
             return new SingleConfigurationGenerationResult(
                 renderResult.Configuration.Index,
                 renderResult.Configuration.ConfigurationName,
                 renderResult.WriteResult.FileName,
                 renderResult.Configuration.Settings,
-                usedTokens,
-                unusedTokens,
-                unrecognisedTokens);
+                usedSettings,
+                unusedSettings,
+                unrecognisedSettings);
         }
     }
 }

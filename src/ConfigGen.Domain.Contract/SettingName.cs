@@ -20,30 +20,23 @@
 #endregion
 
 using System;
-using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Domain.Contract
 {
-    public class UnrecognisedTokenEvent : IConfigurationSpecificEvent, IEquatable<UnrecognisedTokenEvent>
+    public sealed class SettingName : IEquatable<SettingName>, IComparable<SettingName>
     {
-        public UnrecognisedTokenEvent(int configurationIndex, TokenName tokenName)
+        private readonly string _settingName;
+
+        public SettingName(string settingName)
         {
-            ConfigurationIndex = configurationIndex;
-            TokenName = tokenName;
+            _settingName = settingName;
         }
 
-        public int ConfigurationIndex { get; }
-
-        public TokenName TokenName { get; }
-
-        public override string ToString()
-            => $"An unrecognised token '{TokenName}' was requested in generation of configuration {ConfigurationIndex}";
-
-        public bool Equals(UnrecognisedTokenEvent other)
+        public bool Equals(SettingName other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return ConfigurationIndex == other.ConfigurationIndex && TokenName.Equals(other.TokenName);
+            return string.Equals(_settingName, other._settingName, StringComparison.OrdinalIgnoreCase);
         }
 
         public override bool Equals(object obj)
@@ -51,15 +44,32 @@ namespace ConfigGen.Domain.Contract
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((UnrecognisedTokenEvent) obj);
+            return Equals((SettingName) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (ConfigurationIndex * 397) ^ TokenName.GetHashCode();
-            }
+            return (_settingName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(_settingName) : 0);
+        }
+
+        public int CompareTo(SettingName other)
+        {
+            return string.Compare(_settingName, other._settingName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static implicit operator string(SettingName settingName)
+        {
+            return settingName._settingName;
+        }
+
+        public static explicit operator SettingName(string settingName)
+        {
+            return new SettingName(settingName);
+        }
+
+        public override string ToString()
+        {
+            return _settingName;
         }
     }
 }

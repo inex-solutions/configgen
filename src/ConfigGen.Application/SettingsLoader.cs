@@ -39,7 +39,7 @@ namespace ConfigGen.Application
             EventLogger = eventLogger;
         }
 
-        public async Task<IEnumerable<IImmutableDictionary<TokenName, TokenValue>>> Load(string settingsFilePath)
+        public async Task<IEnumerable<IImmutableDictionary<SettingName, SettingValue>>> Load(string settingsFilePath)
         {
             FileInfo settingsFile = new FileInfo(settingsFilePath);
             ExcelPackage excl = new ExcelPackage(settingsFile);
@@ -51,19 +51,19 @@ namespace ConfigGen.Application
                 columnHeadings.Add(worksheet.Cells[worksheet.Dimension.Start.Row, col].Value.ToString());
             }
 
-            var rows = new List<IImmutableDictionary<TokenName, TokenValue>>();
+            var rows = new List<IImmutableDictionary<SettingName, SettingValue>>();
 
             for (int row = worksheet.Dimension.Start.Row + 1;
                 row <= worksheet.Dimension.End.Row;
                 row++)
             {
                 bool rowHasData = false;
-                var settings = new Dictionary<TokenName, TokenValue>();
+                var settings = new Dictionary<SettingName, SettingValue>();
                 for (var col = worksheet.Dimension.Start.Column; col <= worksheet.Dimension.End.Column; col++)
                 {
                     var value = worksheet.Cells[row, col].Value.ToString().EmptyStringToNull();
                     rowHasData |= (value != null);
-                    settings.Add(new TokenName(columnHeadings[col - 1]), new TokenValue(value));
+                    settings.Add(new SettingName(columnHeadings[col - 1]), new SettingValue(value));
                 }
 
                 if (rowHasData)

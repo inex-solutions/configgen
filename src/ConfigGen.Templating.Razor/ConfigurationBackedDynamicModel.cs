@@ -34,7 +34,7 @@ namespace ConfigGen.Templating.Razor
 
         protected override bool TryGetValue(string name, out object result)
         {
-            var success = _configuration.TryGetValue(new TokenName(name), out TokenValue resultString);
+            var success = _configuration.TryGetValue(new SettingName(name), out SettingValue resultString);
             result = resultString;
             return success;
         }

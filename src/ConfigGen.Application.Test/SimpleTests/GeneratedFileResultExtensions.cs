@@ -30,45 +30,33 @@ namespace ConfigGen.Application.Test.SimpleTests
 {
     public static class GeneratedFileResultExtensions
     {
-        public static SingleConfigurationGenerationResult UsedOnlyToken(this SingleConfigurationGenerationResult result, string tokenName)
+        public static SingleConfigurationGenerationResult UsedSetting(this SingleConfigurationGenerationResult result, string settingName)
         {
-            result.UsedTokens.ShouldContainOnly(new [] { (TokenName)tokenName }, "Incorrect used tokens reported");
+            result.UsedSettings.ShouldContain((SettingName)settingName, "Expected setting not reported as used");
             return result;
         }
 
-        public static SingleConfigurationGenerationResult UsedToken(this SingleConfigurationGenerationResult result, string tokenName)
+        public static SingleConfigurationGenerationResult HadUnrecognisedSetting(this SingleConfigurationGenerationResult result, string settingName)
         {
-            result.UsedTokens.ShouldContain((TokenName)tokenName, "Expected token not reported as used");
+            result.UnrecognisedSettings.ShouldContain((SettingName)settingName, "Expected setting to be reported as unrecognised");
             return result;
         }
 
-        public static SingleConfigurationGenerationResult HadUnrecognisedToken(this SingleConfigurationGenerationResult result, string tokenName)
+        public static SingleConfigurationGenerationResult HadNoUnusedSettings(this SingleConfigurationGenerationResult result)
         {
-            result.UnrecognisedTokens.ShouldContain((TokenName)tokenName, "Expected token to be reported as unrecognised");
-            return result;
-        }
-        
-        public static SingleConfigurationGenerationResult UsedTokens(this SingleConfigurationGenerationResult result, params string[] tokenNames)
-        {
-            result.UsedTokens.ShouldContainOnly(tokenNames.Select(t => (TokenName)t), "Incorrect used tokens reported");
+            result.UnusedSettings.ShouldBeEmpty("Expected no unused settings to be reported");
             return result;
         }
 
-        public static SingleConfigurationGenerationResult HadNoUnusedTokens(this SingleConfigurationGenerationResult result)
+        public static SingleConfigurationGenerationResult DidNotUseSetting(this SingleConfigurationGenerationResult result, string settingName)
         {
-            result.UnusedTokens.ShouldBeEmpty("Expected no unused tokens to be reported");
+            result.UnusedSettings.ShouldContain((SettingName)settingName, "Expected setting reported as used when it was expected to be unused");
             return result;
         }
 
-        public static SingleConfigurationGenerationResult DidNotUseToken(this SingleConfigurationGenerationResult result, string tokenName)
+        public static SingleConfigurationGenerationResult HadNoUnrecognisedSettings(this SingleConfigurationGenerationResult result)
         {
-            result.UnusedTokens.ShouldContain((TokenName)tokenName, "Expected token reported as used when it was expected to be unused");
-            return result;
-        }
-
-        public static SingleConfigurationGenerationResult HadNoUnrecognisedTokens(this SingleConfigurationGenerationResult result)
-        {
-            result.UnrecognisedTokens.ShouldBeEmpty("Expected no unrecognised tokens to be reported");
+            result.UnrecognisedSettings.ShouldBeEmpty("Expected no unrecognised settings to be reported");
             return result;
         }
 

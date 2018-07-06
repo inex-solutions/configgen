@@ -20,23 +20,30 @@
 #endregion
 
 using System;
+using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Domain.Contract
 {
-    public sealed class TokenName : IEquatable<TokenName>, IComparable<TokenName>
+    public class UnrecognisedSettingEvent : IConfigurationSpecificEvent, IEquatable<UnrecognisedSettingEvent>
     {
-        private readonly string _tokenName;
-
-        public TokenName(string tokenName)
+        public UnrecognisedSettingEvent(int configurationIndex, SettingName settingName)
         {
-            _tokenName = tokenName;
+            ConfigurationIndex = configurationIndex;
+            SettingName = settingName;
         }
 
-        public bool Equals(TokenName other)
+        public int ConfigurationIndex { get; }
+
+        public SettingName SettingName { get; }
+
+        public override string ToString()
+            => $"An unrecognised setting '{SettingName}' was requested in generation of configuration {ConfigurationIndex}";
+
+        public bool Equals(UnrecognisedSettingEvent other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(_tokenName, other._tokenName, StringComparison.OrdinalIgnoreCase);
+            return ConfigurationIndex == other.ConfigurationIndex && SettingName.Equals(other.SettingName);
         }
 
         public override bool Equals(object obj)
@@ -44,32 +51,15 @@ namespace ConfigGen.Domain.Contract
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((TokenName) obj);
+            return Equals((UnrecognisedSettingEvent) obj);
         }
 
         public override int GetHashCode()
         {
-            return (_tokenName != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(_tokenName) : 0);
-        }
-
-        public int CompareTo(TokenName other)
-        {
-            return string.Compare(_tokenName, other._tokenName, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static implicit operator string(TokenName tokenName)
-        {
-            return tokenName._tokenName;
-        }
-
-        public static explicit operator TokenName(string tokenName)
-        {
-            return new TokenName(tokenName);
-        }
-
-        public override string ToString()
-        {
-            return _tokenName;
+            unchecked
+            {
+                return (ConfigurationIndex * 397) ^ SettingName.GetHashCode();
+            }
         }
     }
 }

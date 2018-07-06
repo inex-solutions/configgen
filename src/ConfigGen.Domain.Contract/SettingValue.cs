@@ -20,30 +20,23 @@
 #endregion
 
 using System;
-using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Domain.Contract
 {
-    public class TokenUsedEvent : IConfigurationSpecificEvent, IEquatable<TokenUsedEvent>
+    public sealed class SettingValue : IEquatable<SettingValue>, IComparable<SettingValue>
     {
-        public TokenUsedEvent(int configurationIndex, TokenName tokenName)
+        private readonly string _settingValue;
+
+        public SettingValue(string settingValue)
         {
-            ConfigurationIndex = configurationIndex;
-            TokenName = tokenName;
+            _settingValue = settingValue;
         }
 
-        public int ConfigurationIndex { get; }
-
-        public TokenName TokenName { get; }
-
-        public override string ToString()
-            => $"Token '{TokenName}' was used in configuration {ConfigurationIndex}";
-
-        public bool Equals(TokenUsedEvent other)
+        public bool Equals(SettingValue other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return ConfigurationIndex == other.ConfigurationIndex && TokenName.Equals(TokenName);
+            return string.Equals(_settingValue, other._settingValue, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -51,15 +44,37 @@ namespace ConfigGen.Domain.Contract
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((TokenUsedEvent)obj);
+            return Equals((SettingValue)obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (ConfigurationIndex * 397) ^ TokenName.GetHashCode();
-            }
+            return (_settingValue != null ? StringComparer.Ordinal.GetHashCode(_settingValue) : 0);
+        }
+
+        public int CompareTo(SettingValue other)
+        {
+            return string.Compare(_settingValue, other._settingValue, StringComparison.Ordinal);
+        }
+
+        public bool IsNull()
+        {
+            return _settingValue == null;
+        }
+
+        public static implicit operator string(SettingValue settingValue)
+        {
+            return settingValue._settingValue;
+        }
+
+        public static explicit operator SettingValue(string settingValue)
+        {
+            return new SettingValue(settingValue);
+        }
+
+        public override string ToString()
+        {
+            return _settingValue;
         }
     }
 }

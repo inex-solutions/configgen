@@ -20,23 +20,30 @@
 #endregion
 
 using System;
+using ConfigGen.Utilities.EventLogging;
 
 namespace ConfigGen.Domain.Contract
 {
-    public sealed class TokenValue : IEquatable<TokenValue>, IComparable<TokenValue>
+    public class SettingUsedEvent : IConfigurationSpecificEvent, IEquatable<SettingUsedEvent>
     {
-        private readonly string _tokenValue;
-
-        public TokenValue(string tokenValue)
+        public SettingUsedEvent(int configurationIndex, SettingName settingName)
         {
-            _tokenValue = tokenValue;
+            ConfigurationIndex = configurationIndex;
+            SettingName = settingName;
         }
 
-        public bool Equals(TokenValue other)
+        public int ConfigurationIndex { get; }
+
+        public SettingName SettingName { get; }
+
+        public override string ToString()
+            => $"Setting '{SettingName}' was used in configuration {ConfigurationIndex}";
+
+        public bool Equals(SettingUsedEvent other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(_tokenValue, other._tokenValue, StringComparison.Ordinal);
+            return ConfigurationIndex == other.ConfigurationIndex && SettingName.Equals(SettingName);
         }
 
         public override bool Equals(object obj)
@@ -44,37 +51,15 @@ namespace ConfigGen.Domain.Contract
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((TokenValue)obj);
+            return Equals((SettingUsedEvent)obj);
         }
 
         public override int GetHashCode()
         {
-            return (_tokenValue != null ? StringComparer.Ordinal.GetHashCode(_tokenValue) : 0);
-        }
-
-        public int CompareTo(TokenValue other)
-        {
-            return string.Compare(_tokenValue, other._tokenValue, StringComparison.Ordinal);
-        }
-
-        public bool IsNull()
-        {
-            return _tokenValue == null;
-        }
-
-        public static implicit operator string(TokenValue tokenValue)
-        {
-            return tokenValue._tokenValue;
-        }
-
-        public static explicit operator TokenValue(string tokenValue)
-        {
-            return new TokenValue(tokenValue);
-        }
-
-        public override string ToString()
-        {
-            return _tokenValue;
+            unchecked
+            {
+                return (ConfigurationIndex * 397) ^ SettingName.GetHashCode();
+            }
         }
     }
 }

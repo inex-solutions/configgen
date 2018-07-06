@@ -33,25 +33,25 @@ namespace ConfigGen.Application.Test.SimpleTests
             return result.SingleConfigurationGenerations[num - 1];
         }
 
-        public static UsedAssertions Used(this SingleConfigurationGenerationResult result, int numTokensUsed)
+        public static UsedAssertions Used(this SingleConfigurationGenerationResult result, int numSettingsUsed)
         {
-            return new UsedAssertions(result, numTokensUsed);
+            return new UsedAssertions(result, numSettingsUsed);
         }
 
         public class UsedAssertions
         {
             private readonly SingleConfigurationGenerationResult _result;
-            private readonly int _numTokensUsed;
+            private readonly int _numSettingsUsed;
 
-            public UsedAssertions(SingleConfigurationGenerationResult result, int numTokensUsed)
+            public UsedAssertions(SingleConfigurationGenerationResult result, int numSettingsUsed)
             {
                 _result = result;
-                _numTokensUsed = numTokensUsed;
+                _numSettingsUsed = numSettingsUsed;
             }
 
-            public void Tokens()
+            public void Settings()
             {
-                _result.UsedTokens.Count.ShouldBe(_numTokensUsed, "Incorrect number of tokens used");
+                _result.UsedSettings.Count.ShouldBe(_numSettingsUsed, "Incorrect number of settings used");
             }
         }
 

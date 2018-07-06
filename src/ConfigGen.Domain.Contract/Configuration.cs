@@ -27,12 +27,12 @@ namespace ConfigGen.Domain.Contract
 {
     public class Configuration
     {
-        private readonly IImmutableDictionary<TokenName, TokenValue> _settings;
+        private readonly IImmutableDictionary<SettingName, SettingValue> _settings;
         private readonly IEventLogger _eventLogger;
 
         public Configuration(int index,
             string configurationName,
-            IImmutableDictionary<TokenName, TokenValue> settings, 
+            IImmutableDictionary<SettingName, SettingValue> settings, 
             IEventLogger eventLogger)
         {
             Index = index;
@@ -46,25 +46,25 @@ namespace ConfigGen.Domain.Contract
         public string ConfigurationName { get; }
 
 
-        public bool TryGetValue(TokenName key, out TokenValue value)
+        public bool TryGetValue(SettingName key, out SettingValue value)
         {
             if (_settings.TryGetValue(key, out value))
             {
-                _eventLogger.Log(new TokenUsedEvent(Index, key));
+                _eventLogger.Log(new SettingUsedEvent(Index, key));
                 return true;
             }
 
-            _eventLogger.Log(new UnrecognisedTokenEvent(Index, key));
+            _eventLogger.Log(new UnrecognisedSettingEvent(Index, key));
             return false;
         }
 
-        public TokenValue this[string key] => this[(TokenName) key];
+        public SettingValue this[string key] => this[(SettingName) key];
 
-        public TokenValue this[TokenName key]
+        public SettingValue this[SettingName key]
         {
             get
             {
-                if (TryGetValue(key, out TokenValue value))
+                if (TryGetValue(key, out SettingValue value))
                 {
                     return value;
                 }
@@ -73,6 +73,6 @@ namespace ConfigGen.Domain.Contract
             }
         }
 
-        public IImmutableDictionary<TokenName, TokenValue> Settings => _settings;
+        public IImmutableDictionary<SettingName, SettingValue> Settings => _settings;
     }
 }

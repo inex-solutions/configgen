@@ -30,18 +30,18 @@ namespace ConfigGen.Application.Contract
             int configurationIndex,
             string configurationName,
             string fileName,
-            IImmutableDictionary<TokenName, TokenValue> settings,
-            ImmutableHashSet<TokenName> usedTokens,
-            ImmutableHashSet<TokenName> unusedTokens,
-            ImmutableHashSet<TokenName> unrecognisedTokens)
+            IImmutableDictionary<SettingName, SettingValue> settings,
+            ImmutableHashSet<SettingName> usedSettings,
+            ImmutableHashSet<SettingName> unusedSettings,
+            ImmutableHashSet<SettingName> unrecognisedSettings)
         {
             ConfigurationIndex = configurationIndex;
             ConfigurationName = configurationName;
             FileName = fileName;
             Settings = settings;
-            UsedTokens = usedTokens;
-            UnusedTokens = unusedTokens;
-            UnrecognisedTokens = unrecognisedTokens;
+            UsedSettings = usedSettings;
+            UnusedSettings = unusedSettings;
+            UnrecognisedSettings = unrecognisedSettings;
         }
         
         public int ConfigurationIndex { get; }
@@ -50,12 +50,12 @@ namespace ConfigGen.Application.Contract
 
         public string FileName { get; }
 
-        public IImmutableDictionary<TokenName, TokenValue> Settings { get; }
+        public IImmutableDictionary<SettingName, SettingValue> Settings { get; }
 
-        public ImmutableHashSet<TokenName> UsedTokens { get; }
+        public ImmutableHashSet<SettingName> UsedSettings { get; }
 
-        public ImmutableHashSet<TokenName> UnusedTokens { get; }
+        public ImmutableHashSet<SettingName> UnusedSettings { get; }
 
-        public ImmutableHashSet<TokenName> UnrecognisedTokens { get; }
+        public ImmutableHashSet<SettingName> UnrecognisedSettings { get; }
     }
 }

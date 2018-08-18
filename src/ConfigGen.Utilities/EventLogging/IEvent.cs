@@ -1,5 +1,5 @@
 ﻿#region Copyright and Licence Notice
-// Copyright (C)2010-2018 - INEX Solutions Ltd
+// Copyright (C)2010-2018 - Rob Levine and other contributors
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -18,7 +18,6 @@
 // the GNU Lesser General Public License along with ConfigGen.  
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
-
 namespace ConfigGen.Utilities.EventLogging
 {
     public interface IEvent

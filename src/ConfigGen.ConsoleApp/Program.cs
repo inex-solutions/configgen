@@ -29,13 +29,21 @@ namespace ConfigGen.ConsoleApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ShowTitle();
             Console.WriteLine("ARGS: \n" + string.Join("\n", args));
             if (Debugger.IsAttached)
             {
                 Console.WriteLine("Press enter to exit");
                 Console.ReadLine();
             }
+        }
+
+        private static void ShowTitle()
+        {
+            Console.WriteLine("ConfigGen v3.0.0 - Configuration file generation tool");
+            Console.WriteLine("Copyright (C)2010-2018 - Rob Levine and other contributors - https://github.com/inex-solutions/configgen");
+            Console.WriteLine("--");
+            Console.WriteLine();
         }
     }
 }

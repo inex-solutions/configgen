@@ -21,14 +21,16 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace ConfigGen.ConsoleApp
 {
     public class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            Console.WriteLine("ARGS: \n" + string.Join("\n", args));
             if (Debugger.IsAttached)
             {
                 Console.WriteLine("Press enter to exit");

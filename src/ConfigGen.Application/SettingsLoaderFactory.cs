@@ -19,22 +19,27 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
+using ConfigGen.Application.Contract;
+using ConfigGen.Domain.Contract;
 using ConfigGen.Utilities.EventLogging;
-using ConfigGen.Utilities.SimpleInjector;
-using SimpleInjector;
 
 namespace ConfigGen.Application
 {
-    public class ApplicationModule : IContainerModule
+    public class SettingsLoaderFactory
     {
-        public void Register(Container container)
+        private readonly XlsxSettingsLoader _xlsxSettingsLoader;
+
+        private IEventLogger EventLogger { get; }
+
+        public SettingsLoaderFactory(XlsxSettingsLoader xlsxSettingsLoader, IEventLogger eventLogger)
         {
-            container.Register<TemplateFactory>();
-            container.Register<XlsxSettingsLoader>();
-            container.Register<SettingsToConfigurationConverter>();
-            container.Register<IEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
-            container.Register<IReadableEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
-            container.RegisterDecorator<IEventLogger, ConsoleOutputEventLoggerDecorator>(Lifestyle.Singleton);
+            _xlsxSettingsLoader = xlsxSettingsLoader;
+            EventLogger = eventLogger;
+        }
+
+        public ISettingsLoader Create(ISettingsLoaderOptions options)
+        {
+            return _xlsxSettingsLoader;
         }
     }
 }

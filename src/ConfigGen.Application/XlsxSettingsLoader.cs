@@ -30,11 +30,11 @@ using OfficeOpenXml;
 
 namespace ConfigGen.Application
 {
-    public class SettingsLoader
+    public class XlsxSettingsLoader : ISettingsLoader
     {
         private IEventLogger EventLogger { get; }
 
-        public SettingsLoader(IEventLogger eventLogger)
+        public XlsxSettingsLoader(IEventLogger eventLogger)
         {
             EventLogger = eventLogger;
         }

@@ -30,20 +30,20 @@ namespace ConfigGen.Application
     public class ConfigurationGenerationService : IConfigurationGenerationService
     {
         private readonly TemplateFactory _templateFactory;
-        private readonly SettingsLoader _settingsLoader;
+        private readonly SettingsLoaderFactory _settingsLoaderFactory;
         private readonly SettingsToConfigurationConverter _settingsToConfigurationConverter;
         private readonly ConfigurationGenerationContextFactory _configurationGenerationContextFactory;
         private readonly GenerationResultFactory _generationResultFactory;
 
         public ConfigurationGenerationService(
-            TemplateFactory templateFactory, 
-            SettingsLoader settingsLoader,
+            TemplateFactory templateFactory,
+            SettingsLoaderFactory settingsLoaderFactory,
             SettingsToConfigurationConverter settingsToConfigurationConverter,
             ConfigurationGenerationContextFactory configurationGenerationContextFactory,
             GenerationResultFactory generationResultFactory)
         {
             _templateFactory = templateFactory;
-            _settingsLoader = settingsLoader;
+            _settingsLoaderFactory = settingsLoaderFactory;
             _settingsToConfigurationConverter = settingsToConfigurationConverter;
             _configurationGenerationContextFactory = configurationGenerationContextFactory;
             _generationResultFactory = generationResultFactory;
@@ -53,7 +53,7 @@ namespace ConfigGen.Application
         {
             var template = await _templateFactory.Create(options);
 
-            var settings = await _settingsLoader.Load(options.SettingsFilePath);
+            var settings = await _settingsLoaderFactory.Create(options).Load(options.SettingsFilePath);
 
             var configurations = _settingsToConfigurationConverter.ToConfigurations(options, settings);
 

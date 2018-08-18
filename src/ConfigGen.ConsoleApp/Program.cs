@@ -1,5 +1,5 @@
 ﻿#region Copyright and Licence Notice
-// Copyright (C)2010-2018 - INEX Solutions Ltd
+// Copyright (C)2010-2018 - Rob Levine and other contributors
 // https://github.com/inex-solutions/configgen
 // 
 // This file is part of ConfigGen.
@@ -21,7 +21,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 namespace ConfigGen.ConsoleApp
 {

@@ -19,22 +19,14 @@
 // If not, see <http://www.gnu.org/licenses/>
 #endregion
 
-using ConfigGen.Utilities.EventLogging;
-using ConfigGen.Utilities.SimpleInjector;
-using SimpleInjector;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
 
-namespace ConfigGen.Application
+namespace ConfigGen.Domain.Contract
 {
-    public class ApplicationModule : IContainerModule
+    public interface ISettingsLoader
     {
-        public void Register(Container container)
-        {
-            container.Register<TemplateFactory>();
-            container.Register<XlsxSettingsLoader>();
-            container.Register<SettingsToConfigurationConverter>();
-            container.Register<IEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
-            container.Register<IReadableEventLogger, InMemoryEventLogger>(Lifestyle.Singleton);
-            container.RegisterDecorator<IEventLogger, ConsoleOutputEventLoggerDecorator>(Lifestyle.Singleton);
-        }
+        Task<IEnumerable<IImmutableDictionary<SettingName, SettingValue>>> Load(string settingsFilePath);
     }
 }
